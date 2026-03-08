@@ -869,11 +869,11 @@
 
         .final-cta {
             border-top: 1px solid var(--bone-white);
-            padding: 48px 40px 0;
+            padding: 48px 40px 56px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             gap: 24px;
-            align-items: center;
+            align-items: flex-start;
         }
 
         .final-cta-copy {
@@ -887,14 +887,15 @@
 
         
         footer {
-            padding: 28px 40px 32px;
+            padding: 30px 40px 36px;
             font-family: var(--font-mono);
             font-size: 12px;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             align-items: center;
-            gap: 24px;
+            gap: 40px;
             text-transform: uppercase;
+            border-top: 1px solid rgba(245, 242, 231, 0.18);
         }
 
         .footer-col {
@@ -907,21 +908,19 @@
             align-items: flex-start;
             text-align: left;
             gap: 8px;
-            flex: 1;
         }
 
         .footer-right {
             align-items: flex-end;
             text-align: right;
             gap: 10px;
-            flex: 1;
         }
 
         .footer-center {
             display: flex;
             align-items: center;
             justify-content: center;
-            flex: 0 0 auto;
+            width: 100%;
         }
 
         .footer-logo-slot {
@@ -933,7 +932,7 @@
 
         .footer-logo {
             display: block;
-            width: 92px;
+            width: 124px;
             max-width: 100%;
             height: auto;
             filter: invert(1);
@@ -1084,14 +1083,15 @@
             }
 
             footer {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 align-items: flex-start;
+                gap: 20px;
             }
 
             .footer-left,
             .footer-right,
             .footer-center {
-                flex: none;
+                width: 100%;
             }
 
             .footer-right,
@@ -1450,7 +1450,6 @@
                 <a href="https://www.x.com/redartorter" class="social-badge" target="_blank" rel="noreferrer" aria-label="X">X</a>
             </div>
             <div class="footer-contact">
-                <span vid="99">xvadur.com</span>
                 <span vid="100">adam@xvadur.com</span>
             </div>
         </div>
