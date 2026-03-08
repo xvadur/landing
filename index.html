@@ -900,20 +900,22 @@
         .footer-col {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            justify-content: center;
+            min-height: 132px;
         }
 
         .footer-left {
             align-items: flex-start;
             text-align: left;
             justify-self: start;
+            gap: 10px;
         }
 
         .footer-right {
             align-items: flex-end;
             text-align: right;
             justify-self: end;
-            gap: 16px;
+            gap: 14px;
         }
 
         .footer-center {
@@ -922,6 +924,7 @@
             align-items: center;
             gap: 0;
             justify-self: center;
+            align-self: center;
         }
 
         .footer-logo-slot {
@@ -944,6 +947,13 @@
             align-items: center;
             gap: 12px;
             justify-content: flex-end;
+        }
+
+        .footer-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-end;
         }
 
         .social-badge {
@@ -1426,8 +1436,10 @@
                 <a href="https://www.github.com/xvadur" class="social-badge" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
                 <a href="https://www.x.com/redartorter" class="social-badge" target="_blank" rel="noreferrer" aria-label="X">X</a>
             </div>
-            <span vid="99">xvadur.com</span>
-            <span vid="100">adam@xvadur.com</span>
+            <div class="footer-contact">
+                <span vid="99">xvadur.com</span>
+                <span vid="100">adam@xvadur.com</span>
+            </div>
         </div>
     </footer>
 
