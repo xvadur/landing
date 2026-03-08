@@ -5,6 +5,8 @@
     <meta name="description" content="AI recepcia pre zubné kliniky od Adama z xvadur. Ambulancia sa nemusí starať o zvonenie telefónu a napriek tomu sa dovolá každý pacient. Nasadenie cez kalendár a telefónne číslo.">
     <link rel="icon" type="image/png" href="./assets/favicon-symbol.png">
     <style vid="5">
+        @import url('https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Mono:wght@500;600;700&display=swap');
+
         :root {
             --acid-green: #CFFF26;
             --signal-yellow: #FFC800;
@@ -12,8 +14,8 @@
             --deep-black: #050505;
             --ink-black: #000000;
             
-            --font-display: Arial, 'Helvetica Neue', Helvetica, sans-serif;
-            --font-mono: 'Courier New', Courier, monospace;
+            --font-display: 'Archivo', 'Aptos', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            --font-mono: 'IBM Plex Mono', 'SFMono-Regular', 'Consolas', monospace;
         }
 
         * {
@@ -27,9 +29,10 @@
             background-color: var(--deep-black);
             color: var(--bone-white);
             font-family: var(--font-display);
-            font-weight: 600;
+            font-weight: 500;
             overflow-x: hidden;
             cursor: crosshair;
+            text-rendering: optimizeLegibility;
         }
 
         
@@ -143,6 +146,7 @@
             text-transform: uppercase;
             margin-bottom: 18px;
             color: var(--acid-green);
+            font-weight: 700;
         }
 
         .hero-description {
@@ -150,7 +154,7 @@
             line-height: 1.35;
             letter-spacing: -0.02em;
             margin-bottom: 28px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .hero-actions {
@@ -172,6 +176,7 @@
             font-size: 13px;
             letter-spacing: 1.4px;
             text-transform: uppercase;
+            font-weight: 700;
             transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease;
         }
 
@@ -323,13 +328,14 @@
             opacity: 0.8;
             display: flex;
             gap: 20px;
+            font-weight: 700;
         }
 
         .ticket-description {
             font-size: 18px;
             line-height: 1.4;
             letter-spacing: -0.02em;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .ticket-points {
@@ -340,6 +346,7 @@
             text-transform: uppercase;
             display: grid;
             gap: 6px;
+            font-weight: 600;
         }
 
         .ticket-footer {
@@ -494,6 +501,7 @@
             text-transform: uppercase;
             color: var(--signal-yellow);
             margin-bottom: 20px;
+            font-weight: 700;
         }
 
         .founder-title,
@@ -517,7 +525,7 @@
             line-height: 1.35;
             letter-spacing: -0.02em;
             color: rgba(245, 242, 231, 0.88);
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .founder-proof {
@@ -532,6 +540,7 @@
             letter-spacing: 1.2px;
             text-transform: uppercase;
             color: var(--acid-green);
+            font-weight: 700;
         }
 
         .founder-name {
@@ -621,12 +630,13 @@
             text-transform: uppercase;
             color: var(--acid-green);
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .trust-text {
             font-size: 20px;
             line-height: 1.2;
-            font-weight: 800;
+            font-weight: 700;
             letter-spacing: -0.03em;
             text-transform: lowercase;
         }
@@ -636,7 +646,7 @@
             font-size: 18px;
             line-height: 1.4;
             color: rgba(245, 242, 231, 0.88);
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .process-detail {
@@ -647,6 +657,7 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
             color: rgba(245, 242, 231, 0.72);
+            font-weight: 600;
         }
 
         .flow-copy {
@@ -715,7 +726,7 @@
             font-size: 18px;
             line-height: 1.42;
             color: rgba(245, 242, 231, 0.86);
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .stack-grid {
@@ -739,13 +750,14 @@
             text-transform: uppercase;
             color: var(--signal-yellow);
             margin-bottom: 10px;
+            font-weight: 700;
         }
 
         .stack-copy {
             font-size: 18px;
             line-height: 1.35;
             letter-spacing: -0.02em;
-            font-weight: 650;
+            font-weight: 500;
         }
 
         .booking-shell {
@@ -799,6 +811,7 @@
             letter-spacing: 0.4px;
             text-transform: uppercase;
             color: rgba(245, 242, 231, 0.72);
+            font-weight: 600;
         }
 
         .booking-panel-title {
@@ -817,7 +830,7 @@
             letter-spacing: -0.02em;
             color: rgba(245, 242, 231, 0.86);
             max-width: 100%;
-            font-weight: 650;
+            font-weight: 500;
         }
 
         .booking-panel-actions {
@@ -843,6 +856,7 @@
             letter-spacing: 0.4px;
             text-transform: uppercase;
             color: rgba(245, 242, 231, 0.62);
+            font-weight: 600;
         }
 
         .final-cta {
