@@ -903,11 +903,25 @@
             gap: 10px;
         }
 
+        .footer-left {
+            align-items: flex-start;
+            text-align: left;
+            justify-self: start;
+        }
+
+        .footer-right {
+            align-items: flex-end;
+            text-align: right;
+            justify-self: end;
+            gap: 16px;
+        }
+
         .footer-center {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 18px;
+            justify-self: center;
         }
 
         .footer-logo-slot {
@@ -938,6 +952,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            justify-content: flex-end;
         }
 
         .social-badge {
@@ -1405,7 +1420,7 @@
     </div>
 
     <footer vid="91">
-        <div class="footer-col" vid="92">
+        <div class="footer-col footer-left" vid="92">
             <strong vid="93">XVADUR</strong>
             <span vid="94">AI RECEPCIA PRE ZUBNÉ KLINIKY</span>
         </div>
@@ -1413,13 +1428,13 @@
             <div class="footer-logo-slot">
                 <img src="./assets/footer-logo.png" alt="xvadur footer logo" class="footer-logo">
             </div>
+        </div>
+        <div class="footer-col footer-right" vid="98">
             <div class="social-badges">
                 <a href="https://www.instagram.com/xvadur" class="social-badge" target="_blank" rel="noreferrer" aria-label="Instagram">IG</a>
                 <a href="https://www.github.com/xvadur" class="social-badge" target="_blank" rel="noreferrer" aria-label="GitHub">GH</a>
                 <a href="https://www.x.com/redartorter" class="social-badge" target="_blank" rel="noreferrer" aria-label="X">X</a>
             </div>
-        </div>
-        <div class="footer-col" vid="98">
             <span vid="99">xvadur.com</span>
             <span vid="100">adam@xvadur.com</span>
         </div>
