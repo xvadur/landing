@@ -1,12 +1,11 @@
-/** Hero xvadur.com v4 (doc 10 §4, ratifikácie 19. 9.): papier + dither (desktop) / zrno (mobil), obrí wordmark
- *  s náklonom ±2° za kurzorom (CSS transform + rAF lerp, bez Motion), motto „DIVIDED," / „WE ARE USELESS." — písmená
- *  vstupujú po znakoch (GSAP SplitText, wdth 75 → 100) a potom šírka dýcha (utilita wdth-breathe); CTA VSTÚP (Magnet +
- *  ClickSpark) vpravo dole; pilulky na sekcie. Ostrov: <Hero client:load> — SSR z tohto súboru (statická vetva) je
- *  zároveň no-JS/SEO HTML, žiadny duplicitný fallback.
- *  Rozpočet: GSAP (SplitText) aj shader sa ťahajú lazy a len na desktope ≥ 1024 px s hoverom bez reduced motion;
- *  mobil dostane statické motto, statické zrno, 0 kB GSAP a 0 kB Motion. Pravidlo enginov: CSS = wordmark, GSAP = motto —
- *  nikdy oba na jednom prvku (po skončení GSAP sa inline hodnoty vyčistia a až potom nastúpi CSS dýchanie).
- *  Odolnosť: lazy chunky majú `.catch` → statický variant; Hranica (error boundary) drží obsah pri chybe za behu. */
+/** Hero xvadur.com v4 — verzia 19. 9. večer (Adam: ASCII namiesto ditheru, motto bez dýchania, opona ako úvod webu).
+ *  Papier + zrno, cez celý hero ASCII šumové pole (Ascii.tsx, Canvas 2D, 0 kB knižníc), v ktorom sa pod wordmarkom
+ *  skladá motto „DIVIDED," / „WE ARE USELESS." zo znakov, drží a rozpadá sa v slučke — bez kurzora. Obrí wordmark
+ *  s náklonom ±2° za kurzorom (CSS transform + rAF lerp). Typografické motto stojí staticky na wdth 100 (kondenzované
+ *  75 pôsobilo stiesnene); keď ASCII beží, <p> sa schová cez opacity — layout, Google aj čítačky ho majú ďalej.
+ *  CTA VSTÚP (Magnet + ClickSpark) vpravo dole; pilulky na sekcie. Ostrov: <Hero client:load> — SSR z tohto súboru
+ *  je zároveň no-JS/SEO HTML. Reduced motion: bez ASCII, statické motto. Ascii sa ťahá lazy s `.catch`; Hranica
+ *  (error boundary) drží obsah pri chybe za behu. GSAP/SplitText/Dither už hero nepoužíva. */
 import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import Magnet from '@/components/vendor/reactbits/Magnet';
 import ClickSpark from '@/components/vendor/reactbits/ClickSpark';
@@ -27,30 +26,18 @@ import {
   TEZA,
 } from './hero-data';
 
-/** Statický riadok motta — SSR, mobil, reduced motion a fallback, keď GSAP chunk nepríde. */
+/** Statický riadok motta — SSR aj klient (motto je typograficky statické; pohyb robí ASCII vrstva). */
 function Riadok({ text }: { text: string }) {
   return <span className={MOTTO_LINE_CLASS}>{text}</span>;
 }
 
-type SplitProps = import('@/components/vendor/reactbits/SplitText').SplitTextProps;
-/** Náhrada za SplitText, keď chunk nepríde: statický riadok, ktorý hneď ohlási „hotovo" (aby nastúpil 2. riadok a dýchanie). */
-function RiadokNahrada({ text, onLetterAnimationComplete }: SplitProps) {
-  useEffect(() => {
-    onLetterAnimationComplete?.();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return <Riadok text={text} />;
-}
-/** Keď chunk SplitText zlyhá (sieť, starý HTML po deployi), riadok ostane statický — hero nikdy nezmizne. */
-const SplitText = lazy(() =>
-  import('@/components/vendor/reactbits/SplitText').catch(() => ({ default: RiadokNahrada })),
-);
 import Wordmark from './Wordmark';
 
-const Dither = lazy(() => import('./Dither').catch(() => ({ default: () => null })));
-
-const SPLIT_FROM = { opacity: 0, y: 48, fontVariationSettings: "'wdth' 75" };
-const SPLIT_TO = { opacity: 1, y: 0, fontVariationSettings: "'wdth' 100" };
+/** ASCII vrstva lazy; keď chunk nepríde, hero ostane s typografickým mottom. */
+type AsciiProps = import('./Ascii').AsciiProps;
+const Ascii = lazy(() =>
+  import('./Ascii').catch(() => ({ default: (_p: AsciiProps) => null as unknown as React.JSX.Element })),
+);
 
 /** Náklon wordmarku za kurzorom: cieľ z pointeru, rAF lerp k cieľu (pružina bez knižnice), zápis do transform. */
 function useNaklon(active: boolean) {
@@ -96,32 +83,11 @@ export default function Hero() {
   const reduced = useMediaQuery(MQ_REDUCED, true);
   const animated = desktop && !reduced;
 
-  /* fonty: motto sa ukáže až po načítaní Bricolage (SplitText čaká na to isté) */
-  const [fontsReady, setFontsReady] = useState(false);
-  useEffect(() => {
-    if (!('fonts' in document)) {
-      setFontsReady(true);
-      return;
-    }
-    let alive = true;
-    document.fonts.ready.then(() => alive && setFontsReady(true));
-    return () => {
-      alive = false;
-    };
-  }, []);
-
-  /* motto: riadok 2 nastúpi, keď riadok 1 dokončí vstup (callback SplitText, nie časovač); po skončení → CSS dýchanie */
-  const [line2, setLine2] = useState(false);
-  const [breathe, setBreathe] = useState(false);
+  /* ASCII beží všade okrem reduced motion (aj mobil — Canvas 2D je lacný); po prvom frame schováme typografické motto */
+  const ascii = !reduced;
+  const [asciiOn, setAsciiOn] = useState(false);
+  const onAsciiReady = useCallback(() => setAsciiOn(true), []);
   const mottoRef = useRef<HTMLParagraphElement>(null);
-  const onLine1Done = useCallback(() => setLine2(true), []);
-  const onMottoDone = useCallback(() => {
-    // GSAP je hotový: vyčistiť inline font-variation-settings na znakoch, aby sa dedilo CSS dýchanie z rodiča
-    mottoRef.current?.querySelectorAll<HTMLElement>('.split-char').forEach((c) => {
-      c.style.fontVariationSettings = '';
-    });
-    setBreathe(true);
-  }, []);
 
   /* wordmark: náklon ±2° za kurzorom, len desktop s myšou */
   const naklon = useNaklon(animated);
@@ -133,8 +99,6 @@ export default function Hero() {
   };
   const onPointerLeave = () => naklon.set(0, 0);
 
-  const mottoVisible = !animated || fontsReady;
-
   return (
     <section
       ref={sectionRef}
@@ -143,11 +107,12 @@ export default function Hero() {
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       data-hero={animated ? 'animated' : 'static'}
+      data-ascii={asciiOn ? 'on' : 'off'}
     >
-      {animated && (
+      {ascii && (
         <Hranica>
           <Suspense fallback={null}>
-            <Dither />
+            <Ascii host={sectionRef} motto={mottoRef} onReady={onAsciiReady} />
           </Suspense>
         </Hranica>
       )}
@@ -165,66 +130,11 @@ export default function Hero() {
         <p
           ref={mottoRef}
           lang="en"
-          className={cn('mt-6 sm:mt-8', MOTTO_CLASS, breathe && 'wdth-breathe')}
-          style={{
-            visibility: mottoVisible ? 'visible' : 'hidden',
-            fontVariationSettings: "'wdth' 100",
-            animationDirection: breathe ? 'alternate-reverse' : undefined,
-          }}
+          className={cn('mt-6 transition-opacity duration-300 sm:mt-8', MOTTO_CLASS, asciiOn && 'opacity-0')}
+          style={{ fontVariationSettings: "'wdth' 100" }}
         >
-          {animated ? (
-            <Hranica
-              fallback={
-                <>
-                  <Riadok text={MOTTO_1} />
-                  <Riadok text={MOTTO_2} />
-                </>
-              }
-            >
-              {/* fallback Suspense = viditeľný statický text; SplitText si pri mount-e nastaví `from` sám */}
-              <Suspense fallback={<Riadok text={MOTTO_1} />}>
-                <SplitText
-                  text={MOTTO_1}
-                  tag="span"
-                  className={cn(MOTTO_LINE_CLASS, 'overflow-visible')}
-                  splitType="chars"
-                  delay={45}
-                  duration={0.9}
-                  ease="power3.out"
-                  from={SPLIT_FROM}
-                  to={SPLIT_TO}
-                  immediate
-                  onLetterAnimationComplete={onLine1Done}
-                />
-              </Suspense>
-              {line2 ? (
-                <Suspense fallback={<Riadok text={MOTTO_2} />}>
-                  <SplitText
-                    text={MOTTO_2}
-                    tag="span"
-                    className={cn(MOTTO_LINE_CLASS, 'overflow-visible')}
-                    splitType="chars"
-                    delay={40}
-                    duration={0.9}
-                    ease="power3.out"
-                    from={SPLIT_FROM}
-                    to={SPLIT_TO}
-                    immediate
-                    onLetterAnimationComplete={onMottoDone}
-                  />
-                </Suspense>
-              ) : (
-                <span className={cn(MOTTO_LINE_CLASS, 'invisible')} aria-hidden="true">
-                  {MOTTO_2}
-                </span>
-              )}
-            </Hranica>
-          ) : (
-            <>
-              <Riadok text={MOTTO_1} />
-              <Riadok text={MOTTO_2} />
-            </>
-          )}
+          <Riadok text={MOTTO_1} />
+          <Riadok text={MOTTO_2} />
         </p>
 
         <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">

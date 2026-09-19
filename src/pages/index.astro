@@ -1,12 +1,12 @@
 ---
 /** Domov xvadur.com v4 (spec 05 §2, doc 10 §4, ratifikácie 01 §8). Poradie sekcií:
- *  1 Hero (ostrov client:load, SSR z Hero.tsx) · 2 marquee žltý (fakty) + ružový protismerný · 3 Dvere (pin, #kto-som)
- *  · 4 Kto som (7 beatov) · 5 Čo som postavil (#postavil) · 6 Gravity (prázdne frázy) · 7 Hry (#hry) · 8 Kvíz pás
+ *  0 Opona (úvod webu, raz za návštevu) · 1 Hero (ostrov client:load, ASCII motto) · 2 marquee žltý (fakty) + ružový
+ *  protismerný · 3 Kto som (žltý pás #kto-som + 7 beatov, čiara osi sa kreslí pri scrolle) · 5 Čo som postavil (#postavil) · 6 Gravity (prázdne frázy) · 7 Hry (#hry) · 8 Kvíz pás
  *  · 9 Texty (#texty) · 10 Makléri pás · 11 Konzultácia (port) · 12 Metóda (port). Pätička z Base. */
 import Base from '@/layouts/Base.astro';
 import Marquee from '@/components/site/Marquee.astro';
 import Hero from '@/components/hero/Hero';
-import Dvere from '@/components/home/Dvere.astro';
+import Opona from '@/components/home/Opona.astro';
 import KtoSom from '@/components/home/KtoSom.astro';
 import PostavilSekcia from '@/components/home/PostavilSekcia.astro';
 import GravitaSekcia from '@/components/home/GravitaSekcia.astro';
@@ -22,12 +22,12 @@ const r = routeByPath('/')!;
 ---
 
 <Base title={r.title} description={r.description} islands="full">
+  <Opona />
   <Hero client:load />
 
   <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="yellow" size="lg" duration={36} label="Fakty" />
   <Marquee items={['ADAM RUDAVSKÝ', 'XVADUR', 'SYSTÉMY, KTORÉ VIDIA ČLOVEKA']} color="pink" reverse size="md" duration={44} label="XVADUR" />
 
-  <Dvere />
   <KtoSom />
   <PostavilSekcia />
   <GravitaSekcia />

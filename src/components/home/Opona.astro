@@ -1,0 +1,166 @@
+---
+/** Opona — povinný úvod webu (Adam, 19. 9. večer: „napíš xvadur, rozdelí sa to na dve polovice jak opona, ukáže sa hero").
+ *  Celá obrazovka papier so zrnom, v strede wordmark XVADUR (rovnaký inline SVG ako v hero: ink + žltý blok + tieň),
+ *  v rohoch motto. Po ~450 ms sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
+ *  Pravidlá: raz za návštevu (sessionStorage.opona), reduced motion = bez opony, scroll / klik / klávesa = preskočiť
+ *  (250 ms). Animácia je čisto CSS (funguje aj bez JS — potom sa opona po skončení iba skryje cez `forwards`
+ *  + pointer-events none); JS rieši session, zámok scrollu a preskočenie. Google vidí hero, opona je aria-hidden.
+ *  Inline skript beží pred vykreslením, aby vracajúci sa návštevník oponu nikdy nezahliadol. */
+import Wordmark from '@/components/hero/Wordmark';
+import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
+---
+
+<div id="opona" class="opona" aria-hidden="true" data-opona>
+  <div class="opona-kridlo opona-l tx-grain">
+    <div class="opona-wm">
+      <Wordmark className="[--wm-shadow:6px] sm:[--wm-shadow:11px]" />
+    </div>
+    <p lang="en" class="opona-motto opona-motto-l">{MOTTO_1}</p>
+  </div>
+  <div class="opona-kridlo opona-r tx-grain">
+    <div class="opona-wm">
+      <Wordmark className="[--wm-shadow:6px] sm:[--wm-shadow:11px]" />
+    </div>
+    <p lang="en" class="opona-motto opona-motto-r">{MOTTO_2}</p>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const el = document.getElementById('opona');
+    if (!el) return;
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem('opona') === '1';
+    } catch {
+      /* súkromné okno / blokované úložisko: opona sa ukáže */
+    }
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (seen || reduced) {
+      el.remove();
+      return;
+    }
+    try {
+      sessionStorage.setItem('opona', '1');
+    } catch {
+      /* ignoruj */
+    }
+    const html = document.documentElement;
+    html.classList.add('opona-lock');
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      html.classList.remove('opona-lock');
+      el.remove();
+      window.removeEventListener('wheel', skip);
+      window.removeEventListener('touchstart', skip);
+      window.removeEventListener('keydown', skip);
+      window.removeEventListener('pointerdown', skip);
+    };
+    const skip = () => {
+      el.classList.add('opona-skip');
+      setTimeout(finish, 260);
+    };
+    window.addEventListener('wheel', skip, { passive: true });
+    window.addEventListener('touchstart', skip, { passive: true });
+    window.addEventListener('keydown', skip);
+    window.addEventListener('pointerdown', skip);
+    el.classList.add('opona-go');
+    setTimeout(finish, 450 + 900 + 80);
+  })();
+</script>
+
+<style>
+  .opona {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  :global(html.opona-lock) {
+    overflow: hidden;
+  }
+  .opona-kridlo {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    overflow: hidden;
+    background: var(--color-paper);
+    will-change: transform;
+  }
+  .opona-l {
+    left: 0;
+    border-right: 3px solid var(--color-ink);
+  }
+  .opona-r {
+    right: 0;
+    border-left: 3px solid var(--color-ink);
+  }
+  /* wordmark: 80 vw široký, centrovaný cez obe krídla — ľavé ukazuje ľavú polovicu, pravé pravú */
+  .opona-wm {
+    position: absolute;
+    top: 50%;
+    width: 80vw;
+    transform: translateY(-55%);
+  }
+  .opona-l .opona-wm {
+    left: 10vw;
+  }
+  .opona-r .opona-wm {
+    left: -40vw;
+  }
+  .opona-motto {
+    position: absolute;
+    bottom: 1.5rem;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.5rem, 1rem + 2.4vw, 3rem);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+  }
+  .opona-motto-l {
+    left: 1rem;
+  }
+  .opona-motto-r {
+    right: 1rem;
+    text-align: right;
+  }
+  @media (min-width: 640px) {
+    .opona-motto-l { left: 1.5rem; }
+    .opona-motto-r { right: 1.5rem; }
+  }
+  @media (min-width: 1024px) {
+    .opona-motto-l { left: 2.5rem; }
+    .opona-motto-r { right: 2.5rem; }
+  }
+
+  /* otvorenie: bez JS sa spustí samo (animation-delay), s JS cez .opona-go (rovnaký čas) */
+  .opona-l,
+  .opona-r {
+    animation-duration: 900ms;
+    animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+    animation-delay: 450ms;
+    animation-fill-mode: forwards;
+  }
+  .opona-l { animation-name: opona-l; }
+  .opona-r { animation-name: opona-r; }
+  .opona-skip .opona-l,
+  .opona-skip .opona-r {
+    animation-duration: 250ms;
+    animation-delay: 0ms;
+  }
+  @keyframes opona-l {
+    to { transform: translateX(-101%); }
+  }
+  @keyframes opona-r {
+    to { transform: translateX(101%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .opona { display: none; }
+  }
+</style>

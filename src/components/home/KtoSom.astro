@@ -1,8 +1,10 @@
 ---
 /** Kto som — vertikálna časová os 7 beatov (src/data/beaty.ts, verbatim; ratifikované 19. 9.: všetkých 7,
- *  mechanizmus, nie krivda, bez mien ľudí a inštitúcií). Titulky: Fancy VerticalCutReveal (Motion) len na desktope
- *  (client:media ≥ 1024 px bez reduced motion — mobil a reduced dostanú SSR text bez Motion, rozpočet JS), text: CSS reveal. Koniec: „CELÝ PRÍBEH"
- *  → /texty/. Nadpis sekcie je v Dvere.astro (#kto-som-nadpis). Tisícové medzery („1 500 €") pevné cez nbsp(). */
+ *  mechanizmus, nie krivda, bez mien ľudí a inštitúcií). Od 19. 9. večer bez Dverí (tie sa stali oponou úvodu webu —
+ *  Opona.astro): sekcia začína žltým pásom s nadpisom (#kto-som, cieľ CTA VSTÚP) a vstup má vlastný — čiara osi
+ *  sa kreslí zhora nadol pri scrolle (animation-timeline: view(), --tl trik ako v global.css), beaty prichádzajú
+ *  cez CSS reveal so stagger cez --i; nálepky roku vyskočia (sticker-pop). Titulky: Fancy VerticalCutReveal len na
+ *  desktope (client:media). Bez pinu, bez GSAP. Koniec: „CELÝ PRÍBEH" → /texty/. Tisícové medzery cez nbsp(). */
 import Section from '@/components/site/Section.astro';
 import Titulok from './Titulok';
 import { BEATY, BEATY_CTA } from '@/data/beaty';
@@ -15,6 +17,15 @@ const posledny = BEATY[BEATY.length - 1]!.rok;
 const FARBY = ['bg-yellow', 'bg-pink', 'bg-lilac', 'bg-lime', 'bg-sky', 'bg-white', 'bg-hot text-ink'];
 ---
 
+<div id="kto-som" class="tx-dots relative flex min-h-[46svh] items-center justify-center border-b-3 border-ink bg-yellow px-4 py-16 [--tx:26%] lg:min-h-[56svh]">
+  <div class="text-center">
+    <p class="eyebrow">{prvy} → {posledny}</p>
+    <h2 id="kto-som-nadpis" class="mt-4 font-display text-display-xl font-extrabold uppercase leading-[0.84] tracking-tighter">
+      Kto som
+    </h2>
+  </div>
+</div>
+
 <Section bg="white" pad="lg" border="bottom" label="Kto som — časová os" as="section">
   <div class="grid gap-10 lg:grid-cols-[0.8fr_2fr]">
     <div class="lg:sticky lg:top-24 lg:self-start">
@@ -24,11 +35,11 @@ const FARBY = ['bg-yellow', 'bg-pink', 'bg-lilac', 'bg-lime', 'bg-sky', 'bg-whit
       </p>
     </div>
 
-    <ol class="relative border-l-3 border-ink pl-6 sm:pl-10" role="list">
+    <ol class="os relative pl-6 sm:pl-10" role="list">
       {
         BEATY.map((b, i) => (
           <li class="reveal relative pb-12 last:pb-0" style={`--i:${i}`}>
-            <span class="absolute top-2 -left-[calc(0.75rem+1.5px)] h-6 w-6 rounded-full border-3 border-ink bg-hot" aria-hidden="true" />
+            <span class="os-bod absolute top-2 -left-[calc(0.75rem+1.5px)] h-6 w-6 rounded-full border-3 border-ink bg-hot" aria-hidden="true" />
             <div class="flex flex-wrap items-start gap-x-5 gap-y-3">
               <span
                 class:list={[
@@ -62,3 +73,46 @@ const FARBY = ['bg-yellow', 'bg-pink', 'bg-lilac', 'bg-lime', 'bg-sky', 'bg-whit
     </a>
   </div>
 </Section>
+
+<style>
+  /* čiara osi: kreslí sa zhora nadol so scrollom (view()); kde view() nie je, stojí celá */
+  .os::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: var(--color-ink);
+    transform-origin: top;
+  }
+  @supports (animation-timeline: view()) {
+    .os::before {
+      --tl: view();
+      animation-name: os-kresli;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--tl);
+      animation-range: entry 0% cover 60%;
+    }
+    .os-bod {
+      --tl: view();
+      animation-name: os-bod;
+      animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+      animation-fill-mode: both;
+      animation-timeline: var(--tl);
+      animation-range: entry 10% entry 45%;
+    }
+  }
+  @keyframes os-kresli {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+  }
+  @keyframes os-bod {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .os::before, .os-bod { animation: none !important; transform: none !important; }
+  }
+</style>
