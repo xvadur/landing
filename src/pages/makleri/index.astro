@@ -1,0 +1,212 @@
+---
+/** /makleri/ — landing „Neviditeľný maklér“ (spec 05 §3). Copy VERBATIM z packu 13 §3 (src/data/makleri/landing.ts),
+ *  sekcia Dôkazy = tabuľka packu §1 (src/data/makleri/dokazy.ts) + 14 citácií (src/data/frazy.ts CITACIE),
+ *  kotvy cez vanilla number-flow (src/data/fakty.ts KOTVY, Kotvy.astro + inline skript). CTA číta STRIPE_URL
+ *  (src/data/makleri/config.ts). islands="none": stránka nemá žiadny React ostrov ani toast (rozpočet ≤ 70 kB). */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import XMark from '@/components/site/XMark.astro';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/vendor/neobrutalism/card';
+import { Badge } from '@/components/vendor/neobrutalism/badge';
+import Kotvy from '@/components/makleri/Kotvy.astro';
+import KlisePas from '@/components/makleri/KlisePas';
+import KupitCta from '@/components/makleri/KupitCta';
+import { routeByPath } from '@/data/routes';
+import { KOTVY } from '@/data/fakty';
+import { CITACIE } from '@/data/frazy';
+import { LANDING, PRODUKT } from '@/data/makleri/landing';
+import { CITACIE_POZNAMKY, CITACIE_UVOD, DOKAZY, DOKAZY_UVOD, boldSegments } from '@/data/makleri/dokazy';
+import { MAILTO_URL, WHATSAPP_URL, EMAIL, FOOT_CAKA, stripeReady } from '@/data/makleri/config';
+
+const r = routeByPath('/makleri/')!;
+const ready = stripeReady();
+
+const kotvy = [
+  { ...KOTVY.kancelarieSFrazou, spoj: 'zo' as const, tone: 'yellow' as const },
+  { ...KOTVY.makleriPodLogom, spoj: 'z' as const, tone: 'pink' as const },
+  { ...KOTVY.prvyKrokKontakt, spoj: 'zo' as const, tone: 'sky' as const },
+  { ...KOTVY.prvyKrokRezervacia, spoj: 'zo' as const, tone: 'lilac' as const },
+  { ...KOTVY.dokazNaWebe, spoj: 'zo' as const, tone: 'lime' as const },
+  { ...KOTVY.webyBezVety, spoj: 'zo' as const, tone: 'white' as const },
+].map((k) => ({ value: k.value, z: k.z, spoj: k.spoj, note: k.note, tone: k.tone }));
+
+const TONES = ['yellow', 'pink', 'lilac', 'lime', 'sky', 'white'] as const;
+/* literálne triedy (Tailwind generuje len to, čo vidí v zdroji) */
+const BG: Record<(typeof TONES)[number] | 'paper', string> = {
+  yellow: 'bg-yellow',
+  pink: 'bg-pink',
+  lilac: 'bg-lilac',
+  lime: 'bg-lime',
+  sky: 'bg-sky',
+  white: 'bg-white',
+  paper: 'bg-paper',
+};
+const CIT_TONES = ['yellow', 'white', 'pink', 'paper', 'lilac', 'white', 'lime', 'paper', 'sky', 'white', 'yellow', 'paper', 'pink', 'lime'] as const;
+---
+
+<Base title={r.title} description={r.description} islands="none">
+  {/* ---------- HERO (pack §3, verbatim) ---------- */}
+  <Section bg="paper" pad="lg" class="tx-grain overflow-hidden">
+    <div class="relative z-10 grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow mb-6">{LANDING.hero.eyebrow}</p>
+        <h1 class="font-display text-display-lg font-extrabold uppercase leading-[0.86] tracking-tighter">
+          {LANDING.hero.h1[0]}<br />{LANDING.hero.h1[1]}
+        </h1>
+      </div>
+      <div class="flex flex-col gap-6">
+        <p class="max-w-xl text-lg font-medium sm:text-xl">
+          {LANDING.hero.sub.map((line, i) => (
+            <>
+              {i > 0 && <br />}
+              <span>{line}</span>
+            </>
+          ))}
+        </p>
+        <div class="flex items-start gap-4">
+          <span class="sticker bg-yellow [--sticker-rotate:-5deg]"><span class="sr-only">Cena </span>9 €</span>
+          <span class="sticker bg-lime [--sticker-rotate:3deg]">7 dní</span>
+          <span class="sticker bg-pink [--sticker-rotate:-2deg]">Deň 8 zadarmo</span>
+        </div>
+        <KupitCta size="xl" />
+      </div>
+    </div>
+    <XMark class="pointer-events-none absolute right-2 top-2 h-28 w-28 text-hot opacity-40 sm:-right-6 sm:-top-6 sm:h-48 sm:w-48 sm:opacity-90 lg:-right-10 lg:-top-10 lg:h-80 lg:w-80 lg:opacity-[0.16]" />
+  </Section>
+
+  <KlisePas />
+
+  {/* ---------- ČO DOSTANETE (pack §3, verbatim) ---------- */}
+  <Section id="co-dostanete" bg="white" pad="md">
+    <p class="eyebrow mb-4">{LANDING.coDostanete.eyebrow}</p>
+    <h2 class="max-w-5xl font-display text-display-sm font-extrabold uppercase tracking-tighter">{LANDING.coDostanete.h2}</h2>
+    <ol class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="list">
+      {
+        LANDING.coDostanete.body.map((b, i) => (
+          <li class="card-drop h-full" style={`--i:${i}`}>
+            <Card tone={TONES[i % 6]} className="h-full">
+              <CardHeader>
+                <Badge variant="sticker" tone="ink" tilt={i % 2 ? 'right' : 'left'}>
+                  Deň {b.n}
+                </Badge>
+                <CardTitle as="h3" className="mt-3 text-xl normal-case sm:text-2xl">
+                  {b.text}
+                </CardTitle>
+              </CardHeader>
+            </Card>
+          </li>
+        ))
+      }
+      <li class="card-drop h-full" style="--i:7">
+        <Card tone="ink" className="h-full justify-center">
+          <CardContent>
+            <p class="font-display text-xl font-extrabold uppercase leading-tight sm:text-2xl">{LANDING.coDostanete.den8}</p>
+          </CardContent>
+        </Card>
+      </li>
+    </ol>
+  </Section>
+
+  {/* ---------- PREČO JA (pack §3, verbatim) ---------- */}
+  <Section id="preco-ja" bg="yellow" border="both" pad="md" class="tx-halftone">
+    <div class="grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:items-start">
+      <div>
+        <p class="eyebrow mb-4">{LANDING.precoJa.eyebrow}</p>
+        <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">{LANDING.precoJa.h2}</h2>
+      </div>
+      <p class="text-lg font-medium leading-relaxed sm:text-xl">{LANDING.precoJa.text}</p>
+    </div>
+  </Section>
+
+  {/* ---------- ČO TO NIE JE + CTA + FOOT (pack §3, verbatim) ---------- */}
+  <Section id="co-to-nie-je" bg="paper" pad="md">
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-center">
+      <div>
+        <h2 class="eyebrow mb-4">{LANDING.coToNieJe.eyebrow}</h2>
+        <p class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight sm:text-3xl">{LANDING.coToNieJe.text}</p>
+      </div>
+      <div class="rounded-lg border-3 border-ink bg-white p-6 shadow-brutal-lg sm:p-8">
+        <KupitCta size="xl" />
+        <p class="mt-6 text-sm font-medium text-ink/70">
+          {ready ? LANDING.foot.text : FOOT_CAKA}
+          {' '}{LANDING.foot.otazky}
+          {' '}
+          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center font-bold underline decoration-[3px] underline-offset-4 hover:decoration-hot">WhatsApp</a>
+          {' · '}
+          <a href={MAILTO_URL} class="inline-flex min-h-11 items-center font-bold underline decoration-[3px] underline-offset-4 hover:decoration-hot">{EMAIL}</a>
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  {/* ---------- DÔKAZY (pack §1) ---------- */}
+  <Section id="dokazy" bg="white" border="top" pad="md">
+    <p class="x-divider mb-8">Dôkazy</p>
+    <h2 class="font-display text-display-sm font-extrabold uppercase tracking-tighter">Dôkazy, na ktorých to stojí</h2>
+    <p class="mt-4 max-w-3xl text-base font-medium text-ink/80 sm:text-lg">{DOKAZY_UVOD}</p>
+
+    <Kotvy items={kotvy} class="mt-10" />
+
+    {/* pod 640 px sa riadky stohujú (block), od sm: klasická tabuľka; bez min-width → bez vnútorného scrollu */}
+    <div class="mt-12 overflow-hidden rounded-lg border-3 border-ink bg-white shadow-brutal">
+      <table class="block w-full border-collapse text-left text-sm break-words sm:table sm:text-base">
+        <caption class="sr-only">Dôkazy: číslo a zdroj (pack 13 §1)</caption>
+        <thead class="hidden sm:table-header-group">
+          <tr class="bg-ink text-paper">
+            <th scope="col" class="px-4 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] sm:px-5">Číslo</th>
+            <th scope="col" class="px-4 py-3 font-mono text-xs font-medium uppercase tracking-[0.14em] sm:w-64 sm:px-5">Zdroj</th>
+          </tr>
+        </thead>
+        <tbody class="block sm:table-row-group">
+          {
+            DOKAZY.map((row, i) => (
+              <tr class:list={['block align-top sm:table-row', i > 0 ? 'border-t-3 border-ink' : 'sm:border-t-3 sm:border-ink', i % 2 ? 'bg-paper' : 'bg-white']}>
+                <td class="block px-4 pt-3 pb-1 font-medium leading-relaxed sm:table-cell sm:py-3 sm:px-5">
+                  {boldSegments(row.cislo).map((seg) => (seg.bold ? <strong class="font-display text-lg font-extrabold sm:text-xl">{seg.text}</strong> : seg.text))}
+                </td>
+                <td class="block px-4 pt-0 pb-3 font-mono text-sm leading-relaxed text-ink/80 sm:table-cell sm:py-3 sm:px-5">
+                  <span class="uppercase tracking-[0.14em] sm:hidden">Zdroj: </span>{row.zdroj}
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <p class="mt-14 x-divider">Citácie</p>
+    <h3 class="mt-4 max-w-3xl font-display text-2xl font-extrabold uppercase tracking-tight sm:text-3xl">{CITACIE_UVOD}</h3>
+    <ul class="mt-8 columns-1 gap-5 sm:columns-2 lg:columns-3" role="list">
+      {
+        CITACIE.map((c, i) => (
+          <li class="mb-5 break-inside-avoid">
+            <figure class:list={['relative rounded-lg border-3 border-ink p-5 shadow-brutal', BG[CIT_TONES[i % CIT_TONES.length]]]}>
+              <XMark class="absolute right-3 top-3 h-6 w-6 text-hot" />
+              <blockquote class="pr-8 font-display text-xl font-bold leading-tight tracking-tight sm:text-2xl">„{c.text}“</blockquote>
+              <figcaption class="mt-4 font-mono text-sm uppercase tracking-[0.14em] text-ink/80">
+                {c.kto}
+                {CITACIE_POZNAMKY[c.kto] && ` · ${CITACIE_POZNAMKY[c.kto]}`}
+              </figcaption>
+            </figure>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  {/* ---------- záverečné CTA ---------- */}
+  <Section id="kupit" bg="ink" border="top" pad="md">
+    <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+      <div>
+        <p class="eyebrow mb-4 text-paper/70">Neviditeľný maklér</p>
+        <h2 class="font-display text-display-sm font-extrabold uppercase tracking-tighter text-paper">
+          7 dní, po ktorých vás klient nájde bez loga kancelárie.
+        </h2>
+      </div>
+      <div class="rounded-lg border-3 border-paper bg-paper p-6 text-ink shadow-[6px_6px_0_0_var(--color-hot)] sm:p-8">
+        <KupitCta size="xl" />
+        <p class="mt-4 text-sm font-medium text-ink/70">Formát: {ready ? PRODUKT.format : PRODUKT.formatBezPlatby}</p>
+      </div>
+    </div>
+  </Section>
+</Base>

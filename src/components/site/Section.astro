@@ -1,0 +1,63 @@
+---
+/** Pás sekcie s farbou podkladu z tokenov a vnútorným kontajnerom (16 px okraj na mobile).
+ *  <Section bg="yellow" id="hry" border="both"> … </Section>
+ *  full = bez kontajnera (marquee, hero); pad = výška pásu. */
+type Bg = 'paper' | 'white' | 'yellow' | 'pink' | 'lilac' | 'lime' | 'sky' | 'hot' | 'ink';
+interface Props {
+  id?: string;
+  bg?: Bg;
+  border?: 'top' | 'bottom' | 'both' | 'none';
+  pad?: 'none' | 'sm' | 'md' | 'lg';
+  full?: boolean;
+  class?: string;
+  /** aria-labelledby / label pre <section> */
+  label?: string;
+  as?: 'section' | 'div' | 'article' | 'aside';
+}
+const {
+  id,
+  bg = 'paper',
+  border = 'none',
+  pad = 'md',
+  full = false,
+  class: className = '',
+  label,
+  as: Tag = 'section',
+} = Astro.props;
+
+const BG: Record<Bg, string> = {
+  paper: 'bg-paper text-ink',
+  white: 'bg-white text-ink',
+  yellow: 'bg-yellow text-ink',
+  pink: 'bg-pink text-ink',
+  lilac: 'bg-lilac text-ink',
+  lime: 'bg-lime text-ink',
+  sky: 'bg-sky text-ink',
+  hot: 'bg-hot text-ink',
+  ink: 'bg-ink text-paper',
+};
+const BORDER = {
+  top: 'border-t-3 border-ink',
+  bottom: 'border-b-3 border-ink',
+  both: 'border-y-3 border-ink',
+  none: '',
+};
+const PAD = {
+  none: '',
+  sm: 'py-8 sm:py-10',
+  md: 'py-14 sm:py-20',
+  lg: 'py-20 sm:py-28 lg:py-36',
+};
+---
+
+<Tag id={id} class:list={['relative', BG[bg], BORDER[border], PAD[pad], className]} aria-label={label}>
+  {
+    full ? (
+      <slot />
+    ) : (
+      <div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10">
+        <slot />
+      </div>
+    )
+  }
+</Tag>

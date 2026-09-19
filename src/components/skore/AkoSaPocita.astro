@@ -1,0 +1,117 @@
+---
+/** „Ako sa počíta“ — dokumentácia vzorca zo src/lib/skore-analyzer.ts. Čísla len z KOTVY (fakty.ts = pack 13 §1)
+ *  a z FRAZY_RODINY (frazy.ts). Percentá sa neprepočítavajú: pack 13 §1 ich uvádza len pri 267/416 (64 %) a 15/416 (3,6 %),
+ *  pri 31/47 a 96/416 nie — tam ostáva len zlomok. Ak sa zmení vzorec v analyzéri, zmení sa aj tu. */
+import Section from '@/components/site/Section.astro';
+import { KOTVY } from '@/data/fakty';
+import { FRAZY_RODINY } from '@/data/frazy';
+
+interface Props {
+  id?: string;
+}
+const { id = 'ako-sa-pocita' } = Astro.props;
+
+const zakladne = FRAZY_RODINY.filter((r) => r.zakladna);
+/** Percentá doslovne z packu 13 §1 (sú aj v KOTVY.note), nie z výpočtu. */
+const PCT_KONTAKT = '64 %';
+const PCT_REZERVACIA = '3,6 %';
+
+const ZLOZKY = [
+  {
+    cislo: '01',
+    nazov: 'Frázy',
+    body: '0 – 40',
+    bg: 'bg-yellow',
+    vzorec: '40 × (6 − zasiahnuté rodiny) ÷ 6',
+    kotva: `${KOTVY.kancelarieSFrazou.value} zo ${KOTVY.kancelarieSFrazou.z}`,
+    kotvaText: 'kancelárií má v texte aspoň jednu zo 6 rodín fráz.',
+    text: 'Hľadáme šesť rodín fráz z Dňa 1 v skloňovaných tvaroch. Počíta sa, koľko rodín sa na stránke vyskytlo, nie koľkokrát. Web bez jedinej rodiny má plných 40 bodov.',
+  },
+  {
+    cislo: '02',
+    nazov: 'Prvý krok',
+    body: '0 – 30',
+    bg: 'bg-sky',
+    vzorec: 'rezervácia 30 · „Kontakt“ 10 · žiadny 0',
+    kotva: `${KOTVY.prvyKrokKontakt.value} zo ${KOTVY.prvyKrokKontakt.z}`,
+    kotvaText: `webov má prvý krok „Kontakt“, telefón alebo všeobecný formulár (${PCT_KONTAKT}). Rezerváciu termínu ponúka ${KOTVY.prvyKrokRezervacia.value} zo ${KOTVY.prvyKrokRezervacia.z}.`,
+    text: 'Rezervačný nástroj alebo odkaz „rezervovať / dohodnúť termín“ = pomenovaný prvý krok. Odkaz „Kontakt“, tel:, formulár bez názvu alebo „nezáväzná konzultácia“ bez termínu = klient nevie, čo dostane.',
+  },
+  {
+    cislo: '03',
+    nazov: 'Dôkaz',
+    body: '0 – 20',
+    bg: 'bg-lime',
+    vzorec: 'prípad s číslom 20 · inak 0',
+    kotva: `${KOTVY.dokazNaWebe.value} zo ${KOTVY.dokazNaWebe.z}`,
+    kotvaText: 'webov má použiteľný dôkaz: prípad, nie „20 rokov“.',
+    text: 'Dôkaz je uzavretý predaj s číslom (cena, dni, percentá) alebo prípadová štúdia. „Roky skúseností“ a „od roku …“ sa nepočítajú — to je sľub, nie prípad.',
+  },
+  {
+    cislo: '04',
+    nazov: 'Nástroj',
+    body: '0 – 10',
+    bg: 'bg-lilac',
+    vzorec: 'rezervačný widget 10 · formulár 4 · nič 0',
+    kotva: `${KOTVY.prvyKrokRezervacia.value} zo ${KOTVY.prvyKrokRezervacia.z}`,
+    kotvaText: `webov ponúka rezerváciu termínu ako prvý krok (${PCT_REZERVACIA}).`,
+    text: 'Rozpoznávame bežné rezervačné nástroje (Calendly, Cal.com, Google Calendar, Reservio, Bookio, HubSpot a ďalšie) a počítame formuláre na stránke.',
+  },
+];
+---
+
+<Section id={id} bg="paper" border="top" pad="lg">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-start">
+    <p class="eyebrow lg:pt-3">Ako sa počíta</p>
+    <div>
+      <h2 class="font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tighter">
+        Štyri zložky. Sto bodov.<br />Štyri čísla z trhu.
+      </h2>
+      <p class="mt-6 max-w-prose text-lg">
+        Skóre nie je hodnotenie dizajnu ani SEO. Meria jedno: koľko z vašej stránky by mohlo byť stránkou
+        ktorejkoľvek zo {KOTVY.kancelarieSFrazou.z} bratislavských kancelárií — a či klient vie, čo dostane, keď klikne.
+        Čísla sú z Adamovho výskumu bratislavského trhu (august 2026). Viac bodov = menej zameniteľný web.
+      </p>
+    </div>
+  </div>
+
+  <ol class="mt-12 grid gap-5 md:grid-cols-2" role="list">
+    {
+      ZLOZKY.map((z, i) => (
+        <li class:list={['reveal relative flex flex-col gap-4 rounded-lg border-3 border-ink p-6 shadow-brutal', z.bg]} style={`--i:${i}`}>
+          <div class="flex items-start justify-between gap-4">
+            <span class="eyebrow">
+              {z.cislo} · {z.nazov}
+            </span>
+            <span class="rounded-lg border-3 border-ink bg-white px-2.5 py-1 font-mono text-sm">{z.body} b.</span>
+          </div>
+          <p class="font-display text-2xl font-extrabold uppercase leading-tight">{z.vzorec}</p>
+          <p class="text-base">{z.text}</p>
+          <p class="mt-auto border-t-3 border-ink pt-4 text-sm">
+            <strong class="font-display text-xl font-extrabold">{z.kotva}</strong> {z.kotvaText}
+          </p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="mt-12 grid gap-8 lg:grid-cols-[0.6fr_2fr]">
+    <p class="eyebrow lg:pt-1">Šesť rodín fráz</p>
+    <ul class="flex flex-wrap gap-3" role="list">
+      {
+        zakladne.map((r) => (
+          <li class="inline-flex items-baseline gap-3 rounded-lg border-3 border-ink bg-white px-4 py-2 shadow-brutal-sm">
+            <span class="font-display text-lg font-extrabold uppercase">{r.rodina}</span>
+            <span class="font-mono text-sm text-ink/70">
+              {r.z47} / 47
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+  <p class="mt-8 max-w-prose text-sm text-ink/70 lg:ml-[calc(0.6/2.6*100%)]">
+    Analyzujeme len HTML vloženej stránky (do 1 MB, časový limit 8 s), tak ako ju vidí prvý návštevník bez JavaScriptu.
+    Text, ktorý sa dotiahne až skriptom, nevidíme. Výsledok sa neukladá.
+  </p>
+</Section>

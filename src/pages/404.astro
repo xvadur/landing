@@ -1,0 +1,41 @@
+---
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import XMark from '@/components/site/XMark.astro';
+import { NAV } from '@/data/nav';
+---
+
+<Base title="404 — Táto stránka neexistuje — XVADUR" description="Stránka, ktorú hľadáte, na xvadur.com nie je." noindex islands="lite">
+  <Section bg="yellow" pad="lg" border="bottom" class="tx-halftone">
+    <div class="grid gap-10 lg:grid-cols-[auto_1fr] lg:items-center">
+      <XMark class="h-32 w-32 text-hot sm:h-48 sm:w-48" />
+      <div>
+        <p class="eyebrow mb-4">Chyba 404</p>
+        <h1 class="font-display text-display-lg font-extrabold uppercase leading-[0.86] tracking-tighter">
+          Tu nič<br />nie je.
+        </h1>
+        <p class="mt-6 max-w-xl text-lg">
+          Adresa je zlá, alebo som to ešte nepostavil. Nič v tomto webe nie je hotové, kým to nie je odškrtnuté.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href="/"
+            class="press inline-flex min-h-12 items-center rounded-lg border-3 border-ink bg-hot px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
+          >
+            Domov
+          </a>
+          {
+            NAV.map((item) => (
+              <a
+                href={item.href}
+                class="press inline-flex min-h-12 items-center rounded-lg border-3 border-ink bg-white px-5 font-display text-lg font-extrabold uppercase shadow-brutal-sm"
+              >
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </Section>
+</Base>

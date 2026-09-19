@@ -1,0 +1,36 @@
+---
+/** Priebeh čítania — 0 kB JS náhrada za Magic UI ScrollProgress (ten ťahá React + Motion ≈ 120 kB gz na článok).
+ *  CSS animation-timeline: scroll(); kde prehliadač nevie, pás sa nezobrazí. Rovnaký vzhľad: horúci pás 8 px, spodný rám ink 3 px.
+ *  Reduced motion: globálne pravidlo prepne timeline na auto → pás skryjeme (nie je čo animovať). */
+interface Props {
+  color?: 'hot' | 'yellow' | 'pink' | 'lilac' | 'lime' | 'sky' | 'ink';
+}
+const { color = 'hot' } = Astro.props;
+const BG = { hot: 'bg-hot', yellow: 'bg-yellow', pink: 'bg-pink', lilac: 'bg-lilac', lime: 'bg-lime', sky: 'bg-sky', ink: 'bg-ink' }[color];
+---
+
+<!-- Sedí pod lepivou hlavičkou (--header-h z tokens.css); pointer-events-none, aby nič neprekrýval pre kliky. -->
+<div class:list={['citanie-progress pointer-events-none fixed inset-x-0 top-[var(--header-h)] z-[60] h-2 origin-left border-b-3 border-ink', BG]} aria-hidden="true"></div>
+
+<style>
+  .citanie-progress {
+    display: none;
+  }
+  @supports (animation-timeline: scroll()) {
+    .citanie-progress {
+      display: block;
+      --tl: scroll(root block);
+      animation-name: citanie-progress;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--tl);
+    }
+  }
+  @keyframes citanie-progress {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .citanie-progress { display: none !important; }
+  }
+</style>

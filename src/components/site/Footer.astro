@@ -1,0 +1,46 @@
+---
+/** Pätička: © 2026 ADAM RUDAVSKÝ · XVADUR · POSTAVENÉ S AI · RIADENÉ ČLOVEKOM.
+ *  Odkazy len Substack a GitHub (overené 200, 19. 9. 2026). X znak. */
+import XMark from './XMark.astro';
+import { NAV } from '@/data/nav';
+
+const SOCIAL = [
+  { href: 'https://substack.com/@xvadur', label: 'SUBSTACK' },
+  { href: 'https://github.com/xvadur', label: 'GITHUB' },
+];
+---
+
+<footer class="border-t-3 border-ink bg-ink text-paper">
+  <div class="mx-auto grid w-full max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-[auto_1fr_auto] lg:items-end lg:px-10 lg:py-20">
+    <a href="/" class="inline-flex" aria-label="XVADUR — domov">
+      <XMark class="h-24 w-24 text-hot sm:h-32 sm:w-32" title="XVADUR" />
+    </a>
+
+    <nav aria-label="Pätička" class="flex flex-wrap gap-x-5 gap-y-1 font-display text-lg font-extrabold uppercase">
+      <a href="/" class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">Domov</a>
+      {NAV.map((item) => <a href={item.href} class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">{item.label}</a>)}
+    </nav>
+
+    <div class="flex flex-wrap gap-3">
+      {
+        SOCIAL.map((s) => (
+          <a
+            href={s.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="press flex h-11 items-center rounded-lg border-3 border-paper bg-ink px-4 font-display font-extrabold uppercase tracking-wide shadow-[3px_3px_0_0_var(--color-paper)] hover:bg-hot hover:text-ink"
+          >
+            {s.label}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="border-t-3 border-paper/30">
+    <div class="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 font-mono text-sm uppercase tracking-[0.14em] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
+      <span>© 2026 Adam Rudavský · XVADUR</span>
+      <span>Postavené s AI · Riadené človekom</span>
+    </div>
+  </div>
+</footer>

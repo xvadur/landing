@@ -1,0 +1,41 @@
+---
+/** Pás „Čo som postavil" (#postavil): nadpis + ostrov Postavil.tsx (client:visible).
+ *  Globálne keyframes pre log kontrol v detaile (React ostrov nevidí scoped štýly): riadky nabiehajú so stagger 260 ms,
+ *  reduced motion = všetko naraz. */
+import Section from '@/components/site/Section.astro';
+import Postavil from './Postavil';
+import { POSTAVIL } from '@/data/fakty';
+---
+
+<Section id="postavil" bg="lilac" pad="lg" border="bottom" label="Čo som postavil">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-end">
+    <p class="eyebrow lg:pb-3">Čo som postavil / {POSTAVIL.length} projektov</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Čo som postavil</h2>
+  </div>
+  <p class="mt-6 max-w-2xl text-lg">Jedno číslo, jeden riadok. Klikni na kartu — detail má všetky čísla a tam, kde web žije, aj odkaz.</p>
+  <div class="mt-10">
+    <Postavil client:visible />
+  </div>
+</Section>
+
+<style is:global>
+  @keyframes log-riadok {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .log-kontrol .log-riadok {
+    animation: log-riadok var(--duration-base) var(--ease-out-hard) both;
+    animation-delay: calc(var(--n, 0) * 260ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .log-kontrol .log-riadok {
+      animation: none !important;
+    }
+  }
+</style>

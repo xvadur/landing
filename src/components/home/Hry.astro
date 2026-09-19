@@ -1,0 +1,68 @@
+---
+/** Hry (#hry, spec 05 §2.4): Škrtací test (naživo → /hry/skrtaci-test/), Miliarda → bilión a Strach-o-meter
+ *  s nálepkou „V STAVBE" (utilita `sticker` — čisté CSS, 0 kB Motion; StickerPeel by ťahal Motion aj na mobil) a bez
+ *  odkazu. Poctivé štítky. Kópia v jednom registri (tykanie ako zvyšok domova); meta-popisy z routes.ts sú pre <meta>/OG. */
+import Section from '@/components/site/Section.astro';
+import { routeByPath } from '@/data/routes';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+
+const skrtaci = routeByPath('/hry/skrtaci-test/')!;
+const hry = routeByPath('/hry/')!;
+
+const KARTY = [
+  { nazov: 'Škrtací test', popis: 'Vlož svoj text. Škrtneme frázy, ktoré má každý. Prečítaj, čo zostalo.', href: skrtaci.path, bg: 'bg-yellow', live: true },
+  { nazov: 'Miliarda → bilión', popis: 'Hra v stavbe.', href: null, bg: 'bg-white', live: false },
+  { nazov: 'Strach-o-meter', popis: 'Hra v stavbe.', href: null, bg: 'bg-pink', live: false },
+];
+/* card-drop na karte (nie na <li>, ktoré by nieslo druhý tieň); fill-mode backwards, aby animácia po dopade neblokovala lift/press */
+const drop = (i: number) => `--i:${i}; animation-fill-mode: backwards`;
+---
+
+<Section id="hry" bg="sky" pad="lg" border="bottom" label="Hry">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-end">
+    <p class="eyebrow lg:pb-3">Hry / Veci, ktoré si vyskúšaš</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Hry</h2>
+  </div>
+  <p class="mt-6 max-w-2xl text-lg">Škrtací test, Miliarda → bilión, Strach-o-meter. Veci, ktoré si vyskúšaš namiesto brožúry.</p>
+
+  <ul class="mt-10 grid gap-6 md:grid-cols-3" role="list">
+    {
+      KARTY.map((k, i) => (
+        <li class="relative">
+          {k.href ? (
+            <a
+              href={k.href}
+              class:list={['brutal lift press card-drop relative flex h-full min-h-72 flex-col gap-4 p-6', k.bg]}
+              style={drop(i)}
+            >
+              <span class="x-stamp" aria-hidden="true" />
+              <span class="sticker self-start bg-lime" style="--sticker-rotate:-3deg">Naživo</span>
+              <h3 class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">{k.nazov}</h3>
+              <p class="text-base leading-relaxed">{k.popis}</p>
+              <span class="mt-auto inline-flex items-center gap-2 font-display text-lg font-extrabold uppercase">
+                Hrať
+                <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+              </span>
+            </a>
+          ) : (
+            <div class:list={['brutal card-drop relative flex h-full min-h-72 flex-col gap-4 p-6', k.bg]} style={drop(i)}>
+              <span class="x-stamp" aria-hidden="true" />
+              <span class="sticker self-start bg-hot text-ink" style={`--sticker-rotate:${i % 2 ? 5 : -6}deg`}>V stavbe</span>
+              <h3 class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">{k.nazov}</h3>
+              <p class="text-base leading-relaxed">{k.popis}</p>
+            </div>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="mt-10">
+    <a
+      href={hry.path}
+      class="inline-flex min-h-11 items-center gap-2 font-display text-lg font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot"
+    >
+      Všetky hry →
+    </a>
+  </div>
+</Section>

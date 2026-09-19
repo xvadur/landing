@@ -1,0 +1,16 @@
+{
+  // xvadur.com v4 — Cloudflare Worker + statické assety (@astrojs/cloudflare 14 číta tento súbor
+  // a generuje dist/server/wrangler.json). Deploy: npm run build && npx wrangler deploy -c dist/server/wrangler.json
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "xvadur-com",
+  "compatibility_date": "2026-09-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "kv_namespaces": [{ "binding": "SESSION", "id": "503345d5baf145f499aebcf46a6c1b3f" }],
+  // Domény: zone routes (hostname je proxied cez Cloudflare; DNS CNAME na Pages ostal, Worker ho predbehne).
+  // Pridané 19. 9. 2026 cez API; deploy ich drží v synchróne. staging.xvadur.com ostáva na Pages.
+  "routes": [
+    { "pattern": "xvadur.com/*", "zone_name": "xvadur.com" },
+    { "pattern": "www.xvadur.com/*", "zone_name": "xvadur.com" }
+  ]
+}

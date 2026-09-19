@@ -1,0 +1,37 @@
+---
+/** Konzultačný pás — port z legacy App.jsx (.consultation-band), texty verbatim („ostáva"),
+ *  + odkaz „Ako prebieha 30 minút" → /konzultacia/. Tlačidlo otvára Wizard (ostrov). */
+import Section from '@/components/site/Section.astro';
+import Wizard from './Wizard';
+
+interface Props {
+  id?: string;
+}
+const { id = 'konzultacia' } = Astro.props;
+---
+
+<Section id={id} bg="lime" border="both" pad="md" class="tx-halftone">
+  <div class="grid gap-8 lg:grid-cols-[1.4fr_0.9fr] lg:items-center">
+    <div>
+      <p class="eyebrow mb-4">Konzultácia / Zatiaľ zadarmo</p>
+      <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+        Príď s AI problémom.<br />Odíď so smerom.
+      </h2>
+    </div>
+    <div class="flex flex-col gap-6">
+      <p class="text-lg">
+        Vyklikáš kontext, WhatsApp pripraví správu a ja už nebudem začínať otázkou „tak čo vlastne potrebujete?“ Výsledkom
+        môže byť workflow, stack, prototyp alebo smer implementácie.
+      </p>
+      <div class="flex flex-col items-start gap-4">
+        <Wizard client:idle label="ZAČAŤ CEZ 4 OTÁZKY" variant="hot" className="w-full sm:w-auto" />
+        <a
+          href="/konzultacia/#priebeh"
+          class="inline-flex min-h-11 items-center gap-2 font-display text-lg font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot"
+        >
+          Ako prebieha 30 minút →
+        </a>
+      </div>
+    </div>
+  </div>
+</Section>

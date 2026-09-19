@@ -1,0 +1,10 @@
+# Cloudflare _headers (adaptér pri builde doplní immutable Cache-Control pre /_astro/*).
+# Platený obsah na stabilnej verejnej URL: nechceme ho v indexe (HTML má aj <meta robots>, PDF nič iné nemá).
+/makleri/plan/
+  X-Robots-Tag: noindex, nofollow
+/makleri/plan/*
+  X-Robots-Tag: noindex, nofollow
+/makleri/neviditelny-makler-plan.pdf
+  X-Robots-Tag: noindex, nofollow
+/lab/
+  X-Robots-Tag: noindex, nofollow

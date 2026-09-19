@@ -1,0 +1,155 @@
+---
+/** /kviz/ — AI-readiness kvíz pre malú firmu (spec 05 §3, doc 10 §3 #17). Bez backendu: všetko počíta ostrov Kviz
+ *  v prehliadači. Sekcie: hero → marquee krokov → kvíz (ostrov, client:load — je zmyslom stránky a hero CTA naň skáče)
+ *  → „Ako sa počíta“ (vzorec, skóre, tabuľka packu 04 verbatim) → statický konzultačný pás (bez Wizardu: rozpočet JS,
+ *  CTA s payloadom je už vo výsledku). islands="lite" (Toaster pre „Kopírovať výsledok“). */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import Marquee from '@/components/site/Marquee.astro';
+import KonzultaciaOdkaz from '@/components/kviz/KonzultaciaOdkaz.astro';
+import { routeByPath } from '@/data/routes';
+import { KROKY, SEGMENTY, TYZDNOV_ROCNE } from '@/data/kviz/kroky';
+import { STROP_BEZ_VLASTNIKA } from '@/components/kviz/logika';
+import Kviz from '@/components/kviz/Kviz';
+
+const r = routeByPath('/kviz/')!;
+---
+
+<Base title={r.title} description={r.description} islands="lite">
+  <Section bg="paper" pad="lg" border="bottom" class="tx-grain">
+    <div class="relative z-10 grid gap-8 lg:grid-cols-[1.5fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow mb-5">Kvíz / AI-readiness pre malú firmu</p>
+        <h1 class="font-display text-display-lg font-extrabold uppercase leading-[0.86] tracking-tighter">
+          Ako pripravený<br />si na AI?
+        </h1>
+      </div>
+      <div class="grid gap-5">
+        <p class="max-w-prose text-lg sm:text-xl">
+          Päť otázok o tom, čo sa ti opakuje, a dve alebo päť doplnkových podľa odpovedí. Na konci: koľko ťa to stojí za
+          rok, skóre 0 – 100 a jeden prvý krok.
+        </p>
+        <ul class="flex flex-wrap gap-2" aria-label="Čo o kvíze platí">
+          {
+            ['7 alebo 10 otázok', 'Bez registrácie', 'Počíta sa v prehliadači'].map((t) => (
+              <li class="rounded-lg border-3 border-ink bg-white px-3 py-1.5 font-mono text-sm uppercase tracking-[0.14em] shadow-brutal-sm">
+                {t}
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href="#kviz"
+          class="press inline-flex min-h-12 w-fit items-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-xl font-extrabold uppercase text-ink shadow-brutal"
+          data-cursor="vstup"
+        >
+          Začať
+        </a>
+      </div>
+    </div>
+  </Section>
+
+  <Marquee items={KROKY.map((k) => k.krok)} color="pink" size="md" duration={48} label="Prvé kroky" />
+
+  <Section id="kviz" bg="lilac" border="both" pad="md" class="tx-dots [--tx:12%] scroll-mt-20">
+    <div class="mx-auto w-full max-w-4xl">
+      <Kviz client:load />
+      <noscript>
+        <p class="brutal mt-6 p-5 font-bold">Kvíz potrebuje zapnutý JavaScript. Alternatíva: napíš na adam@xvadur.com.</p>
+      </noscript>
+    </div>
+  </Section>
+
+  <Section id="ako-sa-pocita" bg="white" pad="md" border="bottom">
+    <p class="eyebrow mb-4">Ako sa počíta</p>
+    <h2 class="font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tight">Tri čísla, jeden krok</h2>
+
+    <div class="mt-10 grid gap-6 md:grid-cols-3">
+      <article class="brutal card-drop p-6" style="--i:0">
+        <p class="eyebrow mb-3">Strata za rok</p>
+        <p class="font-mono text-lg tabular-nums">hodiny × {TYZDNOV_ROCNE} × sadzba</p>
+        <p class="mt-3 text-base">
+          Hodiny týždenne, ktoré ti opakovaná práca zoberie, krát {TYZDNOV_ROCNE} týždňov, krát cena tvojej hodiny.
+          Odhad ceny času, nie sľub úspory.
+        </p>
+      </article>
+      <article class="brutal card-drop p-6" style="--i:1">
+        <p class="eyebrow mb-3">Skóre 0 – 100</p>
+        <p class="font-mono text-lg tabular-nums">body / maximum × 100</p>
+        <p class="mt-3 text-base">
+          Každá odpoveď má body: opakovanie, hodiny, čo si skúšal, podklady, vlastník výsledku a v dlhšej vetve postup,
+          kontrola a prístupy. Skóre je podiel z maxima tvojej vetvy. Bez vlastníka výsledku nejde nad {STROP_BEZ_VLASTNIKA}:
+          najprv vlastník a kritérium.
+        </p>
+      </article>
+      <article class="brutal card-drop p-6" style="--i:2">
+        <p class="eyebrow mb-3">Segment</p>
+        <ul class="grid gap-2">
+          {
+            SEGMENTY.map((s) => (
+              <li class="flex items-start gap-2 font-bold">
+                <span class="mt-1 inline-block h-3 w-3 flex-none rounded-sm border-2 border-ink bg-hot" aria-hidden="true" />
+                {s.label}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-3 text-base">Tri typy ľudí, pre ktorých je konzultácia stavaná. Kvíz tvoj segment posiela ďalej do formulára konzultácie.</p>
+      </article>
+    </div>
+
+    <div class="mt-14">
+      <p class="eyebrow mb-3">Prvý krok / Voľba najmenšieho užitočného riešenia</p>
+      <p class="max-w-prose text-base">
+        Kvíz vyberie jeden riadok z tejto tabuľky. Pravidlo je jednoduché: bez vlastníka sa neautomatizuje, nejasné
+        zadanie potrebuje lepší vstup, opakovaný text potrebuje kontext a kontrolu, stabilný prenos automatizáciu a až
+        rozhodovanie podľa kontextu agenta.
+      </p>
+      <div class="brutal mt-6 overflow-hidden">
+        <table class="w-full border-collapse text-left text-base">
+          <thead class="hidden md:table-header-group">
+            <tr class="bg-ink text-paper">
+              <th scope="col" class="px-5 py-3 font-mono text-sm font-medium uppercase tracking-[0.14em]">Pozorovanie</th>
+              <th scope="col" class="px-5 py-3 font-mono text-sm font-medium uppercase tracking-[0.14em]">Prvý vhodný krok</th>
+              <th scope="col" class="px-5 py-3 font-mono text-sm font-medium uppercase tracking-[0.14em]">Dôvod</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              KROKY.map((k, i) => (
+                <tr class:list={['grid gap-1 border-ink px-5 py-4 md:table-row md:p-0', i > 0 && 'border-t-3']}>
+                  <td class="md:border-t-3 md:border-ink md:px-5 md:py-4">
+                    <span class="eyebrow block md:hidden">Pozorovanie</span>
+                    {k.pozorovanie}
+                  </td>
+                  <td class="font-display text-lg font-extrabold uppercase leading-tight md:border-t-3 md:border-ink md:px-5 md:py-4">
+                    <span class="eyebrow block font-mono md:hidden">Prvý vhodný krok</span>
+                    {k.krok}
+                  </td>
+                  <td class="md:border-t-3 md:border-ink md:px-5 md:py-4">
+                    <span class="eyebrow block md:hidden">Dôvod</span>
+                    {k.dovod}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <blockquote class="mt-8 max-w-prose border-l-[6px] border-ink pl-5 text-lg">
+        Nemerané odpovede zostávajú odhadom klienta. Záznam „20 minút“ bez merania nie je baseline. Kritický výsledok má
+        vždy vlastnú kontrolu človekom.
+      </blockquote>
+    </div>
+  </Section>
+
+  <KonzultaciaOdkaz />
+</Base>
+
+<style is:global>
+  /* pred hydratáciou (astro-island[ssr]) kvíz vyzerá „čakajúco“, nie rozbito: ťuk do prázdna sa nestratí naoko */
+  astro-island[ssr] [data-kviz] {
+    pointer-events: none;
+    opacity: 0.85;
+  }
+</style>

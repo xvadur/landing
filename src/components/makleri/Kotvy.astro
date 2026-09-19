@@ -1,0 +1,109 @@
+---
+/** Kotvy trhu na /makleri/ — čísla z packu 13 §1 (src/data/fakty.ts KOTVY) cez vanilla `number-flow`
+ *  (doc 10 §3 #14 „NumberFlow pri useInView“), bez React runtime: Astro komponent + inline `<script>` (≈ 6 kB gz).
+ *  SSR vypíše cieľové číslo (declarative shadow DOM z `renderInnerHTML`; bez JS je správne hneď).
+ *  Skript: ak používateľ nemá prefers-reduced-motion a blok je ešte pod viewportom, čísla skočia (bez animácie) na 0
+ *  a po vstupe do viewportu (IntersectionObserver) sa prevalia na cieľ. Blok už vo viewporte / reduced motion → nič
+ *  sa nehýbe. Formát sk-SK (2 034 s pevnou medzerou). Retheme cez tokeny, žiadny hex. */
+import { renderInnerHTML } from 'number-flow';
+
+export type Kotva = {
+  /** hlavné číslo */
+  value: number;
+  /** menovateľ (47, 416, 2034, 459) */
+  z: number;
+  /** predložka pred menovateľom tak, ako ju používa pack („zo 47“, „z 2 034“) */
+  spoj?: 'zo' | 'z';
+  /** krátky popis pod číslom */
+  note: string;
+  /** farba tokenu pre pozadie dlaždice */
+  tone?: 'yellow' | 'pink' | 'lilac' | 'lime' | 'sky' | 'white';
+};
+
+interface Props {
+  items: Kotva[];
+  class?: string;
+}
+
+const { items, class: className = '' } = Astro.props;
+
+const TONE: Record<NonNullable<Kotva['tone']>, string> = {
+  yellow: 'bg-yellow',
+  pink: 'bg-pink',
+  lilac: 'bg-lilac',
+  lime: 'bg-lime',
+  sky: 'bg-sky',
+  white: 'bg-white',
+};
+
+const FORMAT: Intl.NumberFormatOptions = { useGrouping: true, maximumFractionDigits: 0 };
+const fmt = (n: number) => new Intl.NumberFormat('sk-SK', FORMAT).format(n);
+---
+
+<div data-kotvy class:list={['grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3', className]}>
+  {
+    items.map((k, i) => (
+      <div
+        class:list={['card-drop relative flex flex-col gap-2 rounded-lg border-3 border-ink p-4 shadow-brutal sm:p-6', TONE[k.tone ?? 'white']]}
+        style={`--i:${i}`}
+      >
+        <p class="flex flex-wrap items-baseline gap-x-1.5 font-display text-display-sm font-extrabold leading-none tracking-tighter tabular-nums">
+          <number-flow data-value={k.value} set:html={renderInnerHTML(k.value, { locales: 'sk-SK', format: FORMAT })} />
+          <span class="whitespace-nowrap font-mono text-base font-medium tracking-normal opacity-70 sm:text-lg">
+            {k.spoj ?? 'zo'} {fmt(k.z)}
+          </span>
+        </p>
+        <p class="text-sm font-medium leading-snug sm:text-base">{k.note}</p>
+      </div>
+    ))
+  }
+</div>
+
+<script>
+  /* Vanilla number-flow: registruje <number-flow>. Nábeh 0 → cieľ až pri vstupe do viewportu.
+     ClientRouter: štart na astro:page-load, upratanie na astro:before-swap. */
+  import 'number-flow';
+  import type { Format } from 'number-flow';
+
+  const FORMAT: Format = { useGrouping: true, maximumFractionDigits: 0 };
+  let io: IntersectionObserver | null = null;
+
+  function setup() {
+    const root = document.querySelector<HTMLElement>('[data-kotvy]');
+    if (!root) return;
+    const els = Array.from(root.querySelectorAll('number-flow'));
+    if (!els.length) return;
+    if (typeof IntersectionObserver === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    // blok už je vo viewporte → cieľ ostáva, nič nebliká
+    if (root.getBoundingClientRect().top < window.innerHeight) return;
+
+    for (const el of els) {
+      el.locales = 'sk-SK';
+      el.format = FORMAT;
+      el.animated = false;
+      el.update(0);
+    }
+    io = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((e) => e.isIntersecting)) return;
+        for (const el of els) {
+          el.animated = true;
+          el.update(Number(el.dataset.value ?? 0));
+        }
+        io?.disconnect();
+        io = null;
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(root);
+  }
+
+  function teardown() {
+    io?.disconnect();
+    io = null;
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', teardown);
+</script>

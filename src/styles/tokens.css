@@ -1,0 +1,161 @@
+/* xvadur.com v4 — tokeny (doc 10 §2). Jediné miesto, kde sú farby, písma, rám, tiene.
+   Nikde inde v repe sa nepíše hex. Tailwind 4 @theme → utility triedy:
+   bg-paper bg-yellow text-ink border-ink border-3 rounded-lg shadow-brutal font-display … */
+@import 'tailwindcss';
+
+@theme {
+  /* ---------- farby (OKLCH, light only) ---------- */
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-ink: oklch(15% 0 0);
+  --color-paper: oklch(95% 0.01 85);
+  --color-white: oklch(100% 0 0);
+
+  --color-yellow: #ffe600;
+  --color-yellow-deep: #e6cc00;
+  --color-pink: #f9c0d2;
+  --color-pink-deep: #ee6fa0;
+  --color-lilac: #dcd0ff;
+  --color-lilac-deep: #9b84f0;
+  --color-lime: #d6f5a0;
+  --color-lime-deep: #7cc72e;
+  --color-sky: #b9e3ff;
+  --color-sky-deep: #4faeec;
+  --color-hot: #ed4e26; /* jediná horúca: CTA a X. Text na hot je vždy ink (5,4 : 1); paper na hot má len 3,2 : 1 (19. 9.) */
+
+  /* hover = L −6 %, press = L −12 % (relatívna farba, žiadny ručný hex) */
+  --color-paper-hover: oklch(from var(--color-paper) calc(l - 0.06) c h);
+  --color-paper-press: oklch(from var(--color-paper) calc(l - 0.12) c h);
+  --color-white-hover: oklch(from var(--color-white) calc(l - 0.06) c h);
+  --color-white-press: oklch(from var(--color-white) calc(l - 0.12) c h);
+  --color-yellow-hover: oklch(from var(--color-yellow) calc(l - 0.06) c h);
+  --color-yellow-press: oklch(from var(--color-yellow) calc(l - 0.12) c h);
+  --color-pink-hover: oklch(from var(--color-pink) calc(l - 0.06) c h);
+  --color-pink-press: oklch(from var(--color-pink) calc(l - 0.12) c h);
+  --color-lilac-hover: oklch(from var(--color-lilac) calc(l - 0.06) c h);
+  --color-lilac-press: oklch(from var(--color-lilac) calc(l - 0.12) c h);
+  --color-lime-hover: oklch(from var(--color-lime) calc(l - 0.06) c h);
+  --color-lime-press: oklch(from var(--color-lime) calc(l - 0.12) c h);
+  --color-sky-hover: oklch(from var(--color-sky) calc(l - 0.06) c h);
+  --color-sky-press: oklch(from var(--color-sky) calc(l - 0.12) c h);
+  --color-hot-hover: oklch(from var(--color-hot) calc(l - 0.06) c h);
+  --color-hot-press: oklch(from var(--color-hot) calc(l - 0.12) c h);
+  --color-ink-hover: oklch(from var(--color-ink) calc(l + 0.06) c h);
+
+  /* sémantické aliasy pre shadcn / neobrutalism.dev vendorované komponenty
+     (bg-background, text-foreground, bg-main, border-border, ring-ring …) */
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --color-secondary-background: var(--color-white);
+  --color-main: var(--color-yellow);
+  --color-main-foreground: var(--color-ink);
+  --color-border: var(--color-ink);
+  --color-input: var(--color-ink);
+  --color-ring: var(--color-hot);
+  --color-overlay: oklch(15% 0 0 / 0.8);
+  --color-primary: var(--color-ink);
+  --color-primary-foreground: var(--color-paper);
+  --color-secondary: var(--color-lilac);
+  --color-secondary-foreground: var(--color-ink);
+  --color-muted: oklch(from var(--color-paper) calc(l - 0.06) c h);
+  --color-muted-foreground: oklch(from var(--color-ink) calc(l + 0.3) c h);
+  --color-accent: var(--color-hot);
+  --color-accent-foreground: var(--color-paper);
+  --color-destructive: var(--color-hot);
+  --color-card: var(--color-white);
+  --color-card-foreground: var(--color-ink);
+  --color-popover: var(--color-white);
+  --color-popover-foreground: var(--color-ink);
+
+  /* ---------- písmo ---------- */
+  --font-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', 'Space Grotesk', system-ui, sans-serif;
+  --font-sans: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+
+  /* display škála 48–240 px (doc 10 §2); mobil motto 64–88 px */
+  /* minimá sú nastavené tak, aby na 375 px (343 px obsahu) nezlomilo slovo „PROBLÉMOM." ani „ROZMÝŠĽAM." */
+  --text-display-xs: clamp(2rem, 1.25rem + 3.5vw, 3.5rem);
+  --text-display-xs--line-height: 0.95;
+  --text-display-sm: clamp(2.5rem, 1.5rem + 4.5vw, 5rem);
+  --text-display-sm--line-height: 0.92;
+  --text-display: clamp(2.75rem, 1.25rem + 7vw, 8rem);
+  --text-display--line-height: 0.9;
+  --text-display-lg: clamp(3.5rem, 1rem + 11vw, 12rem);
+  --text-display-lg--line-height: 0.86;
+  --text-display-xl: clamp(4rem, 0.5rem + 15.5vw, 15rem);
+  --text-display-xl--line-height: 0.84;
+
+  /* ---------- rám, radius ---------- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-brutal: 8px;
+  --border-width-brutal: 3px;
+
+  /* ---------- tiene: tvrdé, nula blur ---------- */
+  --shadow-brutal-sm: 3px 3px 0 0 var(--color-ink);
+  --shadow-brutal: var(--brutal-x) var(--brutal-x) 0 0 var(--color-ink);
+  --shadow-brutal-lg: 9px 9px 0 0 var(--color-ink);
+  --shadow-brutal-xl: 11px 11px 0 0 var(--color-ink);
+  --shadow-brutal-press: 1px 1px 0 0 var(--color-ink);
+  --shadow-brutal-lift: 8px 8px 0 0 var(--color-ink);
+  --shadow-brutal-none: 0 0 0 0 var(--color-ink);
+
+  /* ---------- pohyb ---------- */
+  --ease-spring: linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50.1%, 1.015 55%, 1.017 63.9%, 1.001);
+  --ease-out-hard: cubic-bezier(0.2, 0.9, 0.2, 1);
+  --duration-fast: 120ms;
+  --duration-base: 180ms;
+  --duration-slow: 500ms;
+
+  --animate-card-drop: card-drop var(--duration-slow) var(--ease-spring) both;
+  --animate-marquee: marquee var(--marquee-duration, 40s) linear infinite;
+  --animate-wdth-breathe: wdth-breathe 6s ease-in-out infinite alternate;
+  --animate-fade-in: fade-in var(--duration-fast) ease-out both;
+
+  @keyframes card-drop {
+    from {
+      transform: translate(-8px, -8px);
+      box-shadow: 0 0 0 0 var(--color-ink);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0, 0);
+      box-shadow: var(--shadow-brutal);
+      opacity: 1;
+    }
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes wdth-breathe {
+    from { font-variation-settings: 'wdth' 75; }
+    to { font-variation-settings: 'wdth' 100; }
+  }
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+/* Základný ofset tvrdého tieňa: 6/6, pod 640 px 4/4 (doc 10 §2). --header-h = výška lepivej hlavičky (Header.astro:
+   44 px obsah + 2 × 12 px + 3 px rám) pre sticky prvky a pinnuté scény pod ňou. */
+:root {
+  --brutal-x: 6px;
+  --marquee-duration: 40s;
+  --header-h: 71px;
+}
+@media (max-width: 639px) {
+  :root {
+    --brutal-x: 4px;
+  }
+}

@@ -1,0 +1,83 @@
+---
+/** /hry/skrtaci-test/ — Škrtací test (Deň 1 packu 13), čisto klient. Ostrov SkrtaciTest client:idle.
+ *  islands="lite": stránka s formulárom (Toaster áno, Lenis/kurzor nie) — Motion + NumberFlow si nesie ostrov. */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import Marquee from '@/components/site/Marquee.astro';
+import SkrtaciTest from '@/components/hry/SkrtaciTest';
+import { routeByPath } from '@/data/routes';
+import { KOTVY } from '@/data/fakty';
+import { FRAZY_RODINY, CITACIE } from '@/data/frazy';
+
+const r = routeByPath('/hry/skrtaci-test/')!;
+const zakladne = FRAZY_RODINY.filter((f) => f.zakladna);
+---
+
+<Base title={r.title} description={r.description} islands="lite">
+  <Section bg="yellow" border="bottom" pad="lg" class="tx-halftone">
+    <div class="grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow mb-6">XVADUR / Hry / 01</p>
+        <h1 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+          Škrtací <br />test.
+        </h1>
+        <p class="mt-8 max-w-xl text-xl">
+          Skopírujte text zo svojho profilu, webu alebo bio. Škrtneme každú zo šiestich fráz a každé prídavné meno, za
+          ktorým nie je číslo alebo meno. Prečítajte, čo zostalo.
+        </p>
+      </div>
+      <ul class="flex flex-wrap gap-3 lg:justify-end" role="list" aria-label="Šesť rodín fráz">
+        {
+          zakladne.map((f, i) => (
+            <li class="card-drop inline-flex items-baseline gap-3 rounded-lg border-3 border-ink bg-white px-4 py-2 shadow-brutal-sm" style={`--i:${i}`}>
+              <span class="font-display text-lg font-extrabold uppercase line-through decoration-hot decoration-[3px]">{f.rodina}</span>
+              <span class="font-mono text-sm text-ink/70">{f.z47} / 47</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </Section>
+
+  <Section id="test" bg="paper" pad="lg">
+    <div class="mx-auto max-w-4xl">
+      <SkrtaciTest client:idle />
+    </div>
+  </Section>
+
+  <Marquee items={CITACIE.map((c) => c.text.toUpperCase())} color="pink" size="sm" duration={90} label="Doslovné citácie webov kancelárií" />
+
+  <Section bg="paper" pad="lg" border="none">
+    <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-start">
+      <p class="eyebrow lg:pt-3">Prečo</p>
+      <div class="max-w-prose">
+        <h2 class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">
+          {KOTVY.kancelarieSFrazou.value} zo {KOTVY.kancelarieSFrazou.z} kancelárií má v texte aspoň jednu z týchto fráz.
+        </h2>
+        <p class="mt-6 text-lg">
+          Komplexný alebo kompletný servis ({zakladne[0].z47}), dlhoročné skúsenosti ({zakladne[1].z47}), profesionálny
+          prístup ({zakladne[2].z47}), individuálny prístup ({zakladne[3].z47}), najlepšia alebo najvyššia cena
+          ({zakladne[4].z47}), bez starostí ({zakladne[5].z47}). Ak ich má váš text, klient nevie, či číta vás alebo
+          kanceláriu o ulicu ďalej.
+        </p>
+        <p class="mt-4 text-lg">
+          Väčšinou zostane meno, telefón a názov kancelárie. To je diagnóza. Toto je Deň 1 zo siedmich.
+        </p>
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="/makleri/"
+            class="press inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
+          >
+            Celý plán: 7 dní
+          </a>
+          <a
+            href="/skore/"
+            class="press inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border-3 border-ink bg-white px-5 font-display text-lg font-extrabold uppercase shadow-brutal"
+          >
+            Skóre webu makléra
+          </a>
+        </div>
+      </div>
+    </div>
+  </Section>
+</Base>

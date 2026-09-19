@@ -1,0 +1,43 @@
+---
+/** Statický konzultačný pás pre /kviz/ — texty verbatim z port/KonzultaciaBand.astro, ale bez ostrova Wizard
+ *  (radix Dialog ≈ 21 kB gz): CTA s payloadom je už vo výsledku kvízu, štvorotázkový Wizard beží na /konzultacia/. */
+import Section from '@/components/site/Section.astro';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+
+interface Props {
+  id?: string;
+}
+const { id = 'konzultacia' } = Astro.props;
+---
+
+<Section id={id} bg="lime" border="both" pad="md" class="tx-halftone">
+  <div class="grid gap-8 lg:grid-cols-[1.4fr_0.9fr] lg:items-center">
+    <div>
+      <p class="eyebrow mb-4">Konzultácia / Zatiaľ zadarmo</p>
+      <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+        Príď s AI problémom.<br />Odíď so smerom.
+      </h2>
+    </div>
+    <div class="flex flex-col gap-6">
+      <p class="text-lg">
+        Vyklikáš kontext, WhatsApp pripraví správu a ja už nebudem začínať otázkou „tak čo vlastne potrebujete?“ Výsledkom
+        môže byť workflow, stack, prototyp alebo smer implementácie.
+      </p>
+      <div class="flex flex-col items-start gap-4">
+        <a
+          href="/konzultacia/#formular"
+          class="press inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-xl font-extrabold uppercase text-ink shadow-brutal sm:w-auto"
+          data-cursor="vstup"
+        >
+          Začať cez 4 otázky <ArrowRightIcon weight="bold" size={20} aria-hidden="true" />
+        </a>
+        <a
+          href="/konzultacia/#priebeh"
+          class="inline-flex min-h-11 items-center gap-2 font-display text-lg font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot"
+        >
+          Ako prebieha 30 minút →
+        </a>
+      </div>
+    </div>
+  </div>
+</Section>

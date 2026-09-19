@@ -1,0 +1,115 @@
+---
+/** /texty/<slug>/ — článok z kolekcie `texty`. `.prose` (Bricolage cez opsz, 21 px / 1.62, 65ch), citáty s ľavým rámom 6 px,
+ *  X dropcap na prvom bežnom odseku, CSS priebeh čítania hore (0 kB; Magic UI ScrollProgress by ťahal React + Motion),
+ *  po texte „krátka vložka“ (pack 05) + Substack. islands="none": článok bez vlastného ostrova. Čas čítania z počtu slov. */
+import { getCollection, render } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import XMark from '@/components/site/XMark.astro';
+import ScrollProgress from '@/components/texty/ScrollProgress.astro';
+import { routeByPath } from '@/data/routes';
+import { SUBSTACK_URL, VLOZKA, VYDANIE_LABEL, citanieLabel, datumIso, datumSk } from '@/components/texty/citanie';
+
+export async function getStaticPaths() {
+  const texty = await getCollection('texty');
+  return texty.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const path = `/texty/${entry.id}/`;
+const r = routeByPath(path);
+const title = r?.title ?? `${entry.data.title} — XVADUR`;
+const description = entry.data.description;
+const citanie = citanieLabel(entry.body ?? '');
+const btn =
+  'press inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border-3 border-ink px-5 font-display text-lg font-extrabold uppercase tracking-wide shadow-brutal';
+---
+
+<Base title={title} description={description} islands="none">
+  <ScrollProgress color="hot" />
+
+  <Section bg="paper" pad="md" class="tx-grain [--tx:0.08]" label="Hlavička textu">
+    <div class="relative z-10 mx-auto max-w-3xl">
+      <a
+        href="/texty/"
+        class="inline-flex min-h-11 items-center gap-2 font-display text-base font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot"
+      >
+        <span aria-hidden="true">←</span> Texty
+      </a>
+      <p class="eyebrow mt-8 flex flex-wrap gap-x-3">
+        <time datetime={datumIso(entry.data.date)}>{datumSk(entry.data.date)}</time>
+        <span aria-hidden="true">·</span>
+        <span>{citanie}</span>
+      </p>
+      <h1 class="mt-5 font-display text-display-sm font-extrabold leading-[0.95] tracking-tight sm:text-display">
+        {entry.data.title}
+      </h1>
+      <p class="mt-6 flex items-center gap-3 font-display text-lg font-extrabold uppercase">
+        <XMark class="h-7 w-7 text-hot" />
+        Adam Rudavský / XVADUR
+      </p>
+    </div>
+  </Section>
+
+  <!-- Telo textu: obal bez aria-label (aria-label na generickom <div> je zakázaný), sémantiku nesie <article>. -->
+  <Section bg="white" border="both" pad="md" as="div">
+    <article class="prose clanok mx-auto">
+      <Content />
+    </article>
+  </Section>
+
+  <Section bg="lime" pad="md" class="tx-halftone" label="Konzultácia">
+    <div class="mx-auto max-w-3xl">
+      <div class="relative rounded-lg border-3 border-ink bg-white p-6 shadow-brutal-lg sm:p-9">
+        <span class="x-stamp" aria-hidden="true"></span>
+        <p class="eyebrow">Krátka vložka</p>
+        <p class="mt-4 max-w-xl font-display text-2xl font-bold leading-snug sm:text-3xl">{VLOZKA}</p>
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          <a href="/konzultacia/" class:list={[btn, 'bg-hot text-ink']}>Konzultácia <span aria-hidden="true">→</span></a>
+          {
+            entry.data.substack && (
+              <a href={entry.data.substack} target="_blank" rel="noopener noreferrer" class:list={[btn, 'bg-white text-ink']}>
+                Čítať na Substacku <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </div>
+      </div>
+      <p class="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-lg">
+        <span class="font-bold">{VYDANIE_LABEL}</span>
+        <a
+          href={SUBSTACK_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex min-h-11 items-center gap-1 font-display font-extrabold uppercase underline decoration-[3px] decoration-hot underline-offset-4"
+        >
+          Substack <span aria-hidden="true">↗</span>
+        </a>
+      </p>
+    </div>
+  </Section>
+</Base>
+
+<style>
+  /* Perex = prvý odsek, ak je celý tučný (v zdroji **…**): väčší lede bez dropcapu.
+     X dropcap dostane prvý bežný odsek; v článku bez perexu rovno prvý odsek. */
+  .clanok :global(> p:first-of-type:has(> strong:only-child)) {
+    font-size: 1.12em;
+    line-height: 1.5;
+  }
+  .clanok :global(> p:first-of-type:not(:has(> strong:only-child)))::first-letter,
+  .clanok :global(> p:first-of-type:has(> strong:only-child) + p)::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 4.4em;
+    line-height: 0.78;
+    padding: 0.06em 0.12em 0 0;
+    color: var(--color-hot);
+  }
+  /* Odkazy v texte: zvislý padding na inline prvku nemení riadok, ale zväčší dotykový cieľ na ≥ 44 px. */
+  .clanok :global(a) {
+    padding-block: 0.55em;
+  }
+</style>

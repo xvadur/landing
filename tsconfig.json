@@ -1,0 +1,13 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "types": ["@astrojs/cloudflare", "node"]
+  },
+  "include": [".astro/types.d.ts", "src/**/*"],
+  "exclude": ["dist", "dist-*", "legacy", "node_modules"]
+}

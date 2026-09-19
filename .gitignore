@@ -1,0 +1,14 @@
+node_modules/
+dist/
+dist-*/
+.astro/
+.wrangler/
+.DS_Store
+*.log
+.env
+.env.local
+.claude/worktrees/
+.claude/settings.local.json
+CLAUDE.local.md
+# screenshoty QA skriptov (work/qa/*.mjs) — lokálne artefakty, nie do repa
+work/screens/

@@ -1,0 +1,260 @@
+---
+/** /makleri/plan/ — produkt „Neviditeľný maklér“, Deň 1–8 VERBATIM z packu 13 §2 (src/data/makleri/plan.ts).
+ *  noindex (Base). Sticky navigácia dní (DenNav.astro, 0 kB ostrov). Print CSS: bez hlavičky/pätičky/navigácie/
+ *  marquee/kurzora, každý deň na novej strane, tiene preč. „Stiahnuť PDF“ → /makleri/neviditelny-makler-plan.pdf
+ *  (generuje scripts/export-makleri-pdf.mjs cez Chrome headless z tejto stránky). Deň 8 = Launch Partner most
+ *  s tlačidlom na /konzultacia/?z=plan. islands="none" (žiadny ostrov ani toast; JS = ClientRouter + DenNav skript). */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import XMark from '@/components/site/XMark.astro';
+import DenNav from '@/components/makleri/DenNav.astro';
+import { Badge } from '@/components/vendor/neobrutalism/badge';
+import { routeByPath } from '@/data/routes';
+import { DEN_8, DNI } from '@/data/makleri/plan';
+import { PRODUKT } from '@/data/makleri/landing';
+import { KONZULTACIA_Z_PLANU, PDF_PATH } from '@/data/makleri/config';
+
+const r = routeByPath('/makleri/plan/')!;
+
+const TONES = ['yellow', 'pink', 'lilac', 'lime', 'sky', 'white', 'paper'] as const;
+const BG: Record<(typeof TONES)[number], string> = {
+  yellow: 'bg-yellow',
+  pink: 'bg-pink',
+  lilac: 'bg-lilac',
+  lime: 'bg-lime',
+  sky: 'bg-sky',
+  white: 'bg-white',
+  paper: 'bg-paper',
+};
+
+/** Úloha: časti, ktoré má pack kurzívou, sa vykreslia v <em> (plan.ts `ulohaKurziva`). */
+function emSegments(text: string, kurziva: readonly string[] | undefined): { text: string; em: boolean }[] {
+  if (!kurziva?.length) return [{ text, em: false }];
+  const re = new RegExp(kurziva.map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'), 'g');
+  const out: { text: string; em: boolean }[] = [];
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    if (m.index > last) out.push({ text: text.slice(last, m.index), em: false });
+    out.push({ text: m[0], em: true });
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) out.push({ text: text.slice(last), em: false });
+  return out;
+}
+
+const BLOKY = [
+  { key: 'preco', label: 'Prečo' },
+  { key: 'uloha', label: 'Úloha' },
+  { key: 'artefakt', label: 'Artefakt' },
+  { key: 'cas', label: 'Čas' },
+] as const;
+---
+
+<Base title={r.title} description={r.description} noindex={r.noindex} islands="none">
+  {/* ---------- hlavička produktu ---------- */}
+  <Section bg="paper" pad="md" class="tx-grain">
+    <div class="plan-hero relative z-10 grid gap-8 lg:grid-cols-[1.3fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow mb-5">XVADUR / Neviditeľný maklér / Plán</p>
+        <h1 class="font-display text-display font-extrabold uppercase leading-[0.88] tracking-tighter">{PRODUKT.nazov}</h1>
+        <p class="plan-podtitul mt-6 max-w-2xl font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl">{PRODUKT.podtitul}</p>
+      </div>
+      <div class="rounded-lg border-3 border-ink bg-white p-5 text-sm shadow-brutal sm:p-6">
+      <dl class="grid gap-3">
+        <div>
+          <dt class="eyebrow text-ink/70">Cena</dt>
+          <dd class="mt-1 font-display text-xl font-extrabold">{PRODUKT.cena}</dd>
+        </div>
+        <div>
+          <dt class="eyebrow text-ink/70">Formát</dt>
+          <dd class="mt-1 font-medium">{PRODUKT.format}</dd>
+        </div>
+        <div>
+          <dt class="eyebrow text-ink/70">Pre koho</dt>
+          <dd class="mt-1 font-medium">{PRODUKT.preKoho}</dd>
+        </div>
+      </dl>
+        <div class="mt-5 print:hidden">
+          <a
+            href={PDF_PATH}
+            download="neviditelny-makler-plan.pdf"
+            class="press inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-xl font-extrabold uppercase text-ink shadow-brutal sm:w-auto"
+          >
+            Stiahnuť PDF
+          </a>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <DenNav />
+
+  {/* ---------- Deň 1–7 ---------- */}
+  <div class="mx-auto w-full max-w-7xl px-4 py-10 sm:px-6 lg:px-10">
+    <div class="flex flex-col gap-10 sm:gap-14">
+      {
+        DNI.map((d, i) => (
+          <article id={d.id} class="plan-den scroll-mt-40 rounded-lg border-3 border-ink bg-white shadow-brutal print:shadow-none" aria-labelledby={`${d.id}-h`}>
+            <header class:list={['flex flex-wrap items-center gap-4 border-b-3 border-ink px-5 py-5 sm:px-8', BG[TONES[i % 6]]]}>
+              <Badge variant="sticker" tone="ink" tilt={i % 2 ? 'right' : 'left'}>
+                Deň {d.n}
+              </Badge>
+              <h2 id={`${d.id}-h`} class="font-display text-3xl font-extrabold uppercase leading-none tracking-tight sm:text-display-xs">
+                {d.nazov}
+              </h2>
+            </header>
+            <div class="grid gap-0 sm:grid-cols-2">
+              {BLOKY.map((b, j) => (
+                <div
+                  class:list={[
+                    'flex flex-col gap-3 px-5 py-6 sm:px-8',
+                    j < 2 ? 'border-b-3 border-ink' : '',
+                    j % 2 === 0 ? 'sm:border-r-3 sm:border-ink' : '',
+                  ]}
+                >
+                  <h3 class="x-divider font-medium">{b.label}</h3>
+                  <p class:list={[b.key === 'cas' ? 'font-display text-2xl font-extrabold leading-tight sm:text-3xl' : 'text-base font-medium leading-relaxed sm:text-lg']}>
+                    {b.key === 'uloha'
+                      ? emSegments(d.uloha, d.ulohaKurziva).map((seg) => (seg.em ? <em>{seg.text}</em> : seg.text))
+                      : d[b.key]}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+
+      {/* ---------- Deň 8 — Launch Partner most ---------- */}
+      <article id={DEN_8.id} class="plan-den scroll-mt-40 relative overflow-hidden rounded-lg border-3 border-ink bg-ink text-paper shadow-brutal-lg print:shadow-none" aria-labelledby="den-8-h">
+        <XMark class="pointer-events-none absolute -bottom-6 -right-6 h-40 w-40 text-hot opacity-30 sm:-top-6 sm:bottom-auto sm:h-56 sm:w-56 sm:opacity-90" />
+        <header class="relative flex flex-wrap items-center gap-4 border-b-3 border-paper/40 px-5 py-5 sm:px-8">
+          <Badge variant="sticker" tone="lime" tilt="left">
+            Deň {DEN_8.n}
+          </Badge>
+          <Badge variant="flat" tone="paper">{DEN_8.podtitul}</Badge>
+          <h2 id="den-8-h" class="w-full font-display text-3xl font-extrabold uppercase leading-none tracking-tight sm:text-display-xs">
+            {DEN_8.nazov}
+          </h2>
+        </header>
+        <div class="relative grid gap-8 px-5 py-8 sm:px-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+          <div class="flex flex-col gap-5 text-lg font-medium leading-relaxed sm:text-xl">
+            <p>{DEN_8.odseky[0]}</p>
+            <p>
+              {DEN_8.odseky[1].split(DEN_8.tucne)[0]}
+              <strong class="font-display font-extrabold text-yellow">{DEN_8.tucne}</strong>
+              {DEN_8.odseky[1].split(DEN_8.tucne)[1]}
+            </p>
+          </div>
+          <div class="flex flex-col gap-3 print:hidden">
+            <a
+              href={KONZULTACIA_Z_PLANU}
+              data-cursor="vstup"
+              class="press inline-flex min-h-14 items-center justify-center gap-3 rounded-lg border-3 border-paper bg-hot px-6 font-display text-xl font-extrabold uppercase text-ink shadow-[6px_6px_0_0_var(--color-paper)]"
+            >
+              → {DEN_8.cta}
+            </a>
+            <p class="font-mono text-sm uppercase tracking-[0.14em] text-paper/70">Bezplatný úvod · konzultácia</p>
+          </div>
+          <p class="hidden font-mono text-sm print:block">→ {DEN_8.cta}: xvadur.com/konzultacia/</p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <Section bg="paper" border="top" pad="sm" class="print:hidden">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <a href="/makleri/" class="inline-flex min-h-11 items-center font-display text-lg font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot">← Neviditeľný maklér</a>
+      <a href="/hry/skrtaci-test/" class="inline-flex min-h-11 items-center font-display text-lg font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot">Škrtací test online →</a>
+    </div>
+  </Section>
+</Base>
+
+<style is:global>
+  /* Tlač / PDF export (scripts/export-makleri-pdf.mjs): bez hlavičky, pätičky, navigácie dní, marquee, kurzora,
+     ostrovov; každý deň na novej strane; tiene a textúry preč; farby dlaždíc ostávajú (print-color-adjust). */
+  @page {
+    size: A4;
+    margin: 14mm 12mm;
+  }
+  @media print {
+    html,
+    body {
+      background: var(--color-paper) !important;
+    }
+    body > header,
+    body > footer,
+    [data-den-nav],
+    .marquee,
+    [data-sonner-toaster],
+    astro-island[component-export='Cursor'],
+    astro-island[component-export='Smooth'] {
+      display: none !important;
+    }
+    * {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+    .tx-grain::after,
+    .tx-halftone::before,
+    .tx-dots::before {
+      display: none !important;
+    }
+    .card-drop,
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    main {
+      padding: 0 !important;
+    }
+    /* hlavička produktu kompaktne (dva stĺpce, menší H1), aby Deň 1 začal na strane 1 */
+    main > section:first-of-type {
+      padding-top: 0 !important;
+      padding-bottom: 6mm !important;
+    }
+    .plan-hero {
+      grid-template-columns: 1.2fr 1fr;
+      align-items: start;
+      gap: 8mm;
+    }
+    .plan-hero h1 {
+      font-size: 2.6rem !important;
+      line-height: 0.9 !important;
+    }
+    .plan-podtitul {
+      font-size: 1.15rem !important;
+      margin-top: 4mm !important;
+    }
+    /* Deň 1 začína na strane 1 pod hlavičkou (smie sa zalomiť po blokoch, hlavička dňa drží s obsahom);
+       každý ďalší deň = nová strana, vcelku */
+    .plan-den {
+      break-inside: avoid;
+    }
+    #den-1 {
+      break-inside: auto;
+    }
+    .plan-den header {
+      break-after: avoid;
+    }
+    .plan-den + .plan-den {
+      break-before: page;
+      page-break-before: always;
+    }
+    .plan-den header,
+    .plan-den > div > div {
+      break-inside: avoid;
+    }
+    #den-8 {
+      background: var(--color-ink) !important;
+      color: var(--color-paper) !important;
+    }
+    a[href]::after {
+      content: '';
+    }
+  }
+</style>

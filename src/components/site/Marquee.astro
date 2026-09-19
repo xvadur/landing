@@ -1,0 +1,70 @@
+---
+/** Čisto CSS marquee pás (pauza na hover, reverse, reduced-motion = stojí).
+ *  <Marquee items={['459 WEBOV', '2 034 MAKLÉROV']} color="yellow" reverse /> */
+import XMark from './XMark.astro';
+
+type Color = 'paper' | 'white' | 'yellow' | 'pink' | 'lilac' | 'lime' | 'sky' | 'hot' | 'ink';
+interface Props {
+  items: string[];
+  color?: Color;
+  reverse?: boolean;
+  /** trvanie jedného cyklu v sekundách */
+  duration?: number;
+  /** veľkosť písma: sm = 1.25rem, md = 2rem, lg = 3rem */
+  size?: 'sm' | 'md' | 'lg';
+  class?: string;
+  label?: string;
+}
+const {
+  items,
+  color = 'yellow',
+  reverse = false,
+  duration = 40,
+  size = 'md',
+  class: className = '',
+  label = 'Fakty',
+} = Astro.props;
+
+const BG: Record<Color, string> = {
+  paper: 'bg-paper text-ink',
+  white: 'bg-white text-ink',
+  yellow: 'bg-yellow text-ink',
+  pink: 'bg-pink text-ink',
+  lilac: 'bg-lilac text-ink',
+  lime: 'bg-lime text-ink',
+  sky: 'bg-sky text-ink',
+  hot: 'bg-hot text-ink',
+  ink: 'bg-ink text-paper',
+};
+const SIZE = {
+  sm: 'text-xl py-2',
+  md: 'text-2xl sm:text-3xl py-3',
+  lg: 'text-3xl sm:text-5xl py-4',
+};
+const XSIZE = { sm: 'w-5 h-5', md: 'w-7 h-7', lg: 'w-10 h-10' };
+/* každá kópia má aspoň 8 položiek, aby pás nikdy nemal dieru; obe kópie sú rovnaké → posun −50 % je bezšvový */
+const perCopy = Array.from({ length: Math.max(1, Math.ceil(8 / Math.max(items.length, 1))) }).flatMap(() => items);
+---
+
+<div
+  class:list={['marquee border-y-3 border-ink font-display font-extrabold uppercase tracking-tight', BG[color], SIZE[size], className]}
+  data-reverse={reverse ? 'true' : undefined}
+  style={`--marquee-duration:${duration}s`}
+  role="marquee"
+  aria-label={label}
+>
+  <div class="marquee-track">
+    {
+      [0, 1].map((copy) => (
+        <div class="flex items-center" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {perCopy.map((item) => (
+            <span class="flex items-center gap-[var(--marquee-gap)] pr-[var(--marquee-gap)] whitespace-nowrap">
+              <span>{item}</span>
+              <XMark class={XSIZE[size]} />
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

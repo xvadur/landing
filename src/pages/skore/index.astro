@@ -1,0 +1,80 @@
+---
+/** /skore/ — Skóre webu makléra (spec 05 §3). URL → /api/skore (worker) → výsledok proti kotvám z packu 13 §1.
+ *  islands="lite" (podstránka s formulárom: Toaster, bez Lenis/kurzora). Ostrov SkoreForm client:idle. */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import Marquee from '@/components/site/Marquee.astro';
+import KonzultaciaBand from '@/components/port/KonzultaciaBand.astro';
+import AkoSaPocita from '@/components/skore/AkoSaPocita.astro';
+import SkoreForm from '@/components/skore/SkoreForm';
+import { routeByPath } from '@/data/routes';
+import { KOTVY } from '@/data/fakty';
+import { CITACIE } from '@/data/frazy';
+
+const r = routeByPath('/skore/')!;
+const marquee = CITACIE.map((c) => c.text.toUpperCase());
+---
+
+<Base title={r.title} description={r.description} islands="lite">
+  <Section bg="yellow" border="bottom" pad="lg" class="tx-halftone">
+    <div class="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow mb-6">XVADUR / Pre maklérov / Nástroj</p>
+        <h1 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+          Skóre webu <br />makléra.
+        </h1>
+        <p class="mt-8 max-w-xl text-xl">
+          Vložte adresu. Zistíte, koľko z vášho webu by mohlo byť kohokoľvek — proti tomu, čo píše{' '}
+          <strong>{KOTVY.kancelarieSFrazou.value} zo {KOTVY.kancelarieSFrazou.z}</strong> bratislavských kancelárií.
+        </p>
+      </div>
+      <dl class="grid grid-cols-2 gap-4 lg:gap-5">
+        {
+          [
+            KOTVY.kancelarieSFrazou,
+            KOTVY.prvyKrokKontakt,
+            KOTVY.prvyKrokRezervacia,
+            KOTVY.dokazNaWebe,
+          ].map((k, i) => (
+            <div class="card-drop flex flex-col gap-2 rounded-lg border-3 border-ink bg-white p-4 shadow-brutal" style={`--i:${i}`}>
+              <dt class="order-2 text-sm leading-snug">{k.note}</dt>
+              <dd class="order-1 font-display text-3xl font-extrabold tabular-nums tracking-tight sm:text-4xl">
+                {k.value}
+                <span class="text-lg text-ink/60"> / {k.z}</span>
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </Section>
+
+  <Section id="skore" bg="paper" pad="lg">
+    <div class="mx-auto max-w-4xl">
+      <SkoreForm client:idle />
+    </div>
+  </Section>
+
+  <Marquee items={marquee} color="pink" size="sm" duration={90} label="Doslovné citácie webov kancelárií" />
+
+  <AkoSaPocita />
+
+  <Section bg="ink" border="top" pad="md">
+    <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+      <div>
+        <p class="eyebrow mb-3 text-paper/70">Ďalší krok</p>
+        <p class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">
+          Neviditeľný maklér.<br />7 dní, po ktorých vás klient nájde bez loga kancelárie.
+        </p>
+      </div>
+      <a
+        href="/makleri/"
+        class="press inline-flex min-h-14 shrink-0 items-center justify-center gap-3 rounded-lg border-3 border-paper bg-hot px-6 font-display text-xl font-extrabold uppercase text-ink shadow-[6px_6px_0_0_var(--color-paper)]"
+      >
+        Chcem plán
+      </a>
+    </div>
+  </Section>
+
+  <KonzultaciaBand />
+</Base>

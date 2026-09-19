@@ -1,0 +1,76 @@
+---
+/** /texty/ — index textov (kolekcia `texty`, karty) + Vydanie → Substack. islands="none" (žiadny ostrov). */
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import XMark from '@/components/site/XMark.astro';
+import { routeByPath } from '@/data/routes';
+import { SUBSTACK_URL, VYDANIE_LABEL, citanieLabel, datumIso, datumSk } from '@/components/texty/citanie';
+
+const r = routeByPath('/texty/')!;
+const texty = (await getCollection('texty')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const btn =
+  'press inline-flex min-h-12 items-center justify-center gap-3 rounded-lg border-3 border-ink px-5 font-display text-lg font-extrabold uppercase tracking-wide shadow-brutal';
+---
+
+<Base title={r.title} description={r.description} islands="none">
+  <Section bg="paper" pad="lg" class="tx-grain [--tx:0.08]" label="Texty">
+    <div class="relative z-10">
+      <p class="eyebrow">Texty / AI po slovensky</p>
+      <h1 class="mt-6 font-display text-display-lg font-extrabold uppercase leading-[0.86] tracking-tighter">Texty</h1>
+      <p class="mt-8 max-w-xl text-lg">
+        Píšem o tom, čo práve staviam: čo zostane po rozhovore s AI, kde veci žijú a čo za mňa nástroj nerozhodne.
+      </p>
+    </div>
+  </Section>
+
+  <Section bg="white" border="both" pad="md" label="Zoznam textov">
+    <p class="x-divider">Zoznam</p>
+    <ul class="mt-8 grid gap-6 lg:grid-cols-2">
+      {
+        texty.map((t, i) => (
+          <li class="card-drop" style={`--i:${i}`}>
+            <a
+              href={`/texty/${t.id}/`}
+              class="lift group relative flex h-full flex-col gap-5 rounded-lg border-3 border-ink bg-white p-6 shadow-brutal sm:p-8"
+            >
+              <span class="x-stamp" aria-hidden="true"></span>
+              <p class="eyebrow flex flex-wrap gap-x-3 pr-12">
+                <time datetime={datumIso(t.data.date)}>{datumSk(t.data.date)}</time>
+                <span aria-hidden="true">·</span>
+                <span>{citanieLabel(t.body ?? '')}</span>
+              </p>
+              <h2 class="font-display text-display-xs font-extrabold leading-[0.98] tracking-tight group-hover:underline group-hover:decoration-[4px] group-hover:decoration-hot group-hover:underline-offset-4">
+                {t.data.title}
+              </h2>
+              <p class="text-lg">{t.data.description}</p>
+              <span class="mt-auto inline-flex items-center gap-2 font-display text-lg font-extrabold uppercase">
+                Čítať <span aria-hidden="true">→</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </Section>
+
+  <Section bg="lime" pad="md" class="tx-halftone" label="Vydanie">
+    <div class="grid gap-8 lg:grid-cols-[1.3fr_0.7fr] lg:items-center">
+      <div class="flex items-start gap-5">
+        <XMark class="mt-1 h-10 w-10 shrink-0 text-hot sm:h-14 sm:w-14" />
+        <div>
+          <p class="eyebrow">Newsletter</p>
+          <h2 class="mt-3 font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tight">
+            {VYDANIE_LABEL}
+          </h2>
+        </div>
+      </div>
+      <div class="flex flex-col items-start gap-4">
+        <p class="text-lg">Vychádza na Substacku.</p>
+        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer" class:list={[btn, 'bg-hot text-ink']}>
+          Substack <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </Section>
+</Base>

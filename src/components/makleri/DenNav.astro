@@ -1,0 +1,105 @@
+---
+/** Navigácia dní pre /makleri/plan/ — Astro + malý inline skript (scrollspy cez IntersectionObserver, 0 kB ostrov).
+ *  Štítky D1–D8 (číslo viditeľné, názov dňa v sr-only = prístupné meno „D1 Škrtací test“); aktívny deň
+ *  (aria-current="location") ukáže názov aj vizuálne od md:. Pás sa zalamuje (flex-wrap) → nikdy nepretečie, bez
+ *  vnútorného scrollu. Pod sm: je statický (8 štítkov = 2 riadky, sticky by s hlavičkou zakryl ~180 px z 812);
+ *  od sm: sticky pod hlavičkou (výška hlavičky sa odmeria za behu, fallback 71 px). V tlači skrytá. */
+import { DNI_NAV } from '@/data/makleri/plan';
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<nav
+  id="den-nav"
+  aria-label="Dni plánu"
+  data-den-nav
+  class:list={['top-[71px] z-40 border-b-3 border-ink bg-paper sm:sticky print:hidden', className]}
+>
+  <div class="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-2 px-4 py-2 sm:px-6 lg:px-10">
+    {
+      DNI_NAV.map((d) => (
+        <a
+          href={`#${d.id}`}
+          data-den-link={d.id}
+          title={`Deň ${d.n}: ${d.label}`}
+          class:list={[
+            'group/den press inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-white px-2.5 font-display text-sm font-extrabold uppercase tracking-wide shadow-brutal-sm',
+            'aria-[current=location]:bg-yellow aria-[current=location]:shadow-brutal-press aria-[current=location]:translate-x-px aria-[current=location]:translate-y-px',
+            d.n === 8 ? 'bg-lime' : '',
+          ]}
+        >
+          <span class="font-mono text-sm font-medium tracking-[0.14em] opacity-80">D{d.n}</span>
+          <span class="sr-only md:group-aria-[current=location]/den:not-sr-only">{d.label}</span>
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
+<script>
+  /* scrollspy: aria-current na odkaz dňa, ktorý je práve v hornej tretine viewportu.
+     ClientRouter: štart na astro:page-load, upratanie na astro:before-swap. */
+  let io: IntersectionObserver | null = null;
+  let onResize: (() => void) | null = null;
+
+  function setup() {
+    const nav = document.querySelector<HTMLElement>('[data-den-nav]');
+    if (!nav) return;
+
+    const header = document.querySelector<HTMLElement>('body > header');
+    const place = () => {
+      nav.style.top = `${header ? header.offsetHeight : 0}px`;
+    };
+    place();
+    onResize = place;
+    window.addEventListener('resize', onResize);
+
+    const links = Array.from(nav.querySelectorAll<HTMLAnchorElement>('[data-den-link]'));
+    const sections = links
+      .map((a) => document.getElementById(a.dataset.denLink ?? ''))
+      .filter((el): el is HTMLElement => !!el);
+    if (!sections.length || typeof IntersectionObserver === 'undefined') return;
+
+    const setCurrent = (id: string) => {
+      for (const a of links) {
+        const on = a.dataset.denLink === id;
+        if (on) a.setAttribute('aria-current', 'location');
+        else a.removeAttribute('aria-current');
+      }
+    };
+
+    const visible = new Map<string, number>();
+    io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) visible.set(e.target.id, e.intersectionRatio);
+          else visible.delete(e.target.id);
+        }
+        let best: string | null = null;
+        let bestTop = Infinity;
+        for (const id of visible.keys()) {
+          const top = Math.abs(document.getElementById(id)!.getBoundingClientRect().top);
+          if (top < bestTop) {
+            bestTop = top;
+            best = id;
+          }
+        }
+        if (best) setCurrent(best);
+      },
+      { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.1, 0.5, 1] },
+    );
+    sections.forEach((s) => io!.observe(s));
+  }
+
+  function teardown() {
+    io?.disconnect();
+    io = null;
+    if (onResize) window.removeEventListener('resize', onResize);
+    onResize = null;
+  }
+
+  document.addEventListener('astro:page-load', setup);
+  document.addEventListener('astro:before-swap', teardown);
+</script>

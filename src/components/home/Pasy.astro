@@ -1,0 +1,98 @@
+---
+/** Pásy domova (spec 05 §2.5–2.7): Kvíz („AKO PRIPRAVENÝ SI NA AI?" → /kviz/), Texty (#texty: článok z 11. 9. 2026
+ *  + Vydanie → Substack), Makléri („NEVIDITEĽNÝ MAKLÉR — 7 dní…" → /makleri/; „Skóre webu makléra" → /skore/).
+ *  Externý odkaz Substack overený 19. 9. 2026 (HTTP 200). Register: domov tyká; maklérsky pás vyká (pack 13 vyká
+ *  klientovi-maklérovi, popis z routes.ts je jeho veta). Kvízový popis z routes.ts je bez oslovenia. */
+import Section from '@/components/site/Section.astro';
+import XMark from '@/components/site/XMark.astro';
+import { routeByPath } from '@/data/routes';
+import { ArrowRightIcon, ArrowUpRightIcon } from '@phosphor-icons/react';
+
+const kviz = routeByPath('/kviz/')!;
+const clanok = routeByPath('/texty/co-zostane-ked-zavriem-chat/')!;
+const texty = routeByPath('/texty/')!;
+const makleri = routeByPath('/makleri/')!;
+const skore = routeByPath('/skore/')!;
+
+const SUBSTACK = 'https://substack.com/@xvadur';
+/** Perex článku „Čo zostane, keď zavriem chat" (11. 9. 2026) — verbatim tučný úvod z 11_SUBSTACK_CO_ZOSTANE_2026-09-11.md. */
+const PEREX =
+  'AI mi otvorila cestu od poznámok k vlastným systémom. Rozhodujúce bolo, keď sa práca prestala končiť odpoveďou. Teraz z nej staviam portfólio, do ktorého sa bude dať vstúpiť.';
+
+const BTN_HOT =
+  'press inline-flex min-h-12 items-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal';
+const BTN_WHITE =
+  'press inline-flex min-h-12 items-center gap-3 rounded-lg border-3 border-ink bg-white px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal hover:bg-white-hover';
+---
+
+<!-- KVÍZ -->
+<Section bg="yellow" pad="md" border="bottom" label="Kvíz" class="tx-halftone">
+  <div class="grid gap-8 lg:grid-cols-[1.5fr_auto] lg:items-center">
+    <div>
+      <p class="eyebrow mb-4">Kvíz / Pre malú firmu</p>
+      <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Ako pripravený si na AI?</h2>
+      <p class="mt-5 max-w-xl text-lg">{kviz.description}</p>
+    </div>
+    <a href={kviz.path} class:list={[BTN_HOT, 'lg:justify-self-end']}>
+      Spustiť kvíz
+      <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+    </a>
+  </div>
+</Section>
+
+<!-- TEXTY -->
+<Section id="texty" bg="white" pad="lg" border="bottom" label="Texty">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-end">
+    <p class="eyebrow lg:pb-3">Texty / Po slovensky</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Texty</h2>
+  </div>
+
+  <div class="mt-10 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
+    <article class="brutal lift relative flex flex-col gap-4 bg-paper p-6 sm:p-8">
+      <span class="x-stamp" aria-hidden="true" />
+      <p class="eyebrow">Text · 11. 9. 2026</p>
+      <h3 class="pr-10 font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tighter">
+        <a href={clanok.path} class="no-underline hover:underline hover:decoration-[4px] hover:decoration-hot hover:underline-offset-4">Čo zostane, keď zavriem chat</a>
+      </h3>
+      <p class="max-w-prose font-serif text-2xl italic leading-snug">{PEREX}</p>
+      <a href={clanok.path} class:list={[BTN_WHITE, 'mt-auto self-start']}>
+        Čítať
+        <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+      </a>
+    </article>
+
+    <aside class="brutal relative flex flex-col gap-4 bg-lilac p-6 sm:p-8" aria-label="Vydanie">
+      <XMark class="h-10 w-10 text-hot" />
+      <h3 class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">Vydanie</h3>
+      <p class="text-lg">Týždenný text o AI po slovensky.</p>
+      <a href={SUBSTACK} target="_blank" rel="noopener noreferrer" class:list={[BTN_WHITE, 'mt-auto self-start']}>
+        Substack
+        <ArrowUpRightIcon size={22} weight="bold" aria-hidden="true" />
+      </a>
+      <a href={texty.path} class="inline-flex min-h-11 items-center gap-2 font-display text-lg font-extrabold uppercase underline decoration-[3px] underline-offset-4 hover:decoration-hot">
+        Všetky texty →
+      </a>
+    </aside>
+  </div>
+</Section>
+
+<!-- MAKLÉRI -->
+<Section bg="pink" pad="md" border="bottom" label="Makléri" class="tx-dots">
+  <div class="grid gap-8 lg:grid-cols-[1.5fr_auto] lg:items-center">
+    <div>
+      <p class="eyebrow mb-4">Pre maklérov / Neviditeľný maklér</p>
+      <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Neviditeľný maklér</h2>
+      <p class="mt-5 max-w-xl font-display text-2xl font-bold leading-tight">{makleri.description}</p>
+    </div>
+    <div class="flex flex-col items-start gap-4 lg:items-end">
+      <a href={makleri.path} class={BTN_HOT}>
+        7 dní
+        <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+      </a>
+      <a href={skore.path} class={BTN_WHITE}>
+        Skóre webu makléra
+        <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+</Section>

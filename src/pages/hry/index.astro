@@ -1,0 +1,106 @@
+---
+/** /hry/ — zoznam hier (spec 05 §2.4, §3): Škrtací test (live) · Miliarda → bilión (V STAVBE) · Strach-o-meter (V STAVBE).
+ *  Poctivé štítky: hry 2 a 3 bez odkazu a bez popisu — spec dáva len názvy a štítok, popis doplní Adam.
+ *  islands="full" (kontrakt základu: hry = plný zážitok — Lenis, kurzor VSTÚP na „Hrať“, ⌘K). */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import Marquee from '@/components/site/Marquee.astro';
+import KonzultaciaBand from '@/components/port/KonzultaciaBand.astro';
+import { routeByPath } from '@/data/routes';
+import { KOTVY } from '@/data/fakty';
+import { ArrowRightIcon, ScissorsIcon, StackIcon, GaugeIcon } from '@phosphor-icons/react';
+
+const r = routeByPath('/hry/')!;
+const skrt = routeByPath('/hry/skrtaci-test/')!;
+
+type Hra = {
+  id: string;
+  cislo: string;
+  nazov: string;
+  text: string | null;
+  href: string | null;
+  bg: 'bg-yellow' | 'bg-pink' | 'bg-sky';
+  Icon: typeof ScissorsIcon;
+};
+
+const HRY: Hra[] = [
+  {
+    id: 'skrtaci-test',
+    cislo: '01',
+    nazov: 'Škrtací test',
+    text: `${skrt.description} ${KOTVY.kancelarieSFrazou.value} zo ${KOTVY.kancelarieSFrazou.z} kancelárií má v texte aspoň jednu zo šiestich fráz.`,
+    href: skrt.path,
+    bg: 'bg-yellow',
+    Icon: ScissorsIcon,
+  },
+  {
+    id: 'miliarda-bilion',
+    cislo: '02',
+    nazov: 'Miliarda → bilión',
+    text: null,
+    href: null,
+    bg: 'bg-pink',
+    Icon: StackIcon,
+  },
+  {
+    id: 'strach-o-meter',
+    cislo: '03',
+    nazov: 'Strach-o-meter',
+    text: null,
+    href: null,
+    bg: 'bg-sky',
+    Icon: GaugeIcon,
+  },
+];
+---
+
+<Base title={r.title} description={r.description} islands="full">
+  <Section bg="lilac" border="bottom" pad="lg" class="tx-dots">
+    <p class="eyebrow mb-6">XVADUR / Hry</p>
+    <h1 class="font-display text-display-lg font-extrabold uppercase leading-[0.86] tracking-tighter">Hry.</h1>
+    <p class="mt-8 max-w-xl text-xl">Veci, ktoré si vyskúšate namiesto brožúry. Jedna beží, dve sa stavajú.</p>
+  </Section>
+
+  <Section id="zoznam" bg="paper" pad="lg">
+    <ol class="grid gap-6 lg:grid-cols-3" role="list">
+      {
+        HRY.map(({ Icon, ...h }, i) => (
+          <li
+            class:list={[
+              'card-drop relative flex min-h-80 flex-col gap-5 rounded-lg border-3 border-ink p-6 shadow-brutal sm:p-8',
+              h.bg,
+              h.href ? 'lift' : 'tx-halftone [--tx:14%]',
+            ]}
+            style={`--i:${i}`}
+          >
+            {!h.href && (
+              <span class="sticker absolute -right-3 -top-4 [--sticker-rotate:6deg]">V stavbe</span>
+            )}
+            <div class="flex items-start justify-between gap-4">
+              <span class="eyebrow">Hra {h.cislo}</span>
+              <Icon size={44} weight="bold" aria-hidden="true" />
+            </div>
+            <h2 class="font-display text-3xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-4xl">{h.nazov}</h2>
+            {h.text && <p class="text-base leading-relaxed">{h.text}</p>}
+            {h.href ? (
+              <a
+                href={h.href}
+                data-cursor="vstup"
+                class="press mt-auto inline-flex min-h-12 w-full items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal sm:w-auto sm:self-start"
+              >
+                Hrať
+                <ArrowRightIcon weight="bold" aria-hidden="true" />
+              </a>
+            ) : (
+              <p class="mt-auto font-mono text-sm uppercase tracking-[0.14em] text-ink/70">Zatiaľ bez odkazu. Pribudne.</p>
+            )}
+          </li>
+        ))
+      }
+    </ol>
+  </Section>
+
+  <Marquee items={['ŠKRTACÍ TEST', 'MILIARDA → BILIÓN', 'STRACH-O-METER']} color="ink" size="md" label="Hry" />
+
+  <KonzultaciaBand />
+</Base>

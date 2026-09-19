@@ -1,0 +1,24 @@
+---
+/** X znak z packu (public/brand/x.svg) ako inline SVG s currentColor — funguje aj na tmavom podklade.
+ *  Použitie: <XMark class="w-8 h-8 text-hot" /> */
+interface Props {
+  class?: string;
+  title?: string;
+}
+const { class: className = 'w-6 h-6', title } = Astro.props;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 256 256"
+  class={className}
+  aria-hidden={title ? undefined : 'true'}
+  role={title ? 'img' : undefined}
+  focusable="false"
+>
+  {title && <title>{title}</title>}
+  <path
+    fill="currentColor"
+    d="M0 0H26L53 43L80 0H106L66 65L106 130H79L53 87L27 130H0L40 65Z"
+    transform="translate(63,48) scale(1.23)"></path>
+</svg>

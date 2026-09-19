@@ -1,0 +1,129 @@
+/* neobrutalism.dev → xvadur tokeny (doc 10 §2, §3).
+   Jediné miesto, kde sa premenné knižnice (--main, --background, --border, --shadow, --overlay …)
+   mapujú na naše tokeny zo src/styles/tokens.css. Importujú ho komponenty v tomto priečinku;
+   global.css sa nemení. Žiadny ručný hex — všetko cez var(--color-*), var(--shadow-*), var(--radius-*).
+
+   Zdroj knižnice: github.com/ekmas/neobrutalism-components (MIT, (c) 2023 Samuel Breznjak),
+   commit be6e0e2 (Radix verzia, 22. 3. 2025 – 8. 9. 2026). Novší registry (/r/*.json) beží na Base UI,
+   ktorý v repe nie je; Radix je v základe (radix-ui 1.6.7), preto vendorujeme Radix verziu. */
+
+:root {
+  /* farby knižnice → tokeny */
+  --background: var(--color-paper);
+  --secondary-background: var(--color-white);
+  --foreground: var(--color-ink);
+  --main: var(--color-yellow);
+  --main-foreground: var(--color-ink);
+  --border: var(--color-ink);
+  --ring: var(--color-hot);
+  --overlay: var(--color-overlay);
+
+  /* rám, radius, tieň */
+  --border-width: var(--border-width-brutal); /* 3px */
+  --radius-base: var(--radius-lg); /* 8px */
+  --shadow: var(--shadow-brutal); /* 6/6, pod 640 px 4/4 */
+  /* Tailwind 4 emituje len použité @theme premenné → fallbacky s rovnakými hodnotami ako tokens.css */
+  --shadow-sm: var(--shadow-brutal-sm, 3px 3px 0 0 var(--color-ink));
+  --shadow-lg: var(--shadow-brutal-lg, 9px 9px 0 0 var(--color-ink));
+  --shadow-xl: var(--shadow-brutal-xl, 11px 11px 0 0 var(--color-ink));
+  --shadow-press: var(--shadow-brutal-press, 1px 1px 0 0 var(--color-ink));
+  --shadow-lift: var(--shadow-brutal-lift, 8px 8px 0 0 var(--color-ink));
+  --box-shadow-x: var(--brutal-x);
+  --box-shadow-y: var(--brutal-x);
+  --reverse-box-shadow-x: calc(-1 * var(--brutal-x));
+  --reverse-box-shadow-y: calc(-1 * var(--brutal-x));
+
+  /* písmo */
+  --font-base-family: var(--font-sans);
+  --font-heading-family: var(--font-display);
+  --font-weight-base: 500;
+  --font-weight-heading: 800;
+
+  /* grafy (ak sa niekedy vendoruje chart): deep pastely, žiadny nový odtieň */
+  --chart-1: var(--color-yellow-deep);
+  --chart-2: var(--color-pink-deep);
+  --chart-3: var(--color-lilac-deep);
+  --chart-4: var(--color-lime-deep);
+  --chart-5: var(--color-sky-deep);
+}
+
+/* ---------- stavy otvorenia / zatvorenia (Radix data-state), bez tw-animate-css ----------
+   Dialóg = card-drop preset (padá na miesto so spring), zatvorenie = fade 120 ms.
+   Sheet = slide zo strany. Popovery (select, tooltip) = pop z transform-origin. */
+@keyframes nb-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes nb-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+@keyframes nb-drop {
+  from { opacity: 0; transform: translate(-8px, -8px); box-shadow: 0 0 0 0 var(--color-ink); }
+  to { opacity: 1; transform: translate(0, 0); box-shadow: var(--shadow-brutal-xl, 11px 11px 0 0 var(--color-ink)); }
+}
+@keyframes nb-pop {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes nb-slide-right { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes nb-slide-left { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes nb-slide-top { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+@keyframes nb-slide-bottom { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+[data-slot='dialog-overlay'][data-state='open'],
+[data-slot='sheet-overlay'][data-state='open'] {
+  animation: nb-fade-in var(--duration-base) var(--ease-out-hard) both;
+}
+[data-slot='dialog-overlay'][data-state='closed'],
+[data-slot='sheet-overlay'][data-state='closed'] {
+  animation: nb-fade-out var(--duration-fast) ease-out both;
+}
+[data-slot='dialog-content'][data-state='open'] {
+  animation: nb-drop var(--duration-slow) var(--ease-spring) both;
+}
+[data-slot='dialog-content'][data-state='closed'] {
+  animation: nb-fade-out var(--duration-fast) ease-out both;
+}
+[data-slot='sheet-content'][data-state='open'] {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-out-hard);
+  animation-fill-mode: both;
+}
+[data-slot='sheet-content'][data-state='open'][data-side='right'] { animation-name: nb-slide-right; }
+[data-slot='sheet-content'][data-state='open'][data-side='left'] { animation-name: nb-slide-left; }
+[data-slot='sheet-content'][data-state='open'][data-side='top'] { animation-name: nb-slide-top; }
+[data-slot='sheet-content'][data-state='open'][data-side='bottom'] { animation-name: nb-slide-bottom; }
+[data-slot='sheet-content'][data-state='closed'] {
+  animation: nb-fade-out var(--duration-fast) ease-out both;
+}
+[data-slot='select-content'][data-state='open'],
+[data-slot='tooltip-content'][data-state='delayed-open'],
+[data-slot='tooltip-content'][data-state='instant-open'] {
+  animation: nb-pop var(--duration-base) var(--ease-out-hard) both;
+}
+[data-slot='select-content'] { transform-origin: var(--radix-select-content-transform-origin); }
+[data-slot='tooltip-content'] { transform-origin: var(--radix-tooltip-content-transform-origin); }
+[data-slot='select-content'][data-state='closed'],
+[data-slot='tooltip-content'][data-state='closed'] {
+  animation: nb-fade-out var(--duration-fast) ease-out both;
+}
+
+/* progress: indikátor sa posúva plynulo (spring), pri reduced motion skočí */
+[data-slot='progress-indicator'] {
+  transition: transform var(--duration-slow) var(--ease-spring);
+}
+
+/* ---------- reduced motion: všetko je 120 ms fade (doc 10, pravidlo enginu) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='dialog-content'][data-state='open'],
+  [data-slot='sheet-content'][data-state='open'],
+  [data-slot='select-content'][data-state='open'],
+  [data-slot='tooltip-content'][data-state='delayed-open'],
+  [data-slot='tooltip-content'][data-state='instant-open'] {
+    animation: nb-fade-in var(--duration-fast) ease-out both;
+  }
+  [data-slot='progress-indicator'] {
+    transition: none;
+  }
+}

@@ -1,0 +1,132 @@
+---
+/** Lab — galéria vendorovaných knižníc (Vendor fáza, 19. 9. 2026).
+ *  Jedna sekcia na knižnicu; každý <Lib>Lab je ostrov client:only="react"
+ *  (GSAP pluginy, matter-js, canvas, Motion siahajú na window pri importe).
+ *  islands="lite": Lab má vlastný ⌘K listener (neobrutalism Command), Lenis a kurzor
+ *  tu nie sú potrebné. noindex — interná stránka. */
+import Base from '@/layouts/Base.astro';
+import Section from '@/components/site/Section.astro';
+import { ROUTES } from '@/data/routes';
+
+import NeobrutalismLab from '@/components/lab/neobrutalismLab';
+import ReactbitsLab from '@/components/lab/reactbitsLab';
+import FancyLab from '@/components/lab/fancyLab';
+import MagicuiLab from '@/components/lab/magicuiLab';
+import MotionPrimitivesLab from '@/components/lab/motionprimitivesLab';
+
+type Lib = {
+  id: string;
+  nazov: string;
+  licencia: string;
+  bg: 'paper' | 'white' | 'yellow' | 'pink' | 'lilac' | 'lime' | 'sky';
+  naco: string;
+};
+
+const LIBS: Lib[] = [
+  {
+    id: 'neobrutalism',
+    nazov: 'neobrutalism.dev',
+    licencia: 'MIT · Radix verzia (commit be6e0e2)',
+    bg: 'white',
+    naco: 'Základné UI: tlačidlá, karty, dialóg, sheet, formuláre, select, tabs, progress, ⌘K, tooltip. Rám 3 px, radius 8, tvrdý tieň — cez tokeny.',
+  },
+  {
+    id: 'reactbits',
+    nazov: 'React Bits',
+    licencia: 'MIT + Commons Clause · (c) David Haz',
+    bg: 'yellow',
+    naco: 'Text a efekty pre hero: SplitText, ScrambledText, DecryptedText, Magnet, ClickSpark, TiltedCard, CountUp, Stepper, Noise.',
+  },
+  {
+    id: 'fancy',
+    nazov: 'Fancy',
+    licencia: 'MIT · Fancy Components',
+    bg: 'lime',
+    naco: 'Bloky pre svet a obraz: ScrambleHover, VerticalCutReveal, marquee po SVG ceste, StickerPeel, ImageTrail (len desktop), Gravity (matter-js).',
+  },
+  {
+    id: 'magicui',
+    nazov: 'Magic UI',
+    licencia: 'MIT · magicuidesign',
+    bg: 'sky',
+    naco: 'Marquee, terminál, konfety, priebeh scrollu, dock, číselník, lesklý rám. Záloha k NumberFlow a k site/Marquee.',
+  },
+  {
+    id: 'motionprimitives',
+    nazov: 'Motion Primitives',
+    licencia: 'MIT · ibelick',
+    bg: 'pink',
+    naco: 'Motion vrstva: lokálny kurzor, morphing dialóg, prepínací panel (kvíz), text scramble, InView, animované číslo, Magnetic.',
+  },
+];
+---
+
+<Base title="Lab — XVADUR" description="Lab: galéria vendorovaných knižníc xvadur.com v4. Interná stránka." noindex islands="lite">
+  <Section bg="lilac" pad="lg" border="bottom" class="tx-dots">
+    <p class="eyebrow mb-4">Vendor fáza · 19. 9. 2026 · interné</p>
+    <h1 class="font-display text-display-lg font-extrabold uppercase leading-[0.86] tracking-tighter">Lab</h1>
+    <p class="mt-6 max-w-2xl text-lg">
+      Galéria piatich vendorovaných knižníc v brutal retheme. Každý prvok berie farby, rám a tieň z tokenov;
+      pri obmedzenom pohybe sa všetko len prelína.
+    </p>
+
+    <nav class="mt-10" aria-labelledby="lab-cesty">
+      <h2 id="lab-cesty" class="eyebrow mb-3">Plánované cesty webu (routes.ts)</h2>
+      <ul class="flex flex-wrap gap-3">
+        {
+          ROUTES.map((r) => (
+            <li>
+              <a
+                href={r.path}
+                class="press inline-flex min-h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-4 font-mono text-sm shadow-brutal-sm hover:bg-yellow"
+              >
+                <span class="font-bold">{r.path}</span>
+                <span class="text-ink/60">{r.title.replace(' — XVADUR', '')}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="mt-3 text-sm text-ink/60">Stránky, ktoré ešte nestoja, vrátia 404.</p>
+    </nav>
+
+    <nav class="mt-8" aria-labelledby="lab-kniznice">
+      <h2 id="lab-kniznice" class="eyebrow mb-3">Knižnice na tejto stránke</h2>
+      <ul class="flex flex-wrap gap-3">
+        {
+          LIBS.map((l) => (
+            <li>
+              <a
+                href={`#${l.id}`}
+                class="press inline-flex min-h-11 items-center rounded-lg border-3 border-ink bg-paper px-4 font-display text-base font-extrabold uppercase shadow-brutal-sm hover:bg-yellow"
+              >
+                {l.nazov}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </Section>
+
+  {
+    LIBS.map((l, i) => (
+      <Section id={l.id} bg={l.bg} pad="lg" border="bottom" label={l.nazov}>
+        <header class="mb-10 max-w-3xl">
+          <p class="eyebrow mb-3">
+            {String(i + 1).padStart(2, '0')} · {l.licencia}
+          </p>
+          <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">{l.nazov}</h2>
+          <p class="mt-4 text-lg">{l.naco}</p>
+        </header>
+        <div class="min-w-0">
+          {l.id === 'neobrutalism' && <NeobrutalismLab client:only="react" />}
+          {l.id === 'reactbits' && <ReactbitsLab client:only="react" />}
+          {l.id === 'fancy' && <FancyLab client:only="react" />}
+          {l.id === 'magicui' && <MagicuiLab client:only="react" />}
+          {l.id === 'motionprimitives' && <MotionPrimitivesLab client:only="react" />}
+        </div>
+      </Section>
+    ))
+  }
+</Base>

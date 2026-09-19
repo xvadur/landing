@@ -1,0 +1,43 @@
+---
+/** Metóda — port sekcie „Ako pracujem" z legacy App.jsx (.method), texty verbatim („ostáva"), nové tokeny. */
+import Section from '@/components/site/Section.astro';
+import Marquee from '@/components/site/Marquee.astro';
+import { LightbulbIcon, CodeIcon, MapTrifoldIcon, NewspaperIcon } from '@phosphor-icons/react';
+
+interface Props {
+  id?: string;
+}
+const { id = 'ako-pracujem' } = Astro.props;
+
+const CAPABILITIES = [
+  { Icon: LightbulbIcon, title: 'POCHOPENIE', text: 'Najprv nájdem skutočný problém a rozhodnutie, ktoré má systém podporiť.', bg: 'bg-yellow' },
+  { Icon: CodeIcon, title: 'STAVBA', text: 'AI používam ako materiál a násobič pri weboch, workflowoch a prototypoch.', bg: 'bg-sky' },
+  { Icon: MapTrifoldIcon, title: 'VIZUALIZÁCIA', text: 'Zložité mierky, dáta a vzťahy mením na veci, ktoré sa dajú zažiť.', bg: 'bg-pink' },
+  { Icon: NewspaperIcon, title: 'ARGUMENT', text: 'Pri médiách a politike oddeľujem tvrdenie, mechanizmus, dôkaz a rétoriku.', bg: 'bg-lilac' },
+];
+---
+
+<Section id={id} bg="paper" pad="lg" border="none">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-start">
+    <p class="eyebrow lg:pt-3">Ako pracujem</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+      Rozmýšľam.<br />Staviam.<br />Ukazujem.
+    </h2>
+  </div>
+  <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" role="list">
+    {
+      CAPABILITIES.map(({ Icon, title, text, bg }, i) => (
+        <li
+          class:list={['lift reveal relative flex min-h-64 flex-col gap-4 rounded-lg border-3 border-ink p-6 shadow-brutal', bg]}
+          style={`--i:${i}`}
+        >
+          <span class="x-stamp" aria-hidden="true" />
+          <Icon size={44} weight="bold" aria-hidden="true" />
+          <strong class="font-display text-2xl font-extrabold uppercase tracking-wide">{title}</strong>
+          <span class="text-base leading-relaxed">{text}</span>
+        </li>
+      ))
+    }
+  </ul>
+</Section>
+<Marquee items={['3D MODELY', 'WEBY', 'TEXTY', 'AI WORKFLOWY']} color="ink" size="md" label="Oblasti práce" />

@@ -1,0 +1,33 @@
+---
+/** Pás s fyzikou: prázdne frázy padajú (Gravita.tsx) + „ŠKRTNI ICH" → /hry/skrtaci-test/. */
+import Section from '@/components/site/Section.astro';
+import Gravita from './Gravita';
+import { FRAZY_RODINY } from '@/data/frazy';
+import { KOTVY } from '@/data/fakty';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+
+const pocet = FRAZY_RODINY.filter((r) => r.zakladna).length;
+const k = KOTVY.kancelarieSFrazou;
+---
+
+<Section bg="paper" pad="lg" border="bottom" label="Prázdne frázy">
+  <div class="grid gap-10 lg:grid-cols-[0.9fr_1.4fr] lg:items-center">
+    <div>
+      <p class="x-divider">Hra</p>
+      <h2 class="mt-6 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+        {pocet} fráz, ktoré má každý.
+      </h2>
+      <p class="mt-6 max-w-md text-lg">
+        {k.value} zo {k.z} realitných kancelárií má v texte aspoň jednu z nich. Pohádž nimi. Potom vlož vlastný text a pozri, čo zostane.
+      </p>
+      <a
+        href="/hry/skrtaci-test/"
+        class="press mt-8 inline-flex min-h-12 items-center gap-3 rounded-lg border-3 border-ink bg-hot px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
+      >
+        Škrtni ich
+        <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+      </a>
+    </div>
+    <Gravita client:visible />
+  </div>
+</Section>
