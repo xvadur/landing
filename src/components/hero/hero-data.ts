@@ -14,7 +14,7 @@ export const PILULKY = [
   { label: 'Hry', href: '#hry', bg: 'bg-sky', rotate: 'rotate-[-2deg]' },
   { label: 'Texty', href: '#texty', bg: 'bg-lime', rotate: 'rotate-[3deg]' },
 ];
-export const WORDMARK = { src: '/brand/xvadur-ink.svg', width: 728, height: 130 };
+export const WORDMARK = { src: '/brand/xvadur-ink.svg', width: 678, height: 130 };
 
 /** Motto: clamp podľa šírky viewportu — spodná hranica 4 rem (64 px na 375), horná 10 rem (160 px; ≈ 158 px na 1440).
  *  Strop 10 rem je odvodený z merania: „WE ARE USELESS." pri wdth 100 má ≈ 7,24 em, kontajner max-w-7xl je 1200 px →
