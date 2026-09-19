@@ -86,7 +86,7 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       a.textAlign = 'center';
       for (let row = 0; row < 2; row++) {
         a.font = row === 0 ? `500 ${fontPx}px ${monoFamily}` : `400 ${Math.round(ch * 0.98)}px ${monoFamily}`;
-        a.globalAlpha = row === 0 ? 0.16 : 1;
+        a.globalAlpha = row === 0 ? 0.13 : 1;
         a.fillStyle = ink;
         const set = row === 0 ? CHARS : BLOCKS;
         for (let i = 0; i < set.length; i++) {
@@ -225,10 +225,10 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       visible = v;
       worker?.postMessage({ type: 'visible', visible: v });
     };
-    const io = new IntersectionObserver(([e]) => setVisible(!!e?.isIntersecting && !document.hidden), { threshold: 0 });
+    /* len viditeľnosť vo viewporte; skrytú kartu rieši prehliadač sám (rAF stojí) — document.hidden negatujeme,
+       lebo vnorené prehliadače hlásia „hidden" aj pri zobrazenej stránke a ASCII by sa nikdy nespustilo */
+    const io = new IntersectionObserver(([e]) => setVisible(!!e?.isIntersecting), { threshold: 0 });
     io.observe(section);
-    const onVis = () => setVisible(!document.hidden);
-    document.addEventListener('visibilitychange', onVis);
 
     return () => {
       alive = false;
@@ -238,7 +238,6 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       worker?.terminate();
       ro.disconnect();
       io.disconnect();
-      document.removeEventListener('visibilitychange', onVis);
     };
   }, [host, motto, onReady]);
 

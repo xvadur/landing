@@ -13,18 +13,26 @@ let alive = true;
 let readySent = false;
 const t0 = performance.now();
 
+/* Slučka cez requestAnimationFrame vo workeri: Chrome pushne OffscreenCanvas na obrazovku spoľahlivo len z rAF —
+ *  so setTimeout sa frame zobrazil až vtedy, keď hlavné vlákno náhodou samo prekreslilo. Throttle na fps cez čas. */
 function loop(fps: number) {
-  const tick = () => {
+  const step = 1000 / fps;
+  let last = 0;
+  const hasRaf = typeof requestAnimationFrame === 'function';
+  const tick = (now: number) => {
     if (!alive) return;
-    timer = setTimeout(tick, 1000 / fps) as unknown as number;
+    if (hasRaf) timer = requestAnimationFrame(tick);
+    else timer = setTimeout(() => tick(performance.now()), step) as unknown as number;
     if (!visible || !renderer) return;
-    renderer.frame((performance.now() - t0) / 1000);
+    if (now - last < step - 2) return;
+    last = now;
+    renderer.frame((now - t0) / 1000);
     if (!readySent) {
       readySent = true;
       postMessage({ type: 'ready' });
     }
   };
-  tick();
+  tick(performance.now());
 }
 
 self.onmessage = (e: MessageEvent<Msg>) => {
@@ -49,5 +57,6 @@ self.onmessage = (e: MessageEvent<Msg>) => {
   } else if (m.type === 'stop') {
     alive = false;
     clearTimeout(timer);
+    if (typeof cancelAnimationFrame === 'function') cancelAnimationFrame(timer);
   }
 };

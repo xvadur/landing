@@ -4,7 +4,7 @@
  *  Výkon: šum sa počíta na polovičnej mriežke (2×2 bunky zdieľajú hodnotu → 4× menej simplexu), jeden šum na bunku,
  *  drawImage z atlasu; ~23 k buniek na 1440 px pri 24 fps mimo hlavného vlákna = žiadny jank pri scrolle. */
 
-export const CHARS = ' .:-=+*#%@';
+export const CHARS = ' .:;+*#%@'; // bez „-“ a „=“: vodorovné čiarky robili z pozadia pruhy
 /** zložená veta: blokové znaky (vypĺňajú bunku, ťah písmena je plný); v Geist Mono chýbajú → padne to na Menlo/ui-monospace */
 export const BLOCKS = ' ░▒▓█';
 /** slučka v sekundách: skladanie → drží → rozpad → šum */
