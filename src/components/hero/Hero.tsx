@@ -25,7 +25,6 @@ import {
   PILL_CLASS,
   PILULKY,
   TEZA,
-  WORDMARK,
 } from './hero-data';
 
 /** Statický riadok motta — SSR, mobil, reduced motion a fallback, keď GSAP chunk nepríde. */
@@ -46,6 +45,8 @@ function RiadokNahrada({ text, onLetterAnimationComplete }: SplitProps) {
 const SplitText = lazy(() =>
   import('@/components/vendor/reactbits/SplitText').catch(() => ({ default: RiadokNahrada })),
 );
+import Wordmark from './Wordmark';
+
 const Dither = lazy(() => import('./Dither').catch(() => ({ default: () => null })));
 
 const SPLIT_FROM = { opacity: 0, y: 48, fontVariationSettings: "'wdth' 75" };
@@ -53,7 +54,7 @@ const SPLIT_TO = { opacity: 1, y: 0, fontVariationSettings: "'wdth' 100" };
 
 /** Náklon wordmarku za kurzorom: cieľ z pointeru, rAF lerp k cieľu (pružina bez knižnice), zápis do transform. */
 function useNaklon(active: boolean) {
-  const el = useRef<HTMLImageElement>(null);
+  const el = useRef<SVGSVGElement>(null);
   const target = useRef({ x: 0, y: 0 });
   const current = useRef({ x: 0, y: 0 });
   const raf = useRef(0);
@@ -155,15 +156,9 @@ export default function Hero() {
         <p className="eyebrow">{EYEBROW}</p>
 
         <h1 className="mt-4 w-full max-w-[52rem] sm:mt-6" style={{ perspective: 1200 }}>
-          <img
+          <Wordmark
             ref={naklon.el}
-            src={WORDMARK.src}
-            alt="XVADUR"
-            width={WORDMARK.width}
-            height={WORDMARK.height}
-            className="h-auto w-full origin-center drop-shadow-[8px_8px_0_var(--color-ink)] will-change-transform sm:drop-shadow-[11px_11px_0_var(--color-ink)]"
-            fetchPriority="high"
-            decoding="async"
+            className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"
           />
         </h1>
 
