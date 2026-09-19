@@ -140,12 +140,15 @@ export function createRenderer(ctx: Ctx2D, atlas: Atlas, grid: Grid) {
         let row = 0;
         let ci: number;
         if (inside[idx] && a > threshold[idx]!) {
-          // zložený znak: ▓ alebo █ podľa šumu (živý, ale plný ťah)
+          // zložený znak: plný blok, ~15 % buniek ▒ ako textúra (▓ v Menlo pri 10 px vyzeralo ako pruhy)
           row = 1;
-          ci = n > 0.15 ? 3 : 4;
+          ci = n > 0.45 ? 2 : 4;
         } else {
-          // šum: svetlé znaky, hustejšie okolo písmen počas skladania
-          let level = (n + 1) * 0.25;
+          // šum: riedke oblaky znakov — pod −0,15 bunka ostáva prázdna (inak z pozadia vznikne hustá mriežka)
+          // per-bunkový jitter (threshold je náhoda 0…1) rozbije vodorovné runy rovnakého znaku na zrno
+          const nj = n + (threshold[idx]! - 0.5) * 0.5;
+          if (nj < -0.3 && !inside[idx]) continue;
+          let level = (nj + 0.3) * 0.38;
           if (inside[idx]) level = Math.min(1, level + a * 0.3);
           ci = Math.min(maxC, Math.max(0, Math.round(level * maxC)));
         }

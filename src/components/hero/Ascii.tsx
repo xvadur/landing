@@ -84,14 +84,16 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       a.scale(dpr, dpr);
       a.textBaseline = 'middle';
       a.textAlign = 'center';
-      for (let row = 0; row < 2; row++) {
-        a.font = row === 0 ? `500 ${fontPx}px ${monoFamily}` : `400 ${Math.round(ch * 0.98)}px ${monoFamily}`;
-        a.globalAlpha = row === 0 ? 0.13 : 1;
-        a.fillStyle = ink;
-        const set = row === 0 ? CHARS : BLOCKS;
-        for (let i = 0; i < set.length; i++) {
-          a.fillText(set[i]!, i * cw + cw / 2, row * ch + ch / 2);
-        }
+      // riadok 0: ASCII znaky šumu (svetlé); riadok 1: bloky vety ako obdĺžniky (nezávislé od fontu — glyf █
+      // v niektorých fontoch nevyplní bunku a medzi riadkami vznikajú pruhy). BLOCKS index → krytie bunky.
+      a.font = `500 ${fontPx}px ${monoFamily}`;
+      a.globalAlpha = 0.2;
+      a.fillStyle = ink;
+      for (let i = 0; i < CHARS.length; i++) a.fillText(CHARS[i]!, i * cw + cw / 2, ch / 2);
+      const krytie = [0, 0.25, 0.55, 0.8, 1];
+      for (let i = 1; i < BLOCKS.length; i++) {
+        a.globalAlpha = krytie[i]!;
+        a.fillRect(i * cw, ch, cw + 0.5, ch + 0.5);
       }
       return atlas;
     }
