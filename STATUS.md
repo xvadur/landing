@@ -13,6 +13,10 @@ node work/qa/final.mjs                         # celá QA + screenshoty work/scr
 ```
 `/api/skore` (skóre webu) beží až na Cloudflare (Worker); v statickom náhľade formulár ukáže „Analyzér práve neodpovedá“. Handler sa dá overiť bez servera: `node work/qa/api.mjs`.
 
+## Staging a deploy
+- **Staging = vetva `staging`** → `npm run build && npx wrangler pages deploy dist/client --project-name landing-con --branch staging` → **https://staging.landing-con.pages.dev** (statika; `/api/skore/` tam nebeží). Dizajnové zmeny idú sem, Adam pozrie, potom merge do `main`.
+- **Produkcia = `main`** → `npm run build && npx wrangler deploy -c dist/server/wrangler.json` (Worker) **a** `npx wrangler pages deploy dist/client --project-name landing-con --branch main` (Pages drží DNS, kým záznamy nie sú Proxied).
+
 ## Deploy (až na slovo „deploy“)
 1. `git push origin v4` → staging (Preview build na Cloudflare).
 2. Cloudflare projekt `landing`: build command `npm run build`, **node 22+** (lokálne beží node 26), výstup podľa cieľa:
