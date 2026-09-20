@@ -61,6 +61,7 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
       done = true;
       html.classList.remove('opona-lock');
       el.remove();
+      window.dispatchEvent(new CustomEvent('opona:done'));
       window.removeEventListener('wheel', skip);
       window.removeEventListener('touchstart', skip);
       window.removeEventListener('keydown', skip);

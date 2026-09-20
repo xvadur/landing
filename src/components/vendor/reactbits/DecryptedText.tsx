@@ -27,6 +27,8 @@ export interface DecryptedTextProps extends HTMLAttributes<HTMLSpanElement> {
   parentClassName?: string;
   animateOn?: 'view' | 'hover' | 'inViewHover' | 'click';
   clickMode?: 'once' | 'toggle';
+  /** xvadur: prvý render už rozmiešaný (žiadny záblesk hotového textu pred štartom pri animateOn="view") */
+  initialEncrypted?: boolean;
 }
 
 type Direction = 'forward' | 'reverse';
@@ -44,13 +46,22 @@ export default function DecryptedText({
   encryptedClassName = '',
   animateOn = 'hover',
   clickMode = 'once',
+  initialEncrypted = false,
   ...props
 }: DecryptedTextProps) {
-  const [displayText, setDisplayText] = useState<string>(text);
+  const [displayText, setDisplayText] = useState<string>(() => {
+    if (!initialEncrypted) return text;
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return text;
+    const pool = useOriginalCharsOnly ? text.replace(/\s/g, '') : characters;
+    return text
+      .split('')
+      .map((c) => (c === ' ' ? ' ' : pool[Math.floor(Math.random() * pool.length)] ?? c))
+      .join('');
+  });
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set());
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
-  const [isDecrypted, setIsDecrypted] = useState<boolean>(animateOn !== 'click');
+  const [isDecrypted, setIsDecrypted] = useState<boolean>(animateOn !== 'click' && !initialEncrypted);
   const [direction, setDirection] = useState<Direction>('forward');
 
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -360,7 +371,7 @@ export default function DecryptedText({
   }, [animateOn, hasAnimated, triggerDecrypt]);
 
   useEffect(() => {
-    if (animateOn === 'click' && !reduced) {
+    if ((animateOn === 'click' || (initialEncrypted && animateOn === 'view')) && !reduced) {
       encryptInstantly();
     } else {
       setDisplayText(text);
@@ -368,7 +379,7 @@ export default function DecryptedText({
     }
     setRevealedIndices(new Set());
     setDirection('forward');
-  }, [animateOn, text, encryptInstantly, reduced]);
+  }, [animateOn, text, encryptInstantly, reduced, initialEncrypted]);
 
   const animateProps =
     animateOn === 'hover' || animateOn === 'inViewHover'

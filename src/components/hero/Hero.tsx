@@ -1,16 +1,14 @@
-/** Hero xvadur.com v4 — verzia 19. 9. večer (Adam: ASCII namiesto ditheru, motto bez dýchania, opona ako úvod webu).
- *  Papier + zrno, cez celý hero ASCII šumové pole (Ascii.tsx, Canvas 2D, 0 kB knižníc), v ktorom sa pod wordmarkom
- *  skladá motto „DIVIDED," / „WE ARE USELESS." zo znakov, drží a rozpadá sa v slučke — bez kurzora. Obrí wordmark
- *  s náklonom ±2° za kurzorom (CSS transform + rAF lerp). Typografické motto stojí staticky na wdth 100 (kondenzované
- *  75 pôsobilo stiesnene); keď ASCII beží, <p> sa schová cez opacity — layout, Google aj čítačky ho majú ďalej.
- *  CTA VSTÚP (Magnet + ClickSpark) vpravo dole; pilulky na sekcie. Ostrov: <Hero client:load> — SSR z tohto súboru
- *  je zároveň no-JS/SEO HTML. Reduced motion: bez ASCII, statické motto. Ascii sa ťahá lazy s `.catch`; Hranica
- *  (error boundary) drží obsah pri chybe za behu. GSAP/SplitText/Dither už hero nepoužíva. */
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+/** Hero xvadur.com v4 — verzia 20. 9. (Adam): opona ako úvod, typografické hero, motto sa pred očami návštevníka
+ *  „dešifruje" (React Bits DecryptedText, čistý React ~2 kB): po otvorení opony sa „DIVIDED," poskladá z rozmiešaných
+ *  znakov, o 700 ms za ním „WE ARE USELESS." — raz, bez kurzora. Vracajúci sa návštevník (bez opony) to vidí hneď.
+ *  Papier + zrno + jemné bodky ako pozadie; obrí wordmark (h1) s náklonom ±2° za kurzorom; CTA VSTÚP (Magnet +
+ *  ClickSpark); pilulky. Ostrov <Hero client:load>, SSR = statické motto (Google, no-JS). Reduced motion: statický
+ *  text (DecryptedText to rieši sám), opona sa nezobrazí. ASCII/shader vrstvy z 19.–20. 9. sú preč. */
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import DecryptedText from '@/components/vendor/reactbits/DecryptedText';
 import Magnet from '@/components/vendor/reactbits/Magnet';
 import ClickSpark from '@/components/vendor/reactbits/ClickSpark';
 import { MQ_DESKTOP_POINTER, MQ_REDUCED, useMediaQuery } from '@/components/vendor/reactbits/motion-guards';
-import Hranica from '@/components/home/Hranica';
 import { cn } from '@/lib/utils';
 import {
   CTA,
@@ -25,18 +23,33 @@ import {
   TEZA,
 } from './hero-data';
 
-/** Statický riadok motta — SSR aj klient (motto je typograficky statické; pohyb robí ASCII vrstva). */
-function Riadok({ text }: { text: string }) {
-  return <span className={MOTTO_LINE_CLASS}>{text}</span>;
-}
-
 import Wordmark from './Wordmark';
 
-/** ASCII vrstva lazy; keď chunk nepríde, hero ostane s typografickým mottom. */
-type AsciiProps = import('./Ascii').AsciiProps;
-const Ascii = lazy(() =>
-  import('./Ascii').catch(() => ({ default: (_p: AsciiProps) => null as unknown as React.JSX.Element })),
-);
+/** Statický riadok motta — SSR, no-JS, reduced motion a stav pred otvorením opony. */
+function Riadok({ text, hidden }: { text: string; hidden?: boolean }) {
+  return (
+    <span className={MOTTO_LINE_CLASS} style={hidden ? { visibility: 'hidden' } : undefined}>
+      {text}
+    </span>
+  );
+}
+
+/** Riadok, ktorý sa dešifruje: sekvenčne od stredu, znaky brandu (X × . :) + veľké písmená. */
+function Desifruj({ text, speed }: { text: string; speed: number }) {
+  return (
+    <DecryptedText
+      text={text}
+      animateOn="view"
+      initialEncrypted
+      sequential
+      revealDirection="center"
+      speed={speed}
+      characters="X×.:+-/ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      parentClassName={MOTTO_LINE_CLASS}
+      encryptedClassName="text-ink/40"
+    />
+  );
+}
 
 /** Náklon wordmarku za kurzorom: cieľ z pointeru, rAF lerp k cieľu (pružina bez knižnice), zápis do transform. */
 function useNaklon(active: boolean) {
@@ -82,11 +95,25 @@ export default function Hero() {
   const reduced = useMediaQuery(MQ_REDUCED, true);
   const animated = desktop && !reduced;
 
-  /* ASCII beží všade okrem reduced motion (aj mobil — Canvas 2D je lacný); po prvom frame schováme typografické motto */
-  const ascii = !reduced;
-  const [asciiOn, setAsciiOn] = useState(false);
-  const onAsciiReady = useCallback(() => setAsciiOn(true), []);
-  const mottoRef = useRef<HTMLParagraphElement>(null);
+  /* motto štartuje až po opone (Opona.astro posiela `opona:done`); bez opony (druhá návšteva, reduced motion) hneď.
+     Pred štartom je text v layoute, ale neviditeľný, aby sa po otvorení opony naozaj skladal pred očami. */
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+  const [go, setGo] = useState(false);
+  const [line2, setLine2] = useState(false);
+  useEffect(() => {
+    let t = 0;
+    const start = () => {
+      setGo(true);
+      t = window.setTimeout(() => setLine2(true), 700);
+    };
+    if (!document.getElementById('opona')) start();
+    else window.addEventListener('opona:done', start, { once: true });
+    return () => {
+      window.removeEventListener('opona:done', start);
+      clearTimeout(t);
+    };
+  }, []);
   const wordmarkRef = useRef<HTMLHeadingElement>(null);
 
   /* wordmark: náklon ±2° za kurzorom, len desktop s myšou */
@@ -102,20 +129,12 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="tx-grain relative overflow-hidden border-b-3 border-ink bg-paper"
+      className="tx-grain tx-dots relative overflow-hidden border-b-3 border-ink bg-paper [--tx:12%]"
       aria-label="Úvod"
       onPointerMove={onPointerMove}
       onPointerLeave={onPointerLeave}
       data-hero={animated ? 'animated' : 'static'}
-      data-ascii={asciiOn ? 'on' : 'off'}
     >
-      {ascii && (
-        <Hranica>
-          <Suspense fallback={null}>
-            <Ascii host={sectionRef} motto={mottoRef} source={wordmarkRef} onReady={onAsciiReady} />
-          </Suspense>
-        </Hranica>
-      )}
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-4.5rem)] w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
         {/* eyebrow vypustený (20. 9.): wordmark je h1, meno je v téze, pätičke a titulku */}
@@ -126,14 +145,9 @@ export default function Hero() {
           />
         </h1>
 
-        <p
-          ref={mottoRef}
-          lang="en"
-          className={cn('mt-6 transition-opacity duration-300 sm:mt-8', MOTTO_CLASS, asciiOn && 'opacity-0')}
-          style={{ fontVariationSettings: "'wdth' 100" }}
-        >
-          <Riadok text={MOTTO_1} />
-          <Riadok text={MOTTO_2} />
+        <p lang="en" className={cn('mt-6 sm:mt-8', MOTTO_CLASS)} style={{ fontVariationSettings: "'wdth' 100" }}>
+          {go ? <Desifruj text={MOTTO_1} speed={95} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
+          {line2 ? <Desifruj text={MOTTO_2} speed={70} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
         </p>
 
         <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">
