@@ -370,3 +370,9 @@
 @media (prefers-reduced-motion: reduce) {
   .scena-nastroj { animation: none !important; }
 }
+
+/* fotka v scéne hera: okraje sa rozplynú do papiera (radiálna maska), aby nebolo vidieť obdĺžnik obrázka */
+.scena-foto {
+  -webkit-mask-image: radial-gradient(ellipse 52% 56% at 50% 50%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 52% 56% at 50% 50%, #000 62%, transparent 100%);
+}

@@ -1,6 +1,7 @@
 /** Scéna hera (20. 9., Adam): pod claimom, v prázdnom priestore, Adam od pŕs hore s roztiahnutými rukami a nad
- *  hlavou mu krúžia nástroje. Fotka príde z Higgsfieldu (výrez bez pozadia, PNG); kým nie je, stojí tu terajší
- *  obraz z augusta v neobrutalistickom ráme (3 px ink, tvrdý tieň, mierne natočený), aby bolo vidieť kompozíciu.
+ *  hlavou mu krúžia nástroje. Fotka: augustový obraz „Adam na meste" (fisheye, pixelové oblaky) priamo na papieri
+ *  cez mix-blend-mode: multiply — svetlé pozadie fotky splynie s papierom, bez rámu (Adam, 20. 9.). Neskôr môže prísť
+ *  výrez z Higgsfieldu (brief work/HIGGSFIELD_HERO_BRIEF.md).
  *  Nástroje = pastelové nálepky s ikonami (Phosphor) po eliptickej dráhe (CSS Motion Path, offset-path), každá
  *  s iným štartom; `offset-rotate: 0deg` drží nálepky vzpriamené. Reduced motion: dráha stojí. 0 kB knižníc. */
 import {
@@ -27,9 +28,9 @@ const DRAHA = 'M 50 26 A 50 18 0 1 1 49.99 26';
 
 export default function Scena({ src, className }: { src: string; className?: string }) {
   return (
-    <div className={cn('scena relative mx-auto w-[min(88vw,34rem)] lg:w-[min(34rem,52dvh)]', className)} aria-hidden="true">
+    <div className={cn('scena relative mx-auto w-[min(92vw,40rem)] lg:w-[min(40rem,60dvh)]', className)} aria-hidden="true">
       {/* obežná dráha nástrojov — box nad postavou, nálepky idú po elipse */}
-      <div className="scena-orbit absolute inset-x-[-6%] top-0 z-20 h-[34%]">
+      <div className="scena-orbit absolute inset-x-[-4%] top-0 z-20 h-[30%]">
         {NASTROJE.map(({ Icon, label, bg }, i) => (
           <span
             key={label}
@@ -45,14 +46,15 @@ export default function Scena({ src, className }: { src: string; className?: str
         ))}
       </div>
 
-      {/* postava: kým nie je výrez z Higgsfieldu, rám s terajšou fotkou */}
-      <div className="scena-postava relative z-10 mt-[20%] rotate-[-2deg] overflow-hidden rounded-lg border-3 border-ink bg-white shadow-brutal-lg">
+      {/* postava: augustová fotka „na meste" priamo na papieri — svetlé pozadie fotky zmizne cez multiply,
+          pixelové oblaky a mesto ostanú, nič nie je v ráme */}
+      <div className="scena-postava relative z-10 mt-[16%]">
         <img
           src={src}
           alt=""
           width={1513}
           height={1040}
-          className="block aspect-[4/3] w-full object-cover object-[50%_28%]"
+          className="scena-foto block w-full mix-blend-multiply"
           decoding="async"
           fetchPriority="high"
         />
