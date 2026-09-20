@@ -16,6 +16,7 @@ import Magnet from '@/components/vendor/reactbits/Magnet';
 import ClickSpark from '@/components/vendor/reactbits/ClickSpark';
 import { MQ_DESKTOP_POINTER, MQ_REDUCED, useMediaQuery } from '@/components/vendor/reactbits/motion-guards';
 import { cn } from '@/lib/utils';
+import { BUILD } from '@/lib/build';
 import { NAV } from '@/data/nav';
 import { ListIcon } from '@phosphor-icons/react';
 import {
@@ -57,6 +58,53 @@ function Desifruj({ text, speed }: { text: string; speed: number }) {
       parentClassName={MOTTO_LINE_CLASS}
       encryptedClassName="text-ink/40"
     />
+  );
+}
+
+/** Čas v Europe/Bratislava, „14:32:07" (24 h, so sekundami — operátorský panel, nie bežné hodiny). */
+function casTeraz(d: Date) {
+  return new Intl.DateTimeFormat('sk-SK', {
+    timeZone: 'Europe/Bratislava',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(d);
+}
+
+/** Stavový pás vedľa eyebrow: „off air" dióda (dekoratívna, laboratórna estetika, nie reálny stav vysielania),
+ *  tikajúce hodiny (klient, sekundová aktualizácia — SSR ukáže „--:--:--", aby sa nezhodoval čas servera/klienta)
+ *  a číslo buildu z src/lib/build.ts (git rev-list --count HEAD, vkladá astro.config.mjs pri builde). */
+function StavPas() {
+  const [cas, setCas] = useState('--:--:--');
+  useEffect(() => {
+    const tick = () => setCas(casTeraz(new Date()));
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs uppercase tracking-wide text-ink/70">
+      <span className="inline-flex items-center gap-1.5">
+        <span
+          aria-hidden="true"
+          className="h-2 w-2 rounded-full bg-hot shadow-[0_0_6px_2px_var(--color-hot)] motion-safe:animate-pulse"
+        />
+        Off air
+      </span>
+      <span aria-hidden="true">·</span>
+      <span aria-label="Aktuálny čas">{cas}</span>
+      {BUILD.commity > 0 && (
+        <>
+          <span aria-hidden="true">·</span>
+          <span>
+            Build Nº{BUILD.commity}
+            {BUILD.commit ? ` · ${BUILD.commit}` : ''}
+          </span>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -169,7 +217,10 @@ export default function Hero() {
         </h1>
 
         <nav aria-label="Hlavná navigácia" className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y-3 border-ink py-3 sm:mt-6">
-          <p className="eyebrow">{EYEBROW}</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p className="eyebrow">{EYEBROW}</p>
+            <StavPas />
+          </div>
           <div className="flex flex-wrap items-center gap-1">
             {NAV.map((item) => (
               <a
