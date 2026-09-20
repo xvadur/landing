@@ -35,5 +35,3 @@ export const CTA_CLASS =
  *  na podstránkach s Header.astro). */
 export const PILL_CLASS =
   'press inline-flex min-h-11 items-center rounded-lg border-3 border-ink px-4 font-display text-base font-extrabold uppercase tracking-wide text-ink shadow-brutal-sm';
-/** Scéna hera: fotka Adama. Dočasne augustový obraz; cieľ = výrez z Higgsfieldu (od pŕs hore, roztiahnuté ruky, PNG bez pozadia). */
-export const SCENA_SRC = '/assets/hero-adam.webp';
