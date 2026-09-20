@@ -1,8 +1,14 @@
-/** Hero xvadur.com v4 (doc 10 §4, ratifikácie 19. 9.): papier + dither (desktop) / zrno (mobil), obrí wordmark
- *  s náklonom ±2° za kurzorom (CSS transform + rAF lerp, bez Motion), motto „DIVIDED," / „WE ARE USELESS." — písmená
- *  vstupujú po znakoch (GSAP SplitText, wdth 75 → 100) a potom šírka dýcha (utilita wdth-breathe); CTA VSTÚP (Magnet +
- *  ClickSpark) vpravo dole; pilulky na sekcie. Ostrov: <Hero client:load> — SSR z tohto súboru (statická vetva) je
- *  zároveň no-JS/SEO HTML, žiadny duplicitný fallback.
+/** Hero xvadur.com v4 (doc 10 §4, ratifikácie 19. 9., masthead 20. 9.): papier + dither (desktop) / zrno (mobil),
+ *  obrí wordmark s náklonom ±2° za kurzorom (CSS transform + rAF lerp, bez Motion), motto „DIVIDED," / „WE ARE
+ *  USELESS." — písmená vstupujú po znakoch (GSAP SplitText, wdth 75 → 100) a potom šírka dýcha (utilita
+ *  wdth-breathe); CTA VSTÚP (Magnet + ClickSpark) vpravo dole; pilulky na sekcie. Ostrov: <Hero client:load> — SSR
+ *  z tohto súboru (statická vetva) je zároveň no-JS/SEO HTML, žiadny duplicitný fallback.
+ *  20. 9. (Adam: „XVADUR v menu, v eyebrow aj v hero" — tri opakovania): Header.astro sa na domovskej stránke
+ *  nevykresľuje (Base `header="none"`), nav zo src/data/nav.ts + ⌘K + mobilné menu sedia priamo tu, pod obrím
+ *  wordmarkom (po vzore eduba.io) — jeden wordmark, jedna nav, eyebrow bez opakovania mena značky. Mobilný dialóg
+ *  (NavMobil) vykresľuje Base, tlačidlá [data-nav-open]/[data-commandk] ho ovládajú cez existujúce delegované skripty.
+ *  Znak (portrét v planétovom prstenci, potrace z referencie) je na opone: samostatná maskovaná vrstva v inku, nízka
+ *  krytosť, žiadne JS — vidno ho aj na mobile a pri reduced motion.
  *  Rozpočet: GSAP (SplitText) aj shader sa ťahajú lazy a len na desktope ≥ 1024 px s hoverom bez reduced motion;
  *  mobil dostane statické motto, statické zrno, 0 kB GSAP a 0 kB Motion. Pravidlo enginov: CSS = wordmark, GSAP = motto —
  *  nikdy oba na jednom prvku (po skončení GSAP sa inline hodnoty vyčistia a až potom nastúpi CSS dýchanie).
@@ -13,6 +19,8 @@ import ClickSpark from '@/components/vendor/reactbits/ClickSpark';
 import { MQ_DESKTOP_POINTER, MQ_REDUCED, useMediaQuery } from '@/components/vendor/reactbits/motion-guards';
 import Hranica from '@/components/home/Hranica';
 import { cn } from '@/lib/utils';
+import { NAV } from '@/data/nav';
+import { ListIcon } from '@phosphor-icons/react';
 import {
   CTA,
   CTA_CLASS,
@@ -152,15 +160,63 @@ export default function Hero() {
         </Hranica>
       )}
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-4.5rem)] w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
-        <p className="eyebrow">{EYEBROW}</p>
+      {/* znak na opone: portrét v planétovom prstenci, maskovaný v inku, veľmi nízka krytosť — čisté CSS, žiadne JS */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 z-[1] h-[38rem] w-[38rem] bg-ink opacity-[0.05] sm:h-[46rem] sm:w-[46rem]"
+        style={{
+          maskImage: 'url(/brand/xvadur-znak.svg)',
+          maskSize: 'contain',
+          maskRepeat: 'no-repeat',
+          maskPosition: 'center',
+          WebkitMaskImage: 'url(/brand/xvadur-znak.svg)',
+          WebkitMaskSize: 'contain',
+          WebkitMaskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+        }}
+      />
 
-        <h1 className="mt-4 w-full max-w-[52rem] sm:mt-6" style={{ perspective: 1200 }}>
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
+        <h1 className="w-full" style={{ perspective: 1200 }}>
           <Wordmark
             ref={naklon.el}
             className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"
           />
         </h1>
+
+        <nav aria-label="Hlavná navigácia" className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y-3 border-ink py-3 sm:mt-6">
+          <p className="eyebrow">{EYEBROW}</p>
+          <div className="flex flex-wrap items-center gap-1">
+            {NAV.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="hidden h-11 items-center rounded-lg border-3 border-transparent px-3 font-display text-base font-extrabold uppercase tracking-wide transition-colors duration-[var(--duration-base)] hover:border-ink hover:bg-yellow lg:flex"
+              >
+                {item.label}
+              </a>
+            ))}
+            <button
+              type="button"
+              data-commandk
+              className="press hidden h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm lg:flex"
+              aria-label="Otvoriť príkazovú paletu (⌘K)"
+              title="⌘K / Ctrl K"
+            >
+              <span aria-hidden="true">⌘K</span>
+            </button>
+            <button
+              type="button"
+              data-nav-open
+              aria-haspopup="dialog"
+              aria-controls="mobilna-nav"
+              className="press flex h-11 min-w-11 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-yellow px-3 font-display text-sm font-extrabold uppercase tracking-wide shadow-brutal-sm lg:hidden"
+            >
+              <ListIcon weight="bold" size={22} aria-hidden="true" />
+              <span>Menu</span>
+            </button>
+          </div>
+        </nav>
 
         <p
           ref={mottoRef}

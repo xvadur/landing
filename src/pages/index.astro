@@ -21,7 +21,7 @@ import { nbsp } from '@/components/home/nbsp';
 const r = routeByPath('/')!;
 ---
 
-<Base title={r.title} description={r.description} islands="full">
+<Base title={r.title} description={r.description} islands="full" header="none">
   <Hero client:load />
 
   <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="yellow" size="lg" duration={36} label="Fakty" />

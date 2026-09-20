@@ -14,7 +14,7 @@ const prvy = BEATY[0]!.rok;
 const posledny = BEATY[BEATY.length - 1]!.rok;
 ---
 
-<div id="kto-som" data-dvere="closed" class="dvere relative h-[70svh] overflow-clip border-b-3 border-ink bg-yellow lg:h-[calc(100svh-4.5rem)]">
+<div id="kto-som" data-dvere="closed" class="dvere relative h-[70svh] overflow-clip border-b-3 border-ink bg-yellow lg:h-svh">
   <!-- odhalené: Kto som -->
   <div data-dvere-inner class="tx-dots absolute inset-0 flex items-center justify-center bg-yellow px-4 [--tx:26%]">
     <div class="text-center">
@@ -130,7 +130,7 @@ const posledny = BEATY[BEATY.length - 1]!.rok;
         defaults: { ease: 'none' },
         scrollTrigger: {
           trigger: el,
-          start: 'top 72px',
+          start: 'top top',
           end: '+=110%',
           pin: true,
           pinSpacing: true,
