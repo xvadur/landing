@@ -1,6 +1,6 @@
 ---
 /** Opona — povinný úvod webu (Adam, 19. 9. večer: „napíš xvadur, rozdelí sa to na dve polovice jak opona, ukáže sa hero").
- *  Cela obrazovka zlta s bodkami (ako pas Kto som), v strede cierny wordmark XVADUR, deliaca ciara medzi A a D (XVA | DUR), v rohoch motto. Drží 1,4 s, potom sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
+ *  Cela obrazovka zlta s bodkami (ako pas Kto som), v strede cierny wordmark XVADUR, deliaca ciara medzi A a D (XVA | DUR), pod XVA „DIVIDED,", pod DUR „WE ARE USELESS.". Drží 1,4 s, potom sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
  *  Pravidlá: raz za návštevu (sessionStorage.opona), reduced motion = bez opony, scroll / klik / klávesa = preskočiť
  *  (250 ms). Animácia je čisto CSS (funguje aj bez JS — potom sa opona po skončení iba skryje cez `forwards`
  *  + pointer-events none); JS rieši session, zámok scrollu a preskočenie. Google vidí hero, opona je aria-hidden.
@@ -9,19 +9,19 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
 ---
 
 <div id="opona" class="opona" aria-hidden="true" data-opona>
-  <!-- každé krídlo nesie celú šírku obrazovky (100vw) s wordmarkom vycentrovaným tak, že deliaca čiara padne
-       do medzery medzi A a D: ľavé krídlo ukáže XVA, pravé DUR -->
+  <!-- každé krídlo nesie celú šírku obrazovky (100vw): wordmark vycentrovaný tak, že deliaca čiara padne do medzery
+       medzi A a D (ľavé krídlo XVA, pravé DUR); pod XVA „DIVIDED,", pod DUR „WE ARE USELESS." -->
   <div class="opona-kridlo opona-l tx-dots">
     <div class="opona-vrstva">
       <img class="opona-wm" src="/brand/xvadur-ink.svg" alt="" width="678" height="130" decoding="async" />
+      <p lang="en" class="opona-motto opona-motto-l">{MOTTO_1}</p>
     </div>
-    <p lang="en" class="opona-motto opona-motto-l">{MOTTO_1}</p>
   </div>
   <div class="opona-kridlo opona-r tx-dots">
     <div class="opona-vrstva opona-vrstva-r">
       <img class="opona-wm" src="/brand/xvadur-ink.svg" alt="" width="678" height="130" decoding="async" />
+      <p lang="en" class="opona-motto opona-motto-r">{MOTTO_2}</p>
     </div>
-    <p lang="en" class="opona-motto opona-motto-r">{MOTTO_2}</p>
   </div>
 </div>
 
@@ -124,31 +124,33 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
     max-width: none;
     transform: translateY(-50%);
   }
+  /* motto pod wordmarkom: ľavý riadok končí pri deliacej čiare (pod XVA), pravý od nej začína (pod DUR);
+     výška wordmarku = šírka × 130/678 → spodná hrana je na 50 % + 9,6 % šírky */
   .opona-motto {
+    --wmw: min(84vw, 1180px);
     position: absolute;
-    bottom: 1.5rem;
+    top: calc(50% + var(--wmw) * 0.096 + 1rem);
     margin: 0;
+    max-width: calc(50vw - 1.5rem);
     font-family: var(--font-display);
     font-weight: 800;
-    font-size: clamp(1.5rem, 1rem + 2.4vw, 3rem);
-    line-height: 1;
+    font-size: clamp(1.75rem, 1rem + 3.2vw, 4.5rem);
+    line-height: 0.95;
     letter-spacing: -0.03em;
     text-transform: uppercase;
   }
   .opona-motto-l {
-    left: 1rem;
-  }
-  .opona-motto-r {
-    right: 1rem;
+    right: calc(50vw + 1rem);
     text-align: right;
   }
-  @media (min-width: 640px) {
-    .opona-motto-l { left: 1.5rem; }
-    .opona-motto-r { right: 1.5rem; }
+  .opona-motto-r {
+    left: calc(50vw + 1rem);
+    text-align: left;
   }
-  @media (min-width: 1024px) {
-    .opona-motto-l { left: 2.5rem; }
-    .opona-motto-r { right: 2.5rem; }
+  @media (min-width: 640px) {
+    .opona-motto { top: calc(50% + var(--wmw) * 0.096 + 1.5rem); }
+    .opona-motto-l { right: calc(50vw + 1.5rem); }
+    .opona-motto-r { left: calc(50vw + 1.5rem); }
   }
 
   /* otvorenie: bez JS sa spustí samo (animation-delay), s JS cez .opona-go (rovnaký čas) */
