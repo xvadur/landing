@@ -348,3 +348,25 @@
   .marquee-track { animation-play-state: paused !important; }
   .lift:hover, .press:active { transform: none !important; }
 }
+
+/* ---------- hero scéna: nástroje na eliptickej dráhe nad hlavou (CSS Motion Path, basic shape v % boxu) ---------- */
+.scena-nastroj {
+  offset-path: ellipse(50% 42% at 50% 50%);
+  offset-rotate: 0deg;
+  offset-distance: calc(var(--i) / var(--n) * 100%);
+  animation: scena-orbit 26s linear infinite;
+  animation-delay: calc(var(--i) / var(--n) * -26s);
+  rotate: calc((var(--i) - 2) * 4deg);
+}
+@keyframes scena-orbit {
+  from { offset-distance: calc(var(--i) / var(--n) * 100%); }
+  to { offset-distance: calc(var(--i) / var(--n) * 100% + 100%); }
+}
+@supports not (offset-path: ellipse(50% 42% at 50% 50%)) {
+  /* bez Motion Path: nálepky v rade nad postavou */
+  .scena-nastroj { position: static; display: inline-grid; margin: 0 0.25rem; }
+  .scena-orbit { display: flex; justify-content: center; align-items: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scena-nastroj { animation: none !important; }
+}

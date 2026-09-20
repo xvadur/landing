@@ -15,6 +15,8 @@ export const PILULKY = [
   { label: 'Texty', href: '#texty', bg: 'bg-lime', rotate: 'rotate-[3deg]' },
 ];
 export const WORDMARK = { src: '/brand/xvadur-ink.svg', width: 678, height: 130 };
+/** Scéna hera: fotka Adama. Dočasne augustový obraz; cieľ = výrez z Higgsfieldu (od pŕs hore, roztiahnuté ruky, PNG bez pozadia). */
+export const SCENA_SRC = '/assets/hero-adam.webp';
 
 /** Motto: clamp podľa šírky viewportu — spodná hranica 4 rem (64 px na 375), horná 10 rem (160 px; ≈ 158 px na 1440).
  *  Strop 10 rem je odvodený z merania: „WE ARE USELESS." pri wdth 100 má ≈ 7,24 em, kontajner max-w-7xl je 1200 px →

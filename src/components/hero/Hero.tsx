@@ -21,9 +21,11 @@ import {
   PILL_CLASS,
   PILULKY,
   TEZA,
+  SCENA_SRC,
 } from './hero-data';
 
 import Wordmark from './Wordmark';
+import Scena from './Scena';
 
 /** Statický riadok motta — SSR, no-JS, reduced motion a stav pred otvorením opony. */
 function Riadok({ text, hidden }: { text: string; hidden?: boolean }) {
@@ -149,6 +151,9 @@ export default function Hero() {
           {go ? <Desifruj text={MOTTO_1} speed={70} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
           {line2 ? <Desifruj text={MOTTO_2} speed={55} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
         </p>
+
+        {/* scéna: Adam s nástrojmi nad hlavou vypĺňa priestor medzi claimom a tézou */}
+        <Scena src={SCENA_SRC} className="mt-8 sm:mt-10 lg:mt-6" />
 
         <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">
           <div className="max-w-4xl lg:grid lg:grid-cols-2 lg:gap-x-8">
