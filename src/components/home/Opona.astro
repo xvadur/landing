@@ -1,33 +1,25 @@
 ---
 /** Opona — povinný úvod webu (Adam, 19. 9. večer: „napíš xvadur, rozdelí sa to na dve polovice jak opona, ukáže sa hero").
- *  Celá obrazovka papier so zrnom, v strede wordmark XVADUR (rovnaký inline SVG ako v hero: ink + žltý blok + tieň),
- *  v rohoch motto. Drží 1,4 s, potom sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
- *  Wordmark na opone stojí presne tam, kde stojí wordmark v hero (rovnaký kontajner) — pri otvorení sa nepohne,
- *  svet sa objaví okolo neho.
+ *  Cela obrazovka zlta s bodkami (ako pas Kto som), v strede cierny wordmark XVADUR, deliaca ciara medzi A a D (XVA | DUR), v rohoch motto. Drží 1,4 s, potom sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
  *  Pravidlá: raz za návštevu (sessionStorage.opona), reduced motion = bez opony, scroll / klik / klávesa = preskočiť
  *  (250 ms). Animácia je čisto CSS (funguje aj bez JS — potom sa opona po skončení iba skryje cez `forwards`
  *  + pointer-events none); JS rieši session, zámok scrollu a preskočenie. Google vidí hero, opona je aria-hidden.
  *  Inline skript beží pred vykreslením, aby vracajúci sa návštevník oponu nikdy nezahliadol. */
-import Wordmark from '@/components/hero/Wordmark';
 import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
 ---
 
 <div id="opona" class="opona" aria-hidden="true" data-opona>
-  <!-- každé krídlo nesie celú šírku obrazovky (100vw) s tým istým kontajnerom ako hero, posunutú tak,
-       aby obe krídla spolu tvorili jeden obraz: wordmark stojí presne tam, kde stojí wordmark v hero -->
-  <div class="opona-kridlo opona-l tx-grain">
+  <!-- každé krídlo nesie celú šírku obrazovky (100vw) s wordmarkom vycentrovaným tak, že deliaca čiara padne
+       do medzery medzi A a D: ľavé krídlo ukáže XVA, pravé DUR -->
+  <div class="opona-kridlo opona-l tx-dots">
     <div class="opona-vrstva">
-      <div class="opona-kont">
-        <div class="opona-wm"><Wordmark className="block h-auto w-full [--wm-shadow:6px] sm:[--wm-shadow:11px]" /></div>
-      </div>
+      <img class="opona-wm" src="/brand/xvadur-ink.svg" alt="" width="678" height="130" decoding="async" />
     </div>
     <p lang="en" class="opona-motto opona-motto-l">{MOTTO_1}</p>
   </div>
-  <div class="opona-kridlo opona-r tx-grain">
+  <div class="opona-kridlo opona-r tx-dots">
     <div class="opona-vrstva opona-vrstva-r">
-      <div class="opona-kont">
-        <div class="opona-wm"><Wordmark className="block h-auto w-full [--wm-shadow:6px] sm:[--wm-shadow:11px]" /></div>
-      </div>
+      <img class="opona-wm" src="/brand/xvadur-ink.svg" alt="" width="678" height="130" decoding="async" />
     </div>
     <p lang="en" class="opona-motto opona-motto-r">{MOTTO_2}</p>
   </div>
@@ -97,7 +89,8 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
     bottom: 0;
     width: 50%;
     overflow: hidden;
-    background: var(--color-paper);
+    background-color: var(--color-yellow);
+    --tx: 26%;
     will-change: transform;
   }
   .opona-l {
@@ -119,22 +112,17 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
   .opona-vrstva-r {
     left: -50vw;
   }
-  /* rovnaký kontajner ako hero: max-w-7xl, px 1rem / 1.5rem / 2.5rem, pod hlavičkou (--header-h) + pt 1.25rem / 2rem */
-  .opona-kont {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 80rem;
-    padding: calc(var(--header-h, 4.5rem) + 1.25rem) 1rem 0;
-  }
+  /* wordmark: čierny (SVG s inkovou výplňou), veľký, zvisle v strede; vodorovne posunutý tak, aby stred obrazovky
+     padol do medzery medzi A a D (bod 323 z 678 jednotiek viewBoxu → 47,6 % šírky) */
   .opona-wm {
-    width: 100%;
-    max-width: 52rem;
-  }
-  @media (min-width: 640px) {
-    .opona-kont { padding: calc(var(--header-h, 4.5rem) + 2rem) 1.5rem 0; }
-  }
-  @media (min-width: 1024px) {
-    .opona-kont { padding-left: 2.5rem; padding-right: 2.5rem; }
+    --wmw: min(84vw, 1180px);
+    position: absolute;
+    top: 50%;
+    left: calc(50vw - var(--wmw) * 0.4764);
+    width: var(--wmw);
+    height: auto;
+    max-width: none;
+    transform: translateY(-50%);
   }
   .opona-motto {
     position: absolute;

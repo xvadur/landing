@@ -44,7 +44,7 @@ function Desifruj({ text, speed }: { text: string; speed: number }) {
       sequential
       revealDirection="center"
       speed={speed}
-      characters="X×.:+-/ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+      characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789X×.:;+-=/\\|_*#%&@$§¤¦<>[]{}()?!ÆØÐÞÅÄÖÜŠŽČŘŁ"
       parentClassName={MOTTO_LINE_CLASS}
       encryptedClassName="text-ink/40"
     />
@@ -146,8 +146,8 @@ export default function Hero() {
         </h1>
 
         <p lang="en" className={cn('mt-6 sm:mt-8', MOTTO_CLASS)} style={{ fontVariationSettings: "'wdth' 100" }}>
-          {go ? <Desifruj text={MOTTO_1} speed={95} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
-          {line2 ? <Desifruj text={MOTTO_2} speed={70} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
+          {go ? <Desifruj text={MOTTO_1} speed={70} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
+          {line2 ? <Desifruj text={MOTTO_2} speed={55} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
         </p>
 
         <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">
