@@ -1,7 +1,9 @@
 ---
 /** Opona — povinný úvod webu (Adam, 19. 9. večer: „napíš xvadur, rozdelí sa to na dve polovice jak opona, ukáže sa hero").
  *  Celá obrazovka papier so zrnom, v strede wordmark XVADUR (rovnaký inline SVG ako v hero: ink + žltý blok + tieň),
- *  v rohoch motto. Po ~450 ms sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
+ *  v rohoch motto. Drží 1,4 s, potom sa krídla rozídu do strán (900 ms, cubic-bezier .76 0 .24 1) a odhalia hero.
+ *  Wordmark na opone stojí presne tam, kde stojí wordmark v hero (rovnaký kontajner) — pri otvorení sa nepohne,
+ *  svet sa objaví okolo neho.
  *  Pravidlá: raz za návštevu (sessionStorage.opona), reduced motion = bez opony, scroll / klik / klávesa = preskočiť
  *  (250 ms). Animácia je čisto CSS (funguje aj bez JS — potom sa opona po skončení iba skryje cez `forwards`
  *  + pointer-events none); JS rieši session, zámok scrollu a preskočenie. Google vidí hero, opona je aria-hidden.
@@ -11,15 +13,21 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
 ---
 
 <div id="opona" class="opona" aria-hidden="true" data-opona>
+  <!-- každé krídlo nesie celú šírku obrazovky (100vw) s tým istým kontajnerom ako hero, posunutú tak,
+       aby obe krídla spolu tvorili jeden obraz: wordmark stojí presne tam, kde stojí wordmark v hero -->
   <div class="opona-kridlo opona-l tx-grain">
-    <div class="opona-wm">
-      <Wordmark className="[--wm-shadow:6px] sm:[--wm-shadow:11px]" />
+    <div class="opona-vrstva">
+      <div class="opona-kont">
+        <div class="opona-wm"><Wordmark className="block h-auto w-full [--wm-shadow:6px] sm:[--wm-shadow:11px]" /></div>
+      </div>
     </div>
     <p lang="en" class="opona-motto opona-motto-l">{MOTTO_1}</p>
   </div>
   <div class="opona-kridlo opona-r tx-grain">
-    <div class="opona-wm">
-      <Wordmark className="[--wm-shadow:6px] sm:[--wm-shadow:11px]" />
+    <div class="opona-vrstva opona-vrstva-r">
+      <div class="opona-kont">
+        <div class="opona-wm"><Wordmark className="block h-auto w-full [--wm-shadow:6px] sm:[--wm-shadow:11px]" /></div>
+      </div>
     </div>
     <p lang="en" class="opona-motto opona-motto-r">{MOTTO_2}</p>
   </div>
@@ -67,7 +75,7 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
     window.addEventListener('keydown', skip);
     window.addEventListener('pointerdown', skip);
     el.classList.add('opona-go');
-    setTimeout(finish, 450 + 900 + 80);
+    setTimeout(finish, 1400 + 900 + 80);
   })();
 </script>
 
@@ -99,18 +107,33 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
     right: 0;
     border-left: 3px solid var(--color-ink);
   }
-  /* wordmark: 80 vw široký, centrovaný cez obe krídla — ľavé ukazuje ľavú polovicu, pravé pravú */
-  .opona-wm {
+  /* vrstva = celá obrazovka; v pravom krídle posunutá o −50vw, aby nadväzovala na ľavé */
+  .opona-vrstva {
     position: absolute;
-    top: 50%;
-    width: 80vw;
-    transform: translateY(-55%);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
   }
-  .opona-l .opona-wm {
-    left: 10vw;
+  .opona-vrstva-r {
+    left: -50vw;
   }
-  .opona-r .opona-wm {
-    left: -40vw;
+  /* rovnaký kontajner ako hero: max-w-7xl, px 1rem / 1.5rem / 2.5rem, pod hlavičkou (--header-h) + pt 1.25rem / 2rem */
+  .opona-kont {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 80rem;
+    padding: calc(var(--header-h, 4.5rem) + 1.25rem) 1rem 0;
+  }
+  .opona-wm {
+    width: 100%;
+    max-width: 52rem;
+  }
+  @media (min-width: 640px) {
+    .opona-kont { padding: calc(var(--header-h, 4.5rem) + 2rem) 1.5rem 0; }
+  }
+  @media (min-width: 1024px) {
+    .opona-kont { padding-left: 2.5rem; padding-right: 2.5rem; }
   }
   .opona-motto {
     position: absolute;
@@ -144,7 +167,7 @@ import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
   .opona-r {
     animation-duration: 900ms;
     animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
-    animation-delay: 450ms;
+    animation-delay: 1400ms;
     animation-fill-mode: forwards;
   }
   .opona-l { animation-name: opona-l; }

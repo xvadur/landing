@@ -11,7 +11,7 @@
  *  prečíta alfa v jej strede. Mobil: hrubšia mriežka, 20 fps. Pauza mimo viewportu a pri skrytej karte.
  *  Reduced motion: komponent sa nemontuje (Hero), motto ostáva statické. */
 import { useEffect, useRef, type RefObject } from 'react';
-import { BLOCKS, CHARS, createRenderer, type Grid } from './ascii-engine';
+import { ATLAS_ROWS, BLOCKS, CHARS, createRenderer, type Grid } from './ascii-engine';
 
 function token(name: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -24,9 +24,11 @@ export type AsciiProps = {
   motto: RefObject<HTMLParagraphElement | null>;
   /** prvý vykreslený frame → Hero schová typografické motto */
   onReady?: () => void;
+  /** obrí wordmark — zdroj hmoty (hustota klesá od jeho spodnej hrany) */
+  source: RefObject<HTMLElement | null>;
 };
 
-export default function Ascii({ host, motto, onReady }: AsciiProps) {
+export default function Ascii({ host, motto, onReady, source }: AsciiProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const ready = useRef(false);
 
@@ -38,8 +40,9 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
     const section: HTMLElement = sectionEl;
 
     const ink = token('--color-ink') || '#111';
+    const yellow = token('--color-yellow') || '#FFE600';
     const mobile = !matchMedia('(min-width: 1024px)').matches;
-    const fontPx = 9; // jemná mriežka: písmená motta (160 px) majú ~15 riadkov, inak sa nedajú čítať
+    const fontPx = 11; // bunka ≈ 6,6 × 13 px: písmená motta (160 px) majú ~12 riadkov (čitateľné), hmota je viditeľná
     const hasWorker = typeof OffscreenCanvas !== 'undefined' && typeof Worker !== 'undefined';
     const fps = hasWorker ? 24 : 18;
     /* mobil: motto má 64 px = ~6 riadkov mriežky, z toho sa veta nedá čítať → ASCII je len šumové pozadie,
@@ -75,27 +78,54 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       return { W, H, dpr, cw, ch, cols: Math.ceil(W / cw), rows: Math.ceil(H / ch) };
     }
 
-    /* atlas: 2 riadky (šum svetlý ASCII, veta plné bloky) × znaky */
+    /* atlas: riadok 0 ASCII znaky šumu (ink, alfa), riadok 1 bloky vety v inku (krytie), riadok 2 bloky v žltej */
     function buildAtlas(cw: number, ch: number, dpr: number): HTMLCanvasElement {
       const atlas = document.createElement('canvas');
       atlas.width = Math.ceil(cw * dpr) * Math.max(CHARS.length, BLOCKS.length);
-      atlas.height = Math.ceil(ch * dpr) * 2;
+      atlas.height = Math.ceil(ch * dpr) * ATLAS_ROWS;
       const a = atlas.getContext('2d')!;
       a.scale(dpr, dpr);
       a.textBaseline = 'middle';
       a.textAlign = 'center';
-      // riadok 0: ASCII znaky šumu (svetlé); riadok 1: bloky vety ako obdĺžniky (nezávislé od fontu — glyf █
-      // v niektorých fontoch nevyplní bunku a medzi riadkami vznikajú pruhy). BLOCKS index → krytie bunky.
-      a.font = `500 ${fontPx}px ${monoFamily}`;
-      a.globalAlpha = 0.2;
+      a.font = `600 ${fontPx}px ${monoFamily}`;
       a.fillStyle = ink;
+      a.globalAlpha = 0.46; // riadok 0: blízko zdroja
       for (let i = 0; i < CHARS.length; i++) a.fillText(CHARS[i]!, i * cw + cw / 2, ch / 2);
+      a.globalAlpha = 0.2; // riadok 3: ďaleko od zdroja
+      for (let i = 0; i < CHARS.length; i++) a.fillText(CHARS[i]!, i * cw + cw / 2, 3 * ch + ch / 2);
+      // bloky ako obdĺžniky (nezávislé od fontu — glyf █ v niektorých fontoch nevyplní bunku a vznikajú pruhy)
       const krytie = [0, 0.25, 0.55, 0.8, 1];
       for (let i = 1; i < BLOCKS.length; i++) {
+        a.fillStyle = ink;
         a.globalAlpha = krytie[i]!;
         a.fillRect(i * cw, ch, cw + 0.5, ch + 0.5);
+        a.fillStyle = yellow;
+        a.globalAlpha = 1;
+        a.fillRect(i * cw, 2 * ch, cw + 0.5, ch + 0.5);
       }
       return atlas;
+    }
+
+    /* hustota hmoty: 1 pod wordmarkom, klesá so vzdialenosťou od jeho spodnej hrany (doprava a dole), min 0,12 */
+    function buildDensity(cols: number, rows: number, cw: number, ch: number, W: number): Float32Array {
+      const density = new Float32Array(cols * rows);
+      const rect = section.getBoundingClientRect();
+      const src = source.current?.getBoundingClientRect();
+      const sx0 = src ? src.left - rect.left : 0;
+      const sx1 = src ? src.right - rect.left : W * 0.6;
+      const sy1 = src ? src.bottom - rect.top : rect.height * 0.35;
+      const reach = W * 0.75;
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const px = (x + 0.5) * cw;
+          const py = (y + 0.5) * ch;
+          const dx = px < sx0 ? sx0 - px : px > sx1 ? px - sx1 : 0;
+          const dy = py > sy1 ? py - sy1 : (sy1 - py) * 0.6; // nad wordmarkom hmota redne pomalšie (je „za" ním)
+          const d = Math.sqrt(dx * dx + dy * dy) / reach;
+          density[y * cols + x] = Math.max(0.05, 1 - d * 1.7 + d * d * 0.5); // strmší spád: pod wordmarkom hmota, vpravo dole vzduch
+        }
+      }
+      return density;
     }
 
     /* maska: motto tým istým fontom do offscreen canvasu, alfa v strede každej bunky */
@@ -162,7 +192,8 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       canvas.style.height = `${gm.H}px`;
       const atlas = buildAtlas(gm.cw, gm.ch, gm.dpr);
       const mask = buildMask(gm.W, gm.H, gm.cols, gm.rows, gm.cw, gm.ch);
-      return { grid: { ...gm, ...mask }, atlas };
+      const density = buildDensity(gm.cols, gm.rows, gm.cw, gm.ch, gm.W);
+      return { grid: { ...gm, ...mask, density }, atlas };
     }
 
     async function startWorker(initial: { grid: Grid; atlas: HTMLCanvasElement }) {
@@ -172,7 +203,7 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       worker.onmessage = (e: MessageEvent<{ type: string }>) => {
         if (e.data.type === 'ready') markReady();
       };
-      worker.postMessage({ type: 'init', canvas: off, atlas: bitmap, grid: initial.grid, fps }, [off, bitmap, initial.grid.inside.buffer, initial.grid.threshold.buffer]);
+      worker.postMessage({ type: 'init', canvas: off, atlas: bitmap, grid: initial.grid, fps }, [off, bitmap, initial.grid.inside.buffer, initial.grid.threshold.buffer, initial.grid.density.buffer]);
     }
 
     function startMain(initial: { grid: Grid; atlas: HTMLCanvasElement }) {
@@ -196,7 +227,7 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       const next = build();
       if (worker) {
         const bitmap = await createImageBitmap(next.atlas);
-        worker.postMessage({ type: 'grid', grid: next.grid, atlas: bitmap }, [bitmap, next.grid.inside.buffer, next.grid.threshold.buffer]);
+        worker.postMessage({ type: 'grid', grid: next.grid, atlas: bitmap }, [bitmap, next.grid.inside.buffer, next.grid.threshold.buffer, next.grid.density.buffer]);
       } else if (mainRenderer) {
         canvas.width = Math.round(next.grid.W * next.grid.dpr);
         canvas.height = Math.round(next.grid.H * next.grid.dpr);
@@ -241,7 +272,7 @@ export default function Ascii({ host, motto, onReady }: AsciiProps) {
       ro.disconnect();
       io.disconnect();
     };
-  }, [host, motto, onReady]);
+  }, [host, motto, onReady, source]);
 
   return <canvas ref={canvasRef} className="pointer-events-none absolute inset-0 z-0" aria-hidden="true" />;
 }

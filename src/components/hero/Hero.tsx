@@ -15,7 +15,6 @@ import { cn } from '@/lib/utils';
 import {
   CTA,
   CTA_CLASS,
-  EYEBROW,
   INTRO,
   MOTTO_1,
   MOTTO_2,
@@ -88,6 +87,7 @@ export default function Hero() {
   const [asciiOn, setAsciiOn] = useState(false);
   const onAsciiReady = useCallback(() => setAsciiOn(true), []);
   const mottoRef = useRef<HTMLParagraphElement>(null);
+  const wordmarkRef = useRef<HTMLHeadingElement>(null);
 
   /* wordmark: náklon ±2° za kurzorom, len desktop s myšou */
   const naklon = useNaklon(animated);
@@ -112,15 +112,14 @@ export default function Hero() {
       {ascii && (
         <Hranica>
           <Suspense fallback={null}>
-            <Ascii host={sectionRef} motto={mottoRef} onReady={onAsciiReady} />
+            <Ascii host={sectionRef} motto={mottoRef} source={wordmarkRef} onReady={onAsciiReady} />
           </Suspense>
         </Hranica>
       )}
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-4.5rem)] w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
-        <p className="eyebrow">{EYEBROW}</p>
-
-        <h1 className="mt-4 w-full max-w-[52rem] sm:mt-6" style={{ perspective: 1200 }}>
+        {/* eyebrow vypustený (20. 9.): wordmark je h1, meno je v téze, pätičke a titulku */}
+        <h1 ref={wordmarkRef} className="w-full max-w-[52rem]" style={{ perspective: 1200 }} data-hero-wordmark>
           <Wordmark
             ref={naklon.el}
             className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"

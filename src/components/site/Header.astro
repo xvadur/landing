@@ -5,7 +5,9 @@
  *  (client:media ≤ 1023 px), ktorý ťahal React runtime + vaul ≈ 92 kB gz na každú stránku vrátane článkov — doc 10 chce
  *  články 0 kB a podstránky ≤ 70 kB. Otvorenie: showModal() (fokus, Esc, inert zvyšku stránky natívne), zatvorenie: X,
  *  klik na pozadie, Esc, odkaz v menu, astro:before-swap. Pohyb: @starting-style + transition (kde prehliadač vie),
- *  reduced motion = 120 ms fade z global.css. */
+ *  reduced motion = 120 ms fade z global.css.
+ *  Wordmark v hlavičke (20. 9., Adam: trikrát XVADUR nad sebou je veľa): na domove je skrytý, kým je vo viewporte obrí
+ *  wordmark hera ([data-hero-wordmark]); keď odscrolluje, malý ho nahradí. Na ostatných stránkach je vždy viditeľný. */
 import { NAV } from '@/data/nav';
 import { ListIcon, XIcon } from '@phosphor-icons/react';
 
@@ -17,7 +19,7 @@ const linkClass =
 
 <header class="sticky top-0 z-50 border-b-3 border-ink bg-paper">
   <div class="mx-auto flex w-full max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-10">
-    <a href="/" class="flex h-11 items-center" aria-label="XVADUR — domov">
+    <a href="/" class="site-wm flex h-11 items-center" aria-label="XVADUR — domov" data-site-wm>
       <img
         src="/brand/xvadur-ink.svg"
         alt="XVADUR"
@@ -177,3 +179,39 @@ const linkClass =
     if (m.matches) dlg()?.close();
   });
 </script>
+
+<script>
+  /* malý wordmark vs. veľký wordmark hera: len jeden z nich naraz */
+  function wmSync() {
+    const small = document.querySelector<HTMLElement>('[data-site-wm]');
+    const big = document.querySelector<HTMLElement>('[data-hero-wordmark]');
+    if (!small) return;
+    if (!big) {
+      small.dataset.hidden = 'false';
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([e]) => {
+        small.dataset.hidden = e && e.isIntersecting && e.intersectionRatio > 0.15 ? 'true' : 'false';
+      },
+      { threshold: [0, 0.15, 0.3] },
+    );
+    io.observe(big);
+    document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+  }
+  wmSync();
+  document.addEventListener('astro:page-load', wmSync);
+</script>
+
+<style>
+  .site-wm {
+    transition:
+      opacity var(--duration-base, 200ms) ease-out,
+      transform var(--duration-base, 200ms) ease-out;
+  }
+  .site-wm[data-hidden='true'] {
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+  }
+</style>

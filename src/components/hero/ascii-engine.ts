@@ -2,7 +2,10 @@
  *  Beží vo Web Workeri nad OffscreenCanvas (ascii.worker.ts) alebo, kde OffscreenCanvas nie je, na hlavnom vlákne
  *  (Ascii.tsx). Atlas znakov aj maska motta vznikajú na hlavnom vlákne (potrebujú fonty a DOM) a posielajú sa sem.
  *  Výkon: šum sa počíta na polovičnej mriežke (2×2 bunky zdieľajú hodnotu → 4× menej simplexu), jeden šum na bunku,
- *  drawImage z atlasu; ~23 k buniek na 1440 px pri 24 fps mimo hlavného vlákna = žiadny jank pri scrolle. */
+ *  drawImage z atlasu; ~15 k buniek (11 px) na 1440 px pri 24 fps mimo hlavného vlákna = žiadny jank pri scrolle.
+ *  Kompozícia (20. 9., Adam): wordmark XVADUR je zdroj — hustota znakov je najvyššia pod ním a rozptyľuje sa doprava
+ *  a dole (density); motto je do hmoty vyrezané (v šume = prázdny papier), pri skladaní sa vyplní blokmi v inku so
+ *  žltými zrnami; pri rozpade sa rozpadá len motto, wordmark (vektor mimo canvasu) ostáva celý. */
 
 export const CHARS = ' .:;+*#%@'; // bez „-“ a „=“: vodorovné čiarky robili z pozadia pruhy
 /** zložená veta: blokové znaky (vypĺňajú bunku, ťah písmena je plný); v Geist Mono chýbajú → padne to na Menlo/ui-monospace */
@@ -96,9 +99,17 @@ export type Grid = {
   rows: number;
   cw: number;
   ch: number;
+  /** 1 = bunka je vnútri písmena motta */
   inside: Uint8Array;
+  /** náhoda 0…1 na bunku: poradie skladania, jitter šumu, žlté zrná */
   threshold: Float32Array;
+  /** hustota poľa 0…1 na bunku: 1 pod wordmarkom (zdroj), klesá s vzdialenosťou doprava a dole */
+  density: Float32Array;
 };
+
+/** Atlas: riadok 0 = ASCII znaky šumu blízko zdroja (tmavšie), 1 = bloky vety v inku (BLOCKS, krytie), 2 = bloky v žltej,
+ *  3 = ASCII znaky šumu ďaleko od zdroja (svetlé). */
+export const ATLAS_ROWS = 4;
 
 type Ctx2D = CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
 type Atlas = CanvasImageSource;
@@ -117,12 +128,12 @@ export function createRenderer(ctx: Ctx2D, atlas: Atlas, grid: Grid) {
   setGrid(grid);
 
   const frame = (sec: number) => {
-    const { W, H, dpr, cols, rows, cw, ch, inside, threshold } = g;
+    const { W, H, dpr, cols, rows, cw, ch, inside, threshold, density } = g;
     const a = assembled(sec);
     const z = sec * 0.22;
     // šum na polovičnej mriežke, v pixelových súradniciach (nezávislé od hustoty mriežky)
-    const sx = cw * 2 * 0.0068;
-    const sy = ch * 2 * 0.0068;
+    const sx = cw * 2 * 0.0062;
+    const sy = ch * 2 * 0.0062;
     for (let hy = 0; hy < half.rows; hy++) {
       for (let hx = 0; hx < half.cols; hx++) {
         half.buf[hy * half.cols + hx] = noise(hx * sx, hy * sy, z);
@@ -137,22 +148,27 @@ export function createRenderer(ctx: Ctx2D, atlas: Atlas, grid: Grid) {
       for (let x = 0; x < cols; x++) {
         const idx = y * cols + x;
         const n = half.buf[hrow + (x >> 1)]!; // −1…1
+        const r = threshold[idx]!;
+        const dens = density[idx]!;
         let row = 0;
         let ci: number;
-        if (inside[idx] && a > threshold[idx]!) {
-          // zložený znak: plný blok, ~15 % buniek ▒ ako textúra (▓ v Menlo pri 10 px vyzeralo ako pruhy)
-          row = 1;
-          ci = n > 0.45 ? 2 : 4;
+        if (inside[idx]) {
+          if (a > r) {
+            // zložené: blok vety; ~14 % buniek žlté zrná (farba tieňa wordmarku), zvyšok ink plný / 0,8
+            row = r > 0.86 ? 2 : 1;
+            ci = row === 2 ? 4 : n > 0.5 ? 3 : 4;
+          } else {
+            // nezložené = vyrezané do hmoty: písmeno je prázdny papier (negatív)
+            continue;
+          }
         } else {
-          // šum: riedke oblaky znakov — pod −0,15 bunka ostáva prázdna (inak z pozadia vznikne hustá mriežka)
-          // per-bunkový jitter (threshold je náhoda 0…1) rozbije vodorovné runy rovnakého znaku na zrno
-          const nj = n + (threshold[idx]! - 0.5) * 0.5;
-          if (nj < -0.3 && !inside[idx]) continue;
-          let level = (nj + 0.3) * 0.38;
-          if (inside[idx]) level = Math.min(1, level + a * 0.3);
-          ci = Math.min(maxC, Math.max(0, Math.round(level * maxC)));
+          // hmota: hustota podľa vzdialenosti od wordmarku × šum, per-bunkový jitter rozbíja runy
+          const nj = n + (r - 0.5) * 0.5;
+          const level = (nj + 1) * 0.5 * (0.1 + 0.9 * dens);
+          if (level < 0.14) continue;
+          row = dens > 0.5 ? 0 : 3; // blízko wordmarku tmavšie znaky, ďalej svetlé
+          ci = Math.min(maxC, Math.max(1, Math.round(level * maxC)));
         }
-        if (ci === 0) continue;
         ctx.drawImage(atlas, ci * aw, row * ah, aw, ah, x * cw, y * ch, cw, ch);
       }
     }

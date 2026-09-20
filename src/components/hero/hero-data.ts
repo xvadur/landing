@@ -1,7 +1,7 @@
 /** Hero — jediný zdroj textov pre ostrov (Hero.tsx) aj statický fallback (HeroStatic.astro).
  *  Ratifikované 19. 9. 2026 (01_SMEROVANIE §8): len „DIVIDED," / „WE ARE USELESS." + wordmark XVADUR, bez slovenského riadku.
  *  Téza a intro verbatim zo spec 05 §2 bod 1. */
-export const EYEBROW = 'Adam Rudavský / XVADUR';
+/* EYEBROW vypustený 20. 9. (trikrat XVADUR nad sebou). */
 export const MOTTO_1 = 'DIVIDED,';
 export const MOTTO_2 = 'WE ARE USELESS.';
 export const TEZA = 'Vysvetľujem AI. Staviam systémy. Ukazujem, ako.';
