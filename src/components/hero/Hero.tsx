@@ -3,16 +3,25 @@
  *  znakov, o 700 ms za ním „WE ARE USELESS." — raz, bez kurzora. Vracajúci sa návštevník (bez opony) to vidí hneď.
  *  Papier + zrno + jemné bodky ako pozadie; obrí wordmark (h1) s náklonom ±2° za kurzorom; CTA VSTÚP (Magnet +
  *  ClickSpark); pilulky. Ostrov <Hero client:load>, SSR = statické motto (Google, no-JS). Reduced motion: statický
- *  text (DecryptedText to rieši sám), opona sa nezobrazí. ASCII/shader vrstvy z 19.–20. 9. sú preč. */
+ *  text (DecryptedText to rieši sám), opona sa nezobrazí. ASCII/shader vrstvy z 19.–20. 9. sú preč.
+ *  20. 9. (Adam: „XVADUR v menu, v eyebrow aj v hero" — tri opakovania): Header.astro sa na domovskej stránke
+ *  nevykresľuje (Base `header="none"`), nav zo src/data/nav.ts + ⌘K + mobilné menu sedia priamo tu, pod obrím
+ *  wordmarkom (po vzore eduba.io) — jeden wordmark, jedna nav, eyebrow bez opakovania mena značky. Mobilný dialóg
+ *  (NavMobil) vykresľuje Base, tlačidlá [data-nav-open]/[data-commandk] ho ovládajú cez existujúce delegované skripty.
+ *  Znak (portrét v planétovom prstenci, potrace z referencie): samostatná maskovaná vrstva v inku, nízka krytosť,
+ *  žiadne JS — vidno ho aj na mobile a pri reduced motion. */
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import DecryptedText from '@/components/vendor/reactbits/DecryptedText';
 import Magnet from '@/components/vendor/reactbits/Magnet';
 import ClickSpark from '@/components/vendor/reactbits/ClickSpark';
 import { MQ_DESKTOP_POINTER, MQ_REDUCED, useMediaQuery } from '@/components/vendor/reactbits/motion-guards';
 import { cn } from '@/lib/utils';
+import { NAV } from '@/data/nav';
+import { ListIcon } from '@phosphor-icons/react';
 import {
   CTA,
   CTA_CLASS,
+  EYEBROW,
   INTRO,
   MOTTO_1,
   MOTTO_2,
@@ -137,15 +146,63 @@ export default function Hero() {
       onPointerLeave={onPointerLeave}
       data-hero={animated ? 'animated' : 'static'}
     >
+      {/* znak: portrét v planétovom prstenci, maskovaný v inku, veľmi nízka krytosť — čisté CSS, žiadne JS */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-16 -top-16 z-[1] h-[38rem] w-[38rem] bg-ink opacity-[0.05] sm:h-[46rem] sm:w-[46rem]"
+        style={{
+          maskImage: 'url(/brand/xvadur-znak.svg)',
+          maskSize: 'contain',
+          maskRepeat: 'no-repeat',
+          maskPosition: 'center',
+          WebkitMaskImage: 'url(/brand/xvadur-znak.svg)',
+          WebkitMaskSize: 'contain',
+          WebkitMaskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+        }}
+      />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100dvh-4.5rem)] w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
-        {/* eyebrow vypustený (20. 9.): wordmark je h1, meno je v téze, pätičke a titulku */}
+      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
         <h1 ref={wordmarkRef} className="w-full max-w-[52rem]" style={{ perspective: 1200 }} data-hero-wordmark>
           <Wordmark
             ref={naklon.el}
             className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"
           />
         </h1>
+
+        <nav aria-label="Hlavná navigácia" className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y-3 border-ink py-3 sm:mt-6">
+          <p className="eyebrow">{EYEBROW}</p>
+          <div className="flex flex-wrap items-center gap-1">
+            {NAV.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                className="hidden h-11 items-center rounded-lg border-3 border-transparent px-3 font-display text-base font-extrabold uppercase tracking-wide transition-colors duration-[var(--duration-base)] hover:border-ink hover:bg-yellow lg:flex"
+              >
+                {item.label}
+              </a>
+            ))}
+            <button
+              type="button"
+              data-commandk
+              className="press hidden h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm lg:flex"
+              aria-label="Otvoriť príkazovú paletu (⌘K)"
+              title="⌘K / Ctrl K"
+            >
+              <span aria-hidden="true">⌘K</span>
+            </button>
+            <button
+              type="button"
+              data-nav-open
+              aria-haspopup="dialog"
+              aria-controls="mobilna-nav"
+              className="press flex h-11 min-w-11 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-yellow px-3 font-display text-sm font-extrabold uppercase tracking-wide shadow-brutal-sm lg:hidden"
+            >
+              <ListIcon weight="bold" size={22} aria-hidden="true" />
+              <span>Menu</span>
+            </button>
+          </div>
+        </nav>
 
         <p lang="en" className={cn('mt-6 sm:mt-8', MOTTO_CLASS)} style={{ fontVariationSettings: "'wdth' 100" }}>
           {go ? <Desifruj text={MOTTO_1} speed={70} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}

@@ -1,0 +1,128 @@
+---
+/** Mobilná navigácia: natívny <dialog> + delegovaný skript (0 kB React). Vytiahnuté z Header.astro (20. 9.),
+ *  aby ju vedel osadiť aj Hero na domovskej stránke (obrí wordmark + menu bez sticky Header). Presne jedna
+ *  inštancia na stránku — otvára/zatvára ju ktorékoľvek tlačidlo s [data-nav-open] / [data-nav-close] v DOM.
+ *  Do 19. 9. to bol vaul Drawer ako React ostrov (client:media ≤ 1023 px), ktorý ťahal React runtime + vaul
+ *  ≈ 92 kB gz na každú stránku vrátane článkov — doc 10 chce články 0 kB a podstránky ≤ 70 kB. Otvorenie:
+ *  showModal() (fokus, Esc, inert zvyšku stránky natívne), zatvorenie: X, klik na pozadie, Esc, odkaz v menu,
+ *  astro:before-swap. Pohyb: @starting-style + transition (kde prehliadač vie), reduced motion = 120 ms fade
+ *  z global.css. */
+import { NAV } from '@/data/nav';
+import { XIcon } from '@phosphor-icons/react';
+
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const linkClass =
+  'press block rounded-lg border-3 border-ink bg-white px-4 py-3 font-display text-2xl font-extrabold uppercase shadow-brutal-sm aria-[current=page]:bg-yellow';
+---
+
+<dialog
+  id="mobilna-nav"
+  data-nav
+  data-lenis-prevent
+  aria-label="Navigácia"
+  class="mobilna-nav m-0 h-dvh max-h-none w-[min(88vw,360px)] max-w-none flex-col border-l-3 border-ink bg-paper p-0 text-ink lg:hidden"
+>
+  <div class="flex items-center justify-between border-b-3 border-ink px-4 py-3">
+    <p class="eyebrow">Navigácia</p>
+    <button
+      type="button"
+      data-nav-close
+      class="press flex h-11 w-11 items-center justify-center rounded-lg border-3 border-ink bg-white shadow-brutal-sm"
+      aria-label="Zavrieť menu"
+    >
+      <XIcon weight="bold" size={22} aria-hidden="true" />
+    </button>
+  </div>
+  <nav aria-label="Mobilná navigácia" class="flex flex-col gap-3 p-4">
+    <a href="/" aria-current={path === '/' ? 'page' : undefined} class={linkClass}>Domov</a>
+    {
+      NAV.map((item) => (
+        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined} class={linkClass}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+  <div class="mt-auto border-t-3 border-ink p-4">
+    <a
+      href="/konzultacia/"
+      class="press flex min-h-12 items-center justify-center rounded-lg border-3 border-ink bg-hot px-4 py-3 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
+    >
+      Konzultácia
+    </a>
+  </div>
+</dialog>
+
+<style>
+  /* natívny dialóg: zprava, cez celú výšku; pozadie = overlay token */
+  .mobilna-nav {
+    position: fixed;
+    inset: 0 0 0 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(100%);
+    opacity: 0;
+    transition:
+      transform var(--duration-slow) var(--ease-out-hard),
+      opacity var(--duration-base) var(--ease-out-hard),
+      display var(--duration-slow) allow-discrete,
+      overlay var(--duration-slow) allow-discrete;
+  }
+  .mobilna-nav[open] {
+    display: flex;
+    transform: translateX(0);
+    opacity: 1;
+  }
+  @starting-style {
+    .mobilna-nav[open] {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+  }
+  .mobilna-nav::backdrop {
+    background: var(--color-overlay);
+    transition:
+      background var(--duration-base) var(--ease-out-hard),
+      display var(--duration-slow) allow-discrete,
+      overlay var(--duration-slow) allow-discrete;
+  }
+  @starting-style {
+    .mobilna-nav[open]::backdrop {
+      background: transparent;
+    }
+  }
+  /* stránka pod otvoreným menu nescrolluje */
+  html:has(.mobilna-nav[open]) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  // Delegácia na document: skript beží raz (ClientRouter ho pri navigácii znovu nespúšťa), dialóg sa hľadá pri každom kliku.
+  const dlg = () => document.querySelector<HTMLDialogElement>('dialog[data-nav]');
+  document.addEventListener('click', (e) => {
+    const t = (e.target as Element | null)?.closest?.('[data-nav-open],[data-nav-close],dialog[data-nav] a');
+    const d = dlg();
+    if (!d) return;
+    if (t?.hasAttribute('data-nav-open')) {
+      if (!d.open) d.showModal();
+      return;
+    }
+    if (t?.hasAttribute('data-nav-close') || (t && t.tagName === 'A')) {
+      d.close();
+      return;
+    }
+    // klik na pozadie (::backdrop) = cieľ je samotný <dialog>, mimo jeho obsahu
+    if (e.target === d) {
+      const r = d.getBoundingClientRect();
+      const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) d.close();
+    }
+  });
+  document.addEventListener('astro:before-swap', () => dlg()?.close());
+  // desktop: keby ostal otvorený pri zväčšení okna
+  window.matchMedia('(min-width: 1024px)').addEventListener('change', (m) => {
+    if (m.matches) dlg()?.close();
+  });
+</script>

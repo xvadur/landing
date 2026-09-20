@@ -6,6 +6,7 @@
 import { ClientRouter } from 'astro:transitions';
 import '@/styles/global.css';
 import Header from '@/components/site/Header.astro';
+import NavMobil from '@/components/site/NavMobil.astro';
 import Footer from '@/components/site/Footer.astro';
 import Smooth from '@/components/site/Smooth';
 import Cursor from '@/components/site/Cursor';
@@ -23,6 +24,9 @@ interface Props {
   bodyClass?: string;
   /** vypnúť hlavičku / pätičku (napr. /makleri/plan/ pri tlači) */
   chrome?: boolean;
+  /** 'bar' = sticky Header (default) · 'none' = žiadna lišta, ale mobilný dialóg (NavMobil) sa vykreslí — pre
+   *  domov, kde nav sedí priamo v Hero pod obrím wordmarkom (20. 9., viď Header.astro) */
+  header?: 'bar' | 'none';
   /** site ostrovy: full = Smooth + Cursor + CommandK + Toaster (domov, hry) · lite = len Toaster (podstránky s formulárom,
    *  ušetrí ~50 kB gz na desktope) · none = žiadne (články: JS len z Header drawera na mobile) */
   islands?: 'full' | 'lite' | 'none';
@@ -36,6 +40,7 @@ const {
   bodyClass = '',
   chrome = true,
   islands = 'full',
+  header = 'bar',
 } = Astro.props;
 
 const site = Astro.site ?? new URL('https://xvadur.com');
@@ -75,7 +80,8 @@ const og = new URL(ogImage ?? ogUrlFor(Astro.url.pathname), site);
     <ClientRouter />
   </head>
   <body class:list={['min-h-dvh flex flex-col', bodyClass]}>
-    {chrome && <Header />}
+    {chrome && header === 'bar' && <Header />}
+    {chrome && header === 'none' && <NavMobil />}
     <main id="obsah" class="flex-1">
       <slot />
     </main>

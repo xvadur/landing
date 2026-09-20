@@ -7,20 +7,20 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
-   "div.marquee-track right=5289",
-   "div.flex.items-center right=2501",
-   "span.flex.items-center right=1470",
-   "span.flex.items-center right=1951",
-   "span. right=1847"
+   "div.pointer-events-none.absolute right=1504",
+   "div.marquee-track right=5292",
+   "div.flex.items-center right=2503",
+   "span.flex.items-center right=1472",
+   "span.flex.items-center right=1953"
   ],
   "broken": [],
   "small": [],
-  "h1": "",
+  "h1": "XVADUR",
   "h1Count": 1,
   "headingOrder": true,
   "noAlt": 0,
   "inputsNoLabel": 0,
-  "jsKb": 287.4,
+  "jsKb": 288.7,
   "jsFiles": 56,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
@@ -47,10 +47,10 @@
   "scroll": "1440/1440",
   "wide": [
    "svg.[object.SVGAnimatedString] right=1480",
-   "div.marquee-track right=12328",
-   "div.flex.shrink-0 right=2663",
-   "span.flex.items-center right=1700",
-   "span.line-through.decoration-hot right=1524"
+   "div.marquee-track right=12334",
+   "div.flex.shrink-0 right=2669",
+   "span.flex.items-center right=1705",
+   "span.line-through.decoration-hot right=1529"
   ],
   "broken": [],
   "small": [],
@@ -102,11 +102,11 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
-   "div.marquee-track right=12681",
-   "div.flex.items-center right=6085",
-   "span.flex.items-center right=2135",
-   "span. right=2043",
-   "svg.[object.SVGAnimatedString] right=2103"
+   "div.marquee-track right=12684",
+   "div.flex.items-center right=6088",
+   "span.flex.items-center right=2138",
+   "span. right=2046",
+   "svg.[object.SVGAnimatedString] right=2106"
   ],
   "broken": [],
   "small": [
@@ -148,11 +148,11 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
-   "div.marquee-track right=13797",
-   "div.flex.items-center right=6612",
-   "span.flex.items-center right=2027",
-   "span. right=1943",
-   "svg.[object.SVGAnimatedString] right=1995"
+   "div.marquee-track right=13800",
+   "div.flex.items-center right=6615",
+   "span.flex.items-center right=2030",
+   "span. right=1946",
+   "svg.[object.SVGAnimatedString] right=1998"
   ],
   "broken": [],
   "small": [],
@@ -165,7 +165,7 @@
   "jsFiles": 30,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
-   "10.7 SkoreForm.DwUEhLe9.js",
+   "10.7 SkoreForm.-n13hSfn.js",
    "9.1 dist.CdyZ4SdK.js",
    "9.1 dist.gKZylxt9.js",
    "8.4 utils.DjaP4inF.js",
@@ -226,11 +226,11 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
-   "div.marquee-track right=13848",
-   "div.flex.items-center right=6663",
-   "span.flex.items-center right=2078",
-   "span. right=1994",
-   "svg.[object.SVGAnimatedString] right=2046"
+   "div.marquee-track right=13851",
+   "div.flex.items-center right=6666",
+   "span.flex.items-center right=2081",
+   "span. right=1997",
+   "svg.[object.SVGAnimatedString] right=2049"
   ],
   "broken": [],
   "small": [],
@@ -265,11 +265,11 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
-   "div.marquee-track right=6470",
-   "div.flex.items-center right=3092",
-   "span.flex.items-center right=1688",
-   "span. right=1596",
-   "svg.[object.SVGAnimatedString] right=1656"
+   "div.marquee-track right=6472",
+   "div.flex.items-center right=3094",
+   "span.flex.items-center right=1689",
+   "span. right=1597",
+   "svg.[object.SVGAnimatedString] right=1657"
   ],
   "broken": [],
   "small": [],
@@ -352,11 +352,11 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
-   "div.marquee-track right=3132",
-   "div.flex.shrink-0 right=1497",
-   "span.flex.items-center right=1497",
-   "span. right=1460",
-   "span.text-hot right=1497"
+   "div.marquee-track right=3134",
+   "div.flex.shrink-0 right=1499",
+   "span.flex.items-center right=1499",
+   "span. right=1462",
+   "span.text-hot right=1499"
   ],
   "broken": [],
   "small": [
@@ -378,7 +378,7 @@
   "jsFiles": 60,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
-   "27.6 neobrutalismLab.CsXnyXf1.js",
+   "27.5 neobrutalismLab.BEDGMyXC.js",
    "26.6 gsap.B9cs4HJ2.js",
    "25.4 matter.D4d9obGt.js",
    "23.8 react.20HRVIHb.js",
@@ -430,20 +430,20 @@
   "overflow": false,
   "scroll": "375/375",
   "wide": [
+   "div.pointer-events-none.absolute right=439",
    "div.marquee-track right=3948",
-   "div.flex.items-center right=1865",
-   "span.flex.items-center right=397",
-   "span.flex.items-center right=587",
-   "span. right=483"
+   "div.flex.items-center right=1866",
+   "span.flex.items-center right=398",
+   "span.flex.items-center right=588"
   ],
   "broken": [],
   "small": [],
-  "h1": "",
+  "h1": "XVADUR",
   "h1Count": 1,
   "headingOrder": true,
   "noAlt": 0,
   "inputsNoLabel": 0,
-  "jsKb": 147.2,
+  "jsKb": 148.5,
   "jsFiles": 39,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
@@ -454,10 +454,10 @@
    "4.9 csp.Dm5vS1-u.js",
    "4.7 ClientRouter.astro_astro_type_script_index_0_lang.D-mgMtnq.js",
    "4.3 dist.BTtANWdl.js",
+   "4.1 Hero.BpcK9aVM.js",
    "3.2 react.4Ml5mXYG.js",
    "3.1 dist.BB8QFCOE.js",
-   "3.0 Wizard.kJ31ufA1.js",
-   "3.0 Postavil.BZeHITjW.js"
+   "3.0 Wizard.kJ31ufA1.js"
   ],
   "screenshot": "work/screens/final-home-mobile.png"
  },
@@ -469,11 +469,11 @@
   "overflow": false,
   "scroll": "375/375",
   "wide": [
-   "div.marquee-track right=10667",
-   "div.flex.shrink-0 right=2242",
-   "span.flex.items-center right=487",
-   "span.rounded-lg.border-3 right=419",
-   "svg.[object.SVGAnimatedString] right=467"
+   "div.marquee-track right=10669",
+   "div.flex.shrink-0 right=2244",
+   "span.flex.items-center right=490",
+   "span.rounded-lg.border-3 right=422",
+   "svg.[object.SVGAnimatedString] right=470"
   ],
   "broken": [],
   "small": [],
@@ -573,11 +573,11 @@
   "overflow": false,
   "scroll": "375/375",
   "wide": [
-   "div.marquee-track right=13746",
-   "div.flex.items-center right=6562",
-   "span.flex.items-center right=731",
-   "span. right=647",
-   "svg.[object.SVGAnimatedString] right=699"
+   "div.marquee-track right=13749",
+   "div.flex.items-center right=6565",
+   "span.flex.items-center right=734",
+   "span. right=650",
+   "svg.[object.SVGAnimatedString] right=702"
   ],
   "broken": [],
   "small": [],
@@ -590,7 +590,7 @@
   "jsFiles": 30,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
-   "10.7 SkoreForm.DwUEhLe9.js",
+   "10.7 SkoreForm.-n13hSfn.js",
    "9.1 dist.CdyZ4SdK.js",
    "9.1 dist.gKZylxt9.js",
    "8.4 utils.DjaP4inF.js",
@@ -612,11 +612,11 @@
   "overflow": false,
   "scroll": "375/375",
   "wide": [
-   "div.marquee-track right=4923",
-   "div.flex.items-center right=2365",
-   "span.flex.items-center right=660",
-   "span. right=568",
-   "svg.[object.SVGAnimatedString] right=628"
+   "div.marquee-track right=4924",
+   "div.flex.items-center right=2366",
+   "span.flex.items-center right=661",
+   "span. right=569",
+   "svg.[object.SVGAnimatedString] right=629"
   ],
   "broken": [],
   "small": [],
@@ -651,11 +651,11 @@
   "overflow": false,
   "scroll": "375/375",
   "wide": [
-   "div.marquee-track right=13830",
-   "div.flex.items-center right=6645",
-   "span.flex.items-center right=444",
-   "svg.[object.SVGAnimatedString] right=412",
-   "path.[object.SVGAnimatedString] right=407"
+   "div.marquee-track right=13833",
+   "div.flex.items-center right=6648",
+   "span.flex.items-center right=447",
+   "svg.[object.SVGAnimatedString] right=415",
+   "path.[object.SVGAnimatedString] right=410"
   ],
   "broken": [],
   "small": [],
@@ -690,11 +690,11 @@
   "overflow": false,
   "scroll": "375/375",
   "wide": [
-   "div.marquee-track right=5515",
-   "div.flex.items-center right=2611",
-   "span.flex.items-center right=460",
-   "svg.[object.SVGAnimatedString] right=428",
-   "path.[object.SVGAnimatedString] right=421"
+   "div.marquee-track right=5516",
+   "div.flex.items-center right=2612",
+   "span.flex.items-center right=461",
+   "svg.[object.SVGAnimatedString] right=429",
+   "path.[object.SVGAnimatedString] right=422"
   ],
   "broken": [],
   "small": [],
@@ -779,9 +779,9 @@
   "wide": [
    "button.press.relative right=417",
    "button.press.relative right=678",
-   "div.marquee-track right=2973",
-   "div.flex.shrink-0 right=536",
-   "span.flex.items-center right=536"
+   "div.marquee-track right=2972",
+   "div.flex.shrink-0 right=535",
+   "span.flex.items-center right=535"
   ],
   "broken": [],
   "small": [
@@ -803,7 +803,7 @@
   "jsFiles": 60,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
-   "27.6 neobrutalismLab.CsXnyXf1.js",
+   "27.5 neobrutalismLab.BEDGMyXC.js",
    "26.6 gsap.B9cs4HJ2.js",
    "25.4 matter.D4d9obGt.js",
    "23.8 react.20HRVIHb.js",
@@ -855,20 +855,20 @@
   "overflow": false,
   "scroll": "1440/1440",
   "wide": [
+   "div.pointer-events-none.absolute right=1504",
    "div.marquee-track right=5576",
    "div.flex.items-center right=2788",
    "span.flex.items-center right=1757",
-   "span. right=1653",
-   "svg.[object.SVGAnimatedString] right=1725"
+   "span. right=1653"
   ],
   "broken": [],
   "small": [],
-  "h1": "",
+  "h1": "XVADUR",
   "h1Count": 1,
   "headingOrder": true,
   "noAlt": 0,
   "inputsNoLabel": 0,
-  "jsKb": 147.2,
+  "jsKb": 148.5,
   "jsFiles": 39,
   "jsTop": [
    "63.5 client.Cdu9PUT8.js",
@@ -879,10 +879,10 @@
    "4.9 csp.Dm5vS1-u.js",
    "4.7 ClientRouter.astro_astro_type_script_index_0_lang.D-mgMtnq.js",
    "4.3 dist.BTtANWdl.js",
+   "4.1 Hero.BpcK9aVM.js",
    "3.2 react.4Ml5mXYG.js",
    "3.1 dist.BB8QFCOE.js",
-   "3.0 Wizard.kJ31ufA1.js",
-   "3.0 Postavil.BZeHITjW.js"
+   "3.0 Wizard.kJ31ufA1.js"
   ],
   "screenshot": "work/screens/final-home-reduced.png"
  }

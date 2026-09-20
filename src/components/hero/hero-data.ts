@@ -1,7 +1,8 @@
 /** Hero — jediný zdroj textov pre ostrov (Hero.tsx) aj statický fallback (HeroStatic.astro).
  *  Ratifikované 19. 9. 2026 (01_SMEROVANIE §8): len „DIVIDED," / „WE ARE USELESS." + wordmark XVADUR, bez slovenského riadku.
  *  Téza a intro verbatim zo spec 05 §2 bod 1. */
-/* EYEBROW vypustený 20. 9. (trikrat XVADUR nad sebou). */
+/** 20. 9.: bez „/ XVADUR" — meno značky už nesie obrí wordmark hore aj nav vedľa neho, eyebrow len meno autora. */
+export const EYEBROW = 'Adam Rudavský';
 export const MOTTO_1 = 'DIVIDED,';
 export const MOTTO_2 = 'WE ARE USELESS.';
 export const TEZA = 'Vysvetľujem AI. Staviam systémy. Ukazujem, ako.';
@@ -15,8 +16,6 @@ export const PILULKY = [
   { label: 'Texty', href: '#texty', bg: 'bg-lime', rotate: 'rotate-[3deg]' },
 ];
 export const WORDMARK = { src: '/brand/xvadur-ink.svg', width: 678, height: 130 };
-/** Scéna hera: fotka Adama. Dočasne augustový obraz; cieľ = výrez z Higgsfieldu (od pŕs hore, roztiahnuté ruky, PNG bez pozadia). */
-export const SCENA_SRC = '/assets/hero-adam.webp';
 
 /** Motto: clamp podľa šírky viewportu — spodná hranica 4 rem (64 px na 375), horná 10 rem (160 px; ≈ 158 px na 1440).
  *  Strop 10 rem je odvodený z merania: „WE ARE USELESS." pri wdth 100 má ≈ 7,24 em, kontajner max-w-7xl je 1200 px →
@@ -31,7 +30,10 @@ export const MOTTO_LINE_CLASS = 'block pb-[0.06em] sm:whitespace-nowrap';
 /** Tlačidlo VSTÚP (vzor z kontraktu základu). */
 export const CTA_CLASS =
   'press inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-8 font-display text-2xl font-extrabold uppercase text-ink shadow-brutal-lg sm:w-auto';
-/** Výška hlavičky (Header z Base ≈ 71 px) sa v hero aj v Dvere počíta ako 4,5 rem — jedna hodnota na oboch miestach
- *  (`min-h-[calc(100dvh-4.5rem)]`, `lg:h-[calc(100svh-4.5rem)]`, ScrollTrigger `start: 'top 72px'`). */
+/** 20. 9.: Header sa na domove nevykresľuje (nav je v Hero), takže Hero aj Dvere počítajú s plnou výškou —
+ *  `min-h-dvh`, `lg:h-svh`, ScrollTrigger `start: 'top top'` — bez odpočtu za lepivú hlavičku (tá platí len
+ *  na podstránkach s Header.astro). */
 export const PILL_CLASS =
   'press inline-flex min-h-11 items-center rounded-lg border-3 border-ink px-4 font-display text-base font-extrabold uppercase tracking-wide text-ink shadow-brutal-sm';
+/** Scéna hera: fotka Adama. Dočasne augustový obraz; cieľ = výrez z Higgsfieldu (od pŕs hore, roztiahnuté ruky, PNG bez pozadia). */
+export const SCENA_SRC = '/assets/hero-adam.webp';
