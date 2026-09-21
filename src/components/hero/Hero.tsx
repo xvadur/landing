@@ -192,6 +192,23 @@ export default function Hero() {
       onPointerLeave={onPointerLeave}
       data-hero={animated ? 'animated' : 'static'}
     >
+      {/* znak: portrét v planétovom prstenci, maskovaný v inku, watermark cez celý hero, za obsahom (z-10 nad ním) */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center">
+        <div
+          className="aspect-square w-[85vw] max-w-[64rem] bg-ink opacity-[0.06] sm:w-[70vw]"
+          style={{
+            maskImage: 'url(/brand/xvadur-znak.svg)',
+            maskSize: 'contain',
+            maskRepeat: 'no-repeat',
+            maskPosition: 'center',
+            WebkitMaskImage: 'url(/brand/xvadur-znak.svg)',
+            WebkitMaskSize: 'contain',
+            WebkitMaskRepeat: 'no-repeat',
+            WebkitMaskPosition: 'center',
+          }}
+        />
+      </div>
+
       <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
         <h1 ref={wordmarkRef} className="w-full max-w-[52rem]" style={{ perspective: 1200 }} data-hero-wordmark>
           <Wordmark
@@ -241,22 +258,6 @@ export default function Hero() {
           {go ? <Desifruj text={MOTTO_1} speed={70} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
           {line2 ? <Desifruj text={MOTTO_2} speed={55} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
         </p>
-
-        {/* znak: portrét v planétovom prstenci, maskovaný v inku, watermark v strede pod claimom — čisté CSS, žiadne JS */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none mx-auto my-8 h-[16rem] w-[16rem] bg-ink opacity-[0.08] sm:my-10 sm:h-[20rem] sm:w-[20rem]"
-          style={{
-            maskImage: 'url(/brand/xvadur-znak.svg)',
-            maskSize: 'contain',
-            maskRepeat: 'no-repeat',
-            maskPosition: 'center',
-            WebkitMaskImage: 'url(/brand/xvadur-znak.svg)',
-            WebkitMaskSize: 'contain',
-            WebkitMaskRepeat: 'no-repeat',
-            WebkitMaskPosition: 'center',
-          }}
-        />
 
         <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">
           <div className="max-w-4xl lg:grid lg:grid-cols-2 lg:gap-x-8">
