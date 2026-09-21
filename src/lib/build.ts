@@ -18,7 +18,7 @@ export const BUILD = {
   datum: safe(() => __BUILD_DATUM__, ''),
   /** krátky commit hash (git rev-parse --short HEAD) */
   commit: safe(() => __BUILD_COMMIT__, ''),
-  /** počet commitov na vetve (git rev-list --count HEAD) */
+  /** major verzia z package.json (`4.0.0` → 4) */
   commity: safe(() => __BUILD_COMMITY__, 0),
 };
 

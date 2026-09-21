@@ -74,7 +74,7 @@ function casTeraz(d: Date) {
 
 /** Stavový pás vedľa eyebrow: „off air" dióda (dekoratívna, laboratórna estetika, nie reálny stav vysielania),
  *  tikajúce hodiny (klient, sekundová aktualizácia — SSR ukáže „--:--:--", aby sa nezhodoval čas servera/klienta)
- *  a číslo buildu z src/lib/build.ts (git rev-list --count HEAD, vkladá astro.config.mjs pri builde). */
+ *  a číslo buildu z src/lib/build.ts (major verzia z package.json, vkladá astro.config.mjs pri builde). */
 function StavPas() {
   const [cas, setCas] = useState('--:--:--');
   useEffect(() => {

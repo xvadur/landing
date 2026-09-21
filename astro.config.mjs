@@ -4,13 +4,16 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import cloudflare from '@astrojs/cloudflare';
 import tailwindcss from '@tailwindcss/vite';
+import pkg from './package.json' with { type: 'json' };
 
 // xvadur.com v4 — Astro 7, React ostrovy, Tailwind 4, Cloudflare.
 // Výstup je statický (output: 'static'); server route sa prihlási sama cez
 // `export const prerender = false` (napr. /api/skore).
 
-/** Údaje o builde (src/lib/build.ts): dátum, krátky commit hash, počet commitov na vetve.
- *  Keď git nie je k dispozícii (napr. Cloudflare build bez plnej histórie), ostanú prázdne/0. */
+/** Údaje o builde (src/lib/build.ts): dátum, krátky commit hash, hlavné číslo verzie z package.json.
+ *  Číslo buildu je zámerne major verzia (`4.0.0` → 4), nie `git rev-list --count` — Cloudflare Build
+ *  robí plytký clone (1 commit v histórii), takže počet commitov by tam bol vždy 1. Hash je vždy presný
+ *  (rev-parse funguje aj na plytkom clone). Keď git nie je k dispozícii, hash ostane prázdny. */
 function git(cmd) {
   try {
     return execSync(cmd, { encoding: 'utf8' }).trim();
@@ -20,7 +23,7 @@ function git(cmd) {
 }
 const BUILD_DATUM = new Date().toISOString();
 const BUILD_COMMIT = git('git rev-parse --short HEAD');
-const BUILD_COMMITY = Number(git('git rev-list --count HEAD')) || 0;
+const BUILD_COMMITY = Number.parseInt(pkg.version, 10) || 0;
 
 export default defineConfig({
   site: 'https://xvadur.com',
