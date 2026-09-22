@@ -195,7 +195,7 @@ export default function Hero() {
       {/* znak: portrét v planétovom prstenci, maskovaný v inku, watermark cez celý hero, za obsahom (z-10 nad ním) */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <div
-          className="aspect-square w-[85vw] max-w-[64rem] bg-ink opacity-[0.06] sm:w-[70vw]"
+          className="aspect-square w-[min(88vw,88vh)] bg-ink opacity-[0.06]"
           style={{
             maskImage: 'url(/brand/xvadur-znak.svg)',
             maskSize: 'contain',
@@ -209,78 +209,88 @@ export default function Hero() {
         />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pt-5 pb-6 sm:px-6 sm:pt-8 sm:pb-8 lg:px-10 lg:pb-10">
-        <h1 ref={wordmarkRef} className="w-full max-w-[52rem]" style={{ perspective: 1200 }} data-hero-wordmark>
-          <Wordmark
-            ref={naklon.el}
-            className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"
-          />
-        </h1>
+      <div className="relative z-10 flex min-h-[88dvh] w-full flex-col">
+        <div className="mx-auto w-full max-w-7xl px-4 pt-5 sm:px-6 sm:pt-8 lg:px-10">
+          <h1 ref={wordmarkRef} className="w-full max-w-[52rem]" style={{ perspective: 1200 }} data-hero-wordmark>
+            <Wordmark
+              ref={naklon.el}
+              className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"
+            />
+          </h1>
+        </div>
 
-        <nav aria-label="Hlavná navigácia" className="mt-4 flex flex-wrap items-center justify-between gap-3 border-y-3 border-ink py-3 sm:mt-6">
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <p className="eyebrow">{EYEBROW}</p>
-            <StavPas />
-          </div>
-          <div className="flex flex-wrap items-center gap-1">
-            {NAV.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="hidden h-11 items-center rounded-lg border-3 border-transparent px-3 font-display text-base font-extrabold uppercase tracking-wide transition-colors duration-[var(--duration-base)] hover:border-ink hover:bg-yellow lg:flex"
-              >
-                {item.label}
-              </a>
-            ))}
-            <button
-              type="button"
-              data-commandk
-              className="press hidden h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm lg:flex"
-              aria-label="Otvoriť príkazovú paletu (⌘K)"
-              title="⌘K / Ctrl K"
-            >
-              <span aria-hidden="true">⌘K</span>
-            </button>
-            <button
-              type="button"
-              data-nav-open
-              aria-haspopup="dialog"
-              aria-controls="mobilna-nav"
-              className="press flex h-11 min-w-11 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-yellow px-3 font-display text-sm font-extrabold uppercase tracking-wide shadow-brutal-sm lg:hidden"
-            >
-              <ListIcon weight="bold" size={22} aria-hidden="true" />
-              <span>Menu</span>
-            </button>
-          </div>
-        </nav>
-
-        <p lang="en" className={cn('mt-6 sm:mt-8', MOTTO_CLASS)} style={{ fontVariationSettings: "'wdth' 100" }}>
-          {go ? <Desifruj text={MOTTO_1} speed={70} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
-          {line2 ? <Desifruj text={MOTTO_2} speed={55} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
-        </p>
-
-        <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">
-          <div className="max-w-4xl lg:grid lg:grid-cols-2 lg:gap-x-8">
-            <p className="font-display text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{TEZA}</p>
-            <p className="mt-3 max-w-xl text-base sm:mt-4 sm:text-lg lg:mt-0">{INTRO}</p>
-            <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-3 sm:mt-8 sm:gap-x-4 lg:col-span-2" role="list" aria-label="Sekcie">
-              {PILULKY.map((p) => (
-                <li key={p.href}>
-                  <a href={p.href} className={cn(PILL_CLASS, p.bg, p.rotate)}>
-                    {p.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="lg:justify-self-end">
-            <Magnet padding={80} magnetStrength={3} className="w-full sm:w-auto">
-              <ClickSpark sparkColor="hot" sparkSize={14} sparkRadius={28} sparkCount={8} className="w-full sm:w-auto">
-                <a href={CTA.href} data-cursor="vstup" className={CTA_CLASS}>
-                  {CTA.label}
+        {/* nav pás: čiary cez celú šírku obrazovky (nie len užší max-w-7xl stĺpec s obsahom) */}
+        <div className="mt-4 w-full border-y-3 border-ink sm:mt-6">
+          <nav
+            aria-label="Hlavná navigácia"
+            className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6 lg:px-10"
+          >
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <p className="eyebrow">{EYEBROW}</p>
+              <StavPas />
+            </div>
+            <div className="flex flex-wrap items-center gap-1">
+              {NAV.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="hidden h-11 items-center rounded-lg border-3 border-transparent px-3 font-display text-base font-extrabold uppercase tracking-wide transition-colors duration-[var(--duration-base)] hover:border-ink hover:bg-yellow lg:flex"
+                >
+                  {item.label}
                 </a>
-              </ClickSpark>
-            </Magnet>
+              ))}
+              <button
+                type="button"
+                data-commandk
+                className="press hidden h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm lg:flex"
+                aria-label="Otvoriť príkazovú paletu (⌘K)"
+                title="⌘K / Ctrl K"
+              >
+                <span aria-hidden="true">⌘K</span>
+              </button>
+              <button
+                type="button"
+                data-nav-open
+                aria-haspopup="dialog"
+                aria-controls="mobilna-nav"
+                className="press flex h-11 min-w-11 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-yellow px-3 font-display text-sm font-extrabold uppercase tracking-wide shadow-brutal-sm lg:hidden"
+              >
+                <ListIcon weight="bold" size={22} aria-hidden="true" />
+                <span>Menu</span>
+              </button>
+            </div>
+          </nav>
+        </div>
+
+        <div className="mx-auto flex w-full max-w-7xl flex-1 flex-col px-4 pb-6 sm:px-6 sm:pb-8 lg:px-10 lg:pb-10">
+          <p lang="en" className={cn('mt-6 sm:mt-8', MOTTO_CLASS)} style={{ fontVariationSettings: "'wdth' 100" }}>
+            {go ? <Desifruj text={MOTTO_1} speed={70} /> : <Riadok text={MOTTO_1} hidden={hydrated} />}
+            {line2 ? <Desifruj text={MOTTO_2} speed={55} /> : <Riadok text={MOTTO_2} hidden={hydrated} />}
+          </p>
+
+          <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-8 lg:mt-auto lg:grid-cols-[1fr_auto] lg:items-end lg:pt-8">
+            <div className="max-w-4xl lg:grid lg:grid-cols-2 lg:gap-x-8">
+              <p className="font-display text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">{TEZA}</p>
+              <p className="mt-3 max-w-xl text-base sm:mt-4 sm:text-lg lg:mt-0">{INTRO}</p>
+              <ul className="mt-5 flex flex-wrap gap-x-3 gap-y-3 sm:mt-8 sm:gap-x-4 lg:col-span-2" role="list" aria-label="Sekcie">
+                {PILULKY.map((p) => (
+                  <li key={p.href}>
+                    <a href={p.href} className={cn(PILL_CLASS, p.bg, p.rotate)}>
+                      {p.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="lg:justify-self-end">
+              <Magnet padding={80} magnetStrength={3} className="w-full sm:w-auto">
+                <ClickSpark sparkColor="hot" sparkSize={14} sparkRadius={28} sparkCount={8} className="w-full sm:w-auto">
+                  <a href={CTA.href} data-cursor="vstup" className={CTA_CLASS}>
+                    {CTA.label}
+                  </a>
+                </ClickSpark>
+              </Magnet>
+            </div>
           </div>
         </div>
       </div>
