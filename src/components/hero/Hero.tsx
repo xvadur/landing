@@ -210,8 +210,8 @@ export default function Hero() {
       </div>
 
       <div className="relative z-10 flex min-h-[88dvh] w-full flex-col">
-        <div className="mx-auto w-full max-w-7xl px-4 pt-5 sm:px-6 sm:pt-8 lg:px-10">
-          <h1 ref={wordmarkRef} className="w-full max-w-[52rem]" style={{ perspective: 1200 }} data-hero-wordmark>
+        <div className="w-full px-4 pt-5 sm:px-6 sm:pt-8 lg:px-10">
+          <h1 ref={wordmarkRef} className="w-full" style={{ perspective: 1200 }} data-hero-wordmark>
             <Wordmark
               ref={naklon.el}
               className="h-auto w-full origin-center will-change-transform [--wm-shadow:6px] sm:[--wm-shadow:11px]"
