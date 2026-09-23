@@ -1,5 +1,20 @@
 # STATUS — xvadur.com
 
+## Aktuálne overené — 22. 9. 2026
+
+- Kanonická vetva `main`: `fd4f2e45b629a7d891718dc610a33203e69f3796`, lokálne aj na GitHube. Pri tejto kontrole čistý pracovný strom; kód ani produkcia nezmenené.
+- `https://xvadur.com/` vracia HTTP 200 a v HTML identifikuje build `fd4f2e4`. Cloudflare API potvrdilo aktívnu custom domain `xvadur.com` pre Worker `xvadur-com`, prostredie `production`.
+- Posledné nasadenie Workera: `2026-09-21T02:26:38.960716Z`, verzia `7ae70634-bce2-4e2a-a942-8cff0c477270`, 100 % traffic.
+- Pages projekty `landing` a `landing-con` už v prihlásenom účte nie sú. Zoznam Pages obsahuje iba nesúvisiaci projekt `jozef`.
+- **Otvorené:** `www.xvadur.com` sa v kontrolovanom resolveri nerozlíši (`ENOTFOUND`); `staging.xvadur.com` vracia HTTP 403 „CNAME Cross-User Banned“. `landing-con.pages.dev` ani jeho staging alias sa nerozlíšia. Staging nie je funkčný samostatný Pages web.
+- Cloudflare stále eviduje zone routes `xvadur.com/*` a `www.xvadur.com/*` na rovnaký Worker. Custom domain je potvrdená iba pre apex. `wrangler.jsonc` na `main` obsahuje staré zone routes; pred ďalším deployom treba zosúladiť zamýšľanú konfiguráciu domén. Audit nič na Cloudflare nemenil.
+- Upratanie vetiev: úplná história `main`, `staging`, `hry-wip` a `claude/hero-pojebane-86a898` je zálohovaná a overená v `.git/branch-backups/2026-09-22/before-cleanup.bundle`. Po výslovnom potvrdení odstránené vzdialené `staging` a `hry-wip` aj všetky tri lokálne vedľajšie vetvy. Ostáva iba `main`, sleduje `origin/main`; pôvodný commit zachovaný. Claude worktree ostal na pôvodnom commite v detached HEAD, jeho súbory zachované.
+- Podrobnosti a obnovenie: `work/NOTES_poradie_vetiev_2026-09-22.md`.
+
+## Historický stav — nasledujúce záznamy nie sú aktuálny deploy postup
+
+Staršie poznámky nižšie obsahujú protichodné informácie o vetvách a Pages. Pri ďalšej práci má prednosť aktuálne overenie vyššie; príkazy pre zrušené Pages projekty nepoužívať.
+
 ## Rozpracované
 - **v4 postavené 19. 9. 2026 v noci na vetve `v4`, NENASADENÉ.** Jeden commit s celou stavbou (domov, /makleri/ + /makleri/plan/ + PDF, /kviz/, /konzultacia/, /texty/ + článok, /skore/ + /api/skore, /hry/ + /hry/skrtaci-test/, /lab/, 404, OG karty). `npm run check` 0 chýb · `npm run build` zelený · `npm test` 20/20 · Playwright QA (`work/qa/final.mjs`) 25 meraní bez nálezu (1440×900, 375×812, domov aj reduced motion). Ranný report: `work/V4_NOC_2026-09-19.md`.
 - Placeholder / čaká na Adama: Stripe Payment Link 9 € (`src/data/makleri/config.ts` → `STRIPE_URL`), IG/TikTok v pätičke (zatiaľ len Substack + GitHub), Substack URL článku (`src/content/texty/*.md` → `substack:`), hry 2 a 3 „V STAVBE“, Cloudflare Web Analytics token, senior.xvadur.com / gramata.xvadur.com bez odkazu (DNS 19. 9. neresolvuje).
