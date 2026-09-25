@@ -46,6 +46,8 @@ node work/qa/final.mjs                         # celá QA + screenshoty work/scr
 - Substack: profil `substack.com/@xvadur`; článok „Čo zostane, keď zavriem chat“ je na webe v `/texty/`; na Substacku publikované 0.
 
 ## Rozhodnutia
+- 2026-09-25 — xvadur.com je hlavný web a obchod: predajný aj cool, zameraný na AI agentov a konzultácie; showcase, lákadlo za e-mail (prompt, návod, video), newsletter; akvizícia, outreach, reklamy, Etsy/Shopify skúšky [A]
+- 2026-09-25 — rebríček produktov sa rieši neskôr [A]
 - 2026-09-19 (noc, integrácia) — text na horúcej (`--color-hot`) je vždy **ink** (5,4 : 1), nie paper (3,2 : 1): tokens.css + button.tsx + všetky CTA; `eyebrow` a `x-divider` 14 px; pätička 14 px; `--header-h` token; mobilná navigácia = natívny `<dialog>` v Header.astro (0 kB React; vaul Drawer zmazaný) → články 5,9 kB gz, /makleri/ 11,6 kB; `public/_headers` noindex pre `/makleri/plan/`, PDF a `/lab/`; `work/screens/` v .gitignore [P, čaká na ratifikáciu]
 - 2026-09-19 — slovo „web“: stavba v4 na vetve `v4` (Astro 7, Tailwind 4, OKLCH + Bricolage, maximalizmus, hero „DIVIDED, WE ARE USELESS.“ bez SK riadku, 7 beatov verejných, Stripe placeholder, hry 2 a 3 „V STAVBE“, konzultácia bezplatná cez WhatsApp/mailto, bez maskota, X = sprievodný element + kurzor) [A]
 - 2026-09-18/19 — neobrutalizmus + nové tokeny (OKLCH pastely + horúca #ED4E26, Bricolage Grotesque); slivka/kyselina/Bebas/Source Serif von; lab scéna = svet a obraz, nie UI [A]
