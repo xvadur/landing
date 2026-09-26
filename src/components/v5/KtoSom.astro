@@ -143,20 +143,22 @@ const posledny = BEATY.length - 1;
 </style>
 
 <script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  /* GSAP (≈ 44 kB gz) sa načíta iba na desktope bez reduced motion — mobil ho nesťahuje vôbec. */
+  const MQ = '(min-width: 1024px) and (prefers-reduced-motion: no-preference)';
+  let mm: { revert: () => void } | null = null;
 
-  gsap.registerPlugin(ScrollTrigger);
-  let mm: gsap.MatchMedia | null = null;
-
-  function init() {
+  async function init() {
     mm?.revert();
+    mm = null;
     const sekcia = document.querySelector<HTMLElement>('.ks');
     const pas = sekcia?.querySelector<HTMLElement>('.ks-pas');
     const bar = sekcia?.querySelector<HTMLElement>('.ks-priebeh-bar');
-    if (!sekcia || !pas) return;
-    mm = gsap.matchMedia();
-    mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
+    if (!sekcia || !pas || !window.matchMedia(MQ).matches) return;
+    const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
+    gsap.registerPlugin(ScrollTrigger);
+    const m = gsap.matchMedia();
+    mm = m;
+    m.add(MQ, () => {
       sekcia.dataset.gsap = '';
       const vzdialenost = () => Math.max(0, pas.scrollWidth - window.innerWidth + 80);
       const lenis = (window as unknown as { __lenis?: { on: (e: string, f: () => void) => void; off?: (e: string, f: () => void) => void } }).__lenis;
@@ -183,7 +185,7 @@ const posledny = BEATY.length - 1;
     });
   }
 
-  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:page-load', () => void init());
   document.addEventListener('astro:before-swap', () => {
     mm?.revert();
     mm = null;
