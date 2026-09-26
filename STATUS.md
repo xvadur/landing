@@ -15,7 +15,7 @@
 
 ## Otvorené v infraštruktúre
 - `www.xvadur.com` sa nerozlíši (ENOTFOUND). Cloudflare stále eviduje zone routes `xvadur.com/*` a `www.xvadur.com/*` a `wrangler.jsonc` ich obsahuje. Pred ďalším deployom treba zosúladiť domény (úloha XDR-212).
-- `staging.xvadur.com` vracia 403 („CNAME Cross-User Banned“). Samostatný staging dnes neexistuje. Náhľad bez vplyvu na produkciu: `npx wrangler versions upload -c dist/server/wrangler.json` (nová verzia Workera s 0 % trafficu a vlastnou náhľadovou URL).
+- `staging.xvadur.com` vracia 403 („CNAME Cross-User Banned“). Samostatný staging dnes neexistuje. Náhľad bez vplyvu na produkciu: `npx wrangler versions upload -c dist/server/wrangler.json` (nová verzia Workera s 0 % trafficu; náhľadová URL funguje až po zapnutí preview URLs pre Worker).
 - Pages projekty `landing` a `landing-con` v účte už nie sú.
 - Záloha histórie vetiev z 22. 9.: `.git/branch-backups/2026-09-22/before-cleanup.bundle`, postup v `work/NOTES_poradie_vetiev_2026-09-22.md`.
 
