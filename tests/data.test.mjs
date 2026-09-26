@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { NAV, COMMAND_ITEMS } from '../src/data/nav.ts';
 import { ROUTES, routeByPath, ogUrlFor } from '../src/data/routes.ts';
 import { FRAZY_RODINY, PRAZDNE_PRIDAVNE, CITACIE, frazyRegex, pridavneRegex } from '../src/data/frazy.ts';
-import { POSTAVIL, MARQUEE_FAKTY, FAKTY } from '../src/data/fakty.ts';
+import { POSTAVIL, MARQUEE_FAKTY, FAKTY, DOKAZY, ZIVE_CISLA, VYSLEDKY } from '../src/data/fakty.ts';
 import { BEATY } from '../src/data/beaty.ts';
 
 test('nav: 6 položiek v záväznom poradí, každá má route', () => {
@@ -39,11 +39,27 @@ test('frazy: 6 základných rodín, ~60+ vzorov, regexy škrtajú', () => {
 test('fakty: 8 projektov, marquee 4 fakty, každý fakt má zdroj', () => {
   assert.equal(POSTAVIL.length, 8);
   assert.equal(MARQUEE_FAKTY.length, 4);
-  for (const f of FAKTY) assert.ok(['spec05', 'doc10', 'pack13'].includes(f.source));
+  for (const f of FAKTY) assert.ok(['spec05', 'doc10', 'pack13', 'jadro', 'korpus'].includes(f.source));
   for (const p of POSTAVIL) if (p.url) assert.ok(p.url.startsWith('https://'));
 });
 
 test('beaty: 7 beatov, bez mien inštitúcií', () => {
   assert.equal(BEATY.length, 7);
   for (const b of BEATY) assert.ok(b.rok && b.titulok && b.text);
+});
+
+test('fakty V5: dôkazy majú overený odkaz s dátumom, živé čísla sedia s izbou', () => {
+  for (const d of DOKAZY) {
+    if (d.url) {
+      assert.ok(d.url.startsWith('https://'), d.id);
+      assert.ok(d.overene, `chýba dátum overenia: ${d.id}`);
+      assert.equal(d.stav, 'zive', d.id);
+    }
+    if (d.stav === 'coskoro') assert.equal(d.url, null, d.id);
+    assert.ok(d.stitky.length > 0, d.id);
+  }
+  const projekty = ZIVE_CISLA.find((z) => z.kluc === 'projekty');
+  assert.equal(projekty.value, DOKAZY.length);
+  assert.equal(ZIVE_CISLA.length, 4);
+  for (const v of VYSLEDKY) assert.ok(v.source);
 });

@@ -2,6 +2,8 @@
  *  ako mechanizmus, nie krivda, bez mien ľudí a inštitúcií. Text sa nemení.
  *  `rok` a `text` sú verbatim; `titulok` je pri beatoch 1 a 4 prvé slovo zo spec („Elektrotechnik", „Nemocnica"),
  *  pri ostatných krátky štítok zložený zo slov toho istého beatu (žiadny nový obsah). */
+/** ROZPORY (XDR-200): beat 4 („10 rokov“, „pomocný pracovník“) a beat 6 („Po desiatich rokoch ma vyhodili“) ostávajú
+ *  v dnešnom znení, kým Adam nerozhodne. Čo hovorí jadro: `src/data/fakty.ts`, blok ROZPORY v hlavičke. */
 export type Beat = { rok: string; titulok: string; text: string };
 
 export const BEATY: Beat[] = [

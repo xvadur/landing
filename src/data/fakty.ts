@@ -1,10 +1,26 @@
-/** Overené čísla pre web. Každý záznam má zdroj (dokument), nič iné sa na web nedáva.
- *  Zdroje:
- *   spec05  = xvadur_brand/xvadur_web_v4/05_WEB_V4_SPECIFIKACIA.md §2 bod 3 „Čo som postavil"
- *   doc10   = xvadur_brand/xvadur_web_v4/10_VYBER_KNIZNIC_A_KOMPONENTOV.md §3 #7 (marquee)
- *   pack13  = xvadur_brand/01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md §1
- *  Odkazy: len tie, ktoré 19. 9. 2026 vrátili HTTP 200 (curl). senior.xvadur.com a gramata.xvadur.com
- *  sa neresolvovali → bez odkazu (url: null). */
+/** Overené čísla pre web. Každý záznam má zdroj, nič iné sa na web nedáva.
+ *  Zdroje (názvy dokumentov, nie cesty — dokumenty žijú mimo repa, v repe platí tento súbor):
+ *   spec05  = špecifikácia webu v4 (18. 9. 2026), §2 bod 3 „Čo som postavil“
+ *   doc10   = výber knižníc a komponentov v4 (zákon dizajnu, dnes zhrnutý v STACK.md), §3 #7 marquee
+ *   pack13  = launch pack „Neviditeľný maklér“ (15. 9. 2026), §1
+ *   jadro   = register diela a fakty v jadre XVADUR (xvadur_core, stav 24. 9. 2026)
+ *   korpus  = Korpus v2 (adam.xvadur), tabuľka `days`, snímka 26. 9. 2026 večer
+ *  Odkazy: len tie, ktoré vrátili HTTP 200 (curl, dátum pri odkaze). senior.xvadur.com a gramata.xvadur.com
+ *  26. 9. 2026 neodpovedajú → bez odkazu (url: null).
+ *
+ *  ROZPORY (XDR-200, čaká na Adama) — na webe ostáva dnešné znenie, kým Adam nerozhodne:
+ *   1. Dĺžka praxe: web hovorí „10 rokov“ (hero veta, marquee, beat 4 a 6, nálepka). Jadro: v zdravotníctve
+ *      necelých 8 rokov (7/2017 – 7/2025), z toho v nemocniciach asi 4,5 roka.
+ *   2. Rola: web „pomocný pracovník v zdravotníctve“ (beat 4). Jadro: v DSS opatrovateľ, v nemocniciach PPVZ
+ *      (sanitár); sestra až od maturity 26. 5. 2026. Inde o sebe „zdravotná sestra“.
+ *   3. „Vyhodili“ vs. „odišiel“: web „Po desiatich rokoch ma vyhodili“ (beat 6, jún 2025). Jadro: podal výpoveď,
+ *      posledný deň 1. 7. 2025; sám to často nazýva „vyhodili ma“.
+ *   4. Začiatok s AI / kódom: jadro — denná práca s AI od 1. 1. 2025, kódové prostredie (IDE) okolo 11/2025.
+ *      Web dátum nemá (beat 5 „1 notebook“), rozpor sa webu netýka, kým sa dátum nepridá.
+ *   5. Netopier: 397 prepisov a 2,3 mil. slov (spec05) patria podľa jadra korpusu cudzích prepisov, nie Netopieru;
+ *      web ich dnes pripisuje Netopieru.
+ *   6. 47 / 47 = „47 zo 47 kontrol pred vydaním“, nie „beží v prevádzke“ (jadro: gate NO_GO pre kalendár od 6. 8.).
+ */
 
 export type Fakt = {
   /** krátky názov karty / položky */
@@ -14,7 +30,7 @@ export type Fakt = {
   /** jeden riadok pod hodnotou */
   note: string;
   /** zdrojový dokument */
-  source: 'spec05' | 'doc10' | 'pack13';
+  source: 'spec05' | 'doc10' | 'pack13' | 'jadro' | 'korpus';
 };
 
 export type Projekt = {
@@ -47,6 +63,7 @@ export const POSTAVIL: Projekt[] = [
   },
   {
     id: 'netopier',
+    // ROZPOR 5 (XDR-200): prepisy a slová patria podľa jadra korpusu cudzích prepisov, nie Netopieru.
     nazov: 'Netopier',
     cislo: '2,3 mil.',
     riadok: 'Engine na sledovanie a overovanie mediálnych tvrdení. Mapa 10 redakcií a 558 ľudí, 397 prepisov, 2,3 milióna slov.',
@@ -133,6 +150,7 @@ export const MARQUEE_FAKTY: Fakt[] = [
   { label: 'Realitné weby', value: '459 webov', note: 'prehľadané realitné weby (pack13 §1, Deň 2)', source: 'doc10' },
   { label: 'Makléri', value: '2 034 maklérov', note: 'Bratislavský kraj', source: 'doc10' },
   { label: 'Kontroly', value: '47 / 47', note: 'systém pre makléra', source: 'doc10' },
+  // ROZPOR 1 (XDR-200): „10 rokov“ ostáva, jadro hovorí necelých 8 rokov v zdravotníctve.
   { label: 'Nemocnica', value: '10 rokov', note: 'zdravotníctvo', source: 'doc10' },
 ];
 
@@ -148,3 +166,223 @@ export const KOTVY = {
 
 /** Ploché pole všetkých čísel (na marquee, štatistiky, testy). */
 export const FAKTY: Fakt[] = [...POSTAVIL.flatMap((p) => p.fakty), ...MARQUEE_FAKTY];
+
+/* ======================================================================================================
+ * V5 (26. 9. 2026) — čísla pre hero, pred a po, izbu dôkazov. Rovnaké pravidlo: každé číslo má zdroj.
+ * ==================================================================================================== */
+
+/** Dátum poslednej kontroly odkazov a snímky korpusu. */
+export const OVERENE_DNA = '2026-09-26';
+export const OVERENE_DNA_TEXT = '26. 9. 2026';
+
+export type ZiveCislo = { kluc: string; label: string; value: number; note: string; source: Fakt['source'] };
+
+/** Živý pás v hero (XDR-205). Do dodania verejného endpointu (XDR-203) statická snímka z Korpusu v2
+ *  (tabuľka `days`, iba napísané prompty, deň s hranicou 05:00), 26. 9. 2026 večer.
+ *  `projekty` = počet kariet v izbe dôkazov (DOKAZY nižšie). */
+export const ZIVE_CISLA_ZDROJ: string | null = null; // XDR-203: sem príde URL verejného JSON s číslami
+export const ZIVE_CISLA: ZiveCislo[] = [
+  { kluc: 'slova-mesiac', label: 'slov tento mesiac', value: 107365, note: 'napísané AI, 1.–26. 9. 2026', source: 'korpus' },
+  { kluc: 'prompty-dnes', label: 'promptov dnes', value: 64, note: '26. 9. 2026 do večera', source: 'korpus' },
+  { kluc: 'dni-v-rade', label: 'dní v rade', value: 65, note: 'každý deň aspoň jeden prompt, k 26. 9. 2026', source: 'korpus' },
+  { kluc: 'projekty', label: 'projektov v izbe', value: 11, note: 'karty v izbe dôkazov', source: 'jadro' },
+];
+
+/** Pás výsledkov pod „Pred a po“ (XDR-207). */
+export const VYSLEDKY: Fakt[] = [
+  { label: 'Kontroly pred vydaním', value: '47 / 47', note: 'systém pre makléra', source: 'spec05' },
+  { label: 'Tabuľky v CRM', value: '23', note: 'vlastné CRM pre makléra', source: 'spec05' },
+  { label: 'Makléri v datasete', value: '2 034', note: 'Bratislavský kraj', source: 'spec05' },
+  { label: 'Ľudia v mape médií', value: '558', note: '10 redakcií', source: 'spec05' },
+  { label: 'Tokeny', value: '16,3 mld.', note: 'verejne overené (Tokscale, 15. 9. 2026)', source: 'jadro' },
+  { label: 'Vlastné slová', value: '969 139', note: 'za 246 dní', source: 'spec05' },
+];
+
+export type Stitok = 'AI agent' | 'web' | 'dáta' | 'médiá';
+
+export type Dokaz = {
+  id: string;
+  nazov: string;
+  stitky: Stitok[];
+  /** jedno číslo karty */
+  cislo: string;
+  /** čo to číslo je */
+  cisloPopis: string;
+  /** jeden riadok */
+  riadok: string;
+  /** obrázok v /public (webp), alebo null → karta ukáže typografický panel */
+  obrazok: string | null;
+  /** živý odkaz, len s overeným HTTP 200 (dátum v `overene`) */
+  url: string | null;
+  overene: string | null;
+  /** stav karty: živé = odkaz funguje · interné = beží, ale nie je verejné · čoskoro = doména neodpovedá */
+  stav: 'zive' | 'interne' | 'coskoro';
+  /** text namiesto odkazu (doména / „za prihlásením“) */
+  poznamka?: string;
+};
+
+/** Izba dôkazov (XDR-208). Poradie = poradie na webe. Mená klientov na webe nie sú (jadro: „mená iba so súhlasom“);
+ *  prípadová štúdia makléra je bez mena a bez odkazu, kým Adam nepotvrdí súhlas. */
+export const DOKAZY: Dokaz[] = [
+  {
+    id: 'system-pre-maklera',
+    nazov: 'Systém pre makléra',
+    stitky: ['AI agent', 'web', 'dáta'],
+    cislo: '47 / 47',
+    cisloPopis: 'kontrol pred vydaním', // ROZPOR 6: nie „beží“
+    riadok: 'Web, rezervácie, CRM s 23 tabuľkami, follow-upy a Telegram pre makléra v Bratislave.',
+    obrazok: null,
+    url: null,
+    overene: null,
+    stav: 'interne',
+    poznamka: 'prípadová štúdia nižšie',
+  },
+  {
+    id: 'hriech',
+    nazov: 'Hriech',
+    stitky: ['médiá', 'web'],
+    cislo: '59',
+    cisloPopis: 'stránok mediálnej kritiky',
+    riadok: 'Publikácia a mapa súvislostí: 10 redakcií, 558 ľudí.',
+    obrazok: '/assets/dokazy/hriech.webp',
+    url: 'https://hriech.xvadur.com/',
+    overene: OVERENE_DNA,
+    stav: 'zive',
+  },
+  {
+    id: 'netopier',
+    nazov: 'Netopier',
+    stitky: ['AI agent', 'dáta', 'médiá'],
+    cislo: '2,3 mil.',
+    cisloPopis: 'slov v prepisoch', // ROZPOR 5
+    riadok: 'Engine na sledovanie a overovanie mediálnych tvrdení. 397 prepisov.',
+    obrazok: '/assets/media-ai.webp',
+    url: null,
+    overene: null,
+    stav: 'interne',
+    poznamka: 'backend Hriechu',
+  },
+  {
+    id: 'terapeutka',
+    nazov: 'Web pre terapeutku',
+    stitky: ['web'],
+    cislo: '2.',
+    cisloPopis: 'oficiálny klient',
+    riadok: 'Web s rezerváciami a vlastným publikovaním (Astro + Keystatic).',
+    obrazok: '/assets/dokazy/terapeutka.webp',
+    url: 'https://picung.xvadur.com/',
+    overene: OVERENE_DNA,
+    stav: 'zive',
+    poznamka: 'demo',
+  },
+  {
+    id: 'korpus',
+    nazov: 'Korpus',
+    stitky: ['dáta'],
+    cislo: '969 139',
+    cisloPopis: 'vlastných slov za 246 dní',
+    riadok: 'Meranie vlastného písania: každý prompt, každý deň, rytmus a slová.',
+    obrazok: null,
+    url: null,
+    overene: null,
+    stav: 'interne',
+    poznamka: 'adam.xvadur.com, za prihlásením',
+  },
+  {
+    id: 'trhovy-dataset',
+    nazov: 'Trhový dataset',
+    stitky: ['dáta'],
+    cislo: '275 333',
+    cisloPopis: 'textových blokov zo 441 webov',
+    riadok: '739 realitných kancelárií, 2 034 maklérov v Bratislavskom kraji.',
+    obrazok: null,
+    url: null,
+    overene: null,
+    stav: 'interne',
+  },
+  {
+    id: 'agentovy-system',
+    nazov: 'Agentový systém',
+    stitky: ['AI agent'],
+    cislo: '947',
+    cisloPopis: 'pracovných vlákien od mája 2026',
+    riadok: '30 vlastných skillov, kontrakty pre agentov, 16,3 mld. tokenov (Tokscale, 15. 9. 2026).',
+    obrazok: '/assets/billion-scale.webp',
+    url: null,
+    overene: null,
+    stav: 'interne',
+  },
+  {
+    id: 'vlastne-data',
+    nazov: 'Vlastné zdravotné dáta',
+    stitky: ['dáta'],
+    cislo: '2 483 965',
+    cisloPopis: 'záznamov',
+    riadok: 'Vlastné zdravotné dáta 2018–2026 v jednej pipeline.',
+    obrazok: null,
+    url: null,
+    overene: null,
+    stav: 'interne',
+  },
+  {
+    id: 'xvadur-com',
+    nazov: 'Tento web',
+    stitky: ['web'],
+    cislo: 'V5',
+    cisloPopis: 'piata verzia',
+    riadok: 'Astro, React ostrovy, Cloudflare Worker. Postavené s AI, riadené človekom.',
+    obrazok: null,
+    url: 'https://xvadur.com/',
+    overene: OVERENE_DNA,
+    stav: 'zive',
+  },
+  {
+    id: 'senior-atlas',
+    nazov: 'Senior atlas',
+    stitky: ['dáta', 'web'],
+    cislo: '1 553',
+    cisloPopis: 'služieb pre seniorov v 79 okresoch',
+    riadok: 'Mapa služieb pre seniorov na celom Slovensku.',
+    obrazok: '/assets/senior-map.webp',
+    url: null,
+    overene: null,
+    stav: 'coskoro',
+    poznamka: 'senior.xvadur.com',
+  },
+  {
+    id: 'gramata',
+    nazov: 'gramata',
+    stitky: ['dáta'],
+    cislo: 'V2',
+    cisloPopis: 'osobný dashboard',
+    riadok: 'Osobný dashboard, druhá verzia.',
+    obrazok: null,
+    url: null,
+    overene: null,
+    stav: 'coskoro',
+    poznamka: 'gramata.xvadur.com',
+  },
+];
+
+/** Prípadová štúdia (XDR-208), šablóna „čo mal → čo dostal → čísla“. Bez mena klienta (súhlas čaká na Adama). */
+export const PRIPAD_MAKLER = {
+  kto: 'Maklér v Bratislave',
+  mal: [
+    'Dopyty cez telefón a všeobecný formulár, bez termínu v kalendári.',
+    'Kontakty a obchody v hlave, poznámkach a správach.',
+    'Follow-up iba vtedy, keď si spomenul.',
+  ],
+  dostal: [
+    'Web s rezerváciou termínu ako prvým krokom.',
+    'Vlastné CRM s 23 tabuľkami: kontakty, nehnuteľnosti, obchody.',
+    'Automatické follow-upy e-mailom a upozornenia na Telegram.',
+    'Kontrolný zoznam pred vydaním: 47 zo 47 kontrol prešlo.',
+  ],
+  cisla: [
+    { value: '47 / 47', label: 'kontrol pred vydaním' },
+    { value: '23', label: 'tabuliek v CRM' },
+    { value: '2 034', label: 'maklérov v trhovom datasete' },
+  ],
+  /** jadro: kalendár hlási chybu prihlásenia od 6. 8., preto „pred vydaním“, nie „v prevádzke“ */
+  stav: 'Pred vydaním. Čísla sú z kontrol, nie z prevádzky.',
+} as const;

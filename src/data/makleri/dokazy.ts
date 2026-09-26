@@ -1,5 +1,5 @@
 /** Sekcia „Dôkazy“ na /makleri/ — tabuľka packu 13 §1 VERBATIM
- *  (xvadur_brand/01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md).
+ *  (archív značky: 01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md).
  *  `cislo` nesie tučné časti ako **…** presne ako pack; vykresľuje sa cez `boldSegments()`.
  *  14 citácií webov kancelárií sú v src/data/frazy.ts (CITACIE) — rovnaký zdroj, rovnaké znenie.
  *  Kotvy s číslami pre number-flow sú z src/data/fakty.ts (KOTVY). Dátumy v `zdroj` majú pevnú medzeru (16.\u00A08.),

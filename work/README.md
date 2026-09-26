@@ -1,4 +1,4 @@
-Front projektu. Jeden súbor = jedno issue. Stavy: draft → ready → running → review → blocked → done (presun do done/). Receipt píše /handoff. Odvodené sekcie STATUS.md regeneruje `node ~/xvadur_system/bin/xv status`.
+Front projektu. Jeden súbor = jedno issue. Stavy: draft → ready → running → review → blocked → done (presun do done/). Receipt píše /handoff.
 
 ## v4 (19. 9. 2026, vetva `v4`)
 - `NOTES_zaklad.md` = kontrakt základu (cesty, tokeny, utility, Base, dáta, ostrovy) — čítať prvé. `NOTES_<stránka>.md` (domov, makleri, kviz, konzultacia, skore, lab) = čo agent postavil, odchýlky, otvorené. `NOTES_vendor_*.md` = katalóg vendorovaných kitov. `LICENCIE.md` = licencie (jediný limit: React Bits MIT + Commons Clause).

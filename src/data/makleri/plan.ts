@@ -1,5 +1,5 @@
 /** Produkt /makleri/plan/ — Deň 1–8 VERBATIM z packu 13 §2
- *  (xvadur_brand/01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md).
+ *  (archív značky: 01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md).
  *  Štruktúra dňa = Prečo / Úloha / Artefakt / Čas tak, ako je v packu. Kurzíva packu (*…*) v Úlohe je v `ulohaKurziva`
  *  (podreťazce `uloha`, ktoré stránka vykreslí v <em>). */
 

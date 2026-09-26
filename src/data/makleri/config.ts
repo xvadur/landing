@@ -1,5 +1,5 @@
 /** Konfigurácia produktu Neviditeľný maklér (/makleri/, /makleri/plan/).
- *  Zdroj: xvadur_brand/01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md §2, §6.
+ *  Zdroj: archív značky: 01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md §2, §6.
  *  STRIPE_URL: Stripe Payment Link 9 € (success URL xvadur.com/makleri/plan/). Kým je prázdny,
  *  tlačidlo na landingu je disabled s textom „PLATBA ČOSKORO“. Adam doplní odkaz jedným riadkom. */
 

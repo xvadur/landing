@@ -1,5 +1,5 @@
 /** Klišé rodiny a prázdne prídavné mená pre Škrtací test (/hry/skrtaci-test/) a Skóre webu (/skore/).
- *  Zdroj: xvadur_brand/01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md
+ *  Zdroj: archív značky: 01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md
  *   — §1 „Dôkazy" (6 rodín fráz, 31/47; výskyty na 416 weboch; 14 citácií webov kancelárií; inserty reelov)
  *   — §2 Deň 1 „Škrtací test" (škrtnúť 6 fráz + každé prídavné meno bez čísla alebo mena za ním).
  *  Vzory sú skloňované tvary tých istých fráz z packu, nič nové. Porovnávať bez ohľadu na veľkosť písmen. */

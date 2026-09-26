@@ -1,8 +1,9 @@
 // QA nálezov review (Skóre + Hry): RM animácie 120 ms, ciele ≥ 44 po výsledku, dlhé slovo, dt/dd, kontrast, aria-live. python3 -m http.server 4185 --directory dist-skore/client & node work/qa/skore/review.mjs
 import { chromium } from 'playwright';
 import { readFileSync } from 'node:fs';
-import { analyze } from '/Users/xvadur_mac/xvadur.com/src/lib/skore-analyzer.ts';
-const FIX = analyze(readFileSync('/Users/xvadur_mac/xvadur.com/work/qa/fixtures/klise.html', 'utf8'), 'https://priklad-realitka.sk/');
+const ROOT = new URL('../../../', import.meta.url).pathname;
+const { analyze } = await import(ROOT + 'src/lib/skore-analyzer.ts');
+const FIX = analyze(readFileSync(ROOT + 'work/qa/fixtures/klise.html', 'utf8'), 'https://priklad-realitka.sk/');
 const base = 'http://127.0.0.1:4185';
 const browser = await chromium.launch();
 const out = {};
@@ -49,8 +50,8 @@ for (const [name, w, h, rm] of [['desktop', 1440, 900, false], ['desktop-rm', 14
   });
   const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 8000 }).catch(() => null), page.getByRole('button', { name: /stiahnuť kartu/i }).click()]);
   r.download = !!dl;
-  if (dl && name === 'mobile') await dl.saveAs('/Users/xvadur_mac/xvadur.com/work/screens/skore-hry-skrtaci-test-karta-dlheslovo.png');
-  if (name === 'mobile') await page.screenshot({ path: '/Users/xvadur_mac/xvadur.com/work/screens/skore-hry-skrtaci-test-mobile-dlheslovo.png', fullPage: true });
+  if (dl && name === 'mobile') await dl.saveAs(ROOT + 'work/screens/skore-hry-skrtaci-test-karta-dlheslovo.png');
+  if (name === 'mobile') await page.screenshot({ path: ROOT + 'work/screens/skore-hry-skrtaci-test-mobile-dlheslovo.png', fullPage: true });
   // --- skore
   await page.goto(base + '/skore/', { waitUntil: 'networkidle' });
   await page.waitForSelector('astro-island:not([ssr])', { timeout: 10000 }).catch(() => {});

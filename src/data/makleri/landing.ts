@@ -1,4 +1,4 @@
-/** Landing /makleri/ — copy VERBATIM z packu 13 §3 (xvadur_brand/01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md).
+/** Landing /makleri/ — copy VERBATIM z packu 13 §3 (archív značky: 01_current_personal_brand/13_NEVIDITELNY_MAKLER_LAUNCH_2026-09-15.md).
  *  Nič sa neparafrázuje; poradie blokov je poradie packu. Čísla v texte sú čísla packu. */
 
 export const LANDING = {

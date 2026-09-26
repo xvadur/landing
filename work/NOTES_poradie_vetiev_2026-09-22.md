@@ -13,7 +13,7 @@ Zadanie: zachovať aktuálny main ako jedinú pracovnú vetvu a zistiť, či hla
 
 ## Záloha a stav odstránenia
 
-Kompletný Git bundle: `/Users/xvadur_mac/xvadur.com/.git/branch-backups/2026-09-22/before-cleanup.bundle`.
+Kompletný Git bundle: koreň repa/.git/branch-backups/2026-09-22/before-cleanup.bundle`.
 
 `git bundle verify` potvrdil samostatnú úplnú históriu a všetky štyri refs. Je lokálny, nie uploadnutý.
 
