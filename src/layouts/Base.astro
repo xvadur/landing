@@ -13,6 +13,7 @@ import Cursor from '@/components/site/Cursor';
 import CommandK from '@/components/site/CommandK';
 import Toaster from '@/components/site/Toaster';
 import { ogUrlFor } from '@/data/routes';
+import KonzultaciaPlavajuca from '@/components/site/KonzultaciaPlavajuca.astro';
 
 interface Props {
   title: string;
@@ -91,5 +92,13 @@ const og = new URL(ogImage ?? ogUrlFor(Astro.url.pathname), site);
     {islands === 'full' && <Cursor client:only="react" transition:persist />}
     {islands === 'full' && <CommandK client:idle transition:persist />}
     {islands !== 'none' && <Toaster client:idle transition:persist />}
+    {chrome && <KonzultaciaPlavajuca domov={Astro.url.pathname === '/'} />}
+
+    <script>
+      import { zachytUtm, zapniKliky } from '@/lib/meranie';
+      zachytUtm();
+      zapniKliky();
+      document.addEventListener('astro:page-load', zachytUtm);
+    </script>
   </body>
 </html>

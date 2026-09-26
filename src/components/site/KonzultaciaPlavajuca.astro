@@ -1,0 +1,80 @@
+---
+/** Stále tlačidlo „Konzultácia“ (XDR-205, XDR-210): plávajúce vpravo dole na každej stránke. Na domove sa ukáže až
+ *  po hero (kde je tlačidlo v menu) a schová sa, keď je v obraze sekcia #konzultacia; na podstránkach po 200 px.
+ *  Na /konzultacia/ sa nevykresľuje. 0 kB React, malý inline skript, reduced motion = bez posunu. */
+import { KONZULTACIA_CTA } from '@/data/nav';
+interface Props {
+  domov?: boolean;
+}
+const { domov = false } = Astro.props;
+const path = Astro.url.pathname;
+const skryt = path.startsWith('/konzultacia/') || path.startsWith('/makleri/plan/');
+---
+
+{
+  !skryt && (
+    <a
+      href={domov ? KONZULTACIA_CTA.hrefDomov : KONZULTACIA_CTA.href}
+      class="kpl press fixed right-4 bottom-4 z-40 inline-flex min-h-13 items-center gap-2 rounded-lg border-3 border-ink bg-hot px-5 font-display text-lg font-extrabold uppercase text-ink shadow-brutal-lg sm:right-6 sm:bottom-6"
+      data-kpl
+      data-domov={domov ? '' : undefined}
+      data-track="konzultacia_klik"
+      data-track-miesto="plavajuce"
+      aria-hidden="true"
+      tabindex="-1"
+    >
+      <span aria-hidden="true" class="relative flex h-2.5 w-2.5">
+        <span class="absolute inline-flex h-full w-full rounded-full bg-ink opacity-50 motion-safe:animate-ping" />
+        <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-ink" />
+      </span>
+      {KONZULTACIA_CTA.label}
+    </a>
+  )
+}
+
+<script is:inline>
+  (() => {
+    let io = null;
+    const init = () => {
+      const el = document.querySelector('[data-kpl]');
+      if (!el) return;
+      const domov = el.hasAttribute('data-domov');
+      let sekciaVidno = false;
+      const prah = () => (domov ? window.innerHeight * 0.9 : 200);
+      const upd = () => {
+        const on = window.scrollY > prah() && !sekciaVidno;
+        el.toggleAttribute('data-on', on);
+        el.setAttribute('aria-hidden', on ? 'false' : 'true');
+        el.tabIndex = on ? 0 : -1;
+      };
+      io?.disconnect();
+      const s = document.getElementById('konzultacia');
+      if (s && 'IntersectionObserver' in window) {
+        io = new IntersectionObserver((e) => {
+          sekciaVidno = e.some((x) => x.isIntersecting);
+          upd();
+        });
+        io.observe(s);
+      }
+      window.addEventListener('scroll', upd, { passive: true });
+      upd();
+    };
+    document.addEventListener('astro:page-load', init);
+  })();
+</script>
+
+<style>
+  .kpl {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition:
+      opacity var(--duration-base) var(--ease-out-hard),
+      transform var(--duration-slow) var(--ease-spring);
+  }
+  .kpl[data-on] {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+</style>

@@ -9,6 +9,7 @@ import Marquee from '@/components/site/Marquee.astro';
 import XMark from '@/components/site/XMark.astro';
 import { routeByPath } from '@/data/routes';
 import Intake from '@/components/konzultacia/Intake';
+import Konzultacia from '@/components/v5/Konzultacia.astro';
 import {
   OTAZKY,
   OTAZKY_POZNAMKA,
@@ -49,12 +50,15 @@ const th = 'px-4 py-3 font-mono text-sm font-medium uppercase tracking-[0.14em] 
           Termín dohodneme osobne.
         </p>
         <div class="flex flex-col gap-3 sm:flex-row">
-          <a href="#formular" class:list={[btn, 'bg-hot text-ink']}>Vyplniť formulár</a>
+          <a href="#termin" data-track="konzultacia_klik" data-track-miesto="konzultacia-stranka" class:list={[btn, 'bg-hot text-ink']}>Vybrať termín</a>
+          <a href="#formular" class:list={[btn, 'bg-white text-ink']}>Vyplniť formulár</a>
           <a href="#priebeh" class:list={[btn, 'bg-white text-ink']}>Ako to prebieha</a>
         </div>
       </div>
     </div>
   </Section>
+
+  <Konzultacia id="termin" />
 
   <Marquee
     items={['JEDNA ÚLOHA', '30 MINÚT', 'BEZPLATNÝ VSTUP', 'PÍSOMNÝ ĎALŠÍ KROK', 'NETREBA PREZENTÁCIU']}

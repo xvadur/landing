@@ -5,7 +5,7 @@
  *  (20. 9.: „XVADUR v menu, v eyebrow aj v hero" — tri opakovania zlúčené do jedného, po vzore eduba.io: obrí
  *  wordmark hore, nav pod ním). Dialóg mobilnej navigácie je vytiahnutý do NavMobil.astro (zdieľaný s Hero). */
 import NavMobil from './NavMobil.astro';
-import { NAV } from '@/data/nav';
+import { KONZULTACIA_CTA, NAV } from '@/data/nav';
 import { ListIcon } from '@phosphor-icons/react';
 
 const path = Astro.url.pathname;
@@ -58,8 +58,16 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
         class="press flex h-11 min-w-11 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-yellow px-3 font-display text-sm font-extrabold uppercase tracking-wide shadow-brutal-sm lg:hidden"
       >
         <ListIcon weight="bold" size={22} aria-hidden="true" />
-        <span>Menu</span>
+        <span class="hidden min-[400px]:inline">Menu</span>
       </button>
+      <a
+        href={KONZULTACIA_CTA.href}
+        data-track="konzultacia_klik"
+        data-track-miesto="hlavicka"
+        class="press flex h-11 items-center rounded-lg border-3 border-ink bg-hot px-4 font-display text-sm font-extrabold uppercase text-ink shadow-brutal-sm sm:text-base"
+      >
+        {KONZULTACIA_CTA.label}
+      </a>
     </div>
   </div>
 </header>
