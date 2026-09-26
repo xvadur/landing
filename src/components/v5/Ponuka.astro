@@ -1,0 +1,108 @@
+---
+/** Služba a produkty (XDR-209): vlajka = konzultácia 30 min (vzor itashu: vlajková služba + hotové produkty),
+ *  produkty ako čakačky s formulárom „Chcem vedieť ako prvý“ (XDR-211, /api/zapis/), blok „prečo nie iba ChatGPT“
+ *  (vzor Nexana). Ceny zatiaľ nie sú. Dáta: src/data/ponuka.ts. */
+import { PRECO_NIE_CHATGPT, PRODUKTY, VLAJKA } from '@/data/ponuka';
+import { KONZULTACIA_CTA } from '@/data/nav';
+import ZapisForm from './ZapisForm';
+import { Hviezda, XZnak, Blesk } from './Symboly';
+---
+
+<section id="ponuka" class="relative overflow-hidden border-b-3 border-ink bg-paper" aria-labelledby="ponuka-nadpis">
+  <div aria-hidden="true" class="tx-dots pointer-events-none absolute inset-0 [--tx:14%]"></div>
+  <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
+    <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow">Ponuka / Služba a produkty</p>
+        <h2 id="ponuka-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+          Začni<br />rozhovorom.
+        </h2>
+      </div>
+      <p class="max-w-md text-lg">Konzultácia je vstup. Produkty práve staviam: zapíš sa a dozvieš sa o nich prvý, skôr než pôjdu von.</p>
+    </div>
+
+    <!-- vlajka -->
+    <article class="relative mt-12 grid gap-8 overflow-hidden rounded-lg border-3 border-ink bg-hot p-6 sm:p-10 lg:grid-cols-[1.3fr_1fr] lg:items-center" style="box-shadow: var(--shadow-brutal-xl)">
+      <Hviezda className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rotate-12 text-yellow opacity-90" />
+      <div class="relative">
+        <div class="flex flex-wrap gap-2">
+          <span class="sticker bg-white text-sm" style="--sticker-rotate:-3deg">Vlajka</span>
+          <span class="sticker bg-yellow text-sm" style="--sticker-rotate:2deg">{VLAJKA.trvanie}</span>
+          <span class="sticker bg-lime text-sm" style="--sticker-rotate:-2deg">{VLAJKA.cena}</span>
+        </div>
+        <h3 class="mt-6 font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tighter">{VLAJKA.nazov}</h3>
+        <p class="mt-4 max-w-xl font-display text-2xl font-bold leading-tight">{VLAJKA.titulok}</p>
+      </div>
+      <div class="relative flex flex-col gap-5 rounded-lg border-3 border-ink bg-white p-5 shadow-brutal sm:p-6">
+        <ul class="grid gap-3" role="list">
+          {VLAJKA.body.map((b) => <li class="flex gap-3 text-lg leading-snug"><span class="font-bold" aria-hidden="true">✓</span>{b}</li>)}
+        </ul>
+        <a
+          href={KONZULTACIA_CTA.hrefDomov}
+          data-track="konzultacia_klik"
+          data-track-miesto="ponuka"
+          class="press inline-flex min-h-13 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-ink px-6 font-display text-lg font-extrabold uppercase text-paper shadow-brutal"
+        >
+          Vybrať termín →
+        </a>
+      </div>
+    </article>
+
+    <!-- produkty -->
+    <div class="mt-16 flex flex-wrap items-end justify-between gap-4">
+      <h3 class="font-display text-display-xs font-extrabold uppercase tracking-tight">Čo staviam ďalej</h3>
+      <p class="eyebrow">Čakačka · bez ceny, bez záväzku</p>
+    </div>
+    <ul class="mt-8 grid gap-6 md:grid-cols-2 lg:gap-8" role="list">
+      {
+        PRODUKTY.map((p, i) => (
+          <li class="flex">
+            <article class:list={['brutal lift relative flex w-full flex-col gap-4 p-6 sm:p-8', p.farba]}>
+              <span class="sticker absolute -top-3 right-4 bg-white text-xs" style={`--sticker-rotate:${i % 2 ? 3 : -3}deg`}>
+                {p.nalepka}
+              </span>
+              <p class="eyebrow">{p.pre}</p>
+              <h4 class="font-display text-3xl font-extrabold uppercase leading-[0.95] tracking-tight sm:text-4xl">{p.nazov}</h4>
+              <p class="text-lg leading-relaxed">{p.popis}</p>
+              <ul class="flex flex-wrap gap-2" role="list">
+                {p.body.map((b) => (
+                  <li class="rounded-sm border-2 border-ink bg-white px-2 py-1 font-mono text-xs font-bold uppercase tracking-[0.08em]">{b}</li>
+                ))}
+              </ul>
+              <div class="mt-auto border-t-3 border-ink pt-5">
+                <ZapisForm client:visible zdroj="cakacka" produkt={p.id} />
+              </div>
+            </article>
+          </li>
+        ))
+      }
+    </ul>
+
+    <!-- prečo nie iba ChatGPT -->
+    <div class="relative mt-20 overflow-hidden rounded-lg border-3 border-ink bg-white shadow-brutal-lg">
+      <div class="grid border-b-3 border-ink sm:grid-cols-2">
+        <div class="flex items-center gap-3 border-b-3 border-ink bg-paper px-5 py-4 sm:border-r-3 sm:border-b-0 sm:px-8">
+          <span class="font-display text-2xl font-extrabold uppercase">Iba ChatGPT</span>
+        </div>
+        <div class="flex items-center gap-3 bg-yellow px-5 py-4 sm:px-8">
+          <Blesk className="h-8 w-6 text-hot" />
+          <span class="font-display text-2xl font-extrabold uppercase">Agent, ktorý pracuje</span>
+        </div>
+      </div>
+      <ul role="list">
+        {
+          PRECO_NIE_CHATGPT.map((r) => (
+            <li class="grid border-b-2 border-dashed border-ink/30 last:border-0 sm:grid-cols-2">
+              <p class="px-5 py-4 text-lg text-ink/70 sm:border-r-3 sm:border-ink sm:px-8">{r.chat}</p>
+              <p class="px-5 pb-4 text-lg font-bold sm:px-8 sm:py-4">
+                <span class="sm:hidden">→ </span>
+                {r.agent}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+      <XZnak className="pointer-events-none absolute right-4 bottom-4 hidden h-12 w-10 rotate-12 text-hot sm:block" />
+    </div>
+  </div>
+</section>
