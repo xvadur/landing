@@ -5,14 +5,13 @@ export const MOTTO_1 = 'DIVIDED,';
 export const MOTTO_2 = 'WE ARE USELESS.';
 /** ROZPOR 1 (XDR-200): „Desať rokov“ ostáva v dnešnom znení, jadro hovorí necelých 8 rokov (src/data/fakty.ts). */
 export const VETA = 'Desať rokov som držal zmeny v nemocnici. Dnes staviam agentov, ktorí držia prácu za ľudí.';
-export const CTA_HLAVNE = { label: 'Dohodni si konzultáciu', href: '#konzultacia' };
+export const CTA_HLAVNE = { label: 'Objednaj sa na vyšetrenie', href: '#konzultacia' };
 export const CTA_KTO = { label: 'Kto som', href: '#kto-som' };
 /** Nálepka po okraji hera (XDR-205). ROZPOR 1 ako pri VETA. */
 export const NALEPKA_NEMOCNICA = '10 rokov v nemocnici';
-export const PECIATKA = 'Overené';
+export const PECIATKA = 'Vitálne';
 
-/** Zástupná fotka (XDR-199 čaká na finálnu): kruhový výrez zo staršej scény /assets/hero-adam.webp. */
-export const FOTKA = { src: '/assets/v5/adam-nalepka.webp', alt: 'Adam Rudavský', width: 620, height: 620 };
+/** Fotka: zatiaľ zástupná ilustrácia ZdravotnikPlaceholder (src/components/v5/Symboly.tsx), XDR-199. */
 
 /** Motto: o niečo menšie než v4 (hero má teraz aj fotku a živý pás). 375 px → 3 rem, 1440 px ≈ 7 rem. */
 export const MOTTO_CLASS =

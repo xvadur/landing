@@ -56,7 +56,7 @@ export default function ZapisForm({ zdroj, produkt, tlacidlo = 'Chcem vedieť ak
     return (
       <p
         role="status"
-        className={cn('flex min-h-12 items-center gap-3 rounded-lg border-3 border-ink bg-lime px-4 py-2 font-display text-base font-extrabold text-ink shadow-brutal-sm', className)}
+        className={cn('flex min-h-12 items-center gap-3 rounded-lg border-3 border-ink bg-yellow px-4 py-2 font-display text-base font-extrabold text-ink shadow-brutal-sm', className)}
       >
         <span aria-hidden="true">✓</span>
         {sprava}

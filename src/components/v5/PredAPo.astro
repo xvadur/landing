@@ -1,10 +1,10 @@
 ---
-/** Pred a po (XDR-207): „Tvoj deň. Dve verzie.“ — vzor itashu (work/V5_KONKURENCIA.md), ale neobrutalisticky:
+/** Pred a po (XDR-207; V5.3 XDR-267 zdravotnícky slovník: pred liečbou / po liečbe, bez pastelov): „Tvoj deň. Dve verzie.“ — vzor itashu (work/V5_KONKURENCIA.md), ale neobrutalisticky:
  *  dve karty vedľa seba (bez agenta ✕ / s agentom ✓), každý riadok je vec, ktorú Adam naozaj postavil
  *  (booking a follow-upy pre makléra, CRM, Korpus, Netopier). Pod tým pás výsledkov z fakty.ts (VYSLEDKY).
  *  Čisté Astro, 0 JS: riadky nabiehajú cez `reveal` (view timeline), prečiarknutie na ľavej karte kreslí CSS. */
 import { VYSLEDKY } from '@/data/fakty';
-import { XZnak, Hviezda } from './Symboly';
+import { Kriz, Hviezda } from './Symboly';
 import { nbsp } from '@/components/home/nbsp';
 
 const RIADKY: { bez: string; s: string; kde: string }[] = [
@@ -41,13 +41,13 @@ const RIADKY: { bez: string; s: string; kde: string }[] = [
   <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
       <div>
-        <p class="eyebrow">Pred a po / Z vlastnej praxe</p>
+        <p class="eyebrow">Diagnóza / Z vlastnej praxe</p>
         <h2 id="pred-a-po-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
-          Tvoj deň.<br />Dve verzie.
+          Tvoj deň.<br />Pred liečbou a po nej.
         </h2>
       </div>
       <p class="max-w-md text-lg">
-        Nie je to sľub z prezentácie. Každý riadok „s agentom“ je systém, ktorý som postavil a ktorý vidíš nižšie v izbe dôkazov.
+        Nie je to sľub z prezentácie. Každý riadok „po liečbe“ je systém, ktorý som postavil a ktorý vidíš nižšie pri pacientoch.
       </p>
     </div>
 
@@ -55,14 +55,14 @@ const RIADKY: { bez: string; s: string; kde: string }[] = [
       <!-- bez agenta -->
       <div class="pap-bez brutal relative -rotate-1 bg-white p-6 sm:p-8">
         <div class="flex items-center justify-between gap-4 border-b-3 border-ink pb-4">
-          <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">Bez agenta</h3>
-          <span class="flex h-12 w-12 items-center justify-center rounded-lg border-3 border-ink bg-hot font-display text-2xl font-extrabold text-ink shadow-brutal-sm" aria-hidden="true">✕</span>
+          <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">Pred liečbou</h3>
+          <span class="flex h-12 w-12 items-center justify-center rounded-lg border-3 border-ink bg-stamp font-display text-2xl font-extrabold text-paper shadow-brutal-sm" aria-hidden="true">✕</span>
         </div>
         <ul class="mt-2" role="list">
           {
             RIADKY.map((r, i) => (
               <li class="reveal flex gap-4 border-b-2 border-dashed border-ink/30 py-4 last:border-0" style={`--i:${i}`}>
-                <span class="mt-0.5 font-mono text-sm font-bold text-hot" aria-hidden="true">✕</span>
+                <span class="mt-0.5 font-mono text-sm font-bold text-stamp" aria-hidden="true">✕</span>
                 <span class="pap-skrt text-lg leading-snug">{r.bez}</span>
               </li>
             ))
@@ -72,14 +72,14 @@ const RIADKY: { bez: string; s: string; kde: string }[] = [
 
       <!-- stredová nálepka -->
       <div class="pointer-events-none absolute top-1/2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block" aria-hidden="true">
-        <Hviezda className="h-28 w-28 rotate-12 text-yellow" />
-        <span class="absolute inset-0 flex items-center justify-center font-display text-xl font-extrabold uppercase">vs</span>
+        <Hviezda className="h-28 w-28 rotate-12 text-white" />
+        <span class="absolute inset-0 flex items-center justify-center font-display text-base font-extrabold uppercase">liečba</span>
       </div>
 
       <!-- s agentom -->
-      <div class="brutal relative rotate-1 bg-lime p-6 sm:p-8" style="box-shadow: var(--shadow-brutal-xl)">
+      <div class="brutal relative rotate-1 bg-yellow p-6 sm:p-8" style="box-shadow: var(--shadow-brutal-xl)">
         <div class="flex items-center justify-between gap-4 border-b-3 border-ink pb-4">
-          <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">S agentom</h3>
+          <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">Po liečbe</h3>
           <span class="flex h-12 w-12 items-center justify-center rounded-lg border-3 border-ink bg-white font-display text-2xl font-extrabold text-ink shadow-brutal-sm" aria-hidden="true">✓</span>
         </div>
         <ul class="mt-2" role="list">
@@ -97,7 +97,7 @@ const RIADKY: { bez: string; s: string; kde: string }[] = [
             ))
           }
         </ul>
-        <XZnak className="absolute -right-2 -bottom-6 h-16 w-14 rotate-12 text-hot sm:-right-5" />
+        <Kriz className="absolute -right-2 -bottom-6 h-14 w-14 rotate-12 text-stamp sm:-right-5" />
       </div>
     </div>
   </div>
@@ -121,7 +121,7 @@ const RIADKY: { bez: string; s: string; kde: string }[] = [
 <style>
   /* prečiarknutie na ľavej karte: čiara sa nakreslí, keď riadok vojde do obrazu (kde view() nie je, je hneď) */
   .pap-skrt {
-    background-image: linear-gradient(var(--color-hot), var(--color-hot));
+    background-image: linear-gradient(var(--color-stamp), var(--color-stamp));
     background-repeat: no-repeat;
     background-position: 0 55%;
     background-size: 100% 3px;

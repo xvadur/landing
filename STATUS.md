@@ -11,7 +11,8 @@
   - Nové API (Worker): `/api/terminy/`, `/api/rezervacia/`, `/api/zapis/`, `/api/udalost/`. Úložisko dočasne v existujúcom KV `SESSION` s prefixom `v5:` (kód berie `LEADS`, ak pribudne). Resend iba so secrets `RESEND_API_KEY` + `RESEND_FROM`.
   - Overené: `npm run check` 0 chýb, `npm test` 23/23, build OK, `node work/qa/v5.mjs` (1440/375/reduced bez pretečenia a chýb konzoly), `node work/qa/odkazy.mjs` (6/6 externých odkazov 200), `node work/qa/formulare.mjs` proti lokálnemu `wrangler dev` (rezervácia, čakačka, duplicita, obsadený slot 409, UTM v zázname). JS domova 159 kB gz.
   - Nahraná verzia Workera `ace55d4e-ba78-4f8f-835c-709c53e6596f` (tag `v5-0e1967f`) s 0 % trafficu; produkcia ostáva na `9f8e5fef…` (100 %), xvadur.com stále `8cd283f`. Náhľadová URL nie je: Worker nemá zapnuté workers.dev / preview URLs (zapnutie mení nastavenie produkčného Workera).
-  - **V5.2 dešifrovanie (XDR-266, 26. 9. večer):** Adam zamietol tón V5 (pastely, plochý zoznam). Nová línia „web ako odtajňovaný spis“, päť dejstiev. Hotové iba hero + dejstvo 1 (`src/components/spis/`), zvyšok domova je ešte V5 a čaká na prerobenie. Lokálny statický náhľad: `python3 -m http.server 4191 -d dist/client`. Čísla pásu: `public/pulse.json` (snímka pulzu Korpusu, obnoví `node scripts/pulse-snapshot.mjs`), kým adam.xvadur.com/public/pulse.json nie je verejný.
+  - V5.2 „spis/odtajňovanie“ (XDR-266) Adam zamietol a je zrušená; komponenty odstránené.
+  - **V5.3 zdravotnícka línia (XDR-267, 26. 9. večer):** návrat k hero V5 s opravami (XVADUR podčiarknutý EKG čiarou, motto trvalo čitateľné a dešifruje sa každé 4 s, zástupná ilustrácia zdravotníka s fonendoskopom, monitor vitálnych funkcií s EKG a číslami z `public/pulse.json`). Celý domov v slovníku vyšetrenie / diagnóza / liečba / pacienti, bez pastelov: Kto som = cesta nemocnica → vyhodili → AI → agenti → XVADUR; Pacienti = chorobopisy Jakub a Lucia, diagnóza médií (Hriech), vlastné vitálne funkcie (Korpus 572 469 slov). Lokálny statický náhľad: `python3 -m http.server 4191 -d dist/client` (rezervácia termínu tam nebeží, potrebuje Worker → `wrangler dev` na 8787). Pulz: `node scripts/pulse-snapshot.mjs`.
   - Lokálny náhľad celého Workera: `npm run build && npx wrangler dev -c dist/server/wrangler.json --port 8787 --persist-to .wrangler/qa-state`.
 
 ## Otvorené v infraštruktúre
@@ -21,9 +22,9 @@
 - Záloha histórie vetiev z 22. 9.: `.git/branch-backups/2026-09-22/before-cleanup.bundle`, postup v `work/NOTES_poradie_vetiev_2026-09-22.md`.
 
 ## Čaká na Adama
-- V5: zapnúť preview URLs pre Worker `xvadur-com` (alebo pozrieť lokálne), pravidlá termínov v `src/data/terminy.ts` (Po–Pi 14:00–19:00), Resend secrets a odosielateľ, vlastné KV/D1 pre leady namiesto `SESSION`, ID pixelov (Meta/TikTok), súhlas klienta s menom Jakub a odkazom na jakubolsa.sk, či ukázať demo picung.xvadur.com, obsah lákadla „Prvý agent za večer“, texty produktov v `src/data/ponuka.ts`.
+- V5: zapnúť preview URLs pre Worker `xvadur-com` (alebo pozrieť lokálne), pravidlá termínov v `src/data/terminy.ts` (Po–Pi 14:00–19:00), Resend secrets a odosielateľ, vlastné KV/D1 pre leady namiesto `SESSION`, ID pixelov (Meta/TikTok), súhlas Jakuba a Lucie s menom na webe (V5.3 ich uvádza krstným menom; jakubolsa.sk bez odkazu), či ukázať demo picung.xvadur.com, obsah lákadla „Prvý agent za večer“, texty produktov v `src/data/ponuka.ts`.
 - XDR-200: fakty o sebe (dĺžka praxe, rola, „vyhodili“ / „odišiel“, začiatok s AI). Do rozhodnutia ostáva na webe dnešné znenie, rozpory sú označené v `src/data/fakty.ts`.
-- XDR-199: fotka pre hero a „Kto som“ (zatiaľ zástupná).
+- XDR-199: fotka pre hero a „Kto som“: Adam od ramien hore v zdravotníckej uniforme s fonendoskopom (zatiaľ zástupná ilustrácia).
 - Stripe Payment Link 9 € pre `/makleri/` (`src/data/makleri/config.ts` → `STRIPE_URL`), Cloudflare Web Analytics token, IG/TikTok do pätičky.
 - senior.xvadur.com a gramata.xvadur.com neodpovedajú (26. 9.), na webe sú bez odkazu.
 

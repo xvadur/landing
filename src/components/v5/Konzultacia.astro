@@ -13,20 +13,19 @@ interface Props {
 const { id = 'konzultacia' } = Astro.props;
 ---
 
-<section id={id} class="relative overflow-hidden border-b-3 border-ink bg-lime" aria-labelledby={`${id}-nadpis`}>
-  <div aria-hidden="true" class="tx-halftone pointer-events-none absolute inset-0 [--tx:14%]"></div>
-  <div class="relative mx-auto grid w-full max-w-7xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-x-12 lg:gap-y-8 lg:px-10">
+<section id={id} class="relative overflow-hidden border-b-3 border-ink bg-ink text-paper" aria-labelledby={`${id}-nadpis`}>
+    <div class="relative mx-auto grid w-full max-w-7xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[0.9fr_1.1fr] lg:gap-x-12 lg:gap-y-8 lg:px-10">
     <div class="flex min-w-0 flex-col gap-6 lg:col-start-1 lg:row-start-1">
-      <p class="eyebrow">Konzultácia / 30 minút / Zatiaľ zadarmo</p>
-      <h2 id={`${id}-nadpis`} class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
-        Vyber si<br />termín.
+      <p class="eyebrow text-yellow">Vyšetrenie / 30 minút / Zatiaľ zadarmo</p>
+      <h2 id={`${id}-nadpis`} class="font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tighter">
+        Objednaj sa<br />na vyšetrenie.
       </h2>
-      <p class="max-w-md font-display text-2xl font-bold leading-tight">Príď s jednou úlohou. Odídeš so smerom a písomným ďalším krokom.</p>
+      <p class="max-w-md font-display text-2xl font-bold leading-tight">Prídeš s problémom. Odídeš s diagnózou a plánom liečby.</p>
     </div>
 
     <div class="flex min-w-0 flex-col gap-6 lg:col-start-2 lg:row-span-2 lg:row-start-1" id={id === 'konzultacia' ? 'termin' : undefined}>
       <Rezervacia client:visible />
-      <div class="flex flex-col gap-3 rounded-lg border-3 border-ink bg-paper p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex flex-col gap-3 rounded-lg border-3 border-paper bg-ink p-5 text-paper sm:flex-row sm:items-center sm:justify-between">
         <p class="font-bold">Radšej píšeš? Štyri otázky a WhatsApp pripraví správu.</p>
         <span data-track="whatsapp_klik" data-track-miesto="konzultacia">
           <Wizard client:idle label="Napísať cez WhatsApp" variant="white" className="w-full sm:w-auto" />
@@ -35,11 +34,11 @@ const { id = 'konzultacia' } = Astro.props;
     </div>
 
     <div class="flex min-w-0 flex-col gap-6 lg:col-start-1 lg:row-start-2">
-      <p class="eyebrow">Ako prebehne 30 minút</p>
+      <p class="eyebrow text-yellow">Priebeh vyšetrenia</p>
       <ol class="grid gap-2" role="list">
         {
           PRIEBEH.map((k) => (
-            <li class="flex gap-3 rounded-lg border-3 border-ink bg-white px-4 py-3 shadow-brutal-sm">
+            <li class="flex gap-3 rounded-lg border-3 border-ink bg-paper px-4 py-3 text-ink shadow-[4px_4px_0_0_var(--color-yellow)]">
               <span class="w-20 shrink-0 font-mono text-sm font-bold">{k.cas}</span>
               <span class="text-base font-bold leading-snug">{k.vznikne}</span>
             </li>

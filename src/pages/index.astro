@@ -1,5 +1,5 @@
 ---
-/** Domov xvadur.com V5 (26. 9. 2026, work/V5_ZADANIE.md). Predajný web pripravený na platenú reklamu, mobil prvý.
+/** Domov xvadur.com V5.3 (26. 9. 2026, XDR-267 zdravotnícka línia; pôvodne V5, work/V5_ZADANIE.md). Predajný web pripravený na platenú reklamu, mobil prvý.
  *  0 Opona (raz za návštevu) · 1 Hero (XDR-205) · 2 Kto som, 7 zastávok vodorovne (XDR-206) · pás faktov ·
  *  3 Pred a po (XDR-207) · 4 Izba dôkazov (XDR-208) · 5 Ponuka: vlajka + čakačky + prečo nie iba ChatGPT (XDR-209) ·
  *  6 Konzultácia s rezerváciou (XDR-210, #konzultacia) · 7 Zber e-mailov: lákadlo + newsletter (XDR-211) ·
@@ -7,8 +7,7 @@
  *  Plávajúce tlačidlo Konzultácia vykresľuje Base. */
 import Base from '@/layouts/Base.astro';
 import Marquee from '@/components/site/Marquee.astro';
-import Hero from '@/components/spis/Hero.astro';
-import Dejstvo1 from '@/components/spis/Dejstvo1.astro';
+import Hero from '@/components/hero/Hero';
 import Opona from '@/components/home/Opona.astro';
 import KtoSom from '@/components/v5/KtoSom.astro';
 import PredAPo from '@/components/v5/PredAPo.astro';
@@ -26,13 +25,12 @@ const r = routeByPath('/')!;
 
 <Base title={r.title} description={r.description} islands="full" header="none">
   <Opona />
-  <Hero />
-  <Dejstvo1 />
+  <Hero client:load />
   <KtoSom />
-  <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="pink" size="lg" duration={36} label="Fakty" />
+  <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="ink" size="lg" duration={36} label="Fakty" />
   <PredAPo />
   <Dokazy />
-  <Marquee items={['KONZULTÁCIA 30 MINÚT', 'JEDNA ÚLOHA', 'PÍSOMNÝ ĎALŠÍ KROK', 'ZATIAĽ ZADARMO']} color="yellow" reverse size="md" duration={30} label="Konzultácia" />
+  <Marquee items={['VYŠETRENIE 30 MINÚT', 'TRIÁŽ', 'DIAGNÓZA', 'PLÁN LIEČBY', 'ZATIAĽ ZADARMO']} color="ink" reverse size="md" duration={30} label="Vyšetrenie" />
   <Ponuka />
   <Konzultacia />
   <Zber />

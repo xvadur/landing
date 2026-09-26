@@ -5,7 +5,7 @@
 import { PRECO_NIE_CHATGPT, PRODUKTY, VLAJKA } from '@/data/ponuka';
 import { KONZULTACIA_CTA } from '@/data/nav';
 import ZapisForm from './ZapisForm';
-import { Hviezda, XZnak, Blesk } from './Symboly';
+import { Kriz, Blesk } from './Symboly';
 ---
 
 <section id="ponuka" class="relative overflow-hidden border-b-3 border-ink bg-paper" aria-labelledby="ponuka-nadpis">
@@ -13,27 +13,27 @@ import { Hviezda, XZnak, Blesk } from './Symboly';
   <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
       <div>
-        <p class="eyebrow">Ponuka / Služba a produkty</p>
+        <p class="eyebrow">Liečba / Vyšetrenie a produkty</p>
         <h2 id="ponuka-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
-          Začni<br />rozhovorom.
+          Najprv<br />vyšetrenie.
         </h2>
       </div>
-      <p class="max-w-md text-lg">Konzultácia je vstup. Produkty práve staviam: zapíš sa a dozvieš sa o nich prvý, skôr než pôjdu von.</p>
+      <p class="max-w-md text-lg">Bez diagnózy žiadna liečba. Vyšetrenie je vstup. Ďalšie liečby práve staviam: zapíš sa do čakárne a dozvieš sa o nich prvý.</p>
     </div>
 
     <!-- vlajka -->
-    <article class="relative mt-12 grid gap-8 overflow-hidden rounded-lg border-3 border-ink bg-hot p-6 sm:p-10 lg:grid-cols-[1.3fr_1fr] lg:items-center" style="box-shadow: var(--shadow-brutal-xl)">
-      <Hviezda className="pointer-events-none absolute -top-8 -right-8 h-40 w-40 rotate-12 text-yellow opacity-90" />
+    <article class="relative mt-12 grid gap-8 overflow-hidden rounded-lg border-3 border-ink bg-stamp text-paper p-6 sm:p-10 lg:grid-cols-[1.3fr_1fr] lg:items-center" style="box-shadow: var(--shadow-brutal-xl)">
+      <Kriz className="pointer-events-none absolute -top-6 -right-6 h-36 w-36 rotate-12 text-paper" />
       <div class="relative">
         <div class="flex flex-wrap gap-2">
-          <span class="sticker bg-white text-sm" style="--sticker-rotate:-3deg">Vlajka</span>
+          <span class="sticker bg-white text-sm" style="--sticker-rotate:-3deg">Vstup</span>
           <span class="sticker bg-yellow text-sm" style="--sticker-rotate:2deg">{VLAJKA.trvanie}</span>
-          <span class="sticker bg-lime text-sm" style="--sticker-rotate:-2deg">{VLAJKA.cena}</span>
+          <span class="sticker bg-white text-sm" style="--sticker-rotate:-2deg">{VLAJKA.cena}</span>
         </div>
         <h3 class="mt-6 font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tighter">{VLAJKA.nazov}</h3>
         <p class="mt-4 max-w-xl font-display text-2xl font-bold leading-tight">{VLAJKA.titulok}</p>
       </div>
-      <div class="relative flex flex-col gap-5 rounded-lg border-3 border-ink bg-white p-5 shadow-brutal sm:p-6">
+      <div class="relative flex flex-col gap-5 rounded-lg border-3 border-ink bg-white p-5 text-ink shadow-brutal sm:p-6">
         <ul class="grid gap-3" role="list">
           {VLAJKA.body.map((b) => <li class="flex gap-3 text-lg leading-snug"><span class="font-bold" aria-hidden="true">✓</span>{b}</li>)}
         </ul>
@@ -43,15 +43,15 @@ import { Hviezda, XZnak, Blesk } from './Symboly';
           data-track-miesto="ponuka"
           class="press inline-flex min-h-13 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-ink px-6 font-display text-lg font-extrabold uppercase text-paper shadow-brutal"
         >
-          Vybrať termín →
+          Objednať sa →
         </a>
       </div>
     </article>
 
     <!-- produkty -->
     <div class="mt-16 flex flex-wrap items-end justify-between gap-4">
-      <h3 class="font-display text-display-xs font-extrabold uppercase tracking-tight">Čo staviam ďalej</h3>
-      <p class="eyebrow">Čakačka · bez ceny, bez záväzku</p>
+      <h3 class="font-display text-display-xs font-extrabold uppercase tracking-tight">Ďalšia liečba</h3>
+      <p class="eyebrow">Čakáreň · bez ceny, bez záväzku</p>
     </div>
     <ul class="mt-8 grid gap-6 md:grid-cols-2 lg:gap-8" role="list">
       {
@@ -82,11 +82,11 @@ import { Hviezda, XZnak, Blesk } from './Symboly';
     <div class="relative mt-20 overflow-hidden rounded-lg border-3 border-ink bg-white shadow-brutal-lg">
       <div class="grid border-b-3 border-ink sm:grid-cols-2">
         <div class="flex items-center gap-3 border-b-3 border-ink bg-paper px-5 py-4 sm:border-r-3 sm:border-b-0 sm:px-8">
-          <span class="font-display text-2xl font-extrabold uppercase">Iba ChatGPT</span>
+          <span class="font-display text-2xl font-extrabold uppercase">Náplasť: iba ChatGPT</span>
         </div>
         <div class="flex items-center gap-3 bg-yellow px-5 py-4 sm:px-8">
-          <Blesk className="h-8 w-6 text-hot" />
-          <span class="font-display text-2xl font-extrabold uppercase">Agent, ktorý pracuje</span>
+          <Blesk className="h-8 w-6 text-stamp" />
+          <span class="font-display text-2xl font-extrabold uppercase">Liečba: agent, ktorý pracuje</span>
         </div>
       </div>
       <ul role="list">
@@ -102,7 +102,7 @@ import { Hviezda, XZnak, Blesk } from './Symboly';
           ))
         }
       </ul>
-      <XZnak className="pointer-events-none absolute right-4 bottom-4 hidden h-12 w-10 rotate-12 text-hot sm:block" />
+      <Kriz className="pointer-events-none absolute right-4 bottom-4 hidden h-10 w-10 rotate-12 text-stamp sm:block" />
     </div>
   </div>
 </section>

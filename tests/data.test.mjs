@@ -10,7 +10,7 @@ import { BEATY } from '../src/data/beaty.ts';
 test('nav V5: menu v jednom riadku, každá stránka má route, kotvy smerujú na domov', () => {
   assert.deepEqual(
     NAV.map((n) => n.label),
-    ['KTO SOM', 'DÔKAZY', 'PONUKA', 'TEXTY', 'HRY'],
+    ['KTO SOM', 'PACIENTI', 'LIEČBA', 'TEXTY', 'HRY'],
   );
   for (const n of [...NAV, ...DALSIE]) {
     if (n.href.startsWith('/#')) continue;

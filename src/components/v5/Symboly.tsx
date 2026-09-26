@@ -76,3 +76,56 @@ export function Blesk({ className, style }: P) {
     </svg>
   );
 }
+
+/** Zdravotnícky kríž (plus) s tvrdým tieňom. */
+export function Kriz({ className, style }: P) {
+  const d = 'M36 0H64V36H100V64H64V100H36V64H0V36H36Z';
+  return (
+    <svg viewBox="-6 -6 118 118" className={className} style={style} aria-hidden="true" focusable="false">
+      <path d={d} transform="translate(6,6)" fill="var(--color-ink)" />
+      <path d={d} fill="currentColor" stroke="var(--color-ink)" strokeWidth={4} strokeLinejoin="miter" />
+    </svg>
+  );
+}
+
+/** EKG krivka (jeden úder) ako path v súradniciach 0–200 × 0–40; `w` = šírka celku (opakuje úder). */
+export function ekgPath(sirka = 1200, uder = 200): string {
+  let d = 'M0 24';
+  for (let x = 0; x < sirka; x += uder) {
+    d += ` L${x + 70} 24 L${x + 80} 20 L${x + 88} 24 L${x + 96} 24 L${x + 102} 30 L${x + 110} 2 L${x + 118} 38 L${x + 124} 24 L${x + 140} 24 L${x + 152} 17 L${x + 164} 24 L${x + uder} 24`;
+  }
+  return d;
+}
+
+/** Zástupná fotka (XDR-199): Adam od ramien hore v zdravotníckej uniforme s fonendoskopom, neobrutalistická silueta.
+ *  Nahradí ju skutočná fotka; rozmer a orez sedia (štvorec, sticker). */
+export function ZdravotnikPlaceholder({ className, style }: P) {
+  return (
+    <svg viewBox="0 0 400 400" className={className} style={style} role="img" aria-label="Adam Rudavský v zdravotníckej uniforme (zástupný obrázok)">
+      <rect width="400" height="400" fill="var(--color-yellow)" />
+      <g fill="none" stroke="var(--color-ink)" strokeOpacity="0.14" strokeWidth="2">
+        {Array.from({ length: 12 }).map((_, i) => (
+          <line key={i} x1="0" y1={i * 34 + 10} x2="400" y2={i * 34 + 10} />
+        ))}
+      </g>
+      {/* ramená a uniforma */}
+      <path d="M40 400 C48 318 96 286 150 274 L250 274 C304 286 352 318 360 400 Z" fill="var(--color-ink)" />
+      {/* výstrih do V */}
+      <path d="M160 274 L200 336 L240 274 Z" fill="var(--color-white)" stroke="var(--color-ink)" strokeWidth="6" strokeLinejoin="miter" />
+      {/* krk a hlava */}
+      <rect x="172" y="226" width="56" height="56" fill="var(--color-ink)" />
+      <ellipse cx="200" cy="168" rx="66" ry="78" fill="var(--color-ink)" />
+      {/* vlasy (kučery) */}
+      <path d="M134 150 C128 96 170 76 204 80 C246 80 276 104 268 150 C256 128 238 118 214 122 C190 112 160 120 134 150 Z" fill="var(--color-ink)" stroke="var(--color-paper)" strokeWidth="3" />
+      {/* fonendoskop */}
+      <path d="M152 282 C140 320 150 352 184 356 M248 282 C262 320 252 352 220 356" fill="none" stroke="var(--color-stamp)" strokeWidth="10" strokeLinecap="round" />
+      <path d="M184 356 C196 358 208 358 220 356" fill="none" stroke="var(--color-stamp)" strokeWidth="10" />
+      <circle cx="202" cy="372" r="18" fill="var(--color-white)" stroke="var(--color-ink)" strokeWidth="7" />
+      {/* menovka */}
+      <rect x="262" y="318" width="70" height="26" fill="var(--color-white)" stroke="var(--color-ink)" strokeWidth="4" />
+      <path d="M270 331 H324" stroke="var(--color-ink)" strokeWidth="4" />
+      {/* kríž na rukáve */}
+      <path d="M86 336 H98 V324 H110 V336 H122 V348 H110 V360 H98 V348 H86 Z" fill="var(--color-stamp)" stroke="var(--color-paper)" strokeWidth="2" />
+    </svg>
+  );
+}

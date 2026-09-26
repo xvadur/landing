@@ -1,4 +1,4 @@
-/** Ponuka V5 (XDR-209, dohoda 26. 9. 2026): vlajka = konzultácia 30 min, produkty ako čakačky („Chcem vedieť ako prvý“).
+/** Ponuka V5 (V5.3 XDR-267: konzultácia = vyšetrenie, čakačka = čakáreň, bez pastelov; XDR-209, dohoda 26. 9. 2026): vlajka = konzultácia 30 min, produkty ako čakačky („Chcem vedieť ako prvý“).
  *  Ceny zatiaľ nie sú (rebríček produktov rieši Adam neskôr); keď budú, pribudne cenník v tvare troch stĺpcov (vzor Nexana).
  *  Termíny a rozsah produktov sú z popisu XDR-209; jadro ich zatiaľ nemá (štart kohorty v januári, „Agent pre teba“ 90 dní). */
 
@@ -10,18 +10,18 @@ export type Produkt = {
   pre: string;
   popis: string;
   body: string[];
-  farba: 'bg-yellow' | 'bg-pink' | 'bg-sky' | 'bg-lime' | 'bg-lilac' | 'bg-white';
+  farba: 'bg-yellow' | 'bg-white' | 'bg-paper';
 };
 
 export const VLAJKA = {
-  nazov: 'Konzultácia',
+  nazov: 'Vyšetrenie',
   trvanie: '30 minút',
   cena: 'Zatiaľ zadarmo',
-  titulok: 'Prines jednu úlohu. Pozrieme sa, čo s ňou dokáže AI.',
+  titulok: 'Prídeš s problémom. Odídeš s diagnózou a plánom liečby.',
   body: [
-    'Prejdeme konkrétny príklad tvojej práce: čo sa opakuje a kde sa stráca čas.',
-    'Ukážem vhodný postup na bezpečnej vzorke.',
-    'Odídeš s písomným ďalším krokom. Ak dáva zmysel niečo postaviť, pripravím rozsah a cenu.',
+    'Triáž: jedna úloha z tvojej práce, čo sa opakuje a kde sa stráca čas.',
+    'Diagnóza: vhodný postup ukážem na bezpečnej vzorke.',
+    'Plán liečby: písomný ďalší krok. Ak treba niečo postaviť, pripravím rozsah a cenu.',
   ],
 };
 
@@ -42,7 +42,7 @@ export const PRODUKTY: Produkt[] = [
     pre: 'Pre živnostníka a malú firmu',
     popis: 'Postavím ti agenta, s ktorým sa bavíš cez Telegram, a 90 dní ho so mnou ladíš na tvojej práci.',
     body: ['agent cez Telegram', '90 dní ladenia', 'tvoje dáta ostávajú tvoje'],
-    farba: 'bg-pink',
+    farba: 'bg-white',
   },
   {
     id: 'harness-kit',
@@ -51,7 +51,7 @@ export const PRODUKTY: Produkt[] = [
     pre: 'Pre toho, kto už používa Claude Code',
     popis: 'Moje pravidlá, skills a kontrakty pre agentov, s ktorými denne pracujem. Skopíruješ a upravíš.',
     body: ['pravidlá pre agentov', 'hotové skills', 'návod po slovensky'],
-    farba: 'bg-sky',
+    farba: 'bg-white',
   },
   {
     id: 'webinar',
@@ -60,7 +60,7 @@ export const PRODUKTY: Produkt[] = [
     pre: 'Pre neprogramátorov',
     popis: 'Ako pracovať s Claude Code, keď nie si programátor. Naživo, na skutočnej úlohe, s otázkami.',
     body: ['naživo', 'od nuly', 'na skutočnej úlohe'],
-    farba: 'bg-lime',
+    farba: 'bg-yellow',
   },
 ];
 
@@ -81,7 +81,7 @@ export const NEWSLETTER = {
 
 /** Blok „prečo nie iba ChatGPT“ (vzor Nexana). */
 export const PRECO_NIE_CHATGPT: { chat: string; agent: string }[] = [
-  { chat: 'Odpovie a zabudne. Zajtra začínaš odznova.', agent: 'Pamätá si tvoju prácu: pravidlá, kontakty, históriu.' },
+  { chat: 'Odpovie a zabudne. Zajtra začínaš odznova.', agent: 'Má chorobopis: pamätá si tvoje pravidlá, kontakty, históriu.' },
   { chat: 'Čaká, kým mu napíšeš.', agent: 'Koná sám: pošle follow-up, zapíše kontakt, dá vedieť.' },
   { chat: 'Vidí iba to, čo doňho skopíruješ.', agent: 'Pracuje priamo v tvojich nástrojoch: kalendár, CRM, e-mail.' },
   { chat: 'Výsledok je text na obrazovke.', agent: 'Výsledok je hotová vec: termín, záznam, odoslaná správa.' },

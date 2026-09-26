@@ -13,15 +13,15 @@ const hriech = DOKAZY.find((d) => d.id === 'hriech')!;
 const BTN = 'press inline-flex min-h-12 items-center gap-2 rounded-lg border-3 border-ink px-5 font-display text-base font-extrabold uppercase shadow-brutal-sm';
 ---
 
-<section id="texty" class="relative overflow-hidden border-b-3 border-ink bg-sky" aria-labelledby="texty-nadpis">
+<section id="texty" class="relative overflow-hidden border-b-3 border-ink bg-paper" aria-labelledby="texty-nadpis">
   <div aria-hidden="true" class="tx-dots pointer-events-none absolute inset-0 [--tx:16%]"></div>
   <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
       <div>
-        <p class="eyebrow">Texty, Hriech, hry</p>
-        <h2 id="texty-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Hlas.</h2>
+        <p class="eyebrow">Texty · Hriech · Hry</p>
+        <h2 id="texty-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Mimo<br />ordinácie.</h2>
       </div>
-      <p class="max-w-md text-lg">Píšem o tom, čo staviam. A cez Hriech rozoberám, ako fungujú slovenské médiá.</p>
+      <p class="max-w-md text-lg">Píšem o tom, čo staviam. A v Hriechu stanovujem diagnózu slovenským médiám.</p>
     </div>
 
     <div class="mt-12 grid gap-6 lg:grid-cols-3 lg:gap-8">
@@ -45,10 +45,10 @@ const BTN = 'press inline-flex min-h-12 items-center gap-2 rounded-lg border-3 b
         )
       }
 
-      <article class="brutal lift relative flex flex-col gap-4 overflow-hidden bg-pink p-0">
+      <article class="brutal lift relative flex flex-col gap-4 overflow-hidden bg-ink p-0 text-paper">
         <img src={hriech.obrazok!} alt="Hriech — náhľad publikácie" width="960" height="600" loading="lazy" decoding="async" class="aspect-[16/10] w-full border-b-3 border-ink object-cover object-top" />
         <div class="flex flex-1 flex-col gap-3 px-6 pb-6">
-          <p class="eyebrow">Mediálna kritika</p>
+          <p class="eyebrow text-yellow">Diagnóza médií</p>
           <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight">Hriech</h3>
           <p class="text-base">{hriech.riadok}</p>
           <a href={hriech.url!} target="_blank" rel="noopener noreferrer" data-track="dokaz_klik" data-track-miesto="hriech-texty" class:list={[BTN, 'mt-auto self-start bg-white']}>

@@ -1,138 +1,119 @@
 ---
-/** Kto som V5 (XDR-206): 7 zastávok 17 → XVADUR ako pinnutá sekcia s vodorovným pohybom.
- *  Desktop ≥ 1024 px bez reduced motion: GSAP ScrollTrigger pripne sekciu a pás kariet ide doľava so scrollom
- *  (scrub, Lenis synchronizovaný cez window.__lenis). Mobil a tablet: karty na výšku v natívnom vodorovnom
- *  swipe (scroll-snap, 0 JS). Reduced motion na desktope: statická mriežka kariet.
- *  Text zastávok verbatim zo src/data/beaty.ts (rozpory XDR-200 v beate 4 a 6 ostávajú, pozri fakty.ts).
- *  Fotka (zástupná, XDR-199) pri poslednej zastávke. */
-import { BEATY, BEATY_CTA } from '@/data/beaty';
-import { FOTKA } from '@/components/hero/hero-data';
-import { Blesk, Hviezda, Peciatka, Sipka, XZnak } from './Symboly';
-import { nbsp } from '@/components/home/nbsp';
+/** Kto som V5.3 (XDR-267): cesta na prvé čítanie — nemocnica → vyhodili → AI → agenti → XVADUR (src/data/cesta.ts).
+ *  Desktop ≥ 1024 px bez reduced motion: sekcia sa pripne a cesta ide vodorovne so scrollom (GSAP ScrollTrigger sa
+ *  načíta iba tu), pod kartami beží EKG krivka ako os. Mobil, tablet a reduced motion: zvislá cesta s čiarou vľavo.
+ *  Tmavé pozadie, bez pastelov: papier, žltá, alarmová červená. */
+import { CESTA } from '@/data/cesta';
+import { ekgPath, Kriz, Sipka } from './Symboly';
+import { ZdravotnikPlaceholder } from './Symboly';
 
-const FARBY = ['bg-white', 'bg-pink', 'bg-lilac', 'bg-sky', 'bg-lime', 'bg-white', 'bg-hot'];
-const NAKLON = ['-rotate-2', 'rotate-1', '-rotate-1', 'rotate-2', '-rotate-1', 'rotate-1', '-rotate-2'];
-const SYMBOL_FARBA = ['text-yellow', 'text-lime', 'text-hot', 'text-yellow', 'text-sky', 'text-pink', 'text-yellow'];
-const posledny = BEATY.length - 1;
+const posledny = CESTA.length - 1;
 ---
 
-<section id="kto-som" class="ks relative overflow-hidden border-b-3 border-ink bg-yellow" aria-labelledby="kto-som-nadpis">
-  <div aria-hidden="true" class="tx-dots pointer-events-none absolute inset-0 [--tx:22%]"></div>
-  <div class="ks-pin relative flex flex-col py-14 sm:py-20 lg:h-dvh lg:py-0">
-    <div class="mx-auto flex w-full max-w-[1600px] flex-wrap items-end justify-between gap-4 px-4 sm:px-6 lg:px-10 lg:pt-14">
+<section id="kto-som" class="ks relative overflow-hidden border-b-3 border-ink bg-ink text-paper" aria-labelledby="kto-som-nadpis">
+  <div class="ks-pin relative flex flex-col py-16 sm:py-20 lg:h-dvh lg:py-0">
+    <div class="mx-auto flex w-full max-w-[1600px] flex-wrap items-end justify-between gap-6 px-4 sm:px-6 lg:px-10 lg:pt-12">
       <div>
-        <p class="eyebrow">Kto som / {BEATY[0]!.rok} → {BEATY[posledny]!.rok}</p>
-        <h2 id="kto-som-nadpis" class="mt-3 font-display text-display-lg font-extrabold uppercase leading-[0.84] tracking-tighter">
-          Kto som
+        <p class="font-mono text-sm font-bold uppercase tracking-[0.16em] text-yellow">Kto som / anamnéza</p>
+        <h2 id="kto-som-nadpis" class="mt-3 font-display text-[clamp(2.75rem,1rem+5vw,5.75rem)] leading-[0.88] font-extrabold tracking-tighter uppercase">
+          Z nemocnice<br />k agentom.
         </h2>
       </div>
-      <p class="max-w-md pb-2 font-display text-xl font-bold leading-snug sm:text-2xl">
-        {BEATY.length} zastávok od sedemnástich po XVADUR. <span class="hidden lg:inline">Scrolluj, príbeh ide do strany.</span><span class="lg:hidden">Potiahni do strany.</span>
+      <p class="max-w-md pb-2 text-lg text-paper/80 sm:text-xl">
+        Desať rokov som sa staral o ľudí. Dnes sa starám o firmy a ľudí, ktorých technológia obchádza.
       </p>
     </div>
 
-    <div class="ks-okno relative mt-8 flex-1 lg:mt-10 lg:flex lg:items-center">
-      <ol
-        class="ks-pas flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-8 sm:gap-8 sm:px-6 lg:snap-none lg:overflow-visible lg:px-10 lg:pb-0"
-        data-scroll-x
-        role="list"
-      >
+    <div class="ks-okno relative mt-10 flex-1 lg:mt-6 lg:flex lg:items-center">
+      <ol class="ks-pas relative flex flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:gap-10 lg:px-10" role="list">
+        <!-- os: EKG krivka (desktop) / zvislá čiara (mobil) -->
+        <li aria-hidden="true" class="ks-os pointer-events-none absolute top-0 bottom-0 left-[calc(1rem+13px)] w-[3px] bg-yellow sm:left-[calc(1.5rem+13px)] lg:hidden"></li>
+        <li aria-hidden="true" class="ks-ekg pointer-events-none absolute top-1/2 right-0 left-0 hidden h-12 -translate-y-1/2 lg:block">
+          <svg viewBox="0 0 2400 40" preserveAspectRatio="none" class="h-full w-full">
+            <path d={ekgPath(2400, 300)} fill="none" stroke="var(--color-yellow)" stroke-width="3" vector-effect="non-scaling-stroke" />
+          </svg>
+        </li>
         {
-          BEATY.map((b, i) => (
-            <li
-              class:list={[
-                'ks-karta brutal relative flex w-[82vw] max-w-[380px] shrink-0 snap-center flex-col gap-4 p-6 sm:w-[420px] sm:max-w-none sm:p-8 lg:h-[min(58vh,520px)] lg:w-[440px]',
-                FARBY[i],
-                NAKLON[i],
-              ]}
-            >
-              <div class="flex items-start justify-between gap-4">
-                <span class="font-mono text-sm font-bold uppercase tracking-[0.14em]">
-                  Zastávka {i + 1} / {BEATY.length}
-                </span>
-                <span class="h-14 w-14 shrink-0" aria-hidden="true">
-                  {i % 5 === 0 && <XZnak className={`h-14 w-12 ${SYMBOL_FARBA[i]}`} />}
-                  {i % 5 === 1 && <Hviezda className={`h-14 w-14 ${SYMBOL_FARBA[i]}`} />}
-                  {i % 5 === 2 && <Blesk className={`h-14 w-11 ${SYMBOL_FARBA[i]}`} />}
-                  {i % 5 === 3 && <Sipka className={`h-14 w-14 ${SYMBOL_FARBA[i]}`} smer="vpravo" />}
-                  {i % 5 === 4 && <Peciatka id={`ks-p-${i}`} text="Staviam" className={`h-14 w-14 ${SYMBOL_FARBA[i]}`} />}
-                </span>
-              </div>
-              <p
+          CESTA.map((k, i) => (
+            <li class="ks-karta relative flex gap-4 pl-10 sm:pl-12 lg:w-[440px] lg:shrink-0 lg:pl-0">
+              <span
+                aria-hidden="true"
                 class:list={[
-                  'font-display font-extrabold uppercase leading-[0.85] tracking-tighter',
-                  b.rok.length > 6 ? 'text-[clamp(2.4rem,1.4rem+2.6vw,3.9rem)]' : 'text-[clamp(3.2rem,2rem+4vw,5.5rem)]',
+                  'absolute top-6 left-0 flex h-7 w-7 items-center justify-center rounded-full border-3 border-ink font-mono text-xs font-bold lg:hidden',
+                  i === 1 ? 'bg-stamp text-paper' : 'bg-yellow text-ink',
                 ]}
               >
-                {nbsp(b.rok)}
-              </p>
-              <h3 class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight sm:text-3xl">{b.titulok}</h3>
-              <p class="text-lg leading-relaxed">{nbsp(b.text)}</p>
-              {
-                i === posledny && (
+                {i + 1}
+              </span>
+              <article
+                class:list={[
+                  'relative flex w-full flex-col gap-4 rounded-lg border-3 p-6 sm:p-7 lg:min-h-[min(52vh,460px)]',
+                  i === 1 ? 'border-paper bg-stamp text-paper' : i === posledny ? 'border-ink bg-yellow text-ink' : 'border-ink bg-paper text-ink',
+                  i % 2 ? 'lg:translate-y-6' : 'lg:-translate-y-6',
+                ]}
+                style={`box-shadow: 8px 8px 0 0 ${i === 1 || i === posledny ? 'var(--color-paper)' : 'var(--color-yellow)'}`}
+              >
+                <div class="flex items-center justify-between gap-3 font-mono text-xs font-bold uppercase tracking-[0.16em]">
+                  <span>{String(i + 1).padStart(2, '0')} / {String(CESTA.length).padStart(2, '0')}</span>
+                  <span>{k.kedy}</span>
+                </div>
+                <h3 class="font-display text-[clamp(2.4rem,1.6rem+3vw,4rem)] leading-[0.9] font-extrabold tracking-tighter uppercase">{k.nazov}</h3>
+                <p class="text-lg leading-relaxed">{k.text}</p>
+                {k.citat && (
+                  <blockquote class="mt-auto border-t-3 border-paper/60 pt-4 font-display text-xl leading-snug font-bold">
+                    „{k.citat}“
+                  </blockquote>
+                )}
+                {i === posledny && (
                   <div class="mt-auto flex items-end justify-between gap-4">
                     <a
-                      href={BEATY_CTA.href}
+                      href="#konzultacia"
+                      data-track="konzultacia_klik"
+                      data-track-miesto="kto-som"
                       class="press inline-flex min-h-12 items-center gap-2 rounded-lg border-3 border-ink bg-ink px-4 font-display text-base font-extrabold uppercase text-paper shadow-brutal-sm"
                     >
-                      Celý príbeh →
+                      Objednaj sa →
                     </a>
-                    <img
-                      src={FOTKA.src}
-                      alt={FOTKA.alt}
-                      width="120"
-                      height="120"
-                      loading="lazy"
-                      decoding="async"
-                      class="h-24 w-24 rotate-6 rounded-full border-3 border-ink bg-white p-1 shadow-brutal sm:h-28 sm:w-28"
-                    />
+                    <div class="h-24 w-24 shrink-0 rotate-6 overflow-hidden rounded-[28%] border-3 border-ink bg-white shadow-brutal-sm">
+                      <ZdravotnikPlaceholder className="h-full w-full" />
+                    </div>
                   </div>
-                )
-              }
+                )}
+                {i === 0 && <Kriz className="absolute -top-5 -right-4 h-12 w-12 rotate-12 text-stamp" />}
+              </article>
             </li>
           ))
         }
-        <li class="ks-koniec flex w-[60vw] max-w-[300px] shrink-0 snap-center flex-col justify-center gap-4 sm:w-[320px] lg:h-[min(58vh,520px)]" aria-hidden="true">
-          <p class="font-display text-display-sm font-extrabold uppercase leading-[0.9] tracking-tighter">A teraz tvoj príbeh.</p>
-          <Sipka className="h-20 w-20 text-hot" smer="dole" />
+        <li class="ks-koniec hidden w-[300px] shrink-0 flex-col justify-center gap-4 lg:flex" aria-hidden="true">
+          <p class="font-display text-display-sm leading-[0.9] font-extrabold tracking-tighter uppercase">Ďalší pacient: ty.</p>
+          <Sipka className="h-20 w-20 text-yellow" smer="dole" />
         </li>
       </ol>
-      <div class="ks-priebeh pointer-events-none absolute right-10 bottom-5 left-10 hidden h-3 overflow-hidden rounded-full border-3 border-ink bg-white lg:block" aria-hidden="true">
-        <div class="ks-priebeh-bar h-full w-full origin-left scale-x-0 bg-hot"></div>
+      <div class="ks-priebeh pointer-events-none absolute right-10 bottom-6 left-10 hidden h-3 overflow-hidden rounded-full border-2 border-paper/40 lg:block" aria-hidden="true">
+        <div class="ks-priebeh-bar h-full w-full origin-left scale-x-0 bg-yellow"></div>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* mobil: skryť scrollbar pásu, ale nechať swipe */
-  .ks-pas {
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-  }
-  .ks-pas::-webkit-scrollbar {
-    display: none;
-  }
-  .ks-karta {
-    box-shadow: var(--shadow-brutal-lg);
-  }
-  /* desktop bez JS alebo s reduced motion: statická mriežka */
+  /* desktop bez JS / reduced motion: cesta ako mriežka, bez EKG osi a priebehu */
   @media (min-width: 1024px) {
     .ks:not([data-gsap]) .ks-pin {
       height: auto;
-      padding-bottom: 5rem;
+      padding-bottom: 6rem;
     }
     .ks:not([data-gsap]) .ks-pas {
       flex-wrap: wrap;
       justify-content: center;
-      row-gap: 2.5rem;
+      row-gap: 3.5rem;
     }
     .ks:not([data-gsap]) .ks-karta {
-      height: auto;
       width: 380px;
     }
     .ks:not([data-gsap]) .ks-koniec,
-    .ks:not([data-gsap]) .ks-priebeh {
+    .ks:not([data-gsap]) .ks-priebeh,
+    .ks:not([data-gsap]) .ks-ekg {
       display: none;
     }
     .ks[data-gsap] .ks-pas {
@@ -165,15 +146,7 @@ const posledny = BEATY.length - 1;
       const upd = () => ScrollTrigger.update();
       lenis?.on('scroll', upd);
       const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sekcia,
-          start: 'top top',
-          end: () => `+=${vzdialenost()}`,
-          pin: true,
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-        },
+        scrollTrigger: { trigger: sekcia, start: 'top top', end: () => `+=${vzdialenost()}`, pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 },
       });
       tl.to(pas, { x: () => -vzdialenost(), ease: 'none' }, 0);
       if (bar) tl.to(bar, { scaleX: 1, ease: 'none' }, 0);

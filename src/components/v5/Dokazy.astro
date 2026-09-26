@@ -1,212 +1,164 @@
 ---
-/** Izba dôkazov (XDR-208): projekty ako karty so štítkami, jedným číslom, obrázkom a živým odkazom s dátumom
- *  overenia (DOKAZY vo fakty.ts; odkaz len s overeným HTTP 200, QA: node work/qa/odkazy.mjs). Senior atlas a gramata
- *  = „čoskoro“ bez odkazu. Pod kartami prípadová štúdia makléra (šablóna čo mal → čo dostal → čísla, vzor Klaudia
- *  Juráčková) s logom kontrol pred vydaním. Bez mena klienta (súhlas čaká na Adama). Čisté Astro, 0 JS.
- *  Ledger účteniek z v4 (src/data/uctenky.ts) sem nesedí: je to bibliografia pre plánovanú stránku /zdroje/, nie karty. */
-import { DOKAZY, PRIPAD_MAKLER, OVERENE_DNA_TEXT, type Dokaz } from '@/data/fakty';
-import { Peciatka, Sipka } from './Symboly';
+/** Pacienti (XDR-208 → V5.3 XDR-267): dôkazy podľa toho, pre koho sú.
+ *  1. Pacienti postavení na nohy (klienti): Jakub, maklér · Lucia, terapeutka — chorobopis: príjem → liečba → stav.
+ *  2. Verejnosť: Hriech = diagnóza médií, Netopier = jeho laboratórium.
+ *  3. Vlastné vitálne funkcie: Korpus, zdravotné dáta, agentový systém.
+ *  4. Ďalšie záznamy: trhový dataset, tento web, v príprave (senior atlas, gramata — bez odkazu).
+ *  Odkazy iba s overeným HTTP 200 a dátumom (QA: node work/qa/odkazy.mjs). Jakubov web bez odkazu (súhlas + starý deploy).
+ *  Bez pastelov: papier, biela, žltá, čierna, alarmová červená. Čisté Astro, 0 JS. */
+import { DOKAZY, KORPUS, OVERENE_DNA_TEXT, PRIPAD_MAKLER, PRIPAD_TERAPEUTKA, type Dokaz } from '@/data/fakty';
+import { Kriz } from './Symboly';
 import { nbsp } from '@/components/home/nbsp';
 
-const STITOK_FARBA: Record<string, string> = {
-  'AI agent': 'bg-hot',
-  web: 'bg-sky',
-  dáta: 'bg-yellow',
-  médiá: 'bg-pink',
-};
-const PANEL = ['bg-lilac', 'bg-lime', 'bg-pink', 'bg-sky', 'bg-yellow'];
 const datum = (iso: string | null) => (iso ? iso.split('-').reverse().map((x, i) => (i < 2 ? String(Number(x)) : x)).join('. ') : '');
-const doména = (u: string) => new URL(u).hostname;
-const stavText = (d: Dokaz) => (d.stav === 'coskoro' ? 'Čoskoro' : d.stav === 'interne' ? 'Beží interne' : 'Naživo');
+const domena = (u: string) => new URL(u).hostname;
+const skupina = (pre: Dokaz['pre']) => DOKAZY.filter((d) => d.pre === pre);
+const STITOK: Record<string, string> = { 'AI agent': 'bg-stamp text-paper', web: 'bg-white', dáta: 'bg-yellow', médiá: 'bg-ink text-paper' };
 
-/** subsystémy z riadku karty (nič navyše) */
-const LOG = [
-  'web a rezervácia termínu',
-  'CRM: kontakty, nehnuteľnosti, obchody',
-  'follow-up e-mailom',
-  'upozornenia na Telegram',
+const PACIENTI = [
+  { ...PRIPAD_MAKLER, dokaz: DOKAZY.find((d) => d.id === 'system-pre-maklera')!, url: null as string | null },
+  { ...PRIPAD_TERAPEUTKA, dokaz: DOKAZY.find((d) => d.id === 'terapeutka')!, cisla: null },
 ];
+const BTN = 'press inline-flex min-h-11 items-center gap-2 rounded-lg border-3 border-ink px-4 font-display text-base font-extrabold uppercase shadow-brutal-sm';
 ---
 
-<section id="dokazy" class="relative overflow-hidden border-b-3 border-ink bg-lilac" aria-labelledby="dokazy-nadpis">
-  <div aria-hidden="true" class="tx-halftone pointer-events-none absolute inset-0 [--tx:12%]"></div>
+<section id="dokazy" class="relative overflow-hidden border-b-3 border-ink bg-yellow" aria-labelledby="dokazy-nadpis">
+  <div aria-hidden="true" class="tx-halftone pointer-events-none absolute inset-0 [--tx:10%]"></div>
   <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
     <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
       <div>
-        <p class="eyebrow">Izba dôkazov / {DOKAZY.length} projektov</p>
-        <h2 id="dokazy-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
-          Nič netvrdím.<br />Ukazujem.
+        <p class="eyebrow">Pacienti / Príjem → diagnóza → liečba</p>
+        <h2 id="dokazy-nadpis" class="mt-4 font-display text-display leading-[0.9] font-extrabold tracking-tighter uppercase">
+          Postavení<br />na nohy.
         </h2>
       </div>
-      <div class="flex items-end gap-4">
-        <p class="max-w-md text-lg">
-          Každá karta má jedno číslo a zdroj. Kde web žije, je tam odkaz s dátumom, kedy som ho naposledy overil. Kde nežije, píšem to.
-        </p>
-        <Peciatka id="dokazy-peciatka" text="Overené" className="peciatka-toc hidden h-24 w-24 shrink-0 text-lime sm:block" />
-      </div>
+      <p class="max-w-md text-lg">Nič netvrdím, ukazujem chorobopisy. Kde systém žije, je tam odkaz a dátum, kedy som ho naposledy overil.</p>
     </div>
 
-    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8" role="list">
+    <!-- 1 · pacienti -->
+    <div class="mt-14 grid gap-8 lg:grid-cols-2">
       {
-        DOKAZY.map((d, i) => (
-          <li class="flex">
-            <article
-              class:list={[
-                'brutal lift relative flex w-full flex-col overflow-hidden',
-                d.stav === 'coskoro' ? 'bg-paper' : 'bg-white',
-              ]}
-            >
-              {d.obrazok ? (
-                <div class="relative aspect-[16/10] overflow-hidden border-b-3 border-ink bg-ink">
-                  <img
-                    src={d.obrazok}
-                    alt={`${d.nazov} — náhľad`}
-                    width="960"
-                    height="600"
-                    loading="lazy"
-                    decoding="async"
-                    class:list={['h-full w-full object-cover object-top', d.stav === 'coskoro' && 'opacity-60 grayscale']}
-                  />
-                </div>
-              ) : (
-                <div
-                  class:list={[
-                    'tx-dots relative flex aspect-[16/10] items-center justify-center overflow-hidden border-b-3 border-ink [--tx:18%]',
-                    PANEL[i % PANEL.length],
-                    d.stav === 'coskoro' && 'opacity-70',
-                  ]}
-                  aria-hidden="true"
-                >
-                  <span class="px-4 text-center font-display text-[clamp(2.6rem,1.8rem+3vw,4.2rem)] font-extrabold uppercase leading-none tracking-tighter">
-                    {nbsp(d.cislo)}
-                  </span>
-                </div>
-              )}
-
-              <span
-                class:list={[
-                  'sticker absolute top-3 right-3 text-xs',
-                  d.stav === 'zive' ? 'bg-lime' : d.stav === 'coskoro' ? 'bg-hot' : 'bg-white',
-                ]}
-                style={`--sticker-rotate:${i % 2 ? 4 : -4}deg`}
-              >
-                {d.stav === 'zive' && <span aria-hidden="true">● </span>}
-                {stavText(d)}
-              </span>
-
-              <div class="flex flex-1 flex-col gap-3 p-5 sm:p-6">
-                <ul class="flex flex-wrap gap-2" role="list" aria-label="Štítky">
-                  {d.stitky.map((s) => (
-                    <li class:list={['rounded-sm border-2 border-ink px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink', STITOK_FARBA[s]]}>
-                      {s}
-                    </li>
-                  ))}
-                </ul>
-                <h3 class="font-display text-2xl font-extrabold uppercase leading-tight tracking-tight">{d.nazov}</h3>
-                <p class="flex items-baseline gap-2">
-                  <span class="font-display text-4xl font-extrabold tabular-nums tracking-tight">{nbsp(d.cislo)}</span>
-                  <span class="font-mono text-xs uppercase tracking-[0.1em]">{d.cisloPopis}</span>
-                </p>
-                <p class="text-base leading-relaxed">{nbsp(d.riadok)}</p>
-
-                <div class="mt-auto flex flex-wrap items-center justify-between gap-3 border-t-2 border-dashed border-ink/30 pt-4">
-                  {d.url ? (
-                    <>
-                      <a
-                        href={d.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        data-track="dokaz_klik"
-                        data-track-miesto={d.id}
-                        class="press inline-flex min-h-11 items-center gap-2 rounded-lg border-3 border-ink bg-yellow px-4 font-display text-base font-extrabold uppercase shadow-brutal-sm"
-                      >
-                        {doména(d.url)}
-                        <span aria-hidden="true">↗</span>
-                      </a>
-                      <span class="font-mono text-xs uppercase tracking-[0.1em]">overené {datum(d.overene)}</span>
-                    </>
-                  ) : (
-                    <span class="font-mono text-xs uppercase tracking-[0.1em] text-ink/70">{d.poznamka ?? 'bez verejného odkazu'}</span>
-                  )}
+        PACIENTI.map((pc, i) => (
+          <article class="relative flex flex-col overflow-hidden rounded-lg border-3 border-ink bg-white" style="box-shadow: var(--shadow-brutal-xl)" aria-label={`Chorobopis: ${pc.kto}`}>
+            <header class="flex flex-wrap items-center justify-between gap-3 border-b-3 border-ink bg-ink px-5 py-4 text-paper sm:px-7">
+              <div class="flex items-center gap-3">
+                <Kriz className="h-8 w-8 text-stamp" />
+                <div>
+                  <p class="font-mono text-xs uppercase tracking-[0.16em] text-paper/70">Chorobopis č. {i + 1}</p>
+                  <h3 class="font-display text-2xl font-extrabold uppercase tracking-tight sm:text-3xl">{pc.kto}</h3>
                 </div>
               </div>
-            </article>
-          </li>
+              <ul class="flex flex-wrap gap-2" role="list" aria-label="Štítky">
+                {pc.dokaz.stitky.map((s) => (
+                  <li class:list={['rounded-sm border-2 border-paper px-2 py-0.5 font-mono text-xs font-bold uppercase tracking-[0.1em] text-ink', STITOK[s]]}>{s}</li>
+                ))}
+              </ul>
+            </header>
+            <div class="grid flex-1 gap-6 p-5 sm:grid-cols-2 sm:p-7">
+              <div>
+                <p class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-stamp">Príjem · stav pri príjme</p>
+                <ul class="mt-3 grid gap-2" role="list">
+                  {pc.mal.map((m) => <li class="flex gap-2 leading-snug"><span class="font-bold text-stamp" aria-hidden="true">✕</span>{m}</li>)}
+                </ul>
+              </div>
+              <div>
+                <p class="font-mono text-xs font-bold uppercase tracking-[0.16em]">Liečba · čo som nasadil</p>
+                <ul class="mt-3 grid gap-2" role="list">
+                  {pc.dostal.map((m) => <li class="flex gap-2 leading-snug font-bold"><span aria-hidden="true">✓</span>{nbsp(m)}</li>)}
+                </ul>
+              </div>
+            </div>
+            <footer class="flex flex-wrap items-center justify-between gap-4 border-t-3 border-ink bg-paper px-5 py-4 sm:px-7">
+              <div>
+                <p class="font-mono text-xs font-bold uppercase tracking-[0.16em]">Stav</p>
+                <p class="text-sm">{pc.stav}</p>
+              </div>
+              {pc.cisla ? (
+                <p class="flex items-baseline gap-2"><span class="font-display text-4xl font-extrabold tabular-nums">{nbsp(pc.cisla[0]!.value)}</span><span class="font-mono text-xs uppercase tracking-[0.1em]">{pc.cisla[0]!.label}</span></p>
+              ) : pc.url ? (
+                <div class="flex flex-col items-end gap-1">
+                  <a href={pc.url} target="_blank" rel="noopener noreferrer" data-track="dokaz_klik" data-track-miesto={pc.dokaz.id} class:list={[BTN, 'bg-yellow']}>
+                    {domena(pc.url)} <span aria-hidden="true">↗</span>
+                  </a>
+                  <span class="font-mono text-xs uppercase tracking-[0.1em]">overené {OVERENE_DNA_TEXT}</span>
+                </div>
+              ) : null}
+            </footer>
+          </article>
         ))
       }
-    </ul>
+    </div>
 
-    <!-- prípadová štúdia -->
-    <article id="pripad" class="brutal relative mt-20 overflow-hidden bg-white" style="box-shadow: var(--shadow-brutal-xl)" aria-labelledby="pripad-nadpis">
-      <div class="flex flex-wrap items-center justify-between gap-4 border-b-3 border-ink bg-yellow px-5 py-4 sm:px-8">
-        <p class="eyebrow">Prípadová štúdia / {PRIPAD_MAKLER.kto}</p>
-        <span class="sticker bg-white text-xs" style="--sticker-rotate:3deg">Pred vydaním</span>
-      </div>
-      <div class="grid gap-10 p-5 sm:p-8 lg:grid-cols-[1fr_1fr_0.9fr] lg:gap-8">
-        <div>
-          <h3 id="pripad-nadpis" class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">Čo mal</h3>
-          <ul class="mt-5 grid gap-3" role="list">
-            {PRIPAD_MAKLER.mal.map((m) => (
-              <li class="flex gap-3 text-lg leading-snug"><span class="font-bold text-hot" aria-hidden="true">✕</span>{m}</li>
-            ))}
-          </ul>
-        </div>
-        <div class="relative">
-          <Sipka className="absolute top-1 -left-9 hidden h-8 w-8 text-lime lg:block" smer="vpravo" />
-          <h3 class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">Čo dostal</h3>
-          <ul class="mt-5 grid gap-3" role="list">
-            {PRIPAD_MAKLER.dostal.map((m) => (
-              <li class="flex gap-3 text-lg leading-snug font-bold"><span aria-hidden="true">✓</span>{nbsp(m)}</li>
-            ))}
-          </ul>
-        </div>
-        <div class="flex flex-col gap-4">
-          <div class="overflow-hidden rounded-lg border-3 border-ink bg-ink text-paper shadow-brutal">
-            <div class="flex items-center gap-2 border-b-3 border-paper/20 px-4 py-2.5">
-              <span class="size-3 rounded-full border-2 border-ink bg-hot" aria-hidden="true"></span>
-              <span class="size-3 rounded-full border-2 border-ink bg-yellow" aria-hidden="true"></span>
-              <span class="size-3 rounded-full border-2 border-ink bg-lime-deep" aria-hidden="true"></span>
-              <span class="ml-2 font-mono text-xs uppercase tracking-[0.12em] text-paper/70">kontroly pred vydaním</span>
-            </div>
-            <ol class="log grid gap-1 p-4 font-mono text-sm" role="list">
-              {LOG.map((l, i) => (
-                <li class="log-r" style={`--n:${i}`}><span class="text-lime">✓</span> {l}</li>
+    <!-- 2 · verejnosť, 3 · vlastné vitálne funkcie -->
+    <div class="mt-16 grid gap-8 lg:grid-cols-2">
+      {
+        [
+          { pre: 'verejnost' as const, nadpis: 'Diagnóza médií', eyebrow: 'Pre verejnosť', bg: 'bg-ink text-paper', tien: 'var(--color-paper)' },
+          { pre: 'vlastne' as const, nadpis: 'Vlastné vitálne funkcie', eyebrow: 'Na sebe', bg: 'bg-white text-ink', tien: 'var(--color-ink)' },
+        ].map((g) => (
+          <div class:list={['flex flex-col rounded-lg border-3 border-ink p-6 sm:p-8', g.bg]} style={`box-shadow: 9px 9px 0 0 ${g.tien}`}>
+            <p class="font-mono text-xs font-bold uppercase tracking-[0.16em] opacity-70">{g.eyebrow}</p>
+            <h3 class="mt-2 font-display text-display-xs leading-[0.95] font-extrabold uppercase tracking-tight">{g.nadpis}</h3>
+            {g.pre === 'verejnost' && (
+              <p class="mt-3 text-lg opacity-85">Hriech nie je názor. Je to diagnóza: kto vlastní médiá, kto ich vedie a kto tvorí obsah, zložené do jednej mapy.</p>
+            )}
+            {g.pre === 'vlastne' && (
+              <p class="mt-3 text-lg">Najprv som to skúšal na sebe. Každý prompt, každý deň: {nbsp(KORPUS.slova)} vlastných slov od {KORPUS.od}.</p>
+            )}
+            <ul class="mt-6 grid gap-4" role="list">
+              {skupina(g.pre).map((d) => (
+                <li class="grid items-start gap-x-4 gap-y-2 border-t-2 border-dashed border-current/30 pt-4 sm:grid-cols-[1fr_auto]">
+                  <div class="min-w-0">
+                    <p class="font-display text-xl font-extrabold uppercase">{d.nazov}</p>
+                    <p class="text-sm opacity-80">{nbsp(d.riadok)}</p>
+                  </div>
+                  <div class="flex flex-row items-baseline gap-2 sm:flex-col sm:items-end sm:gap-1 sm:text-right">
+                    <span class="font-display text-3xl font-extrabold tabular-nums">{nbsp(d.cislo)}</span>
+                    <span class="font-mono text-[0.7rem] uppercase tracking-[0.1em] opacity-80">{d.cisloPopis}</span>
+                  </div>
+                  {d.url && (
+                    <div class="flex flex-wrap items-center justify-between gap-3 sm:col-span-2">
+                      <a href={d.url} target="_blank" rel="noopener noreferrer" data-track="dokaz_klik" data-track-miesto={d.id} class:list={[BTN, 'bg-yellow text-ink']}>
+                        {domena(d.url)} <span aria-hidden="true">↗</span>
+                      </a>
+                      <span class="font-mono text-xs uppercase tracking-[0.1em] opacity-70">overené {datum(d.overene)}</span>
+                    </div>
+                  )}
+                </li>
               ))}
-              <li class="log-r mt-2 border-t border-paper/20 pt-2 font-bold text-yellow" style={`--n:${LOG.length}`}>
-                {nbsp(PRIPAD_MAKLER.cisla[0]!.value)} kontrol prešlo
-              </li>
-            </ol>
+            </ul>
           </div>
-          <dl class="grid grid-cols-3 gap-2">
-            {PRIPAD_MAKLER.cisla.map((c) => (
-              <div class="rounded-lg border-3 border-ink bg-paper p-3">
-                <dt class="sr-only">{c.label}</dt>
-                <dd class="font-display text-xl font-extrabold whitespace-nowrap tabular-nums">{nbsp(c.value)}</dd>
-                <dd class="font-mono text-[0.7rem] uppercase leading-tight tracking-[0.08em]">{c.label}</dd>
+        ))
+      }
+    </div>
+
+    <!-- 4 · ďalšie záznamy -->
+    <div class="mt-16">
+      <p class="eyebrow">Ďalšie záznamy</p>
+      <ul class="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-4" role="list">
+        {
+          skupina('dalsie').map((d) => (
+            <li class:list={['flex flex-col gap-2 rounded-lg border-3 border-ink p-5 shadow-brutal', d.stav === 'coskoro' ? 'bg-paper' : 'bg-white']}>
+              <div class="flex items-center justify-between gap-2">
+                <p class="font-display text-lg font-extrabold uppercase">{d.nazov}</p>
+                {d.stav === 'coskoro' && <span class="rounded-sm border-2 border-ink bg-ink px-2 py-0.5 font-mono text-[0.65rem] font-bold uppercase tracking-[0.1em] text-paper">v príprave</span>}
               </div>
-            ))}
-          </dl>
-          <p class="text-sm text-ink/70">{PRIPAD_MAKLER.stav} Stav k {OVERENE_DNA_TEXT}.</p>
-        </div>
-      </div>
-    </article>
+              <p class="font-display text-3xl font-extrabold tabular-nums">{nbsp(d.cislo)}</p>
+              <p class="text-sm">{nbsp(d.cisloPopis)}</p>
+              {d.url ? (
+                <div class="mt-auto flex flex-col gap-1">
+                  <a href={d.url} target="_blank" rel="noopener noreferrer" class="inline-flex min-h-11 items-center font-mono text-xs font-bold uppercase tracking-[0.1em] underline decoration-2 underline-offset-4">
+                    {domena(d.url)} ↗
+                  </a>
+                  <span class="font-mono text-[0.7rem] uppercase tracking-[0.1em] text-ink/60">overené {datum(d.overene)}</span>
+                </div>
+              ) : (
+                <span class="mt-auto font-mono text-xs uppercase tracking-[0.1em] text-ink/60">{d.poznamka ?? 'bez verejného odkazu'}</span>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
-
-<style>
-  /* log kontrol: riadky nabiehajú, keď okno vojde do obrazu (view timeline), inak stoja */
-  @supports (animation-timeline: view()) {
-    .log-r {
-      --tl: view();
-      animation-name: log-r;
-      animation-timing-function: linear;
-      animation-fill-mode: both;
-      animation-timeline: var(--tl);
-      animation-range: entry 20% cover 35%;
-    }
-  }
-  @keyframes log-r {
-    from { opacity: 0; transform: translateX(-8px); }
-    to { opacity: 1; transform: none; }
-  }
-</style>

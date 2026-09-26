@@ -22,7 +22,7 @@
   --color-lime-deep: #7cc72e;
   --color-sky: #b9e3ff;
   --color-sky-deep: #4faeec;
-  --color-stamp: oklch(50% 0.19 28); /* V5.2 spis: červená pečiatka. Text na stamp je paper (≈ 5,6 : 1) */
+  --color-stamp: oklch(50% 0.19 28); /* V5.3: alarmová červená (kríž, EKG alarm). Text na stamp je paper (≈ 5,6 : 1) */
   --color-hot: #ed4e26; /* jediná horúca: CTA a X. Text na hot je vždy ink (5,4 : 1); paper na hot má len 3,2 : 1 (19. 9.) */
 
   /* hover = L −6 %, press = L −12 % (relatívna farba, žiadny ručný hex) */

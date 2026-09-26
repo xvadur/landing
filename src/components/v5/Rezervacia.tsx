@@ -94,10 +94,10 @@ export default function Rezervacia() {
 
   if (stav === 'ok' && slot) {
     return (
-      <div role="status" className="flex flex-col gap-5 rounded-lg border-3 border-ink bg-lime p-6 shadow-brutal-lg sm:p-8">
+      <div role="status" className="flex flex-col gap-5 rounded-lg border-3 border-ink bg-yellow p-6 text-ink shadow-brutal-lg sm:p-8">
         <p className={KROK}>Hotovo ✓</p>
         <p className="font-display text-3xl leading-tight font-extrabold uppercase sm:text-4xl">{slotText(slot)}</p>
-        <p className="text-lg">{sprava} Priprav si jeden príklad úlohy, ktorú chceš zlepšiť. Netreba prezentáciu.</p>
+        <p className="text-lg">{sprava} Na vyšetrenie si prines jeden príklad úlohy, ktorú chceš vyliečiť. Netreba prezentáciu.</p>
         <button type="button" onClick={stiahniIcs} className={cn(CHIP, 'self-start bg-white text-base')}>
           Pridať do kalendára (.ics)
         </button>
@@ -107,7 +107,7 @@ export default function Rezervacia() {
 
   if (nedostupne) {
     return (
-      <div className="flex flex-col gap-4 rounded-lg border-3 border-ink bg-white p-6 shadow-brutal">
+      <div className="flex flex-col gap-4 rounded-lg border-3 border-ink bg-white p-6 text-ink shadow-brutal">
         <p className={KROK}>Kalendár sa nenačítal</p>
         <p className="text-lg">Rezervácia teraz nejde. Napíš mi cez WhatsApp alebo na adam@xvadur.com a termín dohodneme hneď.</p>
       </div>
@@ -115,7 +115,7 @@ export default function Rezervacia() {
   }
 
   return (
-    <form onSubmit={odosli} className="flex flex-col gap-6 rounded-lg border-3 border-ink bg-white p-5 shadow-brutal-lg sm:p-8" aria-label="Rezervácia konzultácie">
+    <form onSubmit={odosli} className="flex flex-col gap-6 rounded-lg border-3 border-ink bg-white p-5 text-ink shadow-brutal-lg sm:p-8" aria-label="Rezervácia konzultácie">
       <fieldset className="flex min-w-0 flex-col gap-3">
         <legend className={KROK}>1 · Deň</legend>
         {!dni ? (
@@ -171,7 +171,7 @@ export default function Rezervacia() {
       )}
 
       <fieldset className={cn('flex min-w-0 flex-col gap-3 transition-opacity', !slot && 'pointer-events-none opacity-40')} disabled={!slot}>
-        <legend className={KROK}>3 · Kto prichádza {slot && <span className="normal-case">— {slotText(slot)}</span>}</legend>
+        <legend className={KROK}>3 · Príjem pacienta {slot && <span className="normal-case">— {slotText(slot)}</span>}</legend>
         <div className="grid gap-3 sm:grid-cols-2">
           <div>
             <label htmlFor={`${idp}-m`} className="mb-1 block text-sm font-bold">Meno</label>
@@ -183,7 +183,7 @@ export default function Rezervacia() {
           </div>
         </div>
         <div>
-          <label htmlFor={`${idp}-t`} className="mb-1 block text-sm font-bold">S akou úlohou prídeš? (nepovinné)</label>
+          <label htmlFor={`${idp}-t`} className="mb-1 block text-sm font-bold">S čím prichádzaš? (nepovinné)</label>
           <textarea
             id={`${idp}-t`}
             name="tema"
@@ -201,10 +201,10 @@ export default function Rezervacia() {
           disabled={!slot || stav === 'posielam'}
           className="press mt-2 inline-flex min-h-14 items-center justify-center gap-2 rounded-lg border-3 border-ink bg-hot px-6 font-display text-xl font-extrabold uppercase text-ink shadow-brutal disabled:opacity-60"
         >
-          {stav === 'posielam' ? 'Rezervujem…' : 'Rezervovať termín'}
+          {stav === 'posielam' ? 'Objednávam…' : 'Objednať sa na vyšetrenie'}
         </button>
         {stav === 'chyba' && (
-          <p role="alert" className="rounded-lg border-3 border-ink bg-pink px-4 py-3 font-bold">
+          <p role="alert" className="rounded-lg border-3 border-ink bg-stamp px-4 py-3 font-bold text-paper">
             {sprava}
           </p>
         )}

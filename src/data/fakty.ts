@@ -223,6 +223,8 @@ export type Dokaz = {
   overene: string | null;
   /** stav karty: živé = odkaz funguje · interné = beží, ale nie je verejné · čoskoro = doména neodpovedá */
   stav: 'zive' | 'interne' | 'coskoro';
+  /** V5.3 (XDR-267): pre koho — pacienti (klienti), verejnosť (diagnóza médií), vlastné vitálne funkcie, ďalšie záznamy */
+  pre: 'pacient' | 'verejnost' | 'vlastne' | 'dalsie';
   /** text namiesto odkazu (doména / „za prihlásením“) */
   poznamka?: string;
 };
@@ -232,7 +234,8 @@ export type Dokaz = {
 export const DOKAZY: Dokaz[] = [
   {
     id: 'system-pre-maklera',
-    nazov: 'Systém pre makléra',
+    pre: 'pacient',
+    nazov: 'Jakub, maklér',
     stitky: ['AI agent', 'web', 'dáta'],
     cislo: '47 / 47',
     cisloPopis: 'kontrol pred vydaním', // ROZPOR 6: nie „beží“
@@ -245,6 +248,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'hriech',
+    pre: 'verejnost',
     nazov: 'Hriech',
     stitky: ['médiá', 'web'],
     cislo: '59',
@@ -257,6 +261,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'netopier',
+    pre: 'verejnost',
     nazov: 'Netopier',
     stitky: ['AI agent', 'dáta', 'médiá'],
     cislo: '2,3 mil.',
@@ -270,7 +275,8 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'terapeutka',
-    nazov: 'Web pre terapeutku',
+    pre: 'pacient',
+    nazov: 'Lucia, terapeutka',
     stitky: ['web'],
     cislo: '2.',
     cisloPopis: 'oficiálny klient',
@@ -283,6 +289,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'korpus',
+    pre: 'vlastne',
     nazov: 'Korpus',
     stitky: ['dáta'],
     cislo: '572 469',
@@ -296,6 +303,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'trhovy-dataset',
+    pre: 'dalsie',
     nazov: 'Trhový dataset',
     stitky: ['dáta'],
     cislo: '275 333',
@@ -308,6 +316,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'agentovy-system',
+    pre: 'vlastne',
     nazov: 'Agentový systém',
     stitky: ['AI agent'],
     cislo: '947',
@@ -320,6 +329,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'vlastne-data',
+    pre: 'vlastne',
     nazov: 'Vlastné zdravotné dáta',
     stitky: ['dáta'],
     cislo: '2 483 965',
@@ -332,6 +342,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'xvadur-com',
+    pre: 'dalsie',
     nazov: 'Tento web',
     stitky: ['web'],
     cislo: 'V5',
@@ -344,6 +355,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'senior-atlas',
+    pre: 'dalsie',
     nazov: 'Senior atlas',
     stitky: ['dáta', 'web'],
     cislo: '1 553',
@@ -357,6 +369,7 @@ export const DOKAZY: Dokaz[] = [
   },
   {
     id: 'gramata',
+    pre: 'dalsie',
     nazov: 'gramata',
     stitky: ['dáta'],
     cislo: 'V2',
@@ -372,7 +385,7 @@ export const DOKAZY: Dokaz[] = [
 
 /** Prípadová štúdia (XDR-208), šablóna „čo mal → čo dostal → čísla“. Bez mena klienta (súhlas čaká na Adama). */
 export const PRIPAD_MAKLER = {
-  kto: 'Maklér v Bratislave',
+  kto: 'Jakub, maklér v Bratislave',
   mal: [
     'Dopyty cez telefón a všeobecný formulár, bez termínu v kalendári.',
     'Kontakty a obchody v hlave, poznámkach a správach.',
@@ -391,4 +404,15 @@ export const PRIPAD_MAKLER = {
   ],
   /** jadro: kalendár hlási chybu prihlásenia od 6. 8., preto „pred vydaním“, nie „v prevádzke“ */
   stav: 'Pred vydaním. Čísla sú z kontrol, nie z prevádzky.',
+} as const;
+
+/** Prípad terapeutky (XDR-267): druhá oficiálna klientka. Zdroj: workspace (projekt lucia: web Astro, rezervácie,
+ *  publikovanie, rast značky), jadro (register: Astro + Keystatic, picung.xvadur.com vracia 200, demo). */
+export const PRIPAD_TERAPEUTKA = {
+  kto: 'Lucia, terapeutka',
+  /* „mal“ = s čím prišla (zadanie projektu lucia: web, rezervácie, publikovanie, rast značky), nie citát klientky */
+  mal: ['Terapiu, značku na Instagrame, ale žiadne vlastné miesto na webe.', 'Termíny dohadované ručne.', 'Texty bez miesta, kde by žili a rástli.'],
+  dostal: ['Web v jej vizuáli a jej hlasom.', 'Rezerváciu hodinového online termínu z jej kalendára (pred spustením).', 'Vlastné publikovanie článkov bez programátora.'],
+  stav: 'Demo beží na picung.xvadur.com, rezervácia je overená lokálne, pred spustením.',
+  url: 'https://picung.xvadur.com/',
 } as const;
