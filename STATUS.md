@@ -11,6 +11,7 @@
   - Nové API (Worker): `/api/terminy/`, `/api/rezervacia/`, `/api/zapis/`, `/api/udalost/`. Úložisko dočasne v existujúcom KV `SESSION` s prefixom `v5:` (kód berie `LEADS`, ak pribudne). Resend iba so secrets `RESEND_API_KEY` + `RESEND_FROM`.
   - Overené: `npm run check` 0 chýb, `npm test` 23/23, build OK, `node work/qa/v5.mjs` (1440/375/reduced bez pretečenia a chýb konzoly), `node work/qa/odkazy.mjs` (6/6 externých odkazov 200), `node work/qa/formulare.mjs` proti lokálnemu `wrangler dev` (rezervácia, čakačka, duplicita, obsadený slot 409, UTM v zázname). JS domova 159 kB gz.
   - Nahraná verzia Workera `ace55d4e-ba78-4f8f-835c-709c53e6596f` (tag `v5-0e1967f`) s 0 % trafficu; produkcia ostáva na `9f8e5fef…` (100 %), xvadur.com stále `8cd283f`. Náhľadová URL nie je: Worker nemá zapnuté workers.dev / preview URLs (zapnutie mení nastavenie produkčného Workera).
+  - **V5.2 dešifrovanie (XDR-266, 26. 9. večer):** Adam zamietol tón V5 (pastely, plochý zoznam). Nová línia „web ako odtajňovaný spis“, päť dejstiev. Hotové iba hero + dejstvo 1 (`src/components/spis/`), zvyšok domova je ešte V5 a čaká na prerobenie. Lokálny statický náhľad: `python3 -m http.server 4191 -d dist/client`. Čísla pásu: `public/pulse.json` (snímka pulzu Korpusu, obnoví `node scripts/pulse-snapshot.mjs`), kým adam.xvadur.com/public/pulse.json nie je verejný.
   - Lokálny náhľad celého Workera: `npm run build && npx wrangler dev -c dist/server/wrangler.json --port 8787 --persist-to .wrangler/qa-state`.
 
 ## Otvorené v infraštruktúre
