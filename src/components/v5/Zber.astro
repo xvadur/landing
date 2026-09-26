@@ -1,0 +1,27 @@
+---
+/** Zber e-mailov (XDR-211): lákadlo za e-mail + newsletter Vydanie. Jeden formulár (ZapisForm) → /api/zapis/ so zdrojom
+ *  a UTM. Lákadlo je zatiaľ v príprave (obsah schváli Adam) — sľubujeme doručenie, keď bude hotové. */
+import ZapisForm from './ZapisForm';
+import { LAKADLO, NEWSLETTER } from '@/data/ponuka';
+import { Sipka } from './Symboly';
+---
+
+<section id="zapis" class="relative overflow-hidden border-b-3 border-ink bg-ink text-paper" aria-labelledby="zapis-nadpis">
+  <div class="relative mx-auto grid w-full max-w-7xl gap-10 px-4 py-20 sm:px-6 sm:py-24 lg:grid-cols-2 lg:gap-14 lg:px-10">
+    <div class="flex flex-col gap-5">
+      <p class="eyebrow text-yellow">Zadarmo za e-mail</p>
+      <h2 id="zapis-nadpis" class="font-display text-display-sm font-extrabold uppercase leading-[0.92] tracking-tighter">{LAKADLO.nazov}</h2>
+      <p class="max-w-lg text-lg text-paper/85">{LAKADLO.popis}</p>
+      <div class="relative max-w-lg">
+        <Sipka className="pointer-events-none absolute -top-16 -right-4 hidden h-14 w-14 rotate-12 text-yellow lg:block" smer="dole" />
+        <ZapisForm client:visible zdroj="lakadlo" produkt={LAKADLO.id} tlacidlo="Pošli mi návod" tmavy hotovo="Hotovo. Návod ti pošlem, keď ho dopíšem." />
+      </div>
+    </div>
+    <div class="flex flex-col gap-5 rounded-lg border-3 border-paper bg-yellow p-6 text-ink shadow-[9px_9px_0_0_var(--color-paper)] sm:p-8">
+      <p class="eyebrow">Newsletter</p>
+      <h3 class="font-display text-display-xs font-extrabold uppercase leading-[0.95] tracking-tight">{NEWSLETTER.nazov}</h3>
+      <p class="text-lg">{NEWSLETTER.popis}</p>
+      <ZapisForm client:visible zdroj="newsletter" produkt={NEWSLETTER.id} tlacidlo="Odoberať" hotovo="Hotovo. Prvé vydanie ti príde do e-mailu." />
+    </div>
+  </div>
+</section>
