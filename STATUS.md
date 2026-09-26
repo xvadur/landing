@@ -33,6 +33,7 @@
 - XVD-001: publikovať prvý Substack článok (text je na webe v `/texty/`).
 
 ## Rozhodnutia
+- 2026-09-26 — **ZAMKNUTÉ: V5.3 zdravotnícka línia** je smer webu. Zdravotnícky žargón spája všetko (vyšetrenie, diagnóza, triáž, liečba, pacienti, vitálne funkcie); hero V5 s XVADUR podčiarknutým EKG čiarou, motto trvalo čitateľné a dešifruje sa každé 4 s, fotka = sticker od ramien hore v uniforme s fonendoskopom, pás čísel = monitor vitálnych funkcií; Kto som = normálna cesta nemocnica → vyhodili → AI → agenti → XVADUR; neobrutalizmus bez pastelov, tón cool. Zamietnuté: V5.2 spis/odtajňovanie („nie som policajt, som zdravotník“), „7 zastávok od sedemnástich“, vety, ktoré znižujú (maturita, Biblia), slovo „hlas“. [A]
 - 2026-09-26 — V5 = predajný web pripravený na platenú reklamu (mobil prvý): hero s obrím XVADUR a fotkou ako nálepkou, kto som, pred a po, izba dôkazov, služba a produkty, konzultácia s rezerváciou, zber e-mailov. Makléri, kvíz a skóre ostávajú na svojich URL, z domova a menu ustúpia. [A]
 - 2026-09-25 — xvadur.com je hlavný web a obchod: predajný aj cool, zameraný na AI agentov a konzultácie; showcase, lákadlo za e-mail, newsletter, reklamy. Rebríček produktov sa rieši neskôr. [A]
 - 2026-09-19 — v4: Astro 7, Tailwind 4, OKLCH + Bricolage, neobrutalizmus a maximalizmus, motto „DIVIDED, WE ARE USELESS.“, 7 beatov príbehu verejných, bez maskota, X ako sprievodný znak a kurzor. Text na horúcej farbe je vždy ink. [A]
