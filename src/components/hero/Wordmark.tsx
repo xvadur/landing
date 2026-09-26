@@ -26,7 +26,8 @@ function Glyphs() {
   );
 }
 
-const Wordmark = forwardRef<SVGSVGElement, { className?: string }>(function Wordmark({ className }, ref) {
+/** `ciara` (V5, XDR-205): zvislá čiara v medzere XVA | DUR (A končí na 316, D začína na 330 → stred 323), ako na opone. */
+const Wordmark = forwardRef<SVGSVGElement, { className?: string; ciara?: boolean }>(function Wordmark({ className, ciara }, ref) {
   return (
     <svg
       ref={ref}
@@ -56,6 +57,7 @@ const Wordmark = forwardRef<SVGSVGElement, { className?: string }>(function Word
       <g fill="var(--color-ink)">
         <Glyphs />
       </g>
+      {ciara && <rect data-ciara x={320} y={-18} width={6} height={176} fill="var(--color-ink)" />}
     </svg>
   );
 });

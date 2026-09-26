@@ -7,7 +7,7 @@
  *  showModal() (fokus, Esc, inert zvyšku stránky natívne), zatvorenie: X, klik na pozadie, Esc, odkaz v menu,
  *  astro:before-swap. Pohyb: @starting-style + transition (kde prehliadač vie), reduced motion = 120 ms fade
  *  z global.css. */
-import { NAV } from '@/data/nav';
+import { DALSIE, KONZULTACIA_CTA, NAV } from '@/data/nav';
 import { XIcon } from '@phosphor-icons/react';
 
 const path = Astro.url.pathname;
@@ -43,10 +43,22 @@ const linkClass =
         </a>
       ))
     }
+    <p class="eyebrow mt-3">Ďalšie</p>
+    <div class="flex flex-wrap gap-2">
+      {
+        DALSIE.filter((d) => d.href !== '/konzultacia/').map((item) => (
+          <a href={item.href} class="press flex min-h-11 items-center rounded-lg border-3 border-ink bg-white px-3 font-display text-base font-extrabold uppercase shadow-brutal-sm">
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
   </nav>
   <div class="mt-auto border-t-3 border-ink p-4">
     <a
-      href="/konzultacia/"
+      href={KONZULTACIA_CTA.href}
+      data-track="konzultacia_klik"
+      data-track-miesto="menu-mobil"
       class="press flex min-h-12 items-center justify-center rounded-lg border-3 border-ink bg-hot px-4 py-3 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
     >
       Konzultácia

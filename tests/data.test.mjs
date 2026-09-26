@@ -1,19 +1,23 @@
 // Smoke testy dát (node --test). Bežia bez Astra: node 26 číta .ts natívne.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { NAV, COMMAND_ITEMS } from '../src/data/nav.ts';
+import { NAV, COMMAND_ITEMS, DALSIE } from '../src/data/nav.ts';
 import { ROUTES, routeByPath, ogUrlFor } from '../src/data/routes.ts';
 import { FRAZY_RODINY, PRAZDNE_PRIDAVNE, CITACIE, frazyRegex, pridavneRegex } from '../src/data/frazy.ts';
 import { POSTAVIL, MARQUEE_FAKTY, FAKTY, DOKAZY, ZIVE_CISLA, VYSLEDKY } from '../src/data/fakty.ts';
 import { BEATY } from '../src/data/beaty.ts';
 
-test('nav: 6 položiek v záväznom poradí, každá má route', () => {
+test('nav V5: menu v jednom riadku, každá stránka má route, kotvy smerujú na domov', () => {
   assert.deepEqual(
     NAV.map((n) => n.label),
-    ['HRY', 'KVÍZ', 'SKÓRE WEBU', 'TEXTY', 'MAKLÉRI', 'KONZULTÁCIA'],
+    ['KTO SOM', 'DÔKAZY', 'PONUKA', 'TEXTY', 'HRY'],
   );
-  for (const n of NAV) assert.ok(routeByPath(n.href), `chýba route pre ${n.href}`);
+  for (const n of [...NAV, ...DALSIE]) {
+    if (n.href.startsWith('/#')) continue;
+    assert.ok(routeByPath(n.href), `chýba route pre ${n.href}`);
+  }
   assert.equal(COMMAND_ITEMS[0].href, '/');
+  for (const p of ['/makleri/', '/kviz/', '/skore/']) assert.ok(COMMAND_ITEMS.some((c) => c.href === p), p);
 });
 
 test('routes: slugy unikátne, cesty s lomkou na konci, OG url', () => {

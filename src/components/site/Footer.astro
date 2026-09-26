@@ -2,7 +2,7 @@
 /** Pätička: © 2026 ADAM RUDAVSKÝ · XVADUR · POSTAVENÉ S AI · RIADENÉ ČLOVEKOM.
  *  Odkazy len Substack a GitHub (overené 200, 19. 9. 2026). X znak. */
 import XMark from './XMark.astro';
-import { NAV } from '@/data/nav';
+import { DALSIE, NAV } from '@/data/nav';
 
 const SOCIAL = [
   { href: 'https://substack.com/@xvadur', label: 'SUBSTACK' },
@@ -18,7 +18,7 @@ const SOCIAL = [
 
     <nav aria-label="Pätička" class="flex flex-wrap gap-x-5 gap-y-1 font-display text-lg font-extrabold uppercase">
       <a href="/" class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">Domov</a>
-      {NAV.map((item) => <a href={item.href} class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">{item.label}</a>)}
+      {[...NAV, ...DALSIE].map((item) => <a href={item.href} class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">{item.label}</a>)}
     </nav>
 
     <div class="flex flex-wrap gap-3">

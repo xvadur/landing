@@ -376,3 +376,40 @@
   -webkit-mask-image: radial-gradient(ellipse 52% 56% at 50% 50%, #000 62%, transparent 100%);
   mask-image: radial-gradient(ellipse 52% 56% at 50% 50%, #000 62%, transparent 100%);
 }
+
+/* ---------- V5 (26. 9. 2026) ---------- */
+/* parallax symbolov: posun o --par px počas prvej výšky obrazovky (CSS scroll timeline, 0 JS); kde nie je, stoja.
+   `translate` (nie transform), aby ostal rotate z utility triedy. */
+@supports (animation-timeline: scroll()) {
+  .par {
+    --tl: scroll(root);
+    animation-name: par-posun;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: var(--tl);
+    animation-range: 0 100vh;
+  }
+}
+@keyframes par-posun {
+  from { translate: 0 0; }
+  to { translate: 0 calc(var(--par, -100) * 1px); }
+}
+/* pečiatka sa pomaly otáča */
+.peciatka-toc > * { transform-origin: 60px 60px; }
+@media (prefers-reduced-motion: no-preference) {
+  .peciatka-toc text { animation: peciatka-toc 18s linear infinite; }
+}
+@keyframes peciatka-toc { to { transform: rotate(360deg); } }
+/* fotka-nálepka: pri hoveri sa pohne ako odlepená */
+.nalepka-telo {
+  transition: transform var(--duration-slow) var(--ease-spring), box-shadow var(--duration-slow) var(--ease-spring);
+}
+@media (hover: hover) {
+  .nalepka-foto:hover .nalepka-telo {
+    transform: rotate(-2deg) translate(-4px, -6px) scale(1.02);
+    box-shadow: 16px 16px 0 0 var(--color-ink);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .par { animation: none !important; translate: none !important; }
+}
