@@ -1,9 +1,10 @@
 # STATUS — xvadur.com
 
 ## Live
-- `https://xvadur.com/` = vetva `main` na commite `8cd283f` (v4 s hero mastheadom). Overené 26. 9. 2026: HTTP 200, v HTML je build `8cd283f`.
-- Hosting: Cloudflare Worker `xvadur-com` (statické assety + `/api/skore`). Custom domain `xvadur.com` je aktívna (prostredie production). Deploy: `npm run build && npx wrangler deploy -c dist/server/wrangler.json`, iba na Adamovo slovo „deploy“.
-- Stránky: domov, `/makleri/` (+ `/makleri/plan/` a PDF), `/kviz/`, `/skore/` (+ `/api/skore`), `/konzultacia/`, `/texty/` (1 článok), `/hry/` (+ `/hry/skrtaci-test/`), `/lab/`, 404, OG karty.
+- `https://xvadur.com/` = vetva `main` na commite `36c2521` (**V5.4**, nasadené 27. 9. 2026, Worker verzia `d10cf82d-a3d0-4dd4-a460-cbb3235f67c6`). Overené: HTTP 200, v HTML je nový domov; `/api/terminy/`, `/konzultacia/`, `/makleri/`, `/skore/`, `/texty/`, `/pulse.json` vracajú 200.
+- Domov V5.4 (XDR-271): rozloženie podľa cohesion.framer.ai v neobrutalizme so zdravotníckym žargónom. Pilulkové menu so sledovaním sekcie, Príjem (bežiaci XVADUR za fotkou, znak XVADUR ako vodoznak, plávajúce symboly, motto sa dešifruje každé 4 s), Vitálne funkcie naživo, Anamnéza ako vrstvené karty, Nástroje v pásoch, Liečba 01–03, Chorobopisy vodorovne (GSAP pin), Tézy, Vyšetrenie s rezerváciou, Zápis, Texty. Komponenty `src/components/v54/`.
+- Hosting: Cloudflare Worker `xvadur-com` (statické assety + API). Deploy: `npm run build && npx wrangler deploy -c dist/server/wrangler.json`, iba na Adamovo slovo „deploy“.
+- Rezervácia a zápis ukladajú do KV `SESSION` s prefixom `v5:`; e-maily cez Resend neodchádzajú, kým nie sú secrets `RESEND_API_KEY` + `RESEND_FROM`.
 
 ## Rozpracované
 - **V5 · Predajný web** (Linear, míľnik „V5 · Predajný web“) postavený na vetve `v5` (26. 9. 2026), **nenasadený, nepushnutý**. Zadanie `work/V5_ZADANIE.md`, konkurencia `work/V5_KONKURENCIA.md`.
@@ -33,6 +34,7 @@
 - XVD-001: publikovať prvý Substack článok (text je na webe v `/texty/`).
 
 ## Rozhodnutia
+- 2026-09-27 — **V5.4:** neobrutalizmus a zdravotnícky žargón ostávajú, mení sa rozloženie a podanie podľa cohesion.framer.ai (pohyb do strán ako aiaktivista). Smer V6 (redakčná vizitka bez neobrutalizmu) Adam zamietol. Znak XVADUR ako vodoznak cez celé hero. Nasadené na main. [A]
 - 2026-09-26 — **ZAMKNUTÉ: V5.3 zdravotnícka línia** je smer webu. Zdravotnícky žargón spája všetko (vyšetrenie, diagnóza, triáž, liečba, pacienti, vitálne funkcie); hero V5 s XVADUR podčiarknutým EKG čiarou, motto trvalo čitateľné a dešifruje sa každé 4 s, fotka = sticker od ramien hore v uniforme s fonendoskopom, pás čísel = monitor vitálnych funkcií; Kto som = normálna cesta nemocnica → vyhodili → AI → agenti → XVADUR; neobrutalizmus bez pastelov, tón cool. Zamietnuté: V5.2 spis/odtajňovanie („nie som policajt, som zdravotník“), „7 zastávok od sedemnástich“, vety, ktoré znižujú (maturita, Biblia), slovo „hlas“. [A]
 - 2026-09-26 — V5 = predajný web pripravený na platenú reklamu (mobil prvý): hero s obrím XVADUR a fotkou ako nálepkou, kto som, pred a po, izba dôkazov, služba a produkty, konzultácia s rezerváciou, zber e-mailov. Makléri, kvíz a skóre ostávajú na svojich URL, z domova a menu ustúpia. [A]
 - 2026-09-25 — xvadur.com je hlavný web a obchod: predajný aj cool, zameraný na AI agentov a konzultácie; showcase, lákadlo za e-mail, newsletter, reklamy. Rebríček produktov sa rieši neskôr. [A]
