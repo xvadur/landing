@@ -1,0 +1,148 @@
+---
+/** Pred a po (XDR-207): „Tvoj deň. Dve verzie.“ — vzor itashu (work/V5_KONKURENCIA.md), ale neobrutalisticky:
+ *  dve karty vedľa seba (bez agenta ✕ / s agentom ✓), každý riadok je vec, ktorú Adam naozaj postavil
+ *  (booking a follow-upy pre makléra, CRM, Korpus, Netopier). Pod tým pás výsledkov z fakty.ts (VYSLEDKY).
+ *  Čisté Astro, 0 JS: riadky nabiehajú cez `reveal` (view timeline), prečiarknutie na ľavej karte kreslí CSS. */
+import { VYSLEDKY } from '@/data/fakty';
+import { XZnak, Hviezda } from './Symboly';
+import { nbsp } from '@/components/home/nbsp';
+
+const RIADKY: { bez: string; s: string; kde: string }[] = [
+  {
+    bez: 'Dopyt zazvoní počas obhliadky. Nezdvihneš, klient volá ďalšiemu.',
+    s: 'Klient si sám vyberie termín na webe. Ty dostaneš správu na Telegram.',
+    kde: 'rezervácie pre makléra',
+  },
+  {
+    bez: 'Follow-up pošleš, keď si spomenieš. Často nikdy.',
+    s: 'Follow-up e-mail odíde sám v deň, ktorý si určíš.',
+    kde: 'follow-upy',
+  },
+  {
+    bez: 'Kontakty a obchody máš v hlave, v poznámkach a v správach.',
+    s: 'Každý kontakt, nehnuteľnosť a obchod je v jednom CRM.',
+    kde: 'CRM s 23 tabuľkami',
+  },
+  {
+    bez: 'Večer nevieš, koľko si toho reálne urobil.',
+    s: 'Každý deň je zmeraný: slová, prompty, dni v rade.',
+    kde: 'Korpus',
+  },
+  {
+    bez: 'Čítaš správy a nevieš, kto čo tvrdil a odkiaľ to má.',
+    s: 'Tvrdenia majú pôvod: redakcia, človek, prepis.',
+    kde: 'Netopier',
+  },
+];
+---
+
+<section id="pred-a-po" class="relative overflow-hidden border-b-3 border-ink bg-paper" aria-labelledby="pred-a-po-nadpis">
+  <div aria-hidden="true" class="tx-grain pointer-events-none absolute inset-0 [--tx:0.08]"></div>
+  <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
+    <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <div>
+        <p class="eyebrow">Pred a po / Z vlastnej praxe</p>
+        <h2 id="pred-a-po-nadpis" class="mt-4 font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+          Tvoj deň.<br />Dve verzie.
+        </h2>
+      </div>
+      <p class="max-w-md text-lg">
+        Nie je to sľub z prezentácie. Každý riadok „s agentom“ je systém, ktorý som postavil a ktorý vidíš nižšie v izbe dôkazov.
+      </p>
+    </div>
+
+    <div class="relative mt-12 grid gap-8 lg:grid-cols-2 lg:gap-10">
+      <!-- bez agenta -->
+      <div class="pap-bez brutal relative -rotate-1 bg-white p-6 sm:p-8">
+        <div class="flex items-center justify-between gap-4 border-b-3 border-ink pb-4">
+          <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">Bez agenta</h3>
+          <span class="flex h-12 w-12 items-center justify-center rounded-lg border-3 border-ink bg-hot font-display text-2xl font-extrabold text-ink shadow-brutal-sm" aria-hidden="true">✕</span>
+        </div>
+        <ul class="mt-2" role="list">
+          {
+            RIADKY.map((r, i) => (
+              <li class="reveal flex gap-4 border-b-2 border-dashed border-ink/30 py-4 last:border-0" style={`--i:${i}`}>
+                <span class="mt-0.5 font-mono text-sm font-bold text-hot" aria-hidden="true">✕</span>
+                <span class="pap-skrt text-lg leading-snug">{r.bez}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      <!-- stredová nálepka -->
+      <div class="pointer-events-none absolute top-1/2 left-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 lg:block" aria-hidden="true">
+        <Hviezda className="h-28 w-28 rotate-12 text-yellow" />
+        <span class="absolute inset-0 flex items-center justify-center font-display text-xl font-extrabold uppercase">vs</span>
+      </div>
+
+      <!-- s agentom -->
+      <div class="brutal relative rotate-1 bg-lime p-6 sm:p-8" style="box-shadow: var(--shadow-brutal-xl)">
+        <div class="flex items-center justify-between gap-4 border-b-3 border-ink pb-4">
+          <h3 class="font-display text-3xl font-extrabold uppercase tracking-tight sm:text-4xl">S agentom</h3>
+          <span class="flex h-12 w-12 items-center justify-center rounded-lg border-3 border-ink bg-white font-display text-2xl font-extrabold text-ink shadow-brutal-sm" aria-hidden="true">✓</span>
+        </div>
+        <ul class="mt-2" role="list">
+          {
+            RIADKY.map((r, i) => (
+              <li class="reveal flex gap-4 border-b-2 border-dashed border-ink/30 py-4 last:border-0" style={`--i:${i}`}>
+                <span class="mt-0.5 font-mono text-sm font-bold" aria-hidden="true">✓</span>
+                <span class="flex-1">
+                  <span class="block text-lg leading-snug font-bold">{r.s}</span>
+                  <span class="mt-1 inline-block rounded-sm border-2 border-ink bg-white px-2 py-0.5 font-mono text-xs uppercase tracking-[0.1em]">
+                    {r.kde}
+                  </span>
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+        <XZnak className="absolute -right-2 -bottom-6 h-16 w-14 rotate-12 text-hot sm:-right-5" />
+      </div>
+    </div>
+  </div>
+
+  <!-- pás výsledkov -->
+  <div class="relative border-t-3 border-ink bg-ink text-paper" aria-label="Výsledky">
+    <ul class="mx-auto grid w-full max-w-7xl grid-cols-2 gap-px bg-paper/20 sm:grid-cols-3 lg:grid-cols-6" role="list">
+      {
+        VYSLEDKY.map((v) => (
+          <li class="flex flex-col gap-1 bg-ink px-4 py-6 sm:px-6">
+            <span class="font-display text-3xl font-extrabold tabular-nums text-yellow sm:text-4xl">{nbsp(v.value)}</span>
+            <span class="font-mono text-xs uppercase leading-snug tracking-[0.1em]">{v.label}</span>
+            <span class="text-sm text-paper/60">{nbsp(v.note)}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* prečiarknutie na ľavej karte: čiara sa nakreslí, keď riadok vojde do obrazu (kde view() nie je, je hneď) */
+  .pap-skrt {
+    background-image: linear-gradient(var(--color-hot), var(--color-hot));
+    background-repeat: no-repeat;
+    background-position: 0 55%;
+    background-size: 100% 3px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  @supports (animation-timeline: view()) {
+    .pap-skrt {
+      --tl: view();
+      animation-name: pap-skrt;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--tl);
+      animation-range: entry 40% cover 45%;
+    }
+  }
+  @keyframes pap-skrt {
+    from { background-size: 0% 3px; }
+    to { background-size: 100% 3px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pap-skrt { animation: none !important; background-size: 100% 3px; }
+  }
+</style>

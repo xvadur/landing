@@ -8,6 +8,7 @@ import Marquee from '@/components/site/Marquee.astro';
 import Hero from '@/components/hero/Hero';
 import Opona from '@/components/home/Opona.astro';
 import KtoSom from '@/components/v5/KtoSom.astro';
+import PredAPo from '@/components/v5/PredAPo.astro';
 import PostavilSekcia from '@/components/home/PostavilSekcia.astro';
 import GravitaSekcia from '@/components/home/GravitaSekcia.astro';
 import Hry from '@/components/home/Hry.astro';
@@ -27,6 +28,7 @@ const r = routeByPath('/')!;
 
   <KtoSom />
   <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="pink" size="lg" duration={36} label="Fakty" />
+  <PredAPo />
   <PostavilSekcia />
   <GravitaSekcia />
   <Hry />
