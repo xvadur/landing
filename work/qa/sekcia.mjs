@@ -9,7 +9,7 @@ for (const [n, w, h] of [['d', 1440, 900], ['m', 375, 812]]) {
   const errs = [];
   p.on('pageerror', (e) => errs.push(e.message));
   await p.addInitScript(() => sessionStorage.setItem('opona', '1'));
-  await p.goto('http://127.0.0.1:4190' + cesta, { waitUntil: 'networkidle' });
+  await p.goto((process.env.QA_BASE ?? 'http://127.0.0.1:4190') + cesta, { waitUntil: 'networkidle' });
   const el = await p.$(sel);
   await el.scrollIntoViewIfNeeded();
   await p.evaluate((s) => document.querySelector(s).scrollIntoView({ block: 'end' }), sel);
