@@ -119,6 +119,7 @@ export const POSTAVIL: Projekt[] = [
     url: null,
   },
   {
+    // v4 karta (na domove V5 sa nepoužíva); 969 139 je staré číslo, aktuálne je KORPUS nižšie (XDR-266)
     id: 'vlastne-data',
     nazov: 'Vlastné dáta',
     cislo: '2 483 965',
@@ -177,16 +178,21 @@ export const OVERENE_DNA_TEXT = '26. 9. 2026';
 
 export type ZiveCislo = { kluc: string; label: string; value: number; note: string; source: Fakt['source'] };
 
-/** Živý pás v hero (XDR-205). Do dodania verejného endpointu (XDR-203) statická snímka z Korpusu v2
- *  (tabuľka `days`, iba napísané prompty, deň s hranicou 05:00), 26. 9. 2026 večer.
- *  `projekty` = počet kariet v izbe dôkazov (DOKAZY nižšie). */
-export const ZIVE_CISLA_ZDROJ: string | null = null; // XDR-203: sem príde URL verejného JSON s číslami
+/** Živý pás v hero (XDR-205, XDR-266). Zdroj = verejný pulz Korpusu v2 (adam.xvadur, corpus/pulse.mjs): iba agregáty.
+ *  Kým adam.xvadur.com/public/pulse.json nie je verejne dostupný (Access), web číta vlastnú snímku /pulse.json
+ *  (public/pulse.json, obnoví `node scripts/pulse-snapshot.mjs` pri bežiacom démonovi). Tieto hodnoty = tá istá snímka
+ *  ako statický fallback pre SSR. Kľúče = kľúče pulzu. */
+export const ZIVE_CISLA_ZDROJ: string | null = '/pulse.json';
+export const ZIVE_CISLA_SNIMKA = '26. 9. 2026 20:31';
 export const ZIVE_CISLA: ZiveCislo[] = [
-  { kluc: 'slova-mesiac', label: 'slov tento mesiac', value: 107365, note: 'napísané AI, 1.–26. 9. 2026', source: 'korpus' },
-  { kluc: 'prompty-dnes', label: 'promptov dnes', value: 64, note: '26. 9. 2026 do večera', source: 'korpus' },
-  { kluc: 'dni-v-rade', label: 'dní v rade', value: 65, note: 'každý deň aspoň jeden prompt, k 26. 9. 2026', source: 'korpus' },
-  { kluc: 'projekty', label: 'projektov v izbe', value: 11, note: 'karty v izbe dôkazov', source: 'jadro' },
+  { kluc: 'words_month', label: 'slov tento mesiac', value: 138921, note: 'napísané AI, september 2026', source: 'korpus' },
+  { kluc: 'prompts_today', label: 'promptov dnes', value: 87, note: 'dnes do večera', source: 'korpus' },
+  { kluc: 'streak_days', label: 'dní v rade', value: 65, note: 'každý deň aspoň jeden prompt', source: 'korpus' },
+  { kluc: 'projects_active', label: 'bežiacich projektov', value: 6, note: 'projekty v stave rozpracované (Linear)', source: 'korpus' },
 ];
+
+/** Korpus celkom (Korpus v2, iba napísané prompty, snímka 26. 9. 2026). Nahrádza staré 969 139 / 246 dní. */
+export const KORPUS = { slova: '572 469', prompty: '7 869', od: 'januára 2026', kDatumu: OVERENE_DNA_TEXT };
 
 /** Pás výsledkov pod „Pred a po“ (XDR-207). */
 export const VYSLEDKY: Fakt[] = [
@@ -195,7 +201,7 @@ export const VYSLEDKY: Fakt[] = [
   { label: 'Makléri v datasete', value: '2 034', note: 'Bratislavský kraj', source: 'spec05' },
   { label: 'Ľudia v mape médií', value: '558', note: '10 redakcií', source: 'spec05' },
   { label: 'Tokeny', value: '16,3 mld.', note: 'verejne overené (Tokscale, 15. 9. 2026)', source: 'jadro' },
-  { label: 'Vlastné slová', value: '969 139', note: 'za 246 dní', source: 'spec05' },
+  { label: 'Vlastné slová', value: '572 469', note: 'Korpus, od januára 2026', source: 'korpus' },
 ];
 
 export type Stitok = 'AI agent' | 'web' | 'dáta' | 'médiá';
@@ -279,9 +285,9 @@ export const DOKAZY: Dokaz[] = [
     id: 'korpus',
     nazov: 'Korpus',
     stitky: ['dáta'],
-    cislo: '969 139',
-    cisloPopis: 'vlastných slov za 246 dní',
-    riadok: 'Meranie vlastného písania: každý prompt, každý deň, rytmus a slová.',
+    cislo: '572 469',
+    cisloPopis: 'vlastných slov od januára 2026',
+    riadok: 'Meranie vlastného písania: 7 869 promptov, každý deň, rytmus a slová.',
     obrazok: null,
     url: null,
     overene: null,

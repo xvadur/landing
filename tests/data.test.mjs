@@ -62,8 +62,8 @@ test('fakty V5: dôkazy majú overený odkaz s dátumom, živé čísla sedia s 
     if (d.stav === 'coskoro') assert.equal(d.url, null, d.id);
     assert.ok(d.stitky.length > 0, d.id);
   }
-  const projekty = ZIVE_CISLA.find((z) => z.kluc === 'projekty');
-  assert.equal(projekty.value, DOKAZY.length);
-  assert.equal(ZIVE_CISLA.length, 4);
+  assert.deepEqual(ZIVE_CISLA.map((z) => z.kluc), ['words_month', 'prompts_today', 'streak_days', 'projects_active']);
+  for (const z of ZIVE_CISLA) assert.ok(Number.isFinite(z.value) && z.source === 'korpus');
+  assert.ok(!VYSLEDKY.some((v) => v.value === '969 139'), 'staré číslo Korpusu');
   for (const v of VYSLEDKY) assert.ok(v.source);
 });

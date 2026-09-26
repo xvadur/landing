@@ -1,0 +1,125 @@
+---
+/** Dejstvo 1 / 5 „Svet je zašifrovaný“ (XDR-266). Tri spisy: systém, médiá, trh. Hriech ako nesúhlas, nie „hlas“.
+ *  Mechanika: redakčné pruhy sa sťahujú pri scrolle (spis.ts), vybrané slová v citáte odkryje až hover / ťuk,
+ *  čísla sa dopočítajú, pečiatka „Odtajniť všetko“ odkryje celé dejstvo naraz.
+ *  Citáty sú Adamove vety z jadra (04_myslenie/svetonazor.md: „Pravdivé fragmenty, chybný výsledný model.“,
+ *  „Systém sa bráni evolúcii.“; línia dešifrovanie 26. 9.: „Všetko je gated…“, „Nie je cieľom nesúhlasiť, ale dešifrovať.“).
+ *  Čísla: Hriech 10 médií / 558 ľudí (fakty.ts, spec05), makléri 2 006 z 2 034 (fakty.ts KOTVY, pack13). */
+import { DOKAZY, KOTVY, OVERENE_DNA_TEXT } from '@/data/fakty';
+import { Sipka } from '@/components/v5/Symboly';
+
+const hriech = DOKAZY.find((d) => d.id === 'hriech')!;
+const fmt = (n: number) => new Intl.NumberFormat('sk-SK').format(n).replace(/\s/g, ' ');
+const pod = KOTVY.makleriPodLogom;
+---
+
+<div class="paska-pas relative overflow-hidden border-b-3 border-ink bg-yellow py-2" aria-hidden="true">
+  <div class="marquee" style="--marquee-duration:26s">
+    <div class="marquee-track">
+      {
+        [0, 1].map(() => (
+          <div class="flex items-center">
+            {Array.from({ length: 6 }).map(() => (
+              <span class="flex items-center gap-6 pr-6 font-mono text-sm font-bold whitespace-nowrap uppercase tracking-[0.2em]">
+                <span>Prístup obmedzený</span>
+                <span class="paska inline-block h-4 w-14 border-2 border-ink" />
+                <span>Odtajňuje sa</span>
+                <span class="paska inline-block h-4 w-14 border-2 border-ink" />
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<section id="dejstvo-1" class="relative overflow-hidden border-b-3 border-ink bg-ink text-paper [--rd-bar:var(--color-yellow)] [--rd-hint:var(--color-ink)]" aria-labelledby="dejstvo-1-nadpis" data-rd-skupina>
+  <div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-10">
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <p class="font-mono text-sm font-bold uppercase tracking-[0.18em] text-yellow">Dejstvo 1 / 5</p>
+      <button type="button" data-odtajnit class="peciatka min-h-11 cursor-pointer bg-transparent text-sm" style="--peciatka-rotate:3deg; color: var(--color-yellow); border-color: var(--color-yellow); outline-color: var(--color-yellow); mix-blend-mode: normal">
+        Odtajniť všetko
+      </button>
+    </div>
+    <h2 id="dejstvo-1-nadpis" class="mt-6 font-display text-display-lg leading-[0.98] font-extrabold tracking-tighter uppercase">
+      Svet je<br /><span class="whitespace-nowrap"><span class="rd" data-rd><span class="rd-t">zašifrovaný</span></span>.</span>
+    </h2>
+
+    <blockquote class="mt-12 max-w-5xl border-l-8 border-yellow pl-5 sm:pl-8">
+      <p class="font-display text-2xl leading-snug font-bold sm:text-4xl sm:leading-tight">
+        „Všetko je <span class="whitespace-nowrap"><span class="rd" data-rd="hover"><span class="rd-t">gated</span></span>.</span> Musíš niekoho{' '}<span class="whitespace-nowrap"><span class="rd" data-rd="hover"><span class="rd-t">poznať</span></span>,</span> aby si sa niekam niekde o niečom{' '}<span class="whitespace-nowrap"><span class="rd" data-rd="hover"><span class="rd-t">dozvedel</span></span>.“</span>
+      </p>
+      <footer class="mt-4 font-mono text-sm uppercase tracking-[0.14em] text-paper/60">— Adam Rudavský · prejdi myšou alebo ťukni na začiernené</footer>
+    </blockquote>
+
+    <ol class="mt-16 grid gap-6 lg:grid-cols-3 lg:gap-8" role="list">
+      <!-- 01 systém -->
+      <li class="spis-karta relative flex flex-col gap-5 border-3 border-paper bg-paper p-6 text-ink shadow-[8px_8px_0_0_var(--color-yellow)] sm:p-7">
+        <div class="flex items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.16em]">
+          <span>Spis 01 / Systém</span>
+          <span class="peciatka text-[0.65rem]" style="--peciatka-rotate:4deg">Dôverné</span>
+        </div>
+        <h3 class="font-display text-3xl leading-[0.95] font-extrabold uppercase tracking-tight sm:text-4xl">Pravidlá poznajú tí, čo ich píšu.</h3>
+        <p class="text-lg leading-relaxed">
+          Nemocnica, úrad, firma. Systém stojí na ľuďoch, ktorí ho ťahajú, a zároveň ich{' '}<span class="whitespace-nowrap"><span class="rd" data-rd><span class="rd-t">brzdí</span></span>.</span> Kto nevie, kde sa pýtať, čaká.
+        </p>
+        <p class="mt-auto border-t-3 border-ink pt-4 font-display text-xl font-extrabold">„Systém sa bráni evolúcii.“</p>
+      </li>
+
+      <!-- 02 médiá -->
+      <li class="spis-karta relative flex flex-col gap-5 border-3 border-paper bg-paper p-6 text-ink shadow-[8px_8px_0_0_var(--color-yellow)] sm:p-7 lg:translate-y-8">
+        <div class="flex items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.16em]">
+          <span>Spis 02 / Médiá</span>
+          <span class="peciatka text-[0.65rem]" style="--peciatka-rotate:-5deg">Nesúhlas</span>
+        </div>
+        <h3 class="font-display text-3xl leading-[0.95] font-extrabold uppercase tracking-tight sm:text-4xl">Pravdivé fragmenty. Chybný model.</h3>
+        <p class="text-lg leading-relaxed">
+          Médiá ti dajú fakty a náladu, nie mechanizmus. Vieš, čoho sa báť, nevieš, čo s tým. Kto ich vlastní a kto ich vedie, je
+          verejne doložené, len <span class="whitespace-nowrap"><span class="rd" data-rd><span class="rd-t">rozhádzané</span></span>.</span>
+        </p>
+        <div class="grid grid-cols-2 gap-3">
+          <p class="border-3 border-ink p-3"><span class="block font-display text-4xl font-extrabold tabular-nums" data-count="10">10</span><span class="font-mono text-xs uppercase tracking-[0.1em]">médií</span></p>
+          <p class="border-3 border-ink p-3"><span class="block font-display text-4xl font-extrabold tabular-nums" data-count="558">558</span><span class="font-mono text-xs uppercase tracking-[0.1em]">ľudí v mape</span></p>
+        </div>
+        <div class="mt-auto border-t-3 border-ink pt-4">
+          <p class="font-display text-xl font-extrabold">Hriech. Nesúhlas, rozložený na dôkazy.</p>
+          <a href={hriech.url!} target="_blank" rel="noopener noreferrer" data-track="dokaz_klik" data-track-miesto="dejstvo-1" class="press mt-3 inline-flex min-h-11 items-center gap-2 rounded-lg border-3 border-ink bg-yellow px-4 font-display text-base font-extrabold uppercase shadow-brutal-sm">
+            hriech.xvadur.com <span aria-hidden="true">↗</span>
+          </a>
+          <p class="mt-2 font-mono text-xs uppercase tracking-[0.1em] text-ink/60">overené {OVERENE_DNA_TEXT}</p>
+        </div>
+      </li>
+
+      <!-- 03 trh -->
+      <li class="spis-karta relative flex flex-col gap-5 border-3 border-paper bg-paper p-6 text-ink shadow-[8px_8px_0_0_var(--color-yellow)] sm:p-7 lg:translate-y-16">
+        <div class="flex items-center justify-between font-mono text-xs font-bold uppercase tracking-[0.16em]">
+          <span>Spis 03 / Trh</span>
+          <span class="peciatka text-[0.65rem]" style="--peciatka-rotate:6deg">Neviditeľné</span>
+        </div>
+        <h3 class="font-display text-3xl leading-[0.95] font-extrabold uppercase tracking-tight sm:text-4xl">Si riadok pod cudzím logom.</h3>
+        <p class="text-lg leading-relaxed">
+          V Bratislavskom kraji je{' '}<span class="font-bold" data-count={pod.z}>{fmt(pod.z)}</span>{' '}maklérov. Ako človek s vlastnou tvárou ich online nájdeš {fmt(pod.z - pod.value)}. Zvyšok je{' '}<span class="rd" data-rd><span class="rd-t">riadok pod logom</span></span>{' '}kancelárie.
+        </p>
+        <p class="mt-auto border-t-3 border-ink pt-4">
+          <span class="block font-display text-6xl leading-none font-extrabold tabular-nums"><span data-count={pod.value}>{fmt(pod.value)}</span><span class="text-3xl"> / {fmt(pod.z)}</span></span>
+          <span class="mt-1 block font-mono text-xs uppercase tracking-[0.1em]">maklérov bez vlastnej tváre na webe</span>
+        </p>
+      </li>
+    </ol>
+
+    <div class="mt-28 grid gap-8 lg:mt-36 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <p class="font-display text-display-sm leading-[0.92] font-extrabold tracking-tighter uppercase">
+        Nie je cieľom nesúhlasiť, ale <span class="whitespace-nowrap"><span class="rd" data-rd><span class="rd-t text-yellow">dešifrovať</span></span>.</span>
+      </p>
+      <div class="flex flex-col items-start gap-4 lg:items-end">
+        {/* ROZPOR 1 (XDR-200): „desať rokov“ ostáva v dnešnom znení */}
+        <p class="max-w-sm text-lg text-paper/80 lg:text-right">Viem, ako to vyzerá zvnútra. Desať rokov som bol jeho súčasťou.</p>
+        <a href="#kto-som" class="inline-flex min-h-11 items-center gap-3 font-display text-lg font-extrabold uppercase text-yellow underline decoration-[3px] underline-offset-8">
+          Dejstvo 2: Bol som vo vnútri
+          <Sipka className="h-8 w-8 text-yellow" smer="dole" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

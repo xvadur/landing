@@ -413,3 +413,72 @@
 @media (prefers-reduced-motion: reduce) {
   .par { animation: none !important; translate: none !important; }
 }
+
+/* ---------- V5.2 spis (XDR-266): redakčné pruhy, pečiatky, výstražná páska ---------- */
+/* Pruh kreslí CSS iba pod html.spis-js (bez JS je text čitateľný). Farba pruhu cez --rd-bar (default ink). */
+.rd {
+  position: relative;
+  white-space: nowrap;
+}
+html.spis-js .rd::after {
+  content: '';
+  position: absolute;
+  inset: 0.06em -0.12em 0.02em;
+  background: var(--rd-bar, var(--color-ink));
+  transform-origin: right center;
+  transform: scaleX(1);
+  transition: transform 520ms cubic-bezier(0.76, 0, 0.24, 1);
+  pointer-events: none;
+}
+html.spis-js .rd.rd-on::after {
+  transform: scaleX(0);
+}
+html.spis-js .rd[data-rd='hover']:not(.rd-on) {
+  cursor: pointer;
+}
+html.spis-js .rd[data-rd='hover']:not(.rd-on)::before {
+  content: 'odkry';
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  right: 0.25em;
+  transform: translateY(-50%);
+  font: 700 0.62rem/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--rd-hint, var(--color-yellow));
+  pointer-events: none;
+}
+.rd:focus-visible {
+  outline: 3px solid var(--color-stamp);
+  outline-offset: 2px;
+}
+
+/* výstražná páska: žlto-čierne šikmé pruhy */
+@utility paska {
+  background-image: repeating-linear-gradient(-45deg, var(--color-yellow) 0 18px, var(--color-ink) 18px 36px);
+}
+
+/* pečiatka: červený rám, dvojitá linka, mono verzálky, natočená */
+@utility peciatka {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.35em 0.7em;
+  border: 3px solid var(--color-stamp);
+  outline: 1.5px solid var(--color-stamp);
+  outline-offset: 2px;
+  border-radius: 4px;
+  color: var(--color-stamp);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  transform: rotate(var(--peciatka-rotate, -6deg));
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.spis-js .rd::after { transition: none !important; }
+}
