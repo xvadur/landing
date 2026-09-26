@@ -1,0 +1,153 @@
+---
+/** V5.4 Chorobopisy (vzor „Projects“ z cohesion.framer.ai a pohyb do strán z aiaktivista): systémy, ktoré Adam postavil,
+ *  ako veľké karty. Desktop bez reduced motion: sekcia sa pripne a karty idú vodorovne so scrollom (GSAP ScrollTrigger
+ *  sa načíta iba tu). Mobil: karty sa posúvajú prstom do strán (scroll-snap). Dáta: DOKAZY z src/data/fakty.ts,
+ *  bez domén, ktoré neodpovedajú (stav „čoskoro“), a bez zdravotných dát. */
+import { DOKAZY } from '@/data/fakty';
+import { Sipka } from '@/components/v5/Symboly';
+
+const KARTY = DOKAZY.filter((d) => d.stav !== 'coskoro' && d.id !== 'zdravotne-data' && !/zdravot/i.test(d.nazov));
+const FARBY = ['bg-yellow', 'bg-white', 'bg-hot', 'bg-white', 'bg-paper', 'bg-white', 'bg-yellow', 'bg-white'];
+const STAV: Record<string, string> = { zive: 'Živé', interne: 'Beží interne', coskoro: 'Čoskoro' };
+const domena = (u: string) => u.replace(/^https?:\/\//, '').replace(/\/$/, '');
+---
+
+<section id="chorobopisy" class="cho relative overflow-hidden border-b-3 border-ink bg-ink text-paper" aria-labelledby="cho-nadpis">
+  <div class="cho-pin relative flex flex-col py-20 lg:h-dvh lg:py-0">
+    <div class="mx-auto flex w-full max-w-[1600px] flex-wrap items-end justify-between gap-6 px-4 sm:px-6 lg:px-10 lg:pt-28">
+      <div>
+        <p class="font-mono text-sm font-bold uppercase tracking-[0.2em] text-yellow">✚ 04 · Chorobopisy</p>
+        <h2 id="cho-nadpis" class="mt-4 font-display text-[clamp(3rem,1.4rem+6vw,6.5rem)] leading-[0.86] font-extrabold tracking-tighter uppercase">
+          Čo som postavil
+        </h2>
+      </div>
+      <p class="max-w-md pb-2 text-lg text-paper/80 sm:text-xl">Každý systém so stavom, ako naozaj je. Kde je odkaz, dá sa otvoriť.</p>
+    </div>
+
+    <div class="cho-okno relative mt-10 flex-1 lg:mt-8 lg:flex lg:items-center">
+      <ul class="cho-pas flex snap-x snap-mandatory gap-5 overflow-x-auto px-4 pb-6 sm:px-6 lg:gap-8 lg:overflow-visible lg:px-10 lg:pb-0" role="list">
+        {
+          KARTY.map((d, i) => (
+            <li class="w-[82vw] shrink-0 snap-center sm:w-[420px] lg:w-[460px]">
+              <article
+                class:list={['relative flex h-full min-h-[440px] flex-col overflow-hidden rounded-[1.6rem] border-4 border-ink text-ink lg:min-h-[min(60vh,540px)]', FARBY[i % FARBY.length]]}
+                style={`box-shadow: 10px 10px 0 0 var(--color-yellow); transform: rotate(${i % 2 ? 1.2 : -1.2}deg)`}
+              >
+                <header class="flex items-center justify-between gap-3 border-b-4 border-ink px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.14em]">
+                  <span>Chorobopis {String(i + 1).padStart(2, '0')}</span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span class:list={['h-2.5 w-2.5 rounded-full border-2 border-ink', d.stav === 'zive' ? 'bg-hot' : 'bg-paper']} />
+                    {STAV[d.stav]}
+                  </span>
+                </header>
+                {d.obrazok && (
+                  <div class="h-40 overflow-hidden border-b-4 border-ink bg-paper">
+                    <img src={d.obrazok} alt="" loading="lazy" class="h-full w-full object-cover object-top" />
+                  </div>
+                )}
+                <div class="flex flex-1 flex-col gap-3 p-5 sm:p-6">
+                  <div class="flex flex-wrap gap-2">
+                    {d.stitky.map((s) => (
+                      <span class="rounded-full border-2 border-ink bg-paper px-2.5 py-0.5 font-mono text-xs font-bold uppercase">{s}</span>
+                    ))}
+                  </div>
+                  <h3 class="font-display text-4xl leading-[0.9] font-extrabold tracking-tight uppercase">{d.nazov}</h3>
+                  <p class="text-lg leading-snug">{d.riadok}</p>
+                  <div class="mt-auto flex items-end justify-between gap-4 border-t-3 border-ink pt-4">
+                    <div>
+                      <p class="font-display text-4xl leading-none font-extrabold whitespace-nowrap tabular-nums sm:text-[2.6rem]">{d.cislo}</p>
+                      <p class="mt-1 font-mono text-xs font-bold uppercase tracking-[0.1em]">{d.cisloPopis}</p>
+                    </div>
+                    {d.url ? (
+                      <a href={d.url} target="_blank" rel="noopener" class="press shrink-0 rounded-full border-3 border-ink bg-ink px-4 py-2 font-mono text-xs font-bold text-paper shadow-brutal-sm">
+                        {domena(d.url)} ↗
+                      </a>
+                    ) : (
+                      d.poznamka && <span class="shrink-0 rounded-full border-2 border-ink px-3 py-1 font-mono text-xs font-bold">{d.poznamka}</span>
+                    )}
+                  </div>
+                </div>
+              </article>
+            </li>
+          ))
+        }
+        <li class="hidden w-[340px] shrink-0 flex-col justify-center gap-5 lg:flex">
+          <p class="font-display text-6xl leading-[0.88] font-extrabold tracking-tighter uppercase">Ďalší chorobopis: tvoj.</p>
+          <a href="#konzultacia" data-track="konzultacia_klik" data-track-miesto="chorobopisy" class="press inline-flex min-h-14 w-fit items-center rounded-full border-3 border-paper bg-hot px-6 font-display text-lg font-extrabold uppercase text-ink">
+            Vyšetrenie →
+          </a>
+          <Sipka className="h-16 w-16 text-yellow" smer="hore-vpravo" />
+        </li>
+      </ul>
+      <div class="cho-priebeh pointer-events-none absolute right-10 bottom-8 left-10 hidden h-3 overflow-hidden rounded-full border-2 border-paper/40 lg:block" aria-hidden="true">
+        <div class="cho-bar h-full w-full origin-left scale-x-0 bg-yellow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cho-pas {
+    scrollbar-width: none;
+  }
+  .cho-pas::-webkit-scrollbar {
+    display: none;
+  }
+  @media (min-width: 1024px) {
+    .cho:not([data-gsap]) .cho-pin {
+      height: auto;
+      padding-bottom: 6rem;
+    }
+    .cho:not([data-gsap]) .cho-pas {
+      overflow-x: auto;
+    }
+    .cho:not([data-gsap]) .cho-priebeh {
+      display: none;
+    }
+    .cho[data-gsap] .cho-pas {
+      width: max-content;
+      will-change: transform;
+    }
+  }
+</style>
+
+<script>
+  const MQ = '(min-width: 1024px) and (prefers-reduced-motion: no-preference)';
+  let mm: { revert: () => void } | null = null;
+
+  async function init() {
+    mm?.revert();
+    mm = null;
+    const sekcia = document.querySelector<HTMLElement>('.cho');
+    const pas = sekcia?.querySelector<HTMLElement>('.cho-pas');
+    const bar = sekcia?.querySelector<HTMLElement>('.cho-bar');
+    if (!sekcia || !pas || !window.matchMedia(MQ).matches) return;
+    const [{ gsap }, { ScrollTrigger }] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger')]);
+    gsap.registerPlugin(ScrollTrigger);
+    const m = gsap.matchMedia();
+    mm = m;
+    m.add(MQ, () => {
+      sekcia.dataset.gsap = '';
+      const vzdialenost = () => Math.max(0, pas.scrollWidth - window.innerWidth + 80);
+      const lenis = (window as unknown as { __lenis?: { on: (e: string, f: () => void) => void; off?: (e: string, f: () => void) => void } }).__lenis;
+      const upd = () => ScrollTrigger.update();
+      lenis?.on('scroll', upd);
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: sekcia, start: 'top top', end: () => `+=${vzdialenost()}`, pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 },
+      });
+      tl.to(pas, { x: () => -vzdialenost(), ease: 'none' }, 0);
+      if (bar) tl.to(bar, { scaleX: 1, ease: 'none' }, 0);
+      ScrollTrigger.refresh();
+      return () => {
+        delete sekcia.dataset.gsap;
+        lenis?.off?.('scroll', upd);
+      };
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => void init());
+  document.addEventListener('astro:before-swap', () => {
+    mm?.revert();
+    mm = null;
+  });
+</script>

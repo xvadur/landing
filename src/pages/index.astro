@@ -1,37 +1,37 @@
 ---
-/** Domov xvadur.com V5.3 (26. 9. 2026, XDR-267 zdravotnícka línia; pôvodne V5, work/V5_ZADANIE.md). Predajný web pripravený na platenú reklamu, mobil prvý.
- *  0 Opona (raz za návštevu) · 1 Hero (XDR-205) · 2 Kto som, 7 zastávok vodorovne (XDR-206) · pás faktov ·
- *  3 Pred a po (XDR-207) · 4 Izba dôkazov (XDR-208) · 5 Ponuka: vlajka + čakačky + prečo nie iba ChatGPT (XDR-209) ·
- *  6 Konzultácia s rezerváciou (XDR-210, #konzultacia) · 7 Zber e-mailov: lákadlo + newsletter (XDR-211) ·
- *  8 Texty, Hriech, hry (XDR-214). Makléri, kvíz a skóre ostávajú na svojich URL (pätička, ⌘K).
- *  Plávajúce tlačidlo Konzultácia vykresľuje Base. */
+/** Domov xvadur.com V5.4 (27. 9. 2026): neobrutalizmus + zdravotnícky žargón (XDR-267), layout a pohyb podľa
+ *  cohesion.framer.ai a aiaktivista (pohyb do strán). Pilulkové menu so sledovaním sekcie, príjem s bežiacim XVADUR za
+ *  fotkou a plávajúcimi symbolmi, vitálne funkcie naživo, anamnéza ako vrstvené karty, inštrumentár v pásoch, liečba
+ *  s obrími číslami, chorobopisy vodorovne, tézy, vyšetrenie s rezerváciou, zápis, texty a hry.
+ *  Predošlé scény V5 (KtoSom, PredAPo, Dokazy, Ponuka) ostávajú v src/components/v5/, na domove sa nepoužívajú. */
 import Base from '@/layouts/Base.astro';
-import Marquee from '@/components/site/Marquee.astro';
-import Hero from '@/components/hero/Hero';
 import Opona from '@/components/home/Opona.astro';
-import KtoSom from '@/components/v5/KtoSom.astro';
-import PredAPo from '@/components/v5/PredAPo.astro';
-import Dokazy from '@/components/v5/Dokazy.astro';
-import Ponuka from '@/components/v5/Ponuka.astro';
+import Pilulky from '@/components/v54/Pilulky.astro';
+import Prijem from '@/components/v54/Prijem.astro';
+import Vitalne from '@/components/v54/Vitalne.astro';
+import Anamneza from '@/components/v54/Anamneza.astro';
+import Nastroje from '@/components/v54/Nastroje.astro';
+import Liecba from '@/components/v54/Liecba.astro';
+import Chorobopisy from '@/components/v54/Chorobopisy.astro';
+import Tezy from '@/components/v54/Tezy.astro';
 import Konzultacia from '@/components/v5/Konzultacia.astro';
 import Zber from '@/components/v5/Zber.astro';
 import TextyHry from '@/components/v5/TextyHry.astro';
-import { MARQUEE_FAKTY } from '@/data/fakty';
 import { routeByPath } from '@/data/routes';
-import { nbsp } from '@/components/home/nbsp';
 
 const r = routeByPath('/')!;
 ---
 
 <Base title={r.title} description={r.description} islands="full" header="none">
   <Opona />
-  <Hero client:load />
-  <KtoSom />
-  <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="ink" size="lg" duration={36} label="Fakty" />
-  <PredAPo />
-  <Dokazy />
-  <Marquee items={['VYŠETRENIE 30 MINÚT', 'TRIÁŽ', 'DIAGNÓZA', 'PLÁN LIEČBY', 'ZATIAĽ ZADARMO']} color="ink" reverse size="md" duration={30} label="Vyšetrenie" />
-  <Ponuka />
+  <Pilulky />
+  <Prijem />
+  <Vitalne />
+  <Anamneza />
+  <Nastroje />
+  <Liecba />
+  <Chorobopisy />
+  <Tezy />
   <Konzultacia />
   <Zber />
   <TextyHry />

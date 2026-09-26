@@ -1,0 +1,79 @@
+---
+/** V5.4 Tézy (vzor „Kind words from Clients“ z cohesion.framer.ai): namiesto recenzií, ktoré zatiaľ nie sú, Adamove
+ *  doslovné vety so zdrojom a dátumom z jadra (xvadur_core, výťah 27. 9. 2026). Dva pásy kariet proti sebe. */
+type Teza = { veta: string; kedy: string };
+const TEZY: Teza[] = [
+  { veta: 'Výborný opatrovateľ nie je výborný zamestnanec.', kedy: 'o nemocnici' },
+  { veta: 'Zdravotnícky systém sa strašne spolieha na iniciatívu zamestnancov a je to neudržateľné.', kedy: '8. 9. 2025' },
+  { veta: 'AI nemá robiť veci za človeka, AI má prinášať veci, ktoré by inak nemohli byť reálne.', kedy: 'o AI' },
+  { veta: 'AI je sandbox, ako Minecraft. Tá istá hra je v rukách dvoch ľudí absolútne odlišná.', kedy: '3. 8. 2025' },
+  { veta: 'Svet sa tak zmenil, že už to, že sa zmenil, nie je vidno.', kedy: 'o dnešku' },
+  { veta: 'Keď som mohol po slovensky rozprávať k počítaču, radikálne sa mi zmenil život. Mohol som začať tvoriť digitálne.', kedy: '22. 3. 2026' },
+  { veta: 'Ja som neni chlapec, ktorý sa hrá s AI. Ja som podnikateľ, ktorý reálne robí veci s AI.', kedy: '1. 7. 2026' },
+  { veta: 'Ľudia sa boja, že AI ovládne svet. Ja sa bojím, že AI bude za paywallom.', kedy: 'o AI' },
+];
+const R1 = TEZY.slice(0, 4);
+const R2 = TEZY.slice(4);
+const FARBY = ['bg-white', 'bg-yellow', 'bg-paper', 'bg-white'];
+---
+
+<section class="tez relative overflow-hidden border-b-3 border-ink bg-paper py-24" aria-labelledby="tez-nadpis">
+  <div class="mx-auto mb-12 w-full max-w-5xl px-4 text-center sm:px-6">
+    <p class="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink/60">✚ Zo záznamov</p>
+    <h2 id="tez-nadpis" class="mt-4 font-display text-[clamp(2.6rem,1.4rem+4.6vw,5.5rem)] leading-[0.88] font-extrabold tracking-tighter uppercase">Čo som si zapísal</h2>
+  </div>
+  {
+    [R1, R2].map((rad, r) => (
+      <div class="tez-okno overflow-hidden py-4">
+        <ul class:list={['tez-pas flex w-max gap-6 px-3', r === 1 && 'tez-spat']} role="list">
+          {[...rad, ...rad].map((t, i) => (
+            <li aria-hidden={i >= rad.length ? 'true' : undefined}>
+              <figure
+                class:list={['flex h-full w-[300px] flex-col justify-between gap-6 rounded-[1.4rem] border-4 border-ink p-6 shadow-[8px_8px_0_0_var(--color-ink)] sm:w-[440px] sm:p-8', FARBY[(i + r) % FARBY.length]]}
+                style={`transform: rotate(${i % 2 ? 1.2 : -1.2}deg)`}
+              >
+                <blockquote class="font-display text-2xl leading-tight font-extrabold sm:text-3xl">
+                  <span class="text-hot">„</span>
+                  {t.veta}
+                  <span class="text-hot">“</span>
+                </blockquote>
+                <figcaption class="flex items-center justify-between gap-3 border-t-3 border-ink pt-3 font-mono text-xs font-bold uppercase tracking-[0.12em]">
+                  <span>Adam Rudavský</span>
+                  <span>{t.kedy}</span>
+                </figcaption>
+              </figure>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .tez-pas {
+    animation: tpas 60s linear infinite;
+  }
+  .tez-spat {
+    animation-direction: reverse;
+  }
+  .tez-okno:hover .tez-pas {
+    animation-play-state: paused;
+  }
+  @keyframes tpas {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tez-pas {
+      animation: none;
+      flex-wrap: wrap;
+      width: auto;
+      justify-content: center;
+    }
+    .tez-pas li[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>

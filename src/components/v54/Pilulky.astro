@@ -1,0 +1,87 @@
+---
+/** V5.4 (27. 9. 2026, vzor cohesion.framer.ai prerobený do neobrutalizmu): plávajúce pilulkové menu hore v strede.
+ *  Aktívna pilulka sa presúva podľa sekcie na obrazovke (IntersectionObserver), vpravo stála pilulka „Vyšetrenie“ (hot).
+ *  Mobil: pás pilulky sa dá posúvať prstom, „Vyšetrenie“ ostáva vždy viditeľné. */
+const POLOZKY = [
+  { id: 'uvod', label: 'Príjem' },
+  { id: 'anamneza', label: 'Anamnéza' },
+  { id: 'nastroje', label: 'Nástroje' },
+  { id: 'liecba', label: 'Liečba' },
+  { id: 'chorobopisy', label: 'Chorobopisy' },
+  { id: 'texty', label: 'Texty' },
+];
+---
+
+<nav class="pil fixed inset-x-0 top-3 z-50 flex justify-center px-3 sm:top-5" aria-label="Hlavné menu">
+  <div class="flex max-w-full items-center gap-2">
+    <ul class="pil-pas no-scrollbar flex min-w-0 items-center gap-1 overflow-x-auto rounded-full border-3 border-ink bg-paper p-1 shadow-brutal-sm sm:shadow-brutal" role="list">
+      {
+        POLOZKY.map((p, i) => (
+          <li>
+            <a
+              href={`#${p.id}`}
+              data-pil={p.id}
+              class="pil-a flex h-10 items-center rounded-full border-2 border-transparent px-3.5 font-display text-sm font-extrabold whitespace-nowrap uppercase tracking-wide transition-[background-color,border-color,color] duration-200 sm:h-11 sm:px-4 sm:text-base"
+              aria-current={i === 0 ? 'true' : undefined}
+            >
+              {p.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a
+      href="#konzultacia"
+      data-track="konzultacia_klik"
+      data-track-miesto="menu"
+      class="press flex h-12 shrink-0 items-center gap-1.5 rounded-full border-3 border-ink bg-hot px-4 font-display text-sm font-extrabold uppercase text-ink shadow-brutal-sm sm:h-[3.4rem] sm:px-5 sm:text-base sm:shadow-brutal"
+    >
+      <span aria-hidden="true">✚</span> Vyšetrenie
+    </a>
+  </div>
+</nav>
+
+<style>
+  .pil-a[aria-current='true'] {
+    background: var(--color-ink);
+    color: var(--color-yellow);
+    border-color: var(--color-ink);
+  }
+  .pil-a:not([aria-current='true']):hover {
+    background: var(--color-yellow);
+    border-color: var(--color-ink);
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+</style>
+
+<script>
+  function init() {
+    const odkazy = [...document.querySelectorAll<HTMLAnchorElement>('[data-pil]')];
+    const sekcie = odkazy.map((a) => document.getElementById(a.dataset.pil!)).filter(Boolean) as HTMLElement[];
+    if (!sekcie.length) return;
+    const pas = document.querySelector<HTMLElement>('.pil-pas');
+    const aktivuj = (id: string) => {
+      odkazy.forEach((a) => {
+        const on = a.dataset.pil === id;
+        if (on) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+        if (on && pas && pas.scrollWidth > pas.clientWidth) pas.scrollTo({ left: a.offsetLeft - 8, behavior: 'smooth' });
+      });
+    };
+    const io = new IntersectionObserver(
+      (zaznamy) => {
+        const viditelne = zaznamy.filter((z) => z.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (viditelne[0]) aktivuj(viditelne[0].target.id);
+      },
+      { rootMargin: '-45% 0px -45% 0px', threshold: [0, 0.01] },
+    );
+    sekcie.forEach((s) => io.observe(s));
+    document.addEventListener('astro:before-swap', () => io.disconnect(), { once: true });
+  }
+  document.addEventListener('astro:page-load', init);
+</script>

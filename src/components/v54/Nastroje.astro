@@ -1,0 +1,91 @@
+---
+/** V5.4 Nástroje (vzor „My Stack“ z cohesion.framer.ai): inštrumentár, s ktorým Adam denne pracuje. Dva pásy kariet
+ *  idú proti sebe, na hover stoja. Každá karta = nástroj + na čo ho používam. Reduced motion: mriežka. */
+type Nastroj = { nazov: string; na: string; farba: string; znak: string };
+const RAD1: Nastroj[] = [
+  { nazov: 'Claude Code', na: 'hlavný operačný stôl: agenti, kód, dáta', farba: 'bg-hot', znak: '✳' },
+  { nazov: 'Codex', na: 'druhý chirurg: dlhé stavby cez noc', farba: 'bg-white', znak: '◎' },
+  { nazov: 'Cloudflare', na: 'weby, Workers, domény, tunely', farba: 'bg-yellow', znak: '☁' },
+  { nazov: 'Supabase', na: 'CRM a databázy pre klientov', farba: 'bg-white', znak: '⚡' },
+  { nazov: 'Linear', na: 'každá úloha od príjmu po odovzdanie', farba: 'bg-ink text-paper', znak: '▲' },
+  { nazov: 'Telegram', na: 'agent vo vrecku klienta', farba: 'bg-white', znak: '➤' },
+];
+const RAD2: Nastroj[] = [
+  { nazov: 'Astro', na: 'rýchle weby, aj tento', farba: 'bg-white', znak: '✦' },
+  { nazov: 'Resend', na: 'potvrdenia a follow-upy e-mailom', farba: 'bg-yellow', znak: '✉' },
+  { nazov: 'Python', na: 'crawlery, korpusy, analýzy', farba: 'bg-white', znak: '§' },
+  { nazov: 'Remotion', na: 'video z kódu', farba: 'bg-stamp text-paper', znak: '▶' },
+  { nazov: 'Notion', na: 'archív a databázy', farba: 'bg-white', znak: 'N' },
+  { nazov: 'GitHub', na: 'záznam každej zmeny', farba: 'bg-yellow', znak: '⌥' },
+];
+---
+
+<section id="nastroje" class="nas relative overflow-hidden border-b-3 border-ink bg-yellow" aria-labelledby="nas-nadpis">
+  <div class="mx-auto flex w-full max-w-[1600px] flex-wrap items-end justify-between gap-6 px-4 pt-24 pb-12 sm:px-6 sm:pt-28 lg:px-10">
+    <div>
+      <p class="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink/70">✚ 02 · Inštrumentár</p>
+      <h2 id="nas-nadpis" class="mt-4 font-display text-[clamp(3rem,1.4rem+6vw,7rem)] leading-[0.86] font-extrabold tracking-tighter uppercase">
+        Moje nástroje
+      </h2>
+    </div>
+    <p class="max-w-md pb-2 text-lg sm:text-xl">
+      Nie som programátor. Po slovensky rozprávam k počítaču a tieto nástroje robia, čo poviem. Každý deň od januára 2025.
+    </p>
+  </div>
+
+  <div class="flex flex-col gap-6 pb-24">
+    {
+      [RAD1, RAD2].map((rad, r) => (
+        <div class="nas-okno overflow-hidden py-3" aria-label={r === 0 ? 'Nástroje, prvý rad' : 'Nástroje, druhý rad'}>
+          <ul class:list={['nas-pas flex w-max gap-5 px-2', r === 1 && 'nas-spat']} role="list">
+            {[...rad, ...rad].map((n, i) => (
+              <li aria-hidden={i >= rad.length ? 'true' : undefined}>
+                <article
+                  class:list={[
+                    'lift flex h-44 w-[260px] flex-col justify-between rounded-[1.4rem] border-4 border-ink p-5 shadow-[8px_8px_0_0_var(--color-ink)] sm:h-52 sm:w-[320px] sm:p-6',
+                    n.farba,
+                  ]}
+                  style={`transform: rotate(${i % 2 ? 1.5 : -1.5}deg)`}
+                >
+                  <span class="flex h-12 w-12 items-center justify-center rounded-xl border-3 border-ink bg-paper font-display text-2xl text-ink">{n.znak}</span>
+                  <div>
+                    <h3 class="font-display text-3xl leading-none font-extrabold tracking-tight uppercase sm:text-4xl">{n.nazov}</h3>
+                    <p class="mt-2 text-base leading-snug opacity-85">{n.na}</p>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .nas-pas {
+    animation: npas 46s linear infinite;
+  }
+  .nas-spat {
+    animation-direction: reverse;
+  }
+  .nas-okno:hover .nas-pas {
+    animation-play-state: paused;
+  }
+  @keyframes npas {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .nas-pas {
+      animation: none;
+      flex-wrap: wrap;
+      width: auto;
+      justify-content: center;
+    }
+    .nas-pas li[aria-hidden='true'] {
+      display: none;
+    }
+  }
+</style>

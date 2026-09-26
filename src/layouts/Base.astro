@@ -92,7 +92,7 @@ const og = new URL(ogImage ?? ogUrlFor(Astro.url.pathname), site);
     {islands === 'full' && <Cursor client:only="react" transition:persist />}
     {islands === 'full' && <CommandK client:idle transition:persist />}
     {islands !== 'none' && <Toaster client:idle transition:persist />}
-    {chrome && <KonzultaciaPlavajuca domov={Astro.url.pathname === '/'} />}
+    {chrome && Astro.url.pathname !== '/' && <KonzultaciaPlavajuca />}
 
     <script>
       import { zachytUtm, zapniKliky } from '@/lib/meranie';

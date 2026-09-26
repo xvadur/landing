@@ -1,0 +1,246 @@
+---
+/** V5.4 Príjem (hero), vzor cohesion.framer.ai prerobený do neobrutalizmu (27. 9. 2026).
+ *  Hore „Ahoj, som Adam.“ a pod tým striedajúca sa rola. V strede fotka ako nálepka v uniforme s fonendoskopom (XDR-199,
+ *  zatiaľ zástupná), za ňou obrí XVADUR beží ako pás cez celú šírku. Okolo plávajú neobrutalistické symboly s tvrdým
+ *  tieňom (kríž, X, pilulka, hviezda, pečiatka, blesk) a na desktope sa hýbu za kurzorom. Pod fotkou motto, ktoré sa
+ *  každé 4 s dešifruje, tlačidlo na vyšetrenie a výzva na scroll. Reduced motion: pás stojí, symboly stoja, motto statické. */
+import { Blesk, Hviezda, Kriz, Peciatka, XZnak, ZdravotnikPlaceholder } from '@/components/v5/Symboly';
+
+const ROLY = ['zdravotník, ktorý stavia AI agentov', '10 rokov pri lôžku', 'každý deň s AI od januára 2025', 'autor Hriechu', 'firma jedného človeka a jeho agentov'];
+const PAS = Array.from({ length: 4 });
+---
+
+<section id="uvod" class="prijem relative overflow-hidden border-b-3 border-ink bg-paper tx-dots" aria-label="Príjem">
+  <div class="relative mx-auto flex min-h-dvh w-full max-w-[1600px] flex-col items-center px-4 pt-24 pb-10 sm:px-6 sm:pt-28 lg:pt-32">
+    <!-- pozdrav + rola -->
+    <div class="relative z-30 flex flex-col items-center text-center">
+      <h1 class="font-display text-[clamp(2.6rem,1.4rem+4.6vw,5.2rem)] leading-[0.95] font-extrabold tracking-tight">
+        Ahoj, som <span class="font-serif font-normal italic tracking-normal">Adam</span><span class="text-hot">.</span>
+      </h1>
+      <p class="rola relative mt-3 h-[1.6em] w-[min(92vw,44rem)] overflow-hidden font-mono text-sm font-bold uppercase tracking-[0.14em] sm:text-lg" aria-label={ROLY.join(', ')}>
+        {
+          ROLY.map((r, i) => (
+            <span class:list={['rola-r absolute inset-x-0 block whitespace-nowrap', i === 0 && 'is-on']} aria-hidden="true">
+              ✚ {r}
+            </span>
+          ))
+        }
+      </p>
+    </div>
+
+    <!-- scéna: pás XVADUR za fotkou, symboly okolo -->
+    <div class="scena relative mt-4 flex w-full flex-1 items-center justify-center py-6 sm:mt-2 lg:min-h-[400px]">
+      <div class="pas-okno pointer-events-none absolute inset-x-[-50vw] top-1/2 z-10 -translate-y-1/2 overflow-hidden" aria-hidden="true">
+        <div class="pas-beh flex w-max items-center">
+          {
+            PAS.map(() => (
+              <span class="flex items-center gap-[0.12em] pr-[0.12em] font-display text-[clamp(7rem,3rem+17vw,19rem)] leading-[0.82] font-extrabold tracking-[-0.04em] uppercase">
+                XVADUR
+                <Kriz className="h-[0.5em] w-[0.5em] text-stamp" />
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- fotka ako nálepka -->
+      <div class="foto relative z-20 w-[min(50vw,200px)] sm:w-[300px] lg:w-[330px]" data-hlbka="0.35">
+        <div class="-rotate-2 overflow-hidden rounded-[2rem] border-4 border-ink bg-yellow shadow-[10px_10px_0_0_var(--color-ink)]">
+          <ZdravotnikPlaceholder className="block aspect-square h-full w-full" />
+        </div>
+        <span class="absolute -bottom-4 left-1/2 -translate-x-1/2 rotate-2 rounded-full border-3 border-ink bg-white px-4 py-1.5 font-mono text-xs font-bold whitespace-nowrap uppercase tracking-[0.12em] shadow-brutal-sm sm:text-sm">
+          Adam Rudavský · XVADUR
+        </span>
+      </div>
+
+      <!-- plávajúce symboly (dekorácia) -->
+      <div class="symboly pointer-events-none absolute inset-0 z-30" aria-hidden="true">
+        <span class="sym left-[4%] top-[2%] w-16 sm:left-[14%] sm:w-28 lg:left-[18%]" data-hlbka="1.4"><span class="plav"><Kriz className="w-full rotate-12 text-stamp" /></span></span>
+        <span class="sym right-[3%] top-[0%] w-16 sm:right-[14%] sm:w-28 lg:right-[19%]" data-hlbka="1.1"><span class="plav d2"><Hviezda className="w-full text-yellow" /></span></span>
+        <span class="sym left-[2%] bottom-[4%] w-14 sm:left-[16%] sm:w-24 lg:left-[21%]" data-hlbka="0.9"><span class="plav d3"><XZnak className="w-full -rotate-12 text-hot" /></span></span>
+        <span class="sym right-[4%] bottom-[2%] w-20 sm:right-[15%] sm:w-32 lg:right-[20%]" data-hlbka="1.6"><span class="plav d4">
+          <svg viewBox="-6 -6 176 86" class="w-full rotate-[-24deg]" focusable="false">
+            <g transform="translate(6,6)"><rect x="0" y="0" width="160" height="70" rx="35" fill="var(--color-ink)" /></g>
+            <path d="M35 0H80V70H35A35 35 0 0 1 35 0Z" fill="var(--color-white)" stroke="var(--color-ink)" stroke-width="4" />
+            <path d="M80 0H125A35 35 0 0 1 125 70H80Z" fill="var(--color-hot)" stroke="var(--color-ink)" stroke-width="4" />
+            <path d="M22 22 Q30 14 42 14" fill="none" stroke="var(--color-ink)" stroke-width="4" stroke-linecap="round" opacity=".5" />
+          </svg>
+        </span></span>
+        <span class="sym hidden lg:block left-[6%] top-[38%] w-32" data-hlbka="0.6"><span class="plav d2"><Peciatka className="w-full -rotate-12 text-white" text="10 rokov pri lôžku" id="pec-prijem" /></span></span>
+        <span class="sym hidden lg:block right-[6%] top-[42%] w-20" data-hlbka="0.8"><span class="plav d3"><Blesk className="w-full rotate-12 text-yellow" /></span></span>
+      </div>
+    </div>
+
+    <!-- motto + akcia -->
+    <div class="relative z-30 mt-6 flex w-full flex-col items-center gap-5 text-center sm:mt-8">
+      <p class="motto font-display text-[clamp(1.7rem,1rem+2.6vw,3.2rem)] leading-none font-extrabold tracking-tight uppercase" data-motto="DIVIDED, WE ARE USELESS.">
+        DIVIDED, WE ARE USELESS.
+      </p>
+      <p class="max-w-xl text-lg leading-snug text-ink/80 sm:text-xl">
+        Desať rokov som držal zmeny v nemocnici. Dnes staviam agentov, ktorí držia prácu za ľudí.
+      </p>
+      <div class="flex w-full flex-col items-center justify-center gap-3 sm:w-auto sm:flex-row">
+        <a
+          href="#konzultacia"
+          data-track="konzultacia_klik"
+          data-track-miesto="prijem"
+          class="press flex min-h-14 w-full items-center justify-center gap-2 rounded-full border-3 border-ink bg-hot px-6 font-display text-base font-extrabold whitespace-nowrap uppercase text-ink shadow-brutal sm:w-auto sm:px-8 sm:text-xl"
+        >
+          Objednaj sa na vyšetrenie <span aria-hidden="true">→</span>
+        </a>
+        <a
+          href="#anamneza"
+          class="press flex min-h-14 w-full items-center justify-center rounded-full border-3 border-ink bg-white px-7 font-display text-lg font-extrabold uppercase shadow-brutal sm:w-auto"
+        >
+          Kto som ↓
+        </a>
+      </div>
+      <p class="mt-2 font-mono text-xs font-bold uppercase tracking-[0.3em] text-ink/60 sm:text-sm">✚ Scrolluj ✚ a spoznaj ma</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pas-beh {
+    animation: pas 38s linear infinite;
+  }
+  @keyframes pas {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .sym {
+    position: absolute;
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .plav {
+    display: block;
+    animation: plav 6s ease-in-out infinite;
+  }
+  .plav.d2 {
+    animation-duration: 7.5s;
+    animation-delay: -2s;
+  }
+  .plav.d3 {
+    animation-duration: 5.5s;
+    animation-delay: -1s;
+  }
+  .plav.d4 {
+    animation-duration: 8s;
+    animation-delay: -3s;
+  }
+  @keyframes plav {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(4deg);
+    }
+  }
+  .foto {
+    transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .rola-r {
+    transform: translateY(110%);
+    opacity: 0;
+    transition:
+      transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+      opacity 0.3s;
+  }
+  .rola-r.is-on {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .rola-r.is-out {
+    transform: translateY(-110%);
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pas-beh,
+    .plav {
+      animation: none;
+    }
+    .rola-r {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const ZNAKY = 'ABCDEFGHIJKLMNOPRSTUVXYZ0123456789✚#%&';
+  let cleanup: (() => void) | null = null;
+
+  function init() {
+    cleanup?.();
+    const sekcia = document.querySelector<HTMLElement>('.prijem');
+    if (!sekcia) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const zrusit: (() => void)[] = [];
+
+    /* striedanie roly */
+    const roly = [...sekcia.querySelectorAll<HTMLElement>('.rola-r')];
+    if (!reduced && roly.length > 1) {
+      let i = 0;
+      const iv = window.setInterval(() => {
+        const stara = roly[i];
+        i = (i + 1) % roly.length;
+        stara.classList.remove('is-on');
+        stara.classList.add('is-out');
+        roly[i].classList.remove('is-out');
+        roly[i].classList.add('is-on');
+        window.setTimeout(() => stara.classList.remove('is-out'), 500);
+      }, 2600);
+      zrusit.push(() => clearInterval(iv));
+    }
+
+    /* motto: dešifrovanie každé 4 s */
+    const motto = sekcia.querySelector<HTMLElement>('.motto');
+    if (!reduced && motto) {
+      const cielovy = motto.dataset.motto ?? motto.textContent ?? '';
+      let raf = 0;
+      const desifruj = () => {
+        const start = performance.now();
+        const dlzka = 700;
+        const krok = (t: number) => {
+          const p = Math.min(1, (t - start) / dlzka);
+          const hotovo = Math.floor(p * cielovy.length);
+          motto.textContent = [...cielovy]
+            .map((c, k) => (k < hotovo || c === ' ' || c === ',' || c === '.' ? c : ZNAKY[Math.floor(Math.random() * ZNAKY.length)]))
+            .join('');
+          if (p < 1) raf = requestAnimationFrame(krok);
+        };
+        raf = requestAnimationFrame(krok);
+      };
+      const spusti = () => {
+        desifruj();
+        const iv = window.setInterval(desifruj, 4000);
+        zrusit.push(() => clearInterval(iv));
+      };
+      if (document.getElementById('opona')) window.addEventListener('opona:done', spusti, { once: true });
+      else spusti();
+      zrusit.push(() => cancelAnimationFrame(raf));
+    }
+
+    /* symboly a fotka za kurzorom (desktop s myšou) */
+    if (!reduced && window.matchMedia('(pointer: fine) and (min-width: 1024px)').matches) {
+      const prvky = [...sekcia.querySelectorAll<HTMLElement>('[data-hlbka]')];
+      const pohyb = (e: PointerEvent) => {
+        const r = sekcia.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        prvky.forEach((el) => {
+          const h = Number(el.dataset.hlbka ?? 1);
+          el.style.transform = `translate(${(x * 50 * h).toFixed(1)}px, ${(y * 40 * h).toFixed(1)}px)`;
+        });
+      };
+      sekcia.addEventListener('pointermove', pohyb);
+      zrusit.push(() => sekcia.removeEventListener('pointermove', pohyb));
+    }
+
+    cleanup = () => zrusit.forEach((f) => f());
+  }
+
+  document.addEventListener('astro:page-load', init);
+  document.addEventListener('astro:before-swap', () => cleanup?.());
+</script>

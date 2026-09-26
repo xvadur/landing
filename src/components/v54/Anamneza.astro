@@ -1,0 +1,83 @@
+---
+/** V5.4 Anamnéza (Kto som), vzor „About Me“ z cohesion.framer.ai: karty sa pri scrolle vrstvia na seba, každá mierne
+ *  naklonená, ako listy chorobopisu. Cesta nemocnica → vyhodili → AI → agenti → XVADUR (src/data/cesta.ts), medzi
+ *  kartami dva Adamove doslovné citáty. Pozícia sticky funguje aj na mobile; vstup karty (náklon) cez CSS view timeline,
+ *  bez podpory alebo pri reduced motion stojí. */
+import { CESTA } from '@/data/cesta';
+import { Kriz, Peciatka, Sipka } from '@/components/v5/Symboly';
+
+const FARBY = ['bg-white', 'bg-stamp text-paper', 'bg-paper', 'bg-white', 'bg-yellow'];
+const NAKLON = ['-2deg', '1.6deg', '-1.2deg', '2deg', '-1deg'];
+---
+
+<section id="anamneza" class="ana relative border-b-3 border-ink bg-paper" aria-labelledby="ana-nadpis">
+  <div class="mx-auto w-full max-w-5xl px-4 pt-24 pb-10 text-center sm:px-6 sm:pt-32">
+    <p class="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink/60">✚ 01 · Anamnéza</p>
+    <h2 id="ana-nadpis" class="mt-4 font-display text-[clamp(3rem,1.4rem+6vw,7rem)] leading-[0.86] font-extrabold tracking-tighter uppercase">
+      Z nemocnice<br /><span class="relative inline-block">k agentom<Kriz className="absolute -top-4 -right-12 h-10 w-10 rotate-12 text-stamp sm:-right-16 sm:h-14 sm:w-14" /></span>
+    </h2>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-ink/75 sm:text-xl">
+      „Výborný opatrovateľ nie je výborný zamestnanec.“ Toto som pochopil po desiatich rokoch. Zvyšok je záznam.
+    </p>
+  </div>
+
+  <ol class="relative mx-auto flex w-full max-w-4xl flex-col px-4 pb-[18vh] sm:px-6" role="list">
+    {
+      CESTA.map((k, i) => (
+        <li class="ana-li sticky" style={`top: calc(6.5rem + ${i * 1.6}rem); --naklon: ${NAKLON[i]}; z-index: ${i + 1}`}>
+          <article
+            class:list={[
+              'ana-karta relative mb-[34vh] flex flex-col gap-4 rounded-[1.6rem] border-4 border-ink p-6 shadow-[10px_10px_0_0_var(--color-ink)] sm:gap-5 sm:p-10',
+              FARBY[i],
+            ]}
+          >
+            <header class="flex items-center justify-between gap-3 border-b-3 border-current/25 pb-3 font-mono text-xs font-bold uppercase tracking-[0.16em] sm:text-sm">
+              <span>Záznam {String(i + 1).padStart(2, '0')} / {String(CESTA.length).padStart(2, '0')}</span>
+              <span class="rounded-full border-2 border-current px-3 py-1">{k.kedy}</span>
+            </header>
+            <h3 class="font-display text-[clamp(2.6rem,1.4rem+5vw,5.5rem)] leading-[0.86] font-extrabold tracking-tighter uppercase">{k.nazov}</h3>
+            <p class="max-w-2xl text-lg leading-relaxed sm:text-2xl sm:leading-snug">{k.text}</p>
+            {k.citat && <blockquote class="border-l-4 border-current pl-4 font-display text-xl leading-snug font-bold sm:text-3xl">„{k.citat}“</blockquote>}
+            {i === 0 && <Peciatka className="absolute -right-5 -bottom-10 w-24 rotate-12 sm:-right-8 text-yellow sm:w-32" text="10 rokov pri lôžku" id="pec-ana" />}
+            {i === CESTA.length - 1 && (
+              <div class="flex flex-wrap items-center gap-4 pt-2">
+                <a
+                  href="#konzultacia"
+                  data-track="konzultacia_klik"
+                  data-track-miesto="anamneza"
+                  class="press inline-flex min-h-14 items-center gap-2 rounded-full border-3 border-ink bg-ink px-6 font-display text-lg font-extrabold uppercase text-paper shadow-brutal-sm"
+                >
+                  Ďalší pacient: ty →
+                </a>
+                <Sipka className="h-14 w-14 text-hot" smer="vpravo" />
+              </div>
+            )}
+          </article>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .ana-karta {
+    transform: rotate(var(--naklon));
+  }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .ana-karta {
+        animation: vstup linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 90%;
+      }
+      @keyframes vstup {
+        from {
+          transform: translateY(18%) rotate(calc(var(--naklon) * -4)) scale(0.94);
+        }
+        to {
+          transform: rotate(var(--naklon));
+        }
+      }
+    }
+  }
+</style>
