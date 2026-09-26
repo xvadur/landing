@@ -6,7 +6,12 @@
 - Stránky: domov, `/makleri/` (+ `/makleri/plan/` a PDF), `/kviz/`, `/skore/` (+ `/api/skore`), `/konzultacia/`, `/texty/` (1 článok), `/hry/` (+ `/hry/skrtaci-test/`), `/lab/`, 404, OG karty.
 
 ## Rozpracované
-- **V5 · Predajný web** (Linear, míľnik „V5 · Predajný web“) na vetve `v5` z `main`. Zadanie `work/V5_ZADANIE.md`, konkurencia `work/V5_KONKURENCIA.md`. Nenasadené.
+- **V5 · Predajný web** (Linear, míľnik „V5 · Predajný web“) postavený na vetve `v5` (26. 9. 2026), **nenasadený, nepushnutý**. Zadanie `work/V5_ZADANIE.md`, konkurencia `work/V5_KONKURENCIA.md`.
+  - Domov: hero (XDR-205), kto som vodorovne (XDR-206), pred a po (XDR-207), izba dôkazov (XDR-208), ponuka (XDR-209), konzultácia s rezerváciou (XDR-210), zber e-mailov (XDR-211), texty/Hriech/hry (XDR-214). Všetko v Lineari „Na overenie“.
+  - Nové API (Worker): `/api/terminy/`, `/api/rezervacia/`, `/api/zapis/`, `/api/udalost/`. Úložisko dočasne v existujúcom KV `SESSION` s prefixom `v5:` (kód berie `LEADS`, ak pribudne). Resend iba so secrets `RESEND_API_KEY` + `RESEND_FROM`.
+  - Overené: `npm run check` 0 chýb, `npm test` 23/23, build OK, `node work/qa/v5.mjs` (1440/375/reduced bez pretečenia a chýb konzoly), `node work/qa/odkazy.mjs` (6/6 externých odkazov 200), `node work/qa/formulare.mjs` proti lokálnemu `wrangler dev` (rezervácia, čakačka, duplicita, obsadený slot 409, UTM v zázname). JS domova 159 kB gz.
+  - Nahraná verzia Workera `ace55d4e-ba78-4f8f-835c-709c53e6596f` (tag `v5-0e1967f`) s 0 % trafficu; produkcia ostáva na `9f8e5fef…` (100 %), xvadur.com stále `8cd283f`. Náhľadová URL nie je: Worker nemá zapnuté workers.dev / preview URLs (zapnutie mení nastavenie produkčného Workera).
+  - Lokálny náhľad celého Workera: `npm run build && npx wrangler dev -c dist/server/wrangler.json --port 8787 --persist-to .wrangler/qa-state`.
 
 ## Otvorené v infraštruktúre
 - `www.xvadur.com` sa nerozlíši (ENOTFOUND). Cloudflare stále eviduje zone routes `xvadur.com/*` a `www.xvadur.com/*` a `wrangler.jsonc` ich obsahuje. Pred ďalším deployom treba zosúladiť domény (úloha XDR-212).
@@ -15,6 +20,7 @@
 - Záloha histórie vetiev z 22. 9.: `.git/branch-backups/2026-09-22/before-cleanup.bundle`, postup v `work/NOTES_poradie_vetiev_2026-09-22.md`.
 
 ## Čaká na Adama
+- V5: zapnúť preview URLs pre Worker `xvadur-com` (alebo pozrieť lokálne), pravidlá termínov v `src/data/terminy.ts` (Po–Pi 14:00–19:00), Resend secrets a odosielateľ, vlastné KV/D1 pre leady namiesto `SESSION`, ID pixelov (Meta/TikTok), súhlas klienta s menom Jakub a odkazom na jakubolsa.sk, či ukázať demo picung.xvadur.com, obsah lákadla „Prvý agent za večer“, texty produktov v `src/data/ponuka.ts`.
 - XDR-200: fakty o sebe (dĺžka praxe, rola, „vyhodili“ / „odišiel“, začiatok s AI). Do rozhodnutia ostáva na webe dnešné znenie, rozpory sú označené v `src/data/fakty.ts`.
 - XDR-199: fotka pre hero a „Kto som“ (zatiaľ zástupná).
 - Stripe Payment Link 9 € pre `/makleri/` (`src/data/makleri/config.ts` → `STRIPE_URL`), Cloudflare Web Analytics token, IG/TikTok do pätičky.
