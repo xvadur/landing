@@ -7,7 +7,7 @@ import Base from '@/layouts/Base.astro';
 import Marquee from '@/components/site/Marquee.astro';
 import Hero from '@/components/hero/Hero';
 import Opona from '@/components/home/Opona.astro';
-import KtoSom from '@/components/home/KtoSom.astro';
+import KtoSom from '@/components/v5/KtoSom.astro';
 import PostavilSekcia from '@/components/home/PostavilSekcia.astro';
 import GravitaSekcia from '@/components/home/GravitaSekcia.astro';
 import Hry from '@/components/home/Hry.astro';
@@ -25,10 +25,8 @@ const r = routeByPath('/')!;
   <Opona />
   <Hero client:load />
 
-  <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="yellow" size="lg" duration={36} label="Fakty" />
-  <Marquee items={['ADAM RUDAVSKÝ', 'XVADUR', 'SYSTÉMY, KTORÉ VIDIA ČLOVEKA']} color="pink" reverse size="md" duration={44} label="XVADUR" />
-
   <KtoSom />
+  <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="pink" size="lg" duration={36} label="Fakty" />
   <PostavilSekcia />
   <GravitaSekcia />
   <Hry />
