@@ -1,0 +1,60 @@
+---
+/** Ponuka (#ponuka) — tri karty, každá odpovie ČO TO JE · KDE BEŽÍ · ČO TI OTVORÍ (src/data/ponuka.ts).
+ *  Pod kartami riadok o cene (pack 04: rozsah a cena písomne po zmapovaní) a CTA na konzultáciu. Statické. */
+import Section from '@/components/site/Section.astro';
+import { PONUKA, PONUKA_CENA } from '@/data/ponuka';
+import { BTN_HOT, LINK } from './btn';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+
+const RIADKY: { k: 'co' | 'kde' | 'otvori'; label: string }[] = [
+  { k: 'co', label: 'Čo to je' },
+  { k: 'kde', label: 'Kde beží' },
+  { k: 'otvori', label: 'Čo ti otvorí' },
+];
+---
+
+<Section id="ponuka" bg="white" pad="lg" border="bottom" label="Ponuka" class="scroll-mt-20">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-end">
+    <p class="eyebrow lg:pb-3">Ponuka / Čo ti postavím</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Čo ti postavím</h2>
+  </div>
+  <p class="mt-6 max-w-2xl text-lg">
+    Žiadne „robím AI“. Pri každej veci je napísané, čo to je, kde to beží a čo ti to otvorí. Keď to neviem vysvetliť
+    takto, nepredávam to.
+  </p>
+
+  <ol class="mt-10 grid gap-6 lg:grid-cols-3" role="list">
+    {
+      PONUKA.map((p, i) => (
+        <li class:list={['brutal lift reveal relative flex h-full flex-col gap-5 p-6 sm:p-8', p.bg]} style={`--i:${i}`}>
+          <span class="x-stamp" aria-hidden="true"></span>
+          <p class="font-mono text-sm tracking-[0.14em]">{p.cislo}</p>
+          <h3 class="pr-10 font-display text-[clamp(1.75rem,1rem+1.6vw,2.375rem)] font-extrabold uppercase leading-[0.95] tracking-tight [overflow-wrap:normal]">{p.nazov}</h3>
+          <p class="font-serif text-xl italic leading-snug">{p.preKoho}</p>
+          <dl class="flex flex-col gap-4 border-t-3 border-ink pt-5">
+            {
+              RIADKY.map((r) => (
+                <div>
+                  <dt class="eyebrow">{r.label}</dt>
+                  <dd class="mt-1.5 text-base leading-relaxed">{p[r.k]}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <a href={p.priklad.href} class:list={[LINK, 'mt-auto text-base']}>
+            {p.priklad.label}
+            <ArrowRightIcon size={20} weight="bold" aria-hidden="true" />
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="mt-10 flex flex-col gap-6 rounded-lg border-3 border-ink bg-paper p-6 shadow-brutal sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+    <p class="max-w-2xl font-display text-xl font-bold leading-snug sm:text-2xl">{PONUKA_CENA.text}</p>
+    <a href={PONUKA_CENA.cta.href} class:list={[BTN_HOT, 'shrink-0']}>
+      {PONUKA_CENA.cta.label}
+      <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+    </a>
+  </div>
+</Section>

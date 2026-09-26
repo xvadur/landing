@@ -11,8 +11,8 @@ export const getStaticPaths = (() => {
   items.push({
     params: { slug: 'default' },
     props: {
-      title: 'Adam Rudavský',
-      description: 'Vysvetľujem AI, staviam agentové systémy a nástroje, ukazujem ako.',
+      title: 'Jeden človek. Celý aparát.',
+      description: 'Adam Rudavský — AI agenti, weby a systémy pre ľudí, ktorí robia firmu sami.',
       eyebrow: 'xvadur.com',
     },
   });

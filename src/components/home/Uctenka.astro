@@ -1,0 +1,50 @@
+---
+/** Účtenka webu v hero (v6): web „vypisuje účtenku sám na seba“ (koncept 13 §3.2 #10). Riadky = účtenky
+ *  z src/data/projekty.ts UCTENKA_RIADKY (každé číslo má kľúč, zdroj a dátum), pätka = údaje o builde
+ *  (src/lib/build.ts, vkladá astro.config.mjs). Čisté HTML + CSS, 0 kB JS. */
+import { UCTENKA_RIADKY, fakt } from '@/data/projekty';
+import { PECIATKA_LABEL, formatDatum } from '@/data/uctenky';
+import { BUILD, buildDatumText } from '@/lib/build';
+
+const riadky = UCTENKA_RIADKY.map(fakt);
+const najnovsie = riadky.map((r) => r.u.kDatumu).sort().at(-1) ?? '';
+const vsetkyZmerane = riadky.every((r) => r.u.peciatka === 'ZMERANE');
+---
+
+<aside
+  class="relative mx-auto w-full max-w-md rotate-[1deg] rounded-lg border-3 border-ink bg-white shadow-brutal-lg lg:mx-0 lg:max-w-none"
+  aria-label="Účtenka webu — zmerané čísla"
+>
+  <div class="flex items-center justify-between gap-3 border-b-3 border-dashed border-ink px-5 py-3 font-mono text-sm uppercase tracking-[0.14em]">
+    <span>Účtenka · xvadur.com</span>
+    <span>Nº {BUILD.commity || '—'}</span>
+  </div>
+
+  <dl class="px-5 py-3">
+    {
+      riadky.map((r) => (
+        <div class="flex items-baseline gap-2 py-2">
+          <dt class="shrink-0 font-mono text-sm uppercase tracking-[0.1em]">{r.label}</dt>
+          <span class="flex-1 self-end border-b-2 border-dotted border-ink/40" aria-hidden="true" style="margin-bottom:0.45em"></span>
+          <dd class="shrink-0 font-display text-2xl font-extrabold tabular-nums tracking-tight sm:text-3xl" title={`${r.u.zdroj} · k ${formatDatum(r.u.kDatumu)}`}>
+            {r.hodnota}
+            {r.jednotka && <span class="ml-1 font-mono text-sm font-medium uppercase tracking-wide text-ink/60">{r.jednotka}</span>}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+
+  <div class="flex flex-col gap-1 border-t-3 border-dashed border-ink px-5 py-3 font-mono text-sm uppercase tracking-[0.12em] text-ink/70">
+    <p>
+      {vsetkyZmerane ? PECIATKA_LABEL.ZMERANE : 'Zmerané / odhad'} · najnovšie k {formatDatum(najnovsie)} · zdroj pri každom čísle nižšie v dôkazoch
+    </p>
+    <p>
+      Build Nº{BUILD.commity || '—'}{BUILD.commit ? ` · ${BUILD.commit}` : ''} · {buildDatumText()}
+    </p>
+  </div>
+
+  <span class="sticker absolute -bottom-4 -right-3 bg-hot text-ink" style="--sticker-rotate:-6deg" aria-hidden="true">
+    {PECIATKA_LABEL.ZMERANE}
+  </span>
+</aside>

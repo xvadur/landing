@@ -7,11 +7,14 @@
  *  showModal() (fokus, Esc, inert zvyšku stránky natívne), zatvorenie: X, klik na pozadie, Esc, odkaz v menu,
  *  astro:before-swap. Pohyb: @starting-style + transition (kde prehliadač vie), reduced motion = 120 ms fade
  *  z global.css. */
-import { NAV } from '@/data/nav';
+import { NAV, NAV_CTA, navPath } from '@/data/nav';
 import { XIcon } from '@phosphor-icons/react';
 
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+const isCurrent = (href: string) => {
+  const base = navPath(href);
+  return base !== '/' && path.startsWith(base);
+};
 const linkClass =
   'press block rounded-lg border-3 border-ink bg-white px-4 py-3 font-display text-2xl font-extrabold uppercase shadow-brutal-sm aria-[current=page]:bg-yellow';
 ---
@@ -46,10 +49,10 @@ const linkClass =
   </nav>
   <div class="mt-auto border-t-3 border-ink p-4">
     <a
-      href="/konzultacia/"
+      href={NAV_CTA.href}
       class="press flex min-h-12 items-center justify-center rounded-lg border-3 border-ink bg-hot px-4 py-3 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
     >
-      Konzultácia
+      {NAV_CTA.label}
     </a>
   </div>
 </dialog>

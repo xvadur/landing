@@ -13,9 +13,9 @@ export const ROUTES: Route[] = [
   {
     path: '/',
     slug: 'domov',
-    title: 'Adam Rudavský — XVADUR',
+    title: 'Jeden človek. Celý aparát. — XVADUR',
     description:
-      'Vysvetľujem AI, staviam agentové systémy a nástroje, ukazujem ako. Hry, kvíz, texty, konzultácia.',
+      'Staviam AI agentov, weby a systémy pre ľudí, ktorí robia firmu sami. Dôkazy naživo, čísla so zdrojom, bezplatná konzultácia 30 minút.',
   },
   {
     path: '/makleri/',

@@ -5,7 +5,7 @@
 //   HTTP 200, 0 console/page errorov, scrollWidth == clientWidth, každý interný odkaz vedie na súbor v dist (alebo kotvu),
 //   celostránkový screenshot work/screens/final-<slug>-{desktop,mobile}.png, domov aj reduced motion → final-home-reduced.png,
 //   gz JS skutočne stiahnutý po prejdení celej stránky. Výsledok: work/qa/final-report.json + tabuľka na stdout.
-import { chromium } from 'playwright';
+import { launch } from './browser.mjs';
 import { existsSync, readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { gzipSync } from 'node:zlib';
 import { join } from 'node:path';
@@ -84,7 +84,7 @@ async function scrollThrough(page) {
   await page.waitForLoadState('networkidle').catch(() => {});
 }
 
-const browser = await chromium.launch();
+const browser = await launch();
 const report = [];
 
 async function runRoute(vp, route, extra = {}) {

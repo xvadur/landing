@@ -1,0 +1,66 @@
+---
+/** Hero v6 (26. 9. 2026): bez opony, bez dešifrovania, bez obrieho wordmarku — jedna veta, ktorú na 459 realitných
+ *  weboch nemá nikto (účtenka trh.kotva.veta = 0): „Jeden človek. Celý aparát.“ Pod ňou ponuka jednou vetou, dve CTA
+ *  (konzultácia = obchod, dôkazy = dôvera) a účtenka webu (Uctenka.astro). Statické Astro, 0 kB JS.
+ *  Register: domov tyká (spec 05). Písmo cez tokeny; veľkosť h1 = clamp tak, aby „JEDEN ČLOVEK.“ sedelo na jeden
+ *  riadok od 375 px (≈ 7,5 em pri Bricolage 800) po 1 200 px kontajner. */
+import Uctenka from './Uctenka.astro';
+import { PRE_KOHO } from '@/data/ponuka';
+import { BTN_HOT_LG, BTN_WHITE } from './btn';
+import { ArrowDownIcon, ArrowRightIcon } from '@phosphor-icons/react';
+---
+
+<section class="tx-grain tx-dots relative overflow-hidden border-b-3 border-ink bg-paper [--tx:10%]" aria-label="Úvod">
+  <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-14 pt-10 sm:px-6 sm:pt-14 lg:px-10 lg:pb-20 lg:pt-20">
+    <p class="eyebrow">Adam Rudavský · AI agenti, weby a systémy · Bratislava</p>
+
+    <h1 class="mt-5 font-display text-[clamp(2.5rem,0.5rem+10.5vw,10rem)] font-extrabold uppercase leading-[0.86] tracking-tighter [text-wrap:initial]">
+      <span class="block">Jeden človek.</span>
+      <span class="mt-[0.22em] block leading-none">
+        <mark class="inline-block rotate-[-1deg] rounded-lg border-3 border-ink bg-yellow px-[0.12em] pb-[0.04em] pt-[0.02em] text-ink shadow-brutal">
+          Celý aparát.
+        </mark>
+      </span>
+    </h1>
+
+    <div class="mt-10 grid gap-10 lg:mt-14 lg:grid-cols-[1.25fr_1fr] lg:items-start lg:gap-14">
+      <div class="flex flex-col gap-6">
+        <p class="max-w-2xl font-display text-xl font-bold leading-tight tracking-tight sm:text-3xl">
+          Staviam AI agentov, weby a systémy pre ľudí, ktorí robia firmu sami.
+        </p>
+        <p class="max-w-xl text-lg leading-relaxed">
+          Nie prezentácie, bežiace veci. Každé číslo na tomto webe má zdroj a dátum a každý projekt má aj riadok
+          „čo treba opraviť“. Začíname bezplatnou polhodinou nad jednou tvojou úlohou.
+        </p>
+
+        <div class="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <a href="/konzultacia/" class={BTN_HOT_LG} data-cursor="vstup">
+            Bezplatná konzultácia
+            <ArrowRightIcon size={26} weight="bold" aria-hidden="true" />
+          </a>
+          <a href="#postavil" class={BTN_WHITE}>
+            Pozri dôkazy
+            <ArrowDownIcon size={22} weight="bold" aria-hidden="true" />
+          </a>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <p class="eyebrow">Pre koho</p>
+          <ul class="flex flex-wrap gap-2" role="list">
+            {
+              PRE_KOHO.map((k) => (
+                <li class="rounded-lg border-3 border-ink bg-white px-3 py-1.5 font-mono text-sm uppercase tracking-[0.14em] shadow-brutal-sm">
+                  {k}
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-4 lg:pt-0">
+        <Uctenka />
+      </div>
+    </div>
+  </div>
+</section>

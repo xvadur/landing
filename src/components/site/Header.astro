@@ -1,15 +1,23 @@
 ---
-/** Hlavička (podstránky + domov na sub-routách): wordmark (transition:name="wordmark"), nav zo src/data/nav.ts, ⌘K,
- *  mobilná navigácia. Hrubá spodná linka 3 px. Sticky (výška = --header-h v tokens.css).
- *  Na domovskej stránke (`/`) Base dostane `header="none"` a túto lištu nahradí obrí wordmark + menu priamo v Hero
- *  (20. 9.: „XVADUR v menu, v eyebrow aj v hero" — tri opakovania zlúčené do jedného, po vzore eduba.io: obrí
- *  wordmark hore, nav pod ním). Dialóg mobilnej navigácie je vytiahnutý do NavMobil.astro (zdieľaný s Hero). */
+/** Hlavička (všetky stránky vrátane domova, v6): wordmark (transition:name="wordmark"), nav zo src/data/nav.ts,
+ *  CTA KONZULTÁCIA (hot, NAV_CTA), ⌘K len keď je na stránke CommandK ostrov (prop commandK ← Base islands="full"),
+ *  mobilná navigácia (NavMobil.astro, natívny <dialog>). Hrubá spodná linka 3 px. Sticky (výška = --header-h). */
 import NavMobil from './NavMobil.astro';
-import { NAV } from '@/data/nav';
+import { NAV, NAV_CTA, navPath } from '@/data/nav';
 import { ListIcon } from '@phosphor-icons/react';
 
+interface Props {
+  /** vykresliť ⌘K tlačidlo (len keď Base osadí CommandK ostrov) */
+  commandK?: boolean;
+}
+const { commandK = false } = Astro.props;
+
 const path = Astro.url.pathname;
-const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+/* kotvy na domove („/#ponuka“) nie sú nikdy „aktuálna stránka“ */
+const isCurrent = (href: string) => {
+  const base = navPath(href);
+  return base !== '/' && path.startsWith(base);
+};
 ---
 
 <header class="sticky top-0 z-50 border-b-3 border-ink bg-paper">
@@ -26,13 +34,13 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
       />
     </a>
 
-    <nav aria-label="Hlavná navigácia" class="hidden items-center gap-1 lg:flex">
+    <nav aria-label="Hlavná navigácia" class="hidden items-center gap-0.5 lg:flex xl:gap-1">
       {
         NAV.map((item) => (
           <a
             href={item.href}
             aria-current={isCurrent(item.href) ? 'page' : undefined}
-            class="flex h-11 items-center rounded-lg border-3 border-transparent px-3 font-display text-base font-extrabold uppercase tracking-wide transition-colors duration-[var(--duration-base)] hover:border-ink hover:bg-yellow aria-[current=page]:border-ink aria-[current=page]:bg-yellow aria-[current=page]:shadow-brutal-sm"
+            class="flex h-11 items-center rounded-lg border-3 border-transparent px-2.5 font-display text-sm font-extrabold uppercase tracking-wide transition-colors duration-[var(--duration-base)] hover:border-ink hover:bg-yellow aria-[current=page]:border-ink aria-[current=page]:bg-yellow aria-[current=page]:shadow-brutal-sm xl:px-3 xl:text-base"
           >
             {item.label}
           </a>
@@ -41,15 +49,26 @@ const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWi
     </nav>
 
     <div class="flex items-center gap-2">
-      <button
-        type="button"
-        data-commandk
-        class="press hidden h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm lg:flex"
-        aria-label="Otvoriť príkazovú paletu (⌘K)"
-        title="⌘K / Ctrl K"
+      {
+        commandK && (
+          <button
+            type="button"
+            data-commandk
+            class="press hidden h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm xl:flex"
+            aria-label="Otvoriť príkazovú paletu (⌘K)"
+            title="⌘K / Ctrl K"
+          >
+            <span aria-hidden="true">⌘K</span>
+          </button>
+        )
+      }
+      <a
+        href={NAV_CTA.href}
+        aria-current={isCurrent(NAV_CTA.href) ? 'page' : undefined}
+        class="press hidden h-11 items-center rounded-lg border-3 border-ink bg-hot px-4 font-display text-sm font-extrabold uppercase tracking-wide text-ink shadow-brutal-sm hover:bg-hot-hover lg:flex xl:text-base"
       >
-        <span aria-hidden="true">⌘K</span>
-      </button>
+        {NAV_CTA.label}
+      </a>
       <button
         type="button"
         data-nav-open

@@ -1,0 +1,35 @@
+---
+/** Ako pracujem — tri kroky (src/data/ponuka.ts KROKY_PRACE). Nadpis „Rozmýšľam. Staviam. Ukazujem.“ ostáva z v4
+ *  (port legacy), karty prepísané na proces s odkazmi na /konzultacia/ (#priebeh, #riesenie) a #postavil. Statické. */
+import Section from '@/components/site/Section.astro';
+import { KROKY_PRACE } from '@/data/ponuka';
+import { LINK } from './btn';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+---
+
+<Section id="ako-pracujem" bg="paper" pad="lg" border="bottom" label="Ako pracujem" class="tx-grain [--tx:0.08] scroll-mt-20">
+  <div class="relative z-10">
+    <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-start">
+      <p class="eyebrow lg:pt-3">Ako pracujem / Tri kroky</p>
+      <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">
+        Rozmýšľam.<br />Staviam.<br />Ukazujem.
+      </h2>
+    </div>
+
+    <ol class="mt-10 grid gap-5 lg:grid-cols-3" role="list">
+      {
+        KROKY_PRACE.map((k, i) => (
+          <li class:list={['lift reveal relative flex min-h-72 flex-col gap-4 rounded-lg border-3 border-ink p-6 shadow-brutal sm:p-8', k.bg]} style={`--i:${i}`}>
+            <span class="font-display text-display-sm font-extrabold leading-none tracking-tighter text-hot">{k.cislo}</span>
+            <h3 class="font-display text-3xl font-extrabold uppercase tracking-wide">{k.sloveso}</h3>
+            <p class="text-base leading-relaxed">{k.text}</p>
+            <a href={k.odkaz.href} class:list={[LINK, 'mt-auto text-base']}>
+              {k.odkaz.label}
+              <ArrowRightIcon size={20} weight="bold" aria-hidden="true" />
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</Section>

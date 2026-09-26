@@ -1,8 +1,10 @@
 ---
-/** Pätička: © 2026 ADAM RUDAVSKÝ · XVADUR · POSTAVENÉ S AI · RIADENÉ ČLOVEKOM.
- *  Odkazy len Substack a GitHub (overené 200, 19. 9. 2026). X znak. */
+/** Pätička: © 2026 ADAM RUDAVSKÝ · XVADUR · POSTAVENÉ S AI · RIADENÉ ČLOVEKOM + účtenka buildu (číslo, hash, čas —
+ *  src/lib/build.ts, „web vypisuje účtenku sám na seba“). Nav = COMMAND_ITEMS (domov, nav, skóre, konzultácia) +
+ *  Vydanie (#vydanie). Odkazy len Substack a GitHub (overené 200, 19. 9. 2026). X znak. */
 import XMark from './XMark.astro';
-import { NAV } from '@/data/nav';
+import { COMMAND_ITEMS } from '@/data/nav';
+import { BUILD, buildDatumText } from '@/lib/build';
 
 const SOCIAL = [
   { href: 'https://substack.com/@xvadur', label: 'SUBSTACK' },
@@ -17,8 +19,8 @@ const SOCIAL = [
     </a>
 
     <nav aria-label="Pätička" class="flex flex-wrap gap-x-5 gap-y-1 font-display text-lg font-extrabold uppercase">
-      <a href="/" class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">Domov</a>
-      {NAV.map((item) => <a href={item.href} class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">{item.label}</a>)}
+      {COMMAND_ITEMS.map((item) => <a href={item.href} class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">{item.label}</a>)}
+      <a href="/#vydanie" class="inline-flex min-h-11 min-w-11 items-center hover:text-yellow">VYDANIE</a>
     </nav>
 
     <div class="flex flex-wrap gap-3">
@@ -41,6 +43,7 @@ const SOCIAL = [
     <div class="mx-auto flex w-full max-w-7xl flex-col gap-2 px-4 py-5 font-mono text-sm uppercase tracking-[0.14em] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
       <span>© 2026 Adam Rudavský · XVADUR</span>
       <span>Postavené s AI · Riadené človekom</span>
+      <span class="text-paper/70">Build Nº{BUILD.commity || '—'}{BUILD.commit ? ` · ${BUILD.commit}` : ''} · {buildDatumText()}</span>
     </div>
   </div>
 </footer>

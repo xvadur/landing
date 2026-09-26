@@ -1,5 +1,9 @@
 Front projektu. Jeden súbor = jedno issue. Stavy: draft → ready → running → review → blocked → done (presun do done/). Receipt píše /handoff. Odvodené sekcie STATUS.md regeneruje `node ~/xvadur_system/bin/xv status`.
 
+## v6 (26. 9. 2026, vetva `claude/determined-goldberg-xy19as`, nenasadené)
+- `NOTES_v6.md` = čo je nové, čo je preč, odchýlky. `V6_2026-09-26.md` = report pre Adama (zhrnutie, čo môže len on).
+- QA: `qa/browser.mjs` (Chromium z /opt/pw-browsers v cloude), `qa/final.mjs` + `qa/nav.mjs` bežia nad `dist/client` na 4190.
+
 ## v4 (19. 9. 2026, vetva `v4`)
 - `NOTES_zaklad.md` = kontrakt základu (cesty, tokeny, utility, Base, dáta, ostrovy) — čítať prvé. `NOTES_<stránka>.md` (domov, makleri, kviz, konzultacia, skore, lab) = čo agent postavil, odchýlky, otvorené. `NOTES_vendor_*.md` = katalóg vendorovaných kitov. `LICENCIE.md` = licencie (jediný limit: React Bits MIT + Commons Clause).
 - `V4_NOC_2026-09-19.md` = ranný report z nočnej stavby (zhrnutie, cesty, nálezy, odchýlky, čo môže len Adam, ďalšie kroky).

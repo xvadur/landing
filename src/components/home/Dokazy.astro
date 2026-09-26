@@ -1,0 +1,111 @@
+---
+/** Dôkazy (#postavil) — karty projektov zo src/data/projekty.ts. Každé číslo je účtenka (hodnota, pečiatka, zdroj,
+ *  dátum) a karta má natívne <details> „Účtenka“ s celým výpisom + riadok „čo treba opraviť“. Odkaz len na domény
+ *  s účtenkou o HTTP 200. Statické Astro (v4 tu mal React dialóg + NumberFlow + ImageTrail ≈ 60 kB). */
+import Section from '@/components/site/Section.astro';
+import { PROJEKTY, fakt } from '@/data/projekty';
+import { PECIATKA_LABEL, formatDatum, zdrojRiadok } from '@/data/uctenky';
+import { LINK } from './btn';
+import { ArrowRightIcon, ArrowUpRightIcon, PlusIcon } from '@phosphor-icons/react';
+
+const karty = PROJEKTY.map((p) => ({ p, hlavne: fakt(p.hlavne), fakty: p.fakty.map(fakt) }));
+const nazivo = PROJEKTY.filter((p) => p.url).length;
+const linkSmall = 'press inline-flex min-h-11 items-center gap-2 rounded-lg border-3 border-ink bg-white px-4 font-display text-base font-extrabold uppercase shadow-brutal-sm hover:bg-white-hover';
+---
+
+<Section id="postavil" bg="lilac" pad="lg" border="bottom" label="Dôkazy — čo som postavil" class="scroll-mt-20">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-end">
+    <p class="eyebrow lg:pb-3">Dôkazy / {PROJEKTY.length} projektov / {nazivo} s odkazom</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Čo som postavil</h2>
+  </div>
+  <p class="mt-6 max-w-2xl text-lg">
+    Nie tvrdenia, účtenky. Každé číslo má zdroj, metódu a dátum. Kde web žije, je odkaz. Kde niečo treba opraviť, je
+    to napísané rovno na karte.
+  </p>
+
+  <ul class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-4" role="list">
+    {
+      karty.map(({ p, hlavne, fakty }, i) => (
+        <li class:list={['brutal reveal relative flex h-full flex-col gap-3 p-5', p.bg]} style={`--i:${i}`}>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class:list={['sticker text-sm', p.stav.bg]} style={`--sticker-rotate:${i % 2 ? 3 : -3}deg`}>{p.stav.label}</span>
+            <span class="font-mono text-sm uppercase tracking-[0.1em] text-ink/60">
+              {PECIATKA_LABEL[hlavne.u.peciatka]} · k {formatDatum(hlavne.u.kDatumu)}
+            </span>
+          </div>
+
+          <p class="mt-2 font-display text-[clamp(2.25rem,1rem+2.6vw,3.5rem)] font-extrabold leading-none tracking-tight tabular-nums">
+            {hlavne.hodnota}
+            {hlavne.jednotka && <span class="ml-2 font-mono text-sm font-medium uppercase tracking-wide text-ink/70">{hlavne.jednotka}</span>}
+          </p>
+          <p class="eyebrow">{hlavne.label}</p>
+
+          <h3 class="mt-2 font-display text-2xl font-extrabold uppercase leading-tight">{p.nazov}</h3>
+          <p class="font-serif text-lg italic leading-snug">{p.preKoho}</p>
+          <p class="text-base leading-relaxed text-ink/85">{p.riadok}</p>
+
+          <details class="uctenka mt-auto rounded-lg border-3 border-ink bg-white">
+            <summary class="flex cursor-pointer items-center justify-between gap-3 px-3 py-2 font-mono text-sm uppercase tracking-[0.14em] [&::-webkit-details-marker]:hidden">
+              Účtenka
+              <PlusIcon size={16} weight="bold" aria-hidden="true" className="uctenka-plus transition-transform duration-[var(--duration-base)]" />
+            </summary>
+            <dl class="flex flex-col gap-3 border-t-3 border-ink px-3 py-3">
+              {
+                fakty.map((f) => (
+                  <div>
+                    <dt class="font-mono text-sm uppercase tracking-[0.1em] text-ink/70">{f.label}</dt>
+                    <dd class="font-display text-lg font-extrabold tabular-nums tracking-tight">
+                      {f.hodnota}
+                      {f.jednotka && <span class="ml-1 font-mono text-sm font-medium uppercase text-ink/60">{f.jednotka}</span>}
+                    </dd>
+                    <dd class="break-words font-mono text-sm leading-snug text-ink/60">{PECIATKA_LABEL[f.u.peciatka]} · {zdrojRiadok(f.u)}</dd>
+                  </div>
+                ))
+              }
+            </dl>
+            {
+              p.oprava && (
+                <p class="border-t-3 border-ink bg-paper px-3 py-3 text-sm leading-snug">
+                  <strong class="font-display uppercase tracking-wide text-hot">Čo treba opraviť:</strong> {p.oprava}
+                </p>
+              )
+            }
+          </details>
+
+          {
+            p.url ? (
+              <a href={p.url} target="_blank" rel="noopener noreferrer" class={linkSmall}>
+                {p.domena ?? p.url}
+                <ArrowUpRightIcon size={18} weight="bold" aria-hidden="true" />
+              </a>
+            ) : p.interny ? (
+              <a href={p.interny.href} class={linkSmall}>
+                {p.interny.label}
+                <ArrowRightIcon size={18} weight="bold" aria-hidden="true" />
+              </a>
+            ) : p.domena ? (
+              <p class="font-mono text-sm tracking-wider text-ink/70">{p.domena} · bez odkazu</p>
+            ) : null
+          }
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="mt-10 flex flex-wrap items-center justify-between gap-4">
+    <p class="max-w-xl text-base text-ink/80">
+      Čísla sú zo súboru účteniek na disku (pečiatka ZMERANÉ = číslo priamo zo súboru, ODHAD = model s metódou).
+      Nič sa neprepisuje ručne.
+    </p>
+    <a href="/konzultacia/" class={LINK}>
+      Chcem niečo také pre seba
+      <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+    </a>
+  </div>
+</Section>
+
+<style>
+  details.uctenka[open] .uctenka-plus {
+    transform: rotate(45deg);
+  }
+</style>

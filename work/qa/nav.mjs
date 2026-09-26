@@ -1,7 +1,7 @@
 // Mobilná navigácia (natívny <dialog> v Header.astro): otvoriť, zavrieť X / Esc / pozadie / odkaz, ClientRouter navigácia, desktop skrytý.
-import { chromium } from 'playwright';
+import { launch } from './browser.mjs';
 const base = `http://127.0.0.1:${process.env.PORT || 4190}`;
-const browser = await chromium.launch();
+const browser = await launch();
 const errs = [];
 const ctx = await browser.newContext({ viewport: { width: 375, height: 812 }, hasTouch: true, isMobile: true });
 const page = await ctx.newPage();

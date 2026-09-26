@@ -1,0 +1,53 @@
+---
+/** Nástroje (#nastroje) — vyskúšaj si namiesto brožúry: Škrtací test, Kvíz, Skóre webu (src/data/ponuka.ts NASTROJE,
+ *  popisy z routes.ts). Hry 2 a 3 „V stavbe“ ostávajú len na /hry/. Statické. */
+import Section from '@/components/site/Section.astro';
+import { NASTROJE } from '@/data/ponuka';
+import { routeByPath } from '@/data/routes';
+import { LINK } from './btn';
+import { ArrowRightIcon } from '@phosphor-icons/react';
+
+const karty = NASTROJE.map((n) => ({ ...n, r: routeByPath(n.path)! }));
+---
+
+<Section id="nastroje" bg="sky" pad="lg" border="bottom" label="Nástroje" class="scroll-mt-20">
+  <div class="grid gap-6 lg:grid-cols-[0.6fr_2fr] lg:items-end">
+    <p class="eyebrow lg:pb-3">Nástroje / Vyskúšaj si</p>
+    <h2 class="font-display text-display font-extrabold uppercase leading-[0.9] tracking-tighter">Namiesto brožúry</h2>
+  </div>
+  <p class="mt-6 max-w-2xl text-lg">
+    Tri veci, ktoré si spustíš hneď. Bez registrácie. Škrtací test a kvíz počíta tvoj prehliadač, skóre webu môj
+    Worker na Cloudflare.
+  </p>
+
+  <ul class="mt-10 grid gap-6 md:grid-cols-3" role="list">
+    {
+      karty.map((k, i) => (
+        <li>
+          <a
+            href={k.path}
+            class:list={['brutal lift press card-drop relative flex h-full min-h-64 flex-col gap-4 p-6', k.bg]}
+            style={`--i:${i}; animation-fill-mode: backwards`}
+            data-cursor="vstup"
+          >
+            <span class="x-stamp" aria-hidden="true"></span>
+            <span class="sticker self-start bg-lime text-sm" style="--sticker-rotate:-3deg">Naživo</span>
+            <h3 class="pr-8 font-display text-[clamp(1.75rem,1rem+1.6vw,2.375rem)] font-extrabold uppercase leading-[0.95] tracking-tight [overflow-wrap:normal]">{k.nazov}</h3>
+            <p class="text-base leading-relaxed">{k.r.description}</p>
+            <span class="mt-auto inline-flex items-center gap-2 font-display text-lg font-extrabold uppercase">
+              Spustiť
+              <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+
+  <div class="mt-10">
+    <a href="/hry/" class={LINK}>
+      Všetky hry (dve sú v stavbe)
+      <ArrowRightIcon size={22} weight="bold" aria-hidden="true" />
+    </a>
+  </div>
+</Section>

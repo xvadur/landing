@@ -1,38 +1,38 @@
 ---
-/** Domov xvadur.com v4 (spec 05 §2, doc 10 §4, ratifikácie 01 §8). Poradie sekcií:
- *  0 Opona (úvod webu, raz za návštevu) · 1 Hero (ostrov client:load, ASCII motto) · 2 marquee žltý (fakty) + ružový
- *  protismerný · 3 Kto som (žltý pás #kto-som + 7 beatov, čiara osi sa kreslí pri scrolle) · 5 Čo som postavil (#postavil) · 6 Gravity (prázdne frázy) · 7 Hry (#hry) · 8 Kvíz pás
- *  · 9 Texty (#texty) · 10 Makléri pás · 11 Konzultácia (port) · 12 Metóda (port). Pätička z Base. */
+/** Domov xvadur.com v6 (26. 9. 2026) — hlavný web a obchod (rozhodnutie 25. 9.): predajný aj cool, AI agenti
+ *  a konzultácie, dôkazy namiesto vizitky, lákadlo za e-mail. Zákaznícka cesta zhora nadol:
+ *  1 Hero + účtenka · 2 marquee (čo staviam) · 3 Ponuka (#ponuka: čo · kde · čo otvorí) · 4 Dôkazy (#postavil, účtenky)
+ *  · 5 marquee (zmerané čísla) · 6 Ako pracujem (#ako-pracujem) · 7 Kto som (#kto-som) · 8 Nástroje (#nastroje)
+ *  · 9 Vydanie / odber (#vydanie) · 10 Konzultácia (Wizard). Pätička z Base (s účtenkou buildu).
+ *  Oproti v5: bez opony, dešifrovania, obrieho wordmarku, ASCII, Gravity, React dialógov — Header je späť ako lišta,
+ *  islands="lite" (Toaster pre Wizard). Jediný React na domove je Wizard v KonzultaciaBand (client:idle). */
 import Base from '@/layouts/Base.astro';
 import Marquee from '@/components/site/Marquee.astro';
-import Hero from '@/components/hero/Hero';
-import Opona from '@/components/home/Opona.astro';
+import Hero from '@/components/home/Hero.astro';
+import Ponuka from '@/components/home/Ponuka.astro';
+import Dokazy from '@/components/home/Dokazy.astro';
+import AkoPracujem from '@/components/home/AkoPracujem.astro';
 import KtoSom from '@/components/home/KtoSom.astro';
-import PostavilSekcia from '@/components/home/PostavilSekcia.astro';
-import GravitaSekcia from '@/components/home/GravitaSekcia.astro';
-import Hry from '@/components/home/Hry.astro';
-import Pasy from '@/components/home/Pasy.astro';
+import Nastroje from '@/components/home/Nastroje.astro';
+import Odber from '@/components/home/Odber.astro';
 import KonzultaciaBand from '@/components/port/KonzultaciaBand.astro';
-import Metoda from '@/components/port/Metoda.astro';
-import { MARQUEE_FAKTY } from '@/data/fakty';
 import { routeByPath } from '@/data/routes';
-import { nbsp } from '@/components/home/nbsp';
+import { MARQUEE_UCTENKY, fakt } from '@/data/projekty';
 
 const r = routeByPath('/')!;
+const CO_STAVIAM = ['AI AGENTI', 'WEBY A CRM', 'AUTOMATIZÁCIE', 'KONZULTÁCIE', 'DÔKAZY, NIE SĽUBY'];
+const zmerane = MARQUEE_UCTENKY.map(fakt).map((f) => `${f.hodnota} ${f.label}`.toUpperCase());
 ---
 
-<Base title={r.title} description={r.description} islands="full" header="none">
-  <Opona />
-  <Hero client:load />
-
-  <Marquee items={MARQUEE_FAKTY.map((f) => nbsp(f.value))} color="yellow" size="lg" duration={36} label="Fakty" />
-  <Marquee items={['ADAM RUDAVSKÝ', 'XVADUR', 'SYSTÉMY, KTORÉ VIDIA ČLOVEKA']} color="pink" reverse size="md" duration={44} label="XVADUR" />
-
+<Base title={r.title} description={r.description} islands="lite">
+  <Hero />
+  <Marquee items={CO_STAVIAM} color="yellow" size="lg" duration={36} label="Čo staviam" />
+  <Ponuka />
+  <Dokazy />
+  <Marquee items={zmerane} color="pink" reverse size="md" duration={48} label="Zmerané čísla" />
+  <AkoPracujem />
   <KtoSom />
-  <PostavilSekcia />
-  <GravitaSekcia />
-  <Hry />
-  <Pasy />
+  <Nastroje />
+  <Odber />
   <KonzultaciaBand />
-  <Metoda />
 </Base>

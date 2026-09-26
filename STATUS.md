@@ -1,5 +1,12 @@
 # STATUS — xvadur.com
 
+## v6 — 26. 9. 2026, vetva `claude/determined-goldberg-xy19as`, NENASADENÉ
+
+- Adam: „v5 je úplne napiču“ → domov postavený nanovo ako predajná stránka (rozhodnutie 25. 9.): Hero „Jeden človek. Celý aparát.“ + účtenka webu → Ponuka (3 karty: čo · kde beží · čo otvorí) → Dôkazy (8 kariet z `uctenky.ts`, každé číslo so zdrojom a dátumom, riadok „čo treba opraviť“) → Ako pracujem → Kto som (7 beatov) → Nástroje → Vydanie/odber (`/api/odber`) → Konzultácia. Header späť na domove s CTA KONZULTÁCIA; nav PONUKA · DÔKAZY · KVÍZ · HRY · TEXTY · MAKLÉRI.
+- Preč: opona, dešifrované motto, obrí wordmark/masthead, Gravity, React dialógy dôkazov, Metóda. JS domova 104,7 kB gz (bolo 253,6 / 147,2).
+- Overené: `npm run check` 0 chýb · `npm run build` zelený · `npm test` 29/29 · Playwright `work/qa/final.mjs` 25 meraní bez nálezu · `nav.mjs`, `api.mjs` OK · `/api/odber` handler overený z `dist/server` (405/400/413/200/502/503).
+- Čaká na Adama: slovo k v6, env pre odber (`ODBER_WEBHOOK_URL` n8n alebo `RESEND_API_KEY`), lákadlo za e-mail (`src/data/ponuka.ts` → `ODBER.magnet`), overiť 200 pre jakubolsa.sk a picung.xvadur.com (z cloudu bez siete), ratifikácie v `work/V6_2026-09-26.md`. Deploy len na slovo „deploy“.
+
 ## Aktuálne overené — 22. 9. 2026
 
 - Kanonická vetva `main`: `fd4f2e45b629a7d891718dc610a33203e69f3796`, lokálne aj na GitHube. Pri tejto kontrole čistý pracovný strom; kód ani produkcia nezmenené.
@@ -46,6 +53,7 @@ node work/qa/final.mjs                         # celá QA + screenshoty work/scr
 - Substack: profil `substack.com/@xvadur`; článok „Čo zostane, keď zavriem chat“ je na webe v `/texty/`; na Substacku publikované 0.
 
 ## Rozhodnutia
+- 2026-09-26 — v6 domova: predajná zákaznícka cesta, čísla len z účteniek (`uctenky.ts`), Header späť, motto „DIVIDED…“ z domova von, KVÍZ v nav namiesto SKÓRE WEBU, odber cez `/api/odber` [P, čaká na ratifikáciu]
 - 2026-09-25 — xvadur.com je hlavný web a obchod: predajný aj cool, zameraný na AI agentov a konzultácie; showcase, lákadlo za e-mail (prompt, návod, video), newsletter; akvizícia, outreach, reklamy, Etsy/Shopify skúšky [A]
 - 2026-09-25 — rebríček produktov sa rieši neskôr [A]
 - 2026-09-19 (noc, integrácia) — text na horúcej (`--color-hot`) je vždy **ink** (5,4 : 1), nie paper (3,2 : 1): tokens.css + button.tsx + všetky CTA; `eyebrow` a `x-divider` 14 px; pätička 14 px; `--header-h` token; mobilná navigácia = natívny `<dialog>` v Header.astro (0 kB React; vaul Drawer zmazaný) → články 5,9 kB gz, /makleri/ 11,6 kB; `public/_headers` noindex pre `/makleri/plan/`, PDF a `/lab/`; `work/screens/` v .gitignore [P, čaká na ratifikáciu]
@@ -58,6 +66,7 @@ node work/qa/final.mjs                         # celá QA + screenshoty work/scr
 - 2026-09-12 — pozicioning „digitálna zdravotná starostlivosť“ / „digitálny úraz“ [A]
 
 ## Ďalší krok
+- v6: Adam pozrie vetvu `claude/determined-goldberg-xy19as` (build + 4190), nastaví kanál odberu, doplní lákadlo, povie „deploy“ → merge do `main` + `npx wrangler deploy -c dist/server/wrangler.json` + WAF rate limit na `/api/odber`.
 - Nasadené 19. 9. Otvorené: BOSEN/Chovanec/Olša na `/makleri/` (Jakub má vidieť landing), Stripe link, CTA label 9 €, titulky beatov 3 a 6, rozpočet JS „základ + N kB“, DNS: zmazať staré CNAME na `landing-con.pages.dev` pre xvadur.com a www a prepnúť na custom domain Workera; Pages projekt `landing` buď vypnúť auto-build z `main`, alebo zmazať.
 - XVD-001 Publikovať prvý Substack článok (text je hotový a už na webe v `/texty/`).
 
@@ -65,6 +74,7 @@ node work/qa/final.mjs                         # celá QA + screenshoty work/scr
 - nič
 
 ## Posledný receipt
+- 2026-09-26: v6 domova na vetve `claude/determined-goldberg-xy19as` (report `work/V6_2026-09-26.md`, poznámky `work/NOTES_v6.md`)
 - 2026-09-19 noc: integrácia v4 (commit na `v4`, report `work/V4_NOC_2026-09-19.md`, kópia `~/xvadur_brand/xvadur_web_v4/12_V4_NOC_2026-09-19.md`)
 
 ## Inbox
