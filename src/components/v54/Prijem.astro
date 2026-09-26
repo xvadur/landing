@@ -11,6 +11,10 @@ const PAS = Array.from({ length: 4 });
 ---
 
 <section id="uvod" class="prijem relative overflow-hidden border-b-3 border-ink bg-paper tx-dots" aria-label="Príjem">
+  <!-- vodoznak: znak XVADUR cez celé hero, za všetkým -->
+  <div class="vodoznak pointer-events-none absolute inset-0 z-0 flex items-center justify-center" aria-hidden="true">
+    <span class="block aspect-square h-[min(140vw,118%)] bg-ink opacity-[0.07] lg:h-[112%]"></span>
+  </div>
   <div class="relative mx-auto flex min-h-dvh w-full max-w-[1600px] flex-col items-center px-4 pt-24 pb-10 sm:px-6 sm:pt-28 lg:pt-32">
     <!-- pozdrav + rola -->
     <div class="relative z-30 flex flex-col items-center text-center">
@@ -101,6 +105,10 @@ const PAS = Array.from({ length: 4 });
 </section>
 
 <style>
+  .vodoznak span {
+    -webkit-mask: url('/brand/xvadur-znak.svg') center / contain no-repeat;
+    mask: url('/brand/xvadur-znak.svg') center / contain no-repeat;
+  }
   .pas-beh {
     animation: pas 38s linear infinite;
   }
