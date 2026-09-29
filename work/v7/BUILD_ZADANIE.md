@@ -46,7 +46,7 @@ Adam: „Texty teraz neriešime, point je, aby si spravil buildy.“
 - JS stránky ≤ 250 kB gz (nad 180 kB zdôvodni v README).
 
 ## Overenie (povinné pred koncom)
-1. `npx astro build --outDir dist-v7-NN` prejde; `npx astro check 2>&1 | grep -B2 -A6 "v7/web/NN\|pages/v7/NN"` bez chýb.
+1. Naraz stavia 10 agentov na 4 jadrách → build a check **vždy cez zámok**: `flock /tmp/v7-build.lock npx astro build --outDir dist-v7-NN` prejde; `flock /tmp/v7-build.lock npx astro check 2>&1 | grep -B2 -A6 "v7/web/NN\|pages/v7/NN"` bez chýb (chyby v cudzích variantoch ignoruj). Builduj rozumne zriedka.
 2. `node work/qa/serve.mjs <port> dist-v7-NN/client &`; Playwright (executablePath `/opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell`, skript v `/tmp/claude-0/-home-user-landing/dfbf09fa-9b7d-5e80-97fc-c749695c4537/scratchpad/`, nie v repe): `/v7/NN/` pri 1440×900, 375×812 (touch) a 1440 reduced motion — pretečenie 0, chyby konzoly a pageerror 0 (sieťové chyby `/api/*` na statickom serveri sú v poriadku, formulár musí ukázať slušnú chybu). Pred načítaním `sessionStorage.setItem('opona','1')` pre screenshoty obsahu; oponu odfoť zvlášť.
 3. Screenshoty celej stránky do `work/v7/vystup/NN/{d,m}.png` a 3–5 záberov kľúčových miest (`work/v7/vystup/NN/zaber-*.png`, viewport). **Pozri si ich (Read) a oprav, čo je škaredé, rozbité alebo prázdne.** Web musí vyzerať hotovo.
 4. JS gz veľkosť stránky do README.
