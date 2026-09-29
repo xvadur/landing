@@ -2,8 +2,8 @@
  *  ako mechanizmus, nie krivda, bez mien ľudí a inštitúcií. Text sa nemení.
  *  `rok` a `text` sú verbatim; `titulok` je pri beatoch 1 a 4 prvé slovo zo spec („Elektrotechnik", „Nemocnica"),
  *  pri ostatných krátky štítok zložený zo slov toho istého beatu (žiadny nový obsah). */
-/** ROZPORY (XDR-200): beat 4 („10 rokov“, „pomocný pracovník“) a beat 6 („Po desiatich rokoch ma vyhodili“) ostávajú
- *  v dnešnom znení, kým Adam nerozhodne. Čo hovorí jadro: `src/data/fakty.ts`, blok ROZPORY v hlavičke. */
+/** ROZPORY (XDR-200): dĺžka praxe opravená 29. 9. 2026 [A] na 8 rokov (beat 4 a 6); „pomocný pracovník“ a „vyhodili“
+ *  ostávajú v dnešnom znení, kým Adam nerozhodne. Čo hovorí jadro: `src/data/fakty.ts`, blok ROZPORY v hlavičke. */
 export type Beat = { rok: string; titulok: string; text: string };
 
 export const BEATY: Beat[] = [
@@ -23,7 +23,7 @@ export const BEATY: Beat[] = [
     text: 'Zistil som, čo je manipulácia a čo je sekta. Odišiel som a študoval psychológiu cez Junga.',
   },
   {
-    rok: '10 rokov',
+    rok: '8 rokov',
     titulok: 'Nemocnica',
     text: 'Pomocný pracovník v zdravotníctve, 1 500 € za 18 služieb mesačne. Popri tom pokusy o medicínu, druhá zdravotnícka škola, v roku 2026 maturita praktickej sestry.',
   },
@@ -33,9 +33,9 @@ export const BEATY: Beat[] = [
     text: 'Notebook, na ktorom som sa začal hrať s AI. Z hry sa stal biznis cez agentov.',
   },
   {
-    rok: 'Jún 2025',
-    titulok: 'Po desiatich rokoch',
-    text: 'Po desiatich rokoch ma vyhodili, hoci som patril k najlepším v celej nemocnici. Od marca 2026 podnikám.',
+    rok: 'Jún 2025*',
+    titulok: 'Po ôsmich rokoch',
+    text: 'Po ôsmich rokoch ma vyhodili, hoci som patril k najlepším v celej nemocnici. Od marca 2026 podnikám.',
   },
   {
     rok: 'XVADUR',

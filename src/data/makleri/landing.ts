@@ -30,7 +30,7 @@ export const LANDING = {
     eyebrow: 'PREČO JA',
     h2: 'NEHÁDAM. ZMERAL SOM TO.',
     text:
-      '459 realitných webov. 275-tisíc textových blokov. 1 266 reklamných záznamov. 2 034 maklérov Bratislavského kraja. Jednému z nich som postavil systém, ktorý mu drží dopyty. Desať rokov predtým som držal zmeny na urgente — tam sa tiež nikto s nikým nerozprával a niekto to musel držať v hlave.',
+      '459 realitných webov. 275-tisíc textových blokov. 1 266 reklamných záznamov. 2 034 maklérov Bratislavského kraja. Jednému z nich som postavil systém, ktorý mu drží dopyty. Osem rokov predtým som držal zmeny na urgente — tam sa tiež nikto s nikým nerozprával a niekto to musel držať v hlave.',
   },
   coToNieJe: {
     eyebrow: 'ČO TO NIE JE',

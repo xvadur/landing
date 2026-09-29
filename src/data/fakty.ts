@@ -8,13 +8,14 @@
  *  Odkazy: len tie, ktoré vrátili HTTP 200 (curl, dátum pri odkaze). senior.xvadur.com a gramata.xvadur.com
  *  26. 9. 2026 neodpovedajú → bez odkazu (url: null).
  *
- *  ROZPORY (XDR-200, čaká na Adama) — na webe ostáva dnešné znenie, kým Adam nerozhodne:
- *   1. Dĺžka praxe: web hovorí „10 rokov“ (hero veta, marquee, beat 4 a 6, nálepka). Jadro: v zdravotníctve
- *      necelých 8 rokov (7/2017 – 7/2025), z toho v nemocniciach asi 4,5 roka.
+ *  ROZPORY (XDR-200) — na webe ostáva dnešné znenie, kým Adam nerozhodne:
+ *   1. VYRIEŠENÉ 29. 9. 2026 [A]: dĺžka praxe = 8 rokov (8/2017 – 7/2025). Web hovorí „8 rokov“ / „osem rokov“.
  *   2. Rola: web „pomocný pracovník v zdravotníctve“ (beat 4). Jadro: v DSS opatrovateľ, v nemocniciach PPVZ
  *      (sanitár); sestra až od maturity 26. 5. 2026. Inde o sebe „zdravotná sestra“.
- *   3. „Vyhodili“ vs. „odišiel“: web „Po desiatich rokoch ma vyhodili“ (beat 6, jún 2025). Jadro: podal výpoveď,
+ *   3. „Vyhodili“ vs. „odišiel“: web „Po ôsmich rokoch ma vyhodili“ (beat 6, jún 2025*). Jadro: podal výpoveď,
  *      posledný deň 1. 7. 2025; sám to často nazýva „vyhodili ma“.
+ *      Dátum odchodu 29. 9. 2026 [A]: „7/25 sa mi zdá, niečo sa mi marí, že na Deň detí (1. 6.)“ → na webe „Jún 2025*“
+ *      s hviezdičkou, kým sa neoverí.
  *   4. Začiatok s AI / kódom: jadro — denná práca s AI od 1. 1. 2025, kódové prostredie (IDE) okolo 11/2025.
  *      Web dátum nemá (beat 5 „1 notebook“), rozpor sa webu netýka, kým sa dátum nepridá.
  *   5. Netopier: 397 prepisov a 2,3 mil. slov (spec05) patria podľa jadra korpusu cudzích prepisov, nie Netopieru;
@@ -144,15 +145,15 @@ export const POSTAVIL: Projekt[] = [
   },
 ];
 
-/** Marquee pás na domove (doc10 §3 #7): 459 webov · 2 034 maklérov · 47/47 · 10 rokov.
+/** Marquee pás na domove (doc10 §3 #7): 459 webov · 2 034 maklérov · 47/47 · 8 rokov.
  *  459 = prehľadané realitné weby (pack13 §1 a Deň 2); 441 z nich malo textové bloky (spec05 §2.3) — preto karta Trhový dataset
  *  hovorí „zo 441 webov“ a marquee „459 webov“. Kraj sa v zdrojoch viaže len na 2 034 maklérov, nie na 739 kancelárií. */
 export const MARQUEE_FAKTY: Fakt[] = [
   { label: 'Realitné weby', value: '459 webov', note: 'prehľadané realitné weby (pack13 §1, Deň 2)', source: 'doc10' },
   { label: 'Makléri', value: '2 034 maklérov', note: 'Bratislavský kraj', source: 'doc10' },
   { label: 'Kontroly', value: '47 / 47', note: 'systém pre makléra', source: 'doc10' },
-  // ROZPOR 1 (XDR-200): „10 rokov“ ostáva, jadro hovorí necelých 8 rokov v zdravotníctve.
-  { label: 'Nemocnica', value: '10 rokov', note: 'zdravotníctvo', source: 'doc10' },
+  // ROZPOR 1 vyriešený 29. 9. 2026 [A]: 8 rokov (8/2017 – 7/2025).
+  { label: 'Nemocnica', value: '8 rokov', note: 'zdravotníctvo', source: 'doc10' },
 ];
 
 /** Trhové kotvy pre /skore/ a /makleri/ (pack13 §1). */

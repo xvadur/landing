@@ -1,6 +1,6 @@
 /** V7 katalóg · Korpus — návrh. Štyri podania dát Korpusu (písanie s AI) pre hero, bio a stránku štatistík.
  *  Skutočné: 4 čísla z /pulse.json (words_month, prompts_today, streak_days, projects_active) a KORPUS z fakty.ts.
- *  Ukážkové: denné rady (DNI_UKAZKA) v tvare pulzu v3 (work/v7/KORPUS_DATA.md) — všade badge „ukážkové dáta“. */
+ *  Zástupné (Adam 29. 9. 2026): denná rada je prázdna, kým sa nenapojí pulz v3 (work/v7/KORPUS_DATA.md). */
 import * as React from 'react';
 import { Area, AreaChart, CartesianGrid, ReferenceDot, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { ArrowRight, Flame, PenLine, Activity } from 'lucide-react';
@@ -12,8 +12,19 @@ import { StatCard } from '@/components/ui/stat-card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { KORPUS } from '@/data/fakty';
-import { DNI_UKAZKA, FARBA, Kus, SkutocneData, UkazkoveData, fmt, usePulz, type Den } from './spolocne';
 import { TEP_ZONY } from './MaleKusy';
+import { DNI_UKAZKA, FARBA, Kus, SkutocneData, fmt, usePulz, type Den } from './spolocne';
+
+/** Adam 29. 9. 2026: „Korpus sa bude napájať potom, sprav tam placeholder.“ Denná rada je zatiaľ prázdna (nuly),
+ *  súčty z nej sa nezobrazujú („—“). Skutočné ostávajú iba 4 čísla z pulse.json. Po napojení pulzu v3 sa sem dá `days`. */
+function UkazkoveData({ className }: { className?: string }) {
+  return (
+    <Badge variant="secondary" className={['shrink-0', className].filter(Boolean).join(' ')}>
+      zástupné · Korpus sa napojí neskôr
+    </Badge>
+  );
+}
+const DNI_KORPUS: Den[] = DNI_UKAZKA.map(([d]) => [d, 0, 0]);
 
 /* ---------- príprava rady ---------- */
 
@@ -49,11 +60,11 @@ function kalendar(dni: Den[]) {
   return { cols, cells, mesiace, podla };
 }
 
-const KAL = kalendar(DNI_UKAZKA);
-const AKTIVNE_DNI = DNI_UKAZKA.filter((d) => d[1] > 0).length;
-const SLOVA_ROK = DNI_UKAZKA.reduce((a, d) => a + d[1], 0);
-const DNES_UKAZKA = DNI_UKAZKA[DNI_UKAZKA.length - 1];
-const RADA30 = DNI_UKAZKA.slice(-30).map((d) => d[1]);
+const KAL = kalendar(DNI_KORPUS);
+const AKTIVNE_DNI = DNI_KORPUS.filter((d) => d[1] > 0).length;
+const SLOVA_ROK = DNI_KORPUS.reduce((a, d) => a + d[1], 0);
+const DNES_UKAZKA = DNI_KORPUS[DNI_KORPUS.length - 1];
+const RADA30 = DNI_KORPUS.slice(-30).map((d) => d[1]);
 
 /** Svietiaca stupnica na ink: 0 = tmavá bunka, max = žltá. Iba tokeny cez color-mix, žiadny hex. */
 const NIZKA = 'color-mix(in srgb, var(--color-paper) 12%, var(--color-ink))';
@@ -120,11 +131,11 @@ function Kalendar() {
       <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className="border-l-3 border-paper/25 pl-3">
           <dt className="font-mono text-xs uppercase text-paper/70">aktívnych dní</dt>
-          <dd className="font-display text-2xl font-extrabold tabular-nums sm:text-3xl">{AKTIVNE_DNI}</dd>
+          <dd className="font-display text-2xl font-extrabold tabular-nums sm:text-3xl">—</dd>
         </div>
         <div className="border-l-3 border-paper/25 pl-3">
           <dt className="font-mono text-xs uppercase text-paper/70">slov za rok</dt>
-          <dd className="font-display text-2xl font-extrabold tabular-nums sm:text-3xl">{fmt(SLOVA_ROK)}</dd>
+          <dd className="font-display text-2xl font-extrabold tabular-nums sm:text-3xl">—</dd>
         </div>
         <div className="border-l-3 border-yellow pl-3">
           <dt className="font-mono text-xs uppercase text-paper/70">dní v rade · skutočné</dt>
@@ -164,7 +175,7 @@ function Kalendar() {
               const d = KAL.podla.get(`${c.row}__${c.col}`);
               if (d) setDen(d);
             }}
-            ariaLabel="Slová za deň, posledných 12 mesiacov, ukážka"
+            ariaLabel="Slová za deň, posledných 12 mesiacov, zástupné"
             className="overflow-visible [&_[role=button]]:border-ink"
           />
         </div>
@@ -214,11 +225,11 @@ function WidgetKarta() {
       <div className="flex flex-col gap-1">
         <div className="flex items-center justify-between font-mono text-xs uppercase text-paper/75">
           <span>slová · 30 dní</span>
-          <span className="rounded-sm bg-yellow px-1.5 text-ink">ukážka</span>
+          <span className="rounded-sm bg-yellow px-1.5 text-ink">napojí sa</span>
         </div>
-        <Sparkline data={RADA30} type="area" color={FARBA.zlta} showEndDot height={56} ariaLabel="Slová za posledných 30 dní, ukážkové dáta" />
+        <Sparkline data={RADA30} type="area" color={FARBA.zlta} showEndDot height={56} ariaLabel="Slová za posledných 30 dní, zástupné, napojí sa neskôr" />
         <p className="font-mono text-xs text-paper/75">
-          dnes {fmt(DNES_UKAZKA[1])} slov (ukážka) · mesiac <b className="text-paper">{fmt(pulz.words_month)}</b> (skutočné)
+          dnes — slov (napojí sa) · mesiac <b className="text-paper">{fmt(pulz.words_month)}</b> (skutočné)
         </p>
       </div>
       <Button asChild variant="accent" className="shadow-[4px_4px_0_hsl(var(--background))]">
@@ -244,7 +255,7 @@ function WidgetPilulka() {
       <span className="hidden whitespace-nowrap sm:inline">
         · <span className="text-yellow">{pulz.streak_days}</span> dní v rade
       </span>
-      <Sparkline data={RADA30.slice(-14)} type="bar" color={FARBA.zlta} width={56} height={20} animated={false} className="shrink-0" ariaLabel="Slová za 14 dní, ukážka" />
+      <Sparkline data={RADA30.slice(-14)} type="bar" color={FARBA.zlta} width={56} height={20} animated={false} className="shrink-0" ariaLabel="Slová za 14 dní, zástupné" />
       <ArrowRight className="h-4 w-4 shrink-0" aria-hidden="true" />
     </a>
   );
@@ -252,7 +263,7 @@ function WidgetPilulka() {
 
 function WidgetMriezka() {
   const pulz = usePulz();
-  const posl = DNI_UKAZKA.slice(-84);
+  const posl = DNI_KORPUS.slice(-84);
   const k = kalendar(posl);
   return (
     <a href="#korpus-a" className="brutal press flex w-fit max-w-full flex-col gap-2 bg-ink p-3 text-paper" aria-label="Posledných 12 týždňov písania, otvor štatistiky">
@@ -265,7 +276,7 @@ function WidgetMriezka() {
         showTooltip={false}
         colorLow={NIZKA}
         colorHigh={VYSOKA}
-        ariaLabel="12 týždňov, ukážka"
+        ariaLabel="12 týždňov, zástupné"
         className="pointer-events-none [&_[role=img]]:border-ink"
       />
       <span className="flex items-center justify-between gap-3 font-mono text-xs uppercase">
@@ -330,7 +341,7 @@ function Bio() {
 
 /* ---------- (d) EKG písania ---------- */
 
-const EKG = DNI_UKAZKA.slice(-90).map(([d, s]) => {
+const EKG = DNI_KORPUS.slice(-90).map(([d, s]) => {
   const dt = new Date(`${d}T12:00:00Z`);
   return { den: `${dt.getUTCDate()}. ${dt.getUTCMonth() + 1}.`, slova: s };
 });
@@ -356,7 +367,7 @@ function Ekg({ seria }: { seria: number }) {
         </p>
         <UkazkoveData />
       </div>
-      <div className="h-[240px] w-full font-mono text-[11px]" role="img" aria-label="Slová za deň za 90 dní ako EKG krivka, ukážkové dáta">
+      <div className="h-[240px] w-full font-mono text-[11px]" role="img" aria-label="Slová za deň za 90 dní ako EKG krivka, zástupné, napojí sa neskôr">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={EKG} margin={{ top: 24, right: 8, left: 0, bottom: 0 }}>
             <defs>
@@ -376,7 +387,7 @@ function Ekg({ seria }: { seria: number }) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      <p className="font-mono text-xs text-paper/75">Čiara série = skutočná dĺžka série z pulzu ({seria} dní), krivka pod ňou je ukážka.</p>
+      <p className="font-mono text-xs text-paper/75">Čiara série = skutočná dĺžka série z pulzu ({seria} dní), krivka sa napojí neskôr.</p>
     </div>
   );
 }
@@ -389,7 +400,7 @@ export default function KorpusNavrh() {
     <Kus
       id="korpus"
       meno="Korpus — návrh"
-      veta="Ako rozsvietiť písanie s AI na webe: štyri podania z kusov vyššie. Skutočné sú iba 4 čísla z pulse.json a súčty z fakty.ts; denné rady sú ukážkové, kým démon Korpusu nevráti dennú radu (pulz v3, work/v7/KORPUS_DATA.md)."
+      veta="Ako rozsvietiť písanie s AI na webe: štyri podania z kusov vyššie. Skutočné sú iba 4 čísla z pulse.json a súčty z fakty.ts; denné rady sú zatiaľ zástupné, Korpus sa napojí neskôr (pulz v3, work/v7/KORPUS_DATA.md)."
     >
       <div className="flex flex-wrap items-center gap-2">
         <SkutocneData zdroj={`pulse.json · ${pulz.cas}`} />

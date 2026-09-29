@@ -3,6 +3,7 @@
  *  → XVADUR). Texty iba zo src/data/cesta.ts a src/components/v54/Anamneza.astro. Zastávky bez textu na webe majú
  *  `doplni: true` → na karte je badge „text doplní Adam“ a žiadny vymyslený detail.
  *  Projekty: Jakub, Lucia, Hriech, Korpus zo src/data/fakty.ts (DOKAZY, PRIPAD_*, KORPUS, ZIVE_CISLA). */
+import { BEATY } from '@/data/beaty';
 import { CESTA, type Krok } from '@/data/cesta';
 import { DOKAZY, KORPUS, PRIPAD_MAKLER, PRIPAD_TERAPEUTKA, ZIVE_CISLA, ZIVE_CISLA_SNIMKA, type Dokaz } from '@/data/fakty';
 
@@ -35,9 +36,10 @@ const xvadur = krok('XVADUR');
 
 export const BIO: Zastavka[] = [
   { id: 'skola', kedy: '—', nazov: 'Elektrotechnická', kde: 'stredná škola, Bratislava', doplni: true, kapitola: 'zaklad' },
-  { id: 'viera', kedy: '2017', nazov: 'Viera v Boha', doplni: true, kapitola: 'zaklad' },
+  // Viera a psychológia: Adamove ratifikované vety zo src/data/beaty.ts (beat 1 a 3, 19. 9. 2026). Adam 29. 9.: „musím to vidieť“.
+  { id: 'viera', kedy: '2017', nazov: 'Viera v Boha', text: BEATY[0].text, kapitola: 'zaklad' },
   { id: 'nemocnica', kedy: nemocnica.kedy, nazov: nemocnica.nazov, kde: 'urgentný príjem', text: nemocnica.text, kapitola: 'sluzba' },
-  { id: 'psychologia', kedy: '—', nazov: 'Psychológia', doplni: true, kapitola: 'sluzba' },
+  { id: 'psychologia', kedy: 'Jung', nazov: 'Psychológia', text: BEATY.find((x) => x.titulok === 'Psychológia cez Junga')!.text, kapitola: 'sluzba' },
   { id: 'odchod', kedy: vyhodili.kedy, nazov: vyhodili.nazov, text: vyhodili.text, citat: vyhodili.citat, kapitola: 'sluzba' },
   { id: 'ai', kedy: ai.kedy, nazov: ai.nazov, text: ai.text, kapitola: 'stavba' },
   { id: 'agenti', kedy: agenti.kedy, nazov: agenti.nazov, text: agenti.text, kapitola: 'stavba' },
@@ -45,7 +47,7 @@ export const BIO: Zastavka[] = [
 ];
 
 export const KAPITOLY = [
-  { id: 'zaklad', nazov: 'Základ', veta: 'Škola a viera. Text doplní Adam.' },
+  { id: 'zaklad', nazov: 'Základ', veta: 'Škola a viera.' },
   { id: 'sluzba', nazov: 'Služba', veta: 'Nemocnica, psychológia, odchod.' },
   { id: 'stavba', nazov: 'Stavba', veta: 'AI, agenti, XVADUR.' },
 ] as const;
@@ -55,9 +57,9 @@ export const ANAMNEZA = {
   eyebrow: '✚ 01 · Anamnéza',
   nadpis: 'Z nemocnice k agentom',
   citat: 'Výborný opatrovateľ nie je výborný zamestnanec.',
-  dovetok: 'Toto som pochopil po desiatich rokoch. Zvyšok je záznam.',
+  dovetok: 'Toto som pochopil po ôsmich rokoch. Zvyšok je záznam.',
   cta: 'Ďalší pacient: ty →',
-  peciatka: '10 rokov pri lôžku',
+  peciatka: '8 rokov pri lôžku',
 };
 
 const dokaz = (id: string): Dokaz => {

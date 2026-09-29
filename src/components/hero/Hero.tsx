@@ -7,7 +7,7 @@
  *  otvorení opony dešifruje (React Bits DecryptedText); napravo fotka ako okrúhla nálepka s hrubým obrysom a tvrdým
  *  tieňom cez písmená D-U-R (zástupná, XDR-199); naľavo veta + „Dohodni si konzultáciu“ + „Kto som ↓“; spodok = čierna
  *  lišta so živými číslami a zelenou diódou (XDR-203, do dodania snímka z fakty.ts); po okrajoch symboly (X, šípka,
- *  hviezdička, pečiatka OVERENÉ, nálepka 10 ROKOV V NEMOCNICI) s parallaxom cez CSS scroll timeline; ClickSpark na klik.
+ *  hviezdička, pečiatka OVERENÉ, nálepka 8 ROKOV V NEMOCNICI) s parallaxom cez CSS scroll timeline; ClickSpark na klik.
  *  Preč z v4: pilulky, stavový pás, znak ako vodoznak, menu pod wordmarkom.
  *  Mobil: XVADUR cez šírku, fotka pod ním zasahuje do písmen, motto, veta, tlačidlo, živý pás ako bežiaci riadok.
  *  Reduced motion: statický text, bez parallaxu, čísla hneď (CountUp), opona sa nezobrazí. SSR = plný statický obsah. */
@@ -280,7 +280,7 @@ export default function Hero() {
               <div className="nalepka-telo relative aspect-square rotate-[4deg] overflow-hidden rounded-[28%] border-4 border-ink bg-white shadow-brutal-xl">
                 <ZdravotnikPlaceholder className="h-full w-full" />
               </div>
-              {/* nálepka 10 ROKOV V NEMOCNICI (ROZPOR 1, XDR-200) */}
+              {/* nálepka 8 ROKOV V NEMOCNICI (ROZPOR 1 vyriešený 29. 9. 2026) */}
               <span className="sticker absolute -bottom-3 -left-4 bg-white text-sm sm:text-base lg:-bottom-2 lg:-left-10 lg:text-lg" style={{ ['--sticker-rotate' as string]: '-9deg' }}>
                 <span className="mr-1 text-stamp" aria-hidden="true">✚</span>
                 {NALEPKA_NEMOCNICA}

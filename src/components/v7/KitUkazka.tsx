@@ -21,7 +21,7 @@ import { MathCurveBackground } from '@/components/ui/math-curve-background';
 import { HeatmapChart } from '@/components/ui/heatmap-chart';
 
 const cesta = [
-  { t: 'Nemocnica', d: 'Desať rokov zmien.', s: 'completed' as const },
+  { t: 'Nemocnica', d: 'Osem rokov zmien.', s: 'completed' as const },
   { t: 'AI', d: 'Prvý agent za večer.', s: 'completed' as const },
   { t: 'XVADUR', d: 'Systémy, ktoré nesú prácu.', s: 'current' as const },
 ];

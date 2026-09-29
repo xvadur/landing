@@ -37,6 +37,8 @@
 - XVD-001: publikovať prvý Substack článok (text je na webe v `/texty/`).
 
 ## Rozhodnutia
+- 2026-09-29 — **V7 = stavebnica + kuchárka, nie 10 obalov:** BoldKit je jedna stavebnica pre celý ekosystém (xvadur.com, Hriech, Netopier), štýl cez tokeny. Poradie: katalóg surovín `/kit/*` (hotový, 6 skupín) → oprava stavebnice → kuchárka receptov po blokoch → Adam vyberie → poskladaný web. Rohy ostávajú hranaté podľa BoldKitu (nie `rounded-lg`). Korpus sa napojí neskôr, na webe zatiaľ zástupná plocha (návrh `work/v7/KORPUS_DATA.md`). [A]
+- 2026-09-29 — **XDR-200 čiastočne:** prax = **8 rokov (8/2017 – 7/2025)**, na webe „8 rokov“ / „osem rokov“. Odchod: „Jún 2025*“ s hviezdičkou, kým sa neoverí (7/25 alebo 1. 6.). Viera a psychológia: Adam ich chce vidieť v bio, v katalógu ich nesú jeho vety z `beaty.ts`; rozhodne po obhliadke. [A]
 - 2026-09-29 — **Smer XVADUR:** Adam = zdravotná sestra, ktorá sa naučila pracovať s AI a učí ostatných o AI a o svete; nie agentúra, nie marketér. Zarábanie sa teraz nerieši. Dvaja klienti (Lucia, Jakub) dostanú build → šablóna → content cez Higgsfield. Adam rozpíše každý projekt. [A]
 - 2026-09-29 — **V7:** domov sa postaví v 10 naozaj rozdielnych variantoch cez cloudové sessions (kombinácie layoutu, komponentov, pohybu a Higgsfield médií), Adam vyberie; copy neskôr. Základ je BoldKit napojený na tokeny, neobrutalizmus a zdravotnícka línia ostávajú. [A]
 - 2026-09-29 — **V7 prvé kolo bez Higgsfieldu:** 10 variantov sa stavia s BoldKit tvarmi, canvas efektmi, SVG a zástupnými plochami; prompty v `SHOTS.md`, médiá až v druhom kole pre vybrané varianty. Podklady `work/v7/` upravené. [A]
