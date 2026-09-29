@@ -1,0 +1,47 @@
+---
+/** V7-01 · jedna obrazovka monitora: rám, lišta s číslom obrazovky, kanálom a stavom, alarmový pás (podpisový pohyb)
+ *  a mriežka 12 stĺpcov (mobil 1). Monitor (skript v stránke) pri príchode na obrazovku nastaví data-alarm. */
+import { OBRAZOVKY, POCET, cisloObrazovky } from './data';
+
+interface Props {
+  id: string;
+  /** kanál monitora vpravo hore (napr. „EKG II“) */
+  kanal: string;
+  /** stav vľavo (● naživo, ● záznam …) */
+  stav?: string;
+  ton?: 'paper' | 'white' | 'ink' | 'yellow';
+  class?: string;
+  /** názov pre čítačku (aria-labelledby cieľ je nadpis v obsahu) */
+  nadpisId?: string;
+}
+const { id, kanal, stav = 'monitorované', ton = 'paper', class: trieda, nadpisId } = Astro.props;
+const o = OBRAZOVKY.find((x) => x.id === id)!;
+const cislo = cisloObrazovky(id);
+const TON = {
+  paper: 'bg-paper text-ink',
+  white: 'bg-white text-ink',
+  ink: 'bg-ink text-paper',
+  yellow: 'bg-yellow text-ink',
+};
+---
+
+<section
+  id={id}
+  class:list={['m01-obr relative', TON[ton], trieda]}
+  data-obrazovka={id}
+  data-nazov={o.nazov}
+  data-cislo={cislo}
+  aria-labelledby={nadpisId}
+  aria-label={nadpisId ? undefined : o.nazov}
+>
+  <header class="m01-obr-hlava" aria-hidden="true">
+    <span class="m01-obr-cislo">OBR {cislo}/{POCET}</span>
+    <span class="m01-obr-nazov">{o.nazov}</span>
+    <span class="m01-obr-alarm">✚ Alarm · {o.kratko}</span>
+    <span class="m01-obr-stav"><span class="m01-bod"></span>{stav}</span>
+    <span class="m01-obr-kanal">{kanal}</span>
+  </header>
+  <div class="m01-obr-telo">
+    <slot />
+  </div>
+</section>

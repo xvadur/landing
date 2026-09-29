@@ -1,0 +1,53 @@
+---
+/** V7-01 · horný pás monitora: pacient XVADUR, čas (Bratislava, živé hodiny), stav príjmu, ⌘K a CTA na vyšetrenie.
+ *  Pod pásom beží pás alarmov (BoldKit Marquee, čisté CSS): overené fakty a výzva na vyšetrenie. 0 kB React. */
+import Alarmy from './Alarmy';
+import { Kbd } from '@/components/ui/kbd';
+import { MARQUEE_FAKTY } from '@/data/fakty';
+import { VLAJKA } from '@/data/ponuka';
+import { MENO } from '@/components/hero/hero-data';
+
+const ALARMY = [
+  ...MARQUEE_FAKTY.map((f) => `${f.label}: ${f.value}`),
+  `Príjem otvorený · ${VLAJKA.nazov} ${VLAJKA.trvanie} · ${VLAJKA.cena.toLowerCase()}`,
+];
+---
+
+<div class="m01-pas sticky top-0 z-50 border-b-3 border-ink bg-paper" data-m01-pas>
+  <div class="flex h-16 items-center gap-3 px-3 sm:px-5">
+    <a href="#prijem" class="flex min-h-11 shrink-0 items-center gap-2" aria-label="XVADUR, na začiatok">
+      <img src="/brand/x.svg" alt="" width="28" height="28" class="h-7 w-7" />
+      <img src="/brand/xvadur-ink.svg" alt="XVADUR" width="120" height="23" class="hidden h-[22px] w-auto sm:block" />
+    </a>
+    <dl class="hidden min-w-0 items-center gap-5 font-mono text-xs font-bold uppercase tracking-[0.12em] lg:flex">
+      <div class="flex gap-2"><dt class="text-ink/55">Pacient</dt><dd>{MENO}</dd></div>
+      <div class="flex gap-2"><dt class="text-ink/55">Stav</dt><dd class="flex items-center gap-1.5"><span class="m01-bod"></span>Príjem otvorený</dd></div>
+    </dl>
+    <p class="ml-auto flex items-center gap-2 font-mono text-sm font-bold tabular-nums" aria-label="Čas v Bratislave">
+      <span class="hidden text-ink/55 sm:inline">BA</span>
+      <time data-m01-cas>--:--:--</time>
+    </p>
+    <button
+      type="button"
+      data-m01-paleta
+      class="m01-paleta-btn inline-flex min-h-11 min-w-11 items-center justify-center gap-2 border-3 border-ink bg-white px-3 font-mono text-sm font-bold shadow-[3px_3px_0_0_var(--color-ink)]"
+      aria-label="Kam chceš ísť? Otvorí paletu (Cmd K)"
+    >
+      <span class="hidden sm:inline">Kam?</span>
+      <Kbd size="sm" className="hidden sm:inline-flex">⌘K</Kbd>
+      <span class="sm:hidden" aria-hidden="true">⌘</span>
+    </button>
+    <a
+      href="#vysetrenie"
+      data-m01-cta
+      data-track="konzultacia_klik"
+      data-track-miesto="v7-01-pas"
+      class="m01-cta inline-flex min-h-11 items-center gap-2 border-3 border-ink bg-hot px-3 font-display text-sm font-extrabold uppercase text-ink shadow-[3px_3px_0_0_var(--color-ink)] sm:px-4 sm:text-base"
+    >
+      Vyšetrenie <span aria-hidden="true" class="hidden sm:inline">→</span>
+    </a>
+  </div>
+  <div class="border-t-3 border-ink bg-ink text-paper" aria-label="Alarmy monitora">
+    <Alarmy polozky={ALARMY} />
+  </div>
+</div>

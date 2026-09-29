@@ -1,0 +1,235 @@
+---
+/** V7-05 · Opona ako obálka komiksu (variant src/components/home/Opona.astro, ten ostáva nezmenený).
+ *  Žltá obálka s rastrom, výbuch, wordmark XVADUR (so „zlou registráciou“ farebných platní ako tlač) a motto.
+ *  Stránka sa roztrhne po diagonále panelového žliabku: dve krídla odletia do strán s prekmitom a odhalia hero.
+ *  Pravidlá ako pôvodná opona: raz za návštevu (sessionStorage.opona), reduced motion = bez opony, scroll / klik /
+ *  klávesa = preskočiť. Animácia je čisto CSS (bez JS po skončení iba zmizne), JS rieši session a zámok scrollu. */
+import { ExplosionShape } from '@/components/ui/shapes';
+import { MENO, MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
+---
+
+<div id="opona" class="k-opona" aria-hidden="true" data-opona>
+  {
+    ['l', 'r'].map((s) => (
+      <div class={`k-opona-kridlo k-opona-${s}`}>
+        <div class="k-opona-obalka">
+          <div class="k-opona-raster" />
+          <ExplosionShape size={900} color="var(--color-white)" strokeColor="var(--color-ink)" strokeWidth={1.5} className="k-opona-vybuch" />
+          <p class="k-opona-hlavicka">
+            <span>{MENO}</span>
+            <span>Príjem · strana 1</span>
+          </p>
+          <div class="k-opona-wm">
+            <span class="k-opona-plat k-opona-plat-y" />
+            <span class="k-opona-plat k-opona-plat-r" />
+            <img src="/brand/xvadur-ink.svg" alt="" width="678" height="130" decoding="async" />
+          </div>
+          <p lang="en" class="k-opona-motto">
+            <span>{MOTTO_1}</span>
+            <span>{MOTTO_2}</span>
+          </p>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<script is:inline>
+  (() => {
+    const el = document.getElementById('opona');
+    if (!el) return;
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem('opona') === '1';
+    } catch {
+      /* súkromné okno: opona sa ukáže */
+    }
+    if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      el.remove();
+      return;
+    }
+    try {
+      sessionStorage.setItem('opona', '1');
+    } catch {
+      /* ignoruj */
+    }
+    const html = document.documentElement;
+    html.classList.add('opona-lock');
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      html.classList.remove('opona-lock');
+      el.remove();
+      window.dispatchEvent(new CustomEvent('opona:done'));
+      ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((t) => window.removeEventListener(t, skip));
+    };
+    const skip = () => {
+      el.classList.add('k-opona-skip');
+      setTimeout(finish, 280);
+    };
+    ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach((t) => window.addEventListener(t, skip, { passive: true }));
+    setTimeout(finish, 1500 + 820 + 80);
+  })();
+</script>
+
+<style>
+  .k-opona {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  :global(html.opona-lock) {
+    overflow: hidden;
+  }
+  .k-opona-kridlo {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    will-change: transform;
+    animation-duration: 820ms;
+    animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+    animation-delay: 1500ms;
+    animation-fill-mode: forwards;
+  }
+  /* rez po diagonále žliabku medzi panelmi (hore 58 %, dole 42 %) */
+  .k-opona-l {
+    clip-path: polygon(0 0, 58% 0, 42% 100%, 0 100%);
+    animation-name: k-opona-l;
+  }
+  .k-opona-r {
+    clip-path: polygon(58% 0, 100% 0, 100% 100%, 42% 100%);
+    animation-name: k-opona-r;
+  }
+  @keyframes k-opona-l {
+    0% { transform: translate(0, 0) rotate(0); }
+    18% { transform: translate(1.5%, 0) rotate(0.6deg); }
+    100% { transform: translate(-112%, 6%) rotate(-7deg); }
+  }
+  @keyframes k-opona-r {
+    0% { transform: translate(0, 0) rotate(0); }
+    18% { transform: translate(-1.5%, 0) rotate(-0.6deg); }
+    100% { transform: translate(112%, -6%) rotate(7deg); }
+  }
+  .k-opona-skip .k-opona-kridlo {
+    animation-duration: 260ms;
+    animation-delay: 0ms;
+  }
+  .k-opona-obalka {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: var(--color-yellow);
+    border: 6px solid var(--color-ink);
+  }
+  /* žliabok: tvrdá ink hrana rezu (kreslí sa na oboch krídlach) */
+  .k-opona-l .k-opona-obalka::after,
+  .k-opona-r .k-opona-obalka::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-ink);
+    clip-path: polygon(57.4% 0, 58.6% 0, 42.6% 100%, 41.4% 100%);
+  }
+  .k-opona-raster {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(color-mix(in oklab, var(--color-ink) 30%, transparent) 2.2px, transparent 2.8px);
+    background-size: 16px 16px;
+  }
+  :global(.k-opona-vybuch) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(150vw, 1300px);
+    height: min(150vw, 1300px);
+    transform: translate(-50%, -52%);
+  }
+  .k-opona-hlavicka {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    background: var(--color-ink);
+    color: var(--color-yellow);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .k-opona-wm {
+    position: relative;
+    width: min(84vw, 1100px);
+    aspect-ratio: 678 / 130;
+    transform: rotate(-3deg);
+  }
+  .k-opona-wm img {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+  /* farebné platne tlače: posunuté kópie wordmarku (maska SVG), „zlá registrácia“ sa pred roztrhnutím trasie */
+  .k-opona-plat {
+    position: absolute;
+    inset: 0;
+    -webkit-mask: url('/brand/xvadur-ink.svg') center / contain no-repeat;
+    mask: url('/brand/xvadur-ink.svg') center / contain no-repeat;
+  }
+  .k-opona-plat-y {
+    background: var(--color-white);
+    transform: translate(10px, 8px);
+  }
+  .k-opona-plat-r {
+    background: var(--color-stamp);
+    transform: translate(-6px, 4px);
+    animation: k-opona-reg 1400ms steps(2) 100ms forwards;
+  }
+  @keyframes k-opona-reg {
+    0% { transform: translate(-10px, 6px); }
+    40% { transform: translate(-3px, 2px); }
+    70% { transform: translate(-8px, 5px); }
+    100% { transform: translate(-4px, 3px); }
+  }
+  .k-opona-motto {
+    position: absolute;
+    bottom: 12%;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1em;
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: clamp(1.9rem, 1rem + 4vw, 5rem);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+  .k-opona-motto span {
+    background: var(--color-white);
+    border: 4px solid var(--color-ink);
+    box-shadow: 6px 6px 0 0 var(--color-ink);
+    padding: 0.05em 0.3em;
+  }
+  .k-opona-motto span:first-child {
+    transform: rotate(-2deg);
+  }
+  .k-opona-motto span:last-child {
+    transform: rotate(1.5deg);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .k-opona {
+      display: none;
+    }
+  }
+</style>
