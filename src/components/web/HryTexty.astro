@@ -1,0 +1,38 @@
+---
+/** Hry a texty: Škrtací test hrateľný na mieste (Hry.tsx), posledný text z kolekcie `texty` a Substack. */
+import { getCollection } from 'astro:content';
+import { routeByPath } from '@/data/routes';
+import { KOTVY } from '@/data/fakty';
+import { datumSk, SUBSTACK_URL } from '@/components/texty/citanie';
+import Hry from './Hry';
+
+const skrt = routeByPath('/hry/skrtaci-test/')!;
+const skrtText = `${skrt.description} ${KOTVY.kancelarieSFrazou.value} zo ${KOTVY.kancelarieSFrazou.z} kancelárií má v texte aspoň jednu zo šiestich fráz.`;
+const texty = (await getCollection('texty')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posledny = texty[0];
+const BTN = 'press inline-flex min-h-12 items-center gap-2 border-3 border-ink px-5 font-display text-base font-extrabold uppercase shadow-brutal-sm';
+---
+
+<section id="hry" class="relative border-b-3 border-ink bg-white" aria-labelledby="hry-nadpis">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <p class="eyebrow">✚ 04 · Hry</p>
+    <h2 id="hry-nadpis" class="mt-8 font-display text-display-lg font-extrabold uppercase tracking-tighter">Zahraj sa</h2>
+    <div class="mt-12">
+      <Hry client:visible skrtText={skrtText} />
+    </div>
+
+    {posledny && (
+      <article id="texty" class="mt-16 grid gap-6 border-3 border-ink bg-paper p-6 shadow-brutal sm:p-8 lg:grid-cols-[1fr_auto] lg:items-end">
+        <div>
+          <p class="font-mono text-sm uppercase tracking-[0.14em]">Texty · {datumSk(posledny.data.date)}</p>
+          <h3 class="mt-3 font-display text-[clamp(2rem,1.4rem+2vw,3.2rem)] leading-[0.95] font-extrabold uppercase">{posledny.data.title}</h3>
+          {posledny.data.description && <p class="mt-4 max-w-2xl text-lg leading-snug">{posledny.data.description}</p>}
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href={`/texty/${posledny.id}/`} class={`${BTN} bg-ink text-paper`}>Čítať <span aria-hidden="true">→</span></a>
+          <a href={SUBSTACK_URL} target="_blank" rel="noopener" class={`${BTN} bg-white`}>Substack <span aria-hidden="true">↗</span></a>
+        </div>
+      </article>
+    )}
+  </div>
+</section>

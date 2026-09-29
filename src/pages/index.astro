@@ -1,38 +1,42 @@
 ---
-/** Domov xvadur.com V5.4 (27. 9. 2026): neobrutalizmus + zdravotnícky žargón (XDR-267), layout a pohyb podľa
- *  cohesion.framer.ai a aiaktivista (pohyb do strán). Pilulkové menu so sledovaním sekcie, príjem s bežiacim XVADUR za
- *  fotkou a plávajúcimi symbolmi, vitálne funkcie naživo, anamnéza ako vrstvené karty, inštrumentár v pásoch, liečba
- *  s obrími číslami, chorobopisy vodorovne, tézy, vyšetrenie s rezerváciou, zápis, texty a hry.
- *  Predošlé scény V5 (KtoSom, PredAPo, Dokazy, Ponuka) ostávajú v src/components/v5/, na domove sa nepoužívajú. */
+/** Domov xvadur.com V7 (29. 9. 2026): jeden web, príbeh ako chrbtica. Adam: „nádherný, redakčný a funkčný web“.
+ *  Opona → hero s fotkou a pulzom Korpusu → príbeh v troch dejstvách → vitálne funkcie → čo som postavil (detail
+ *  v Sheete) → hry (Škrtací test hrateľný na mieste) a texty → tézy → liečba → vyšetrenie s rezerváciou (funkčná,
+ *  /api/terminy/ + /api/rezervacia/) → zápis (/api/zapis/). Stavebnica BoldKit (src/components/ui/), komponenty
+ *  src/components/web/. Predošlý domov V5.4 (src/components/v54/) ostáva v repe, na domove sa nepoužíva. */
 import Base from '@/layouts/Base.astro';
 import Opona from '@/components/home/Opona.astro';
-import Pilulky from '@/components/v54/Pilulky.astro';
-import Prijem from '@/components/v54/Prijem.astro';
-import Vitalne from '@/components/v54/Vitalne.astro';
-import Anamneza from '@/components/v54/Anamneza.astro';
-import Nastroje from '@/components/v54/Nastroje.astro';
-import Liecba from '@/components/v54/Liecba.astro';
-import Chorobopisy from '@/components/v54/Chorobopisy.astro';
-import Tezy from '@/components/v54/Tezy.astro';
+import Hero from '@/components/web/Hero.astro';
+import Pribeh from '@/components/web/Pribeh.astro';
+import Vitalne from '@/components/web/Vitalne.astro';
+import Postavil from '@/components/web/Postavil.astro';
+import HryTexty from '@/components/web/HryTexty.astro';
+import Tezy from '@/components/web/Tezy.astro';
+import Liecba from '@/components/web/Liecba.astro';
 import Konzultacia from '@/components/v5/Konzultacia.astro';
 import Zber from '@/components/v5/Zber.astro';
-import TextyHry from '@/components/v5/TextyHry.astro';
 import { routeByPath } from '@/data/routes';
 
 const r = routeByPath('/')!;
 ---
 
-<Base title={r.title} description={r.description} islands="full" header="none">
+<Base title={r.title} description={r.description} islands="full">
   <Opona />
-  <Pilulky />
-  <Prijem />
+  <Hero />
+  <Pribeh />
   <Vitalne />
-  <Anamneza />
-  <Nastroje />
-  <Liecba />
-  <Chorobopisy />
+  <Postavil />
+  <HryTexty />
   <Tezy />
+  <Liecba />
   <Konzultacia />
   <Zber />
-  <TextyHry />
 </Base>
+
+<style is:global>
+  /* kotvy z menu nesmú padnúť pod prilepenú lištu */
+  main section[id],
+  section[id] {
+    scroll-margin-top: 5rem;
+  }
+</style>

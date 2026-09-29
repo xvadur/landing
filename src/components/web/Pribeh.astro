@@ -1,0 +1,106 @@
+---
+/** Príbeh (Anamnéza) — chrbtica webu. Tri dejstvá (Hľadanie, Služba, Stavba), deväť kapitol ako v redakčnom článku:
+ *  na desktope vľavo prilepené dejstvo s rímskym číslom, vpravo kapitoly s obrím obrysovým číslom, rokom, textom
+ *  a citátom v Instrument Serif. Texty iba z data.ts (beaty.ts, cesta.ts, tézy). Kapitola bez textu = štítok.
+ *  BoldKit: Badge, Stamp, Sticker, shapes. Pohyb: CSS `reveal` (animation-timeline: view()), reduced motion statické. */
+import { Badge } from '@/components/ui/badge';
+import { Stamp } from '@/components/ui/sticker';
+import { CrossShape, PillShape, Star4Shape } from '@/components/ui/shapes';
+import { DEJSTVA, cisloKapitoly } from './data';
+
+const FARBA: Record<string, string> = { hladanie: 'bg-paper', sluzba: 'bg-white', stavba: 'bg-yellow' };
+const ZNAK = { hladanie: Star4Shape, sluzba: CrossShape, stavba: PillShape } as const;
+---
+
+<section id="kto-som" class="relative border-b-3 border-ink" aria-labelledby="pribeh-nadpis">
+  <header class="border-b-3 border-ink bg-paper">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+      <p class="eyebrow">✚ 01 · Anamnéza</p>
+      <h2 id="pribeh-nadpis" class="mt-8 font-display text-display-xl font-extrabold uppercase tracking-tighter">Môj príbeh</h2>
+      <div class="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
+        <p class="font-serif text-[clamp(1.9rem,1.2rem+2.2vw,3.2rem)] leading-[1.08] italic">
+          „Výborný opatrovateľ nie je výborný zamestnanec.“
+        </p>
+        <p class="max-w-md text-xl leading-snug">Toto som pochopil po ôsmich rokoch. Zvyšok je záznam.</p>
+      </div>
+      <ol class="mt-12 flex flex-wrap gap-3 font-mono text-sm uppercase tracking-[0.14em]">
+        {DEJSTVA.map((d) => (
+          <li>
+            <a href={`#dejstvo-${d.id}`} class="press inline-flex min-h-11 items-center gap-2 border-3 border-ink bg-white px-4 shadow-brutal-sm">
+              <span class="font-bold">{d.rim}</span> {d.nazov}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </header>
+
+  {DEJSTVA.map((d) => {
+    const Znak = ZNAK[d.id as keyof typeof ZNAK];
+    return (
+      <div id={`dejstvo-${d.id}`} class:list={['border-b-3 border-ink last:border-b-0', FARBA[d.id]]}>
+        <div class="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,2fr)] lg:gap-16 lg:py-24">
+          <div class="lg:sticky lg:top-24 lg:self-start">
+            <p class:list={["font-serif text-[clamp(5rem,3.5rem+6vw,10rem)] leading-[0.8] italic text-ink", d.id === "stavba" ? "[text-shadow:5px_5px_0_var(--color-white)]" : "[text-shadow:5px_5px_0_var(--color-yellow)]"]} aria-hidden="true">
+              {d.rim}
+            </p>
+            <h3 class="mt-4 flex items-center gap-3 font-display text-display-xs font-extrabold uppercase tracking-tight">
+              <Znak size={34} filled color={d.id === 'stavba' ? 'var(--color-white)' : 'var(--color-yellow)'} strokeWidth={2.5} />
+              {d.nazov}
+            </h3>
+            <p class="mt-3 font-mono text-sm uppercase tracking-[0.14em] text-ink/70">
+              Dejstvo {d.rim} · {d.kapitoly.length} kapitoly
+            </p>
+          </div>
+
+          <div class="flex flex-col gap-16 lg:gap-24">
+            {d.kapitoly.map((k) => (
+              <article id={`kapitola-${k.id}`} class="reveal relative" aria-labelledby={`kap-${k.id}`}>
+                <div class="flex items-center gap-4">
+                  <span class="font-display text-5xl leading-none font-extrabold sm:text-6xl">{cisloKapitoly(k.id)}</span>
+                  <span class="h-[3px] flex-1 bg-ink" aria-hidden="true" />
+                  <Badge variant="outline" className="shrink-0 bg-white font-mono text-sm">{k.kedy}</Badge>
+                </div>
+
+                <h4 id={`kap-${k.id}`} class="mt-5 font-display text-display-sm font-extrabold uppercase tracking-tight">
+                  {k.titul}
+                </h4>
+
+                {k.id === 'odchod' && (
+                  <div class="absolute -top-4 right-0 hidden sm:block" aria-hidden="true">
+                    <Stamp variant="destructive" size="lg" doubleRing>{k.kedy}</Stamp>
+                  </div>
+                )}
+
+                {k.text && (
+                  <p class="mt-5 max-w-2xl text-[clamp(1.2rem,1rem+0.6vw,1.5rem)] leading-relaxed">{k.text}</p>
+                )}
+
+                {k.doplni && (
+                  <p class="mt-5 max-w-2xl border-3 border-dashed border-ink/50 px-5 py-4 font-mono text-sm uppercase tracking-[0.12em] text-ink/70">
+                    ✎ text doplní Adam
+                  </p>
+                )}
+
+                {k.citat && (
+                  <figure class="mt-8 max-w-3xl border-l-[6px] border-ink pl-6">
+                    <blockquote class="font-serif text-[clamp(1.7rem,1.1rem+1.8vw,2.8rem)] leading-[1.12] italic">
+                      <span class="box-decoration-clone bg-yellow/90 px-1 [.bg-yellow_&]:bg-white">„{k.citat}“</span>
+                    </blockquote>
+                    {k.citatKedy && (
+                      <figcaption class="mt-3 font-mono text-sm uppercase tracking-[0.14em] text-ink/70">Adam · {k.citatKedy}</figcaption>
+                    )}
+                  </figure>
+                )}
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  })}
+
+  <p class="border-t-3 border-ink bg-ink px-4 py-3 text-center font-mono text-xs uppercase tracking-[0.14em] text-paper/75">
+    * dátum odchodu sa ešte overuje
+  </p>
+</section>

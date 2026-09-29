@@ -1,0 +1,19 @@
+---
+/** Vitálne funkcie: živé čísla Korpusu (písanie s AI) a miesto na kalendár aktívnych dní, ktorý sa napojí neskôr. */
+import PulzKorpusu from './Pulz';
+import { MathCurveBackground } from '@/components/ui/math-curve-background';
+---
+
+<section id="vitalne" class="relative overflow-hidden border-b-3 border-ink bg-ink text-paper" aria-labelledby="vitalne-nadpis">
+  <div class="pointer-events-none absolute inset-0 opacity-30" aria-hidden="true">
+    <MathCurveBackground client:visible curve="lissajous" speed="slow" opacity={0.5} trackColor="var(--color-paper)" headColor="var(--color-yellow)" strokeWidth={1.5} />
+  </div>
+  <div class="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <p class="eyebrow text-yellow">✚ 02 · Vitálne funkcie</p>
+    <h2 id="vitalne-nadpis" class="mt-8 font-display text-display-lg font-extrabold uppercase tracking-tighter">Píšem každý deň</h2>
+    <p class="mt-6 max-w-2xl text-xl leading-snug text-paper/85">Živé čísla z môjho Korpusu: všetko, čo napíšem s AI, sa počíta.</p>
+    <div class="mt-12">
+      <PulzKorpusu client:visible variant="velky" />
+    </div>
+  </div>
+</section>

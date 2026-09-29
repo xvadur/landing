@@ -1,0 +1,48 @@
+---
+/** Liečba (ponuka): Vyšetrenie ako vlajka + produkty zo src/data/ponuka.ts. Ponuka sa bude meniť (Adam 29. 9. 2026:
+ *  „ponuka sa dorieši potom“), preto kompaktne. Kotva #ponuka kvôli menu. BoldKit: LayeredCard, Badge. */
+import { LayeredCard } from '@/components/ui/layered-card';
+import { Badge } from '@/components/ui/badge';
+import { VLAJKA, PRODUKTY } from '@/data/ponuka';
+---
+
+<section id="ponuka" class="relative border-b-3 border-ink bg-paper" aria-labelledby="ponuka-nadpis">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <p class="eyebrow">✚ 06 · Liečba</p>
+    <h2 id="ponuka-nadpis" class="mt-8 font-display text-display-lg font-extrabold uppercase tracking-tighter">Ako ti pomôžem</h2>
+
+    <div class="mt-12 grid gap-10 lg:grid-cols-[1.1fr_1fr]">
+      <LayeredCard layers="triple" layerColor="secondary" className="h-full">
+        <div class="flex h-full flex-col gap-5 border-3 border-ink bg-white p-6 sm:p-8">
+          <div class="flex flex-wrap gap-2">
+            <Badge className="font-mono text-xs">{VLAJKA.trvanie}</Badge>
+            <Badge variant="secondary" className="font-mono text-xs">{VLAJKA.cena}</Badge>
+          </div>
+          <h3 class="font-display text-[clamp(2.4rem,1.6rem+2.6vw,4rem)] leading-[0.9] font-extrabold uppercase">{VLAJKA.nazov}</h3>
+          <p class="text-xl leading-snug">{VLAJKA.titulok}</p>
+          <ol class="flex flex-col gap-3">
+            {VLAJKA.body.map((b, i) => (
+              <li class="flex gap-3 border-t-3 border-ink pt-3 text-base leading-snug">
+                <span class="font-mono font-bold">0{i + 1}</span><span>{b}</span>
+              </li>
+            ))}
+          </ol>
+          <a href="#konzultacia" class="press mt-auto inline-flex min-h-14 w-fit items-center gap-3 rounded-lg border-3 border-ink bg-hot px-6 font-display text-lg font-extrabold uppercase text-ink shadow-brutal">
+            Vybrať termín <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </LayeredCard>
+
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {PRODUKTY.map((p) => (
+          <li class:list={['flex flex-col gap-3 border-3 border-ink p-5 shadow-brutal-sm', p.farba]}>
+            <p class="font-mono text-xs uppercase tracking-[0.14em]">{p.nalepka}</p>
+            <h3 class="font-display text-xl leading-tight font-extrabold uppercase">{p.nazov}</h3>
+            <p class="text-sm leading-snug">{p.popis}</p>
+            <p class="mt-auto font-mono text-xs uppercase tracking-[0.12em] text-ink/70">{p.pre}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

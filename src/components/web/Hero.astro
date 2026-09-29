@@ -1,0 +1,71 @@
+---
+/** Hero webu XVADUR (V7): za oponou. Redakčná hlavička (ako titulka časopisu), vľavo „Ahoj, som Adam.“, veta, motto,
+ *  dve výzvy; vpravo skutočná fotka (public/assets/hero-adam.webp) v ráme ako nálepka. Pod tým živý pulz Korpusu.
+ *  BoldKit: Sticker, Stamp, shapes (Star5, Cross). Pohyb: CSS (reveal), reduced motion = statické. */
+import { Sticker, Stamp } from '@/components/ui/sticker';
+import { Star5Shape, CrossShape } from '@/components/ui/shapes';
+import XMark from '@/components/site/XMark.astro';
+import PulzKorpusu from './Pulz';
+import { VETA, MOTTO_1, MOTTO_2 } from './data';
+---
+
+<section id="uvod" class="relative overflow-hidden border-b-3 border-ink bg-paper" aria-labelledby="uvod-nadpis">
+  <div class="tx-dots pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-7xl px-4 pt-6 pb-12 sm:px-6 lg:pt-8 lg:pb-16">
+    <!-- redakčná hlavička -->
+    <div class="flex items-center justify-between gap-4 border-y-3 border-ink py-2 font-mono text-xs uppercase tracking-[0.18em] sm:text-sm">
+      <span>Vydanie 01</span>
+      <span class="hidden sm:inline">Zdravotník, ktorý stavia AI agentov</span>
+      <span>Bratislava</span>
+    </div>
+
+    <div class="mt-10 grid items-center gap-12 lg:mt-14 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
+      <div class="flex flex-col gap-7">
+        <p class="eyebrow flex items-center gap-2"><CrossShape size={18} filled color="var(--color-stamp)" strokeWidth={2} /> Príjem</p>
+        <h1 id="uvod-nadpis" class="font-display text-display font-extrabold tracking-tighter">
+          Ahoj,<br />som&nbsp;<span class="font-serif font-normal italic tracking-normal">Adam</span><span class="text-hot">.</span>
+        </h1>
+        <p class="max-w-xl text-xl leading-snug sm:text-2xl">{VETA}</p>
+
+        <p class="w-fit -rotate-1 border-3 border-ink bg-ink px-4 py-3 font-display text-[clamp(1.6rem,1rem+2.4vw,2.6rem)] leading-[0.95] font-extrabold uppercase tracking-tight text-yellow shadow-brutal-sm">
+          {MOTTO_1}<br />{MOTTO_2}
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="#konzultacia" class="press inline-flex min-h-14 items-center gap-3 rounded-lg border-3 border-ink bg-hot px-6 font-display text-lg font-extrabold uppercase text-ink shadow-brutal">
+            Objednaj sa na vyšetrenie <span aria-hidden="true">→</span>
+          </a>
+          <a href="#kto-som" class="press inline-flex min-h-14 items-center gap-3 rounded-lg border-3 border-ink bg-white px-6 font-display text-lg font-extrabold uppercase shadow-brutal">
+            Môj príbeh <span aria-hidden="true">↓</span>
+          </a>
+        </div>
+      </div>
+
+      <figure class="relative mx-auto w-full max-w-xl lg:max-w-none">
+        <div class="relative rotate-1 border-3 border-ink bg-white p-3 shadow-brutal-lg sm:p-4">
+          <img
+            src="/assets/hero-adam.webp"
+            alt="Adam Rudavský letí nad Bratislavou s rozpaženými rukami"
+            width="1513"
+            height="1040"
+            fetchpriority="high"
+            decoding="async"
+            class="block h-auto w-full border-3 border-ink"
+          />
+          <figcaption class="mt-3 flex items-center justify-between font-mono text-xs uppercase tracking-[0.14em] sm:text-sm">
+            <span>Adam Rudavský</span><span>XVADUR</span>
+          </figcaption>
+        </div>
+        <Sticker size="lg" rotation="medium" className="absolute -top-5 -left-2 sm:-left-6">8 rokov pri lôžku</Sticker>
+        <Stamp variant="destructive" size="lg" doubleRing className="absolute -right-2 -bottom-10 sm:-right-8">Vitálne</Stamp>
+        <span class="absolute -top-8 right-10 hidden text-hot sm:block" aria-hidden="true"><XMark class="h-14 w-14" /></span>
+        <span class="absolute bottom-16 -left-7 hidden lg:block" aria-hidden="true"><Star5Shape size={56} filled color="var(--color-yellow)" /></span>
+      </figure>
+    </div>
+
+    <div class="mt-16 lg:mt-20">
+      <PulzKorpusu client:visible variant="pas" />
+    </div>
+  </div>
+</section>

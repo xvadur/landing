@@ -1,0 +1,19 @@
+---
+/** Čo som postavil (Pacienti): mriežka systémov s detailom v Sheete (Projekty.tsx). Kotva #dokazy kvôli menu. */
+import Projekty from './Projekty';
+---
+
+<section id="dokazy" class="relative border-b-3 border-ink bg-paper" aria-labelledby="dokazy-nadpis">
+  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:py-24">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="eyebrow">✚ 03 · Pacienti</p>
+        <h2 id="dokazy-nadpis" class="mt-8 font-display text-display-lg font-extrabold uppercase tracking-tighter">Čo som postavil</h2>
+      </div>
+      <p class="max-w-sm font-mono text-sm uppercase tracking-[0.12em] text-ink/70">Klikni na kartu, chorobopis sa otvorí vedľa.</p>
+    </div>
+    <div class="mt-12">
+      <Projekty client:visible />
+    </div>
+  </div>
+</section>
