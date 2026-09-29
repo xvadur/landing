@@ -1,5 +1,7 @@
 # V7 — Higgsfield médiá v neobrutalizme
 
+> **Prvé kolo (29. 9. 2026): Higgsfield je vypnutý.** Neprihlasuj sa, nevolaj MCP ani CLI, nespotrebúvaj kredity. Platí iba režim „Keď Higgsfield nie je dostupný“ nižšie: zástupné plochy + `SHOTS.md`. Rozpočet kreditov a Soul ID sa doplnia až v druhom kole pre vybrané varianty; tento súbor a pravidlá štýlu ostávajú ako podklad pre prompty.
+
 Higgsfield je hlavný zdroj médií pre V7. Použiť ho poriadne: hero video alebo loop, obrázky sekcií, textúry, pohybové slučky. Každý variant má vlastný zoznam záberov v koncepte.
 
 ## Prístup

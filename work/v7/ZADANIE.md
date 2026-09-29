@@ -4,7 +4,7 @@ Pripravené 29. 9. 2026 na pokyn Adama. Každý cloudový agent dostane toto zad
 
 ## Cieľ
 
-Postaviť **domov xvadur.com (`/`) ako pôsobivý web**: iný a lepší ako konkurencia. Desať agentov stavia desať naozaj rozdielnych verzií, Adam si potom vyberie. Skúšame kombinácie **layoutu, komponentov, animácií a Higgsfield médií**. Copy sa teraz nerieši, texty sa berú zo súčasného webu.
+Postaviť **domov xvadur.com (`/`) ako pôsobivý web**: iný a lepší ako konkurencia. Desať agentov stavia desať naozaj rozdielnych verzií, Adam si potom vyberie. Skúšame kombinácie **layoutu, komponentov a animácií**. **Higgsfield sa v tomto kole nepoužíva** (Adam 29. 9. 2026): médiá prídu v druhom kole pre vybrané varianty. Copy sa teraz nerieši, texty sa berú zo súčasného webu.
 
 Rozdielne znamená iná stavba stránky, iný pohyb a iná práca s médiami, nie iný font ani iná farba.
 
@@ -66,7 +66,7 @@ Zdravotnícka línia je zamknutá: vyšetrenie, diagnóza, triáž, liečba, pac
 - Aspoň **12 rôznych BoldKit kusov**, z toho aspoň 2 grafy a aspoň 1 z: shapes, sticker, layered-card, math-curve, canvas efekt.
 - Aspoň **2 kusy z iných knižníc** (vendor v repe alebo doinštalované).
 - **Jeden hlavný pohybový motor** podľa konceptu (GSAP scrub, Motion, CSS scroll-timeline alebo BoldKit stupňovitý pohyb) a jeden **podpisový pohyb**, ktorý si človek zapamätá.
-- **Higgsfield médiá** podľa `work/v7/HIGGSFIELD.md` a konceptu.
+- **Médiá bez Higgsfieldu:** vizuál nesú BoldKit tvary a ASCII tvary, canvas efekty, matematické krivky, SVG ilustrácie a piktogramy, CSS. Miesta, kde koncept žiada film, video alebo portrét, ostávajú ako **presné zástupné plochy** podľa `work/v7/HIGGSFIELD.md` (režim „bez Higgsfieldu“ je v tomto kole povinný). Web musí vyzerať hotovo.
 
 ## Laťka: konkurencia
 
@@ -76,11 +76,11 @@ Prečítaj `work/V5_KONKURENCIA.md`. Laťka je **itashu.co v ponuke** a **svojtk
 
 1. `git switch v7-zaklad && git switch -c v7-NN-<slug>`; `npm ci`.
 2. Prečítaj koncept, `HIGGSFIELD.md`, konkurenciu, súčasné bloky.
-3. Napíš `work/v7/vystup/NN/PLAN.md`: layout po blokoch, komponenty ku každému bloku, pohyb, zoznam Higgsfield záberov.
-4. Higgsfield: najprv **jeden hero obrázok**, skontroluj ho proti pravidlám, až potom videá. Médiá do `public/v7/NN/`.
+3. Napíš `work/v7/vystup/NN/PLAN.md`: layout po blokoch, komponenty ku každému bloku, pohyb, zoznam zástupných plôch (budúcich Higgsfield záberov).
+4. Higgsfield **nevolaj**. Zástupné plochy postav s presným pomerom strán a štítkom `HIGGSFIELD: <id záberu>`; prompty zapíš do `work/v7/vystup/NN/SHOTS.md` (id, prompt, negatívny prompt, model, pomer strán, dĺžka). Vlastné súbory (SVG, CSS) do `public/v7/NN/`.
 5. Postav domov v `src/components/v7/NN/` a `src/pages/index.astro`.
 6. Overenie (nižšie), commit po krokoch (`V7-NN: …`), push vetvy.
-7. `work/v7/vystup/NN/README.md`: čo je variant, komponenty, knižnice, pohyb, médiá (prompty, model, cena v kreditoch), konkurencia, čo nevyšlo.
+7. `work/v7/vystup/NN/README.md`: čo je variant, komponenty, knižnice, pohyb, médiá (zástupné plochy a odkaz na `SHOTS.md`), konkurencia, čo nevyšlo.
 
 ## Podmienka hotového
 
