@@ -7,7 +7,7 @@
 - Rezervácia a zápis ukladajú do KV `SESSION` s prefixom `v5:`; e-maily cez Resend neodchádzajú, kým nie sú secrets `RESEND_API_KEY` + `RESEND_FROM`.
 
 ## Rozpracované
-- **V7 · 10 variantov domova (XDR-285, 29. 9. 2026)**, vetva `v7-zaklad`, nepushnutá. Adam: pôsobivý web, skúšajú sa kombinácie layoutu, komponentov, pohybu a Higgsfield médií; copy neskôr. Základ: BoldKit (boldkit.dev, MIT) celý v `src/components/ui/` (84 komponentov + knižnice), napojený na tokeny v `src/styles/boldkit.css` + `motion.css`; `@tanstack/react-table` 8 a `react-day-picker` 9 kvôli BoldKitu. Kontrola `/v7-kit` (noindex). Overené: `npm run check` 0 chýb, `npm test` 23/23, build OK, `/v7-kit` aj domov V5.4 bez chýb konzoly v prehliadači. Zadanie a 10 konceptov v `work/v7/` (ZADANIE, HIGGSFIELD, SIET, SPUSTENIE, koncepty 01–10). Čaká na Adama: push `v7-zaklad`, sieť Custom v cloudovom prostredí. Higgsfield (konektor, rozpočet, Soul ID) je vypnutý do druhého kola.
+- **V7 · 10 variantov domova (XDR-285, 29. 9. 2026)**, vetva `v7-zaklad`, pushnutá na origin 29. 9. (`0da87c6`). Adam: pôsobivý web, skúšajú sa kombinácie layoutu, komponentov, pohybu a Higgsfield médií; copy neskôr. Základ: BoldKit (boldkit.dev, MIT) celý v `src/components/ui/` (84 komponentov + knižnice), napojený na tokeny v `src/styles/boldkit.css` + `motion.css`; `@tanstack/react-table` 8 a `react-day-picker` 9 kvôli BoldKitu. Kontrola `/v7-kit` (noindex). Overené: `npm run check` 0 chýb, `npm test` 23/23, build OK, `/v7-kit` aj domov V5.4 bez chýb konzoly v prehliadači. Zadanie a 10 konceptov v `work/v7/` (ZADANIE, HIGGSFIELD, SIET, SPUSTENIE, koncepty 01–10). Čaká na Adama: sieť Custom v cloudovom prostredí, potom 10× `claude --cloud` (Adam ich spúšťa sám z konverzácie). Higgsfield (konektor, rozpočet, Soul ID) je vypnutý do druhého kola.
 - **V5 · Predajný web** (Linear, míľnik „V5 · Predajný web“) postavený na vetve `v5` (26. 9. 2026), **nenasadený, nepushnutý**. Zadanie `work/V5_ZADANIE.md`, konkurencia `work/V5_KONKURENCIA.md`.
   - Domov: hero (XDR-205), kto som vodorovne (XDR-206), pred a po (XDR-207), izba dôkazov (XDR-208), ponuka (XDR-209), konzultácia s rezerváciou (XDR-210), zber e-mailov (XDR-211), texty/Hriech/hry (XDR-214). Všetko v Lineari „Na overenie“.
   - Nové API (Worker): `/api/terminy/`, `/api/rezervacia/`, `/api/zapis/`, `/api/udalost/`. Úložisko dočasne v existujúcom KV `SESSION` s prefixom `v5:` (kód berie `LEADS`, ak pribudne). Resend iba so secrets `RESEND_API_KEY` + `RESEND_FROM`.
@@ -32,7 +32,7 @@
 
 ## Ďalší krok
 - **Ponuka (nová konverzácia, Adam):** rozhodnúť vozidlo. Návrh na stole: lievik pre maklérov z hotových kusov — magnet Skóre webu (`/skore`) so zberom e-mailu, Neviditeľný maklér 9 €, hlavný produkt = Jakubov systém (web, rezervácie, CRM, agent v Telegrame), návrh ceny 1 900 € stavba + 190 €/mes. starostlivosť, oslovenie z datasetu 2 034 maklérov so skóre ich webu, reklama z Higgsfieldu. Nerozhodnuté.
-- **V7:** push `v7-zaklad`, sieť Custom (`work/v7/SIET.md`), potom 10 sessions podľa `work/v7/SPUSTENIE.md`. Higgsfield až v druhom kole pre vybrané varianty.
+- **V7:** sieť Custom (`work/v7/SIET.md`), potom 10 sessions podľa `work/v7/SPUSTENIE.md`. Higgsfield až v druhom kole pre vybrané varianty.
 - Dostavať V5 podľa Linearu, náhľad cez `wrangler versions upload`, Adam skontroluje, potom XDR-212 (domény a deploy).
 - XVD-001: publikovať prvý Substack článok (text je na webe v `/texty/`).
 
