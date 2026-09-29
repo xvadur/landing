@@ -62,7 +62,7 @@ export default function Paska() {
             {obsah}
           </a>
         ) : (
-          <div className="t-prefarbi t-srafy flex min-h-0 flex-1 flex-col items-center gap-4 py-6" aria-live="polite">
+          <div className="t-prefarbi t-srafy flex min-h-0 flex-1 flex-col items-center gap-4 py-6">
             <span className="sr-only">
               Aktuálna úroveň: triáž {z} · {akt.uroven} · {akt.nazov}
             </span>

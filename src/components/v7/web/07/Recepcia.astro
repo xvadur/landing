@@ -1,0 +1,162 @@
+---
+/** V7-07 · Recepcia (hero). Kto je Adam (MOTTO, VETA z hero-data.ts), fotka ako nálepka pri recepcii (zástupná plocha
+ *  4:5 „FOTKA ADAMA“), monitor vitálnych funkcií (Korpus naživo), informačná tabuľa pavilónov (rozcestník) a bežiaca
+ *  tabuľa s ordinačnými hodinami a faktami. BoldKit kusy sa tu vykreslia staticky (SSR bez JS), živý je iba Monitor. */
+import { MENO, MOTTO_1, MOTTO_2, NALEPKA_NEMOCNICA, PECIATKA, VETA } from '@/components/hero/hero-data';
+import { MARQUEE_FAKTY } from '@/data/fakty';
+import { TERMINY } from '@/data/terminy';
+import { VLAJKA } from '@/data/ponuka';
+import { Sticker, Stamp } from '@/components/ui/sticker';
+import { Badge } from '@/components/ui/badge';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Marquee, MarqueeItem, MarqueeSeparator } from '@/components/ui/marquee';
+import { ArrowBadge, CrossShape } from '@/components/ui/shapes';
+import { ArrowDown, ArrowRight, BookOpen, ClipboardList, ConciergeBell, DoorOpen, Gamepad2, Pill, Stethoscope, UserRound } from 'lucide-react';
+import Monitor from './Monitor';
+import { MIESTA } from './data';
+
+const IKONY = {
+  anamneza: UserRound,
+  chorobopisy: ClipboardList,
+  liecba: Pill,
+  herna: Gamepad2,
+  kniznica: BookOpen,
+  vysetrenie: Stethoscope,
+  vychod: DoorOpen,
+} as const;
+const ciele = MIESTA.filter((m) => m.id !== 'recepcia');
+const hodiny = `Po–Pi ${TERMINY.casy[0]}–${TERMINY.casy[TERMINY.casy.length - 1]}`;
+---
+
+<section id="recepcia" data-miesto="recepcia" aria-labelledby="recepcia-h" class="relative overflow-hidden border-b-3 border-ink bg-paper pt-16">
+  <div aria-hidden="true" class="tx-dots pointer-events-none absolute inset-0 [--tx:12%]"></div>
+
+  <div class="relative mx-auto grid w-full max-w-[1500px] gap-10 px-4 pt-8 pb-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8 lg:px-10 lg:pt-12">
+    <div class="flex min-w-0 flex-col gap-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <span class="v07-pismeno" aria-hidden="true">R</span>
+        <ConciergeBell class="h-8 w-8" aria-hidden="true" />
+        <p class="font-mono text-sm font-bold tracking-[0.16em] uppercase">Recepcia · príjem · prízemie</p>
+      </div>
+
+      <h1 id="recepcia-h" class="flex flex-col gap-4">
+        <img src="/brand/xvadur-ink.svg" alt="XVADUR" width="678" height="130" class="h-auto w-full max-w-[680px]" fetchpriority="high" />
+        <span lang="en" class="font-display text-[clamp(2.4rem,0.9rem+6vw,5.6rem)] leading-[0.86] font-extrabold tracking-[-0.04em] uppercase">
+          <span class="block">{MOTTO_1}</span>
+          <span class="block">{MOTTO_2}</span>
+        </span>
+      </h1>
+
+      <p class="max-w-xl text-xl leading-snug sm:text-2xl">
+        <strong class="font-display font-extrabold uppercase">{MENO}.</strong>
+        {VETA}
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <a
+          href="#vysetrenie"
+          data-chod="vysetrenie"
+          class="press inline-flex min-h-14 max-w-full items-center gap-3 border-3 border-ink bg-hot px-6 py-2 font-display text-lg font-extrabold uppercase text-ink shadow-brutal-lg sm:text-xl"
+        >
+          <Stethoscope class="h-6 w-6 shrink-0" aria-hidden="true" /> Objednaj sa na vyšetrenie
+        </a>
+        <a
+          href="#anamneza"
+          data-chod="anamneza"
+          class="press inline-flex min-h-14 items-center gap-3 border-3 border-ink bg-white px-5 font-display text-lg font-extrabold uppercase shadow-brutal"
+        >
+          <span class="flex h-8 w-8 items-center justify-center bg-yellow font-display text-base" aria-hidden="true">A</span> Kto som <ArrowRight class="h-5 w-5" aria-hidden="true" />
+        </a>
+      </div>
+      <p class="flex flex-wrap items-center gap-2 font-mono text-xs font-bold tracking-[0.1em] uppercase">
+        <span>{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</span>
+        <span aria-hidden="true">✚</span>
+        <span>ordinujem {hodiny}</span>
+      </p>
+    </div>
+
+    <div class="relative flex flex-col gap-8 lg:block lg:min-h-[700px]">
+      <!-- fotka ako nálepka pri recepcii -->
+      <figure class="relative mx-auto w-[min(78vw,360px)] -rotate-2 border-3 border-ink bg-white p-3 shadow-brutal-lg lg:absolute lg:top-0 lg:right-2 lg:mx-0">
+        <AspectRatio ratio={4 / 5}>
+          <div class="tx-halftone relative flex h-full w-full flex-col items-center justify-center gap-3 overflow-hidden border-3 border-ink bg-paper [--tx:22%]">
+            <Stethoscope class="h-24 w-24" strokeWidth={1.5} aria-hidden="true" />
+            <span class="border-3 border-ink bg-yellow px-3 py-1 font-display text-xl font-extrabold uppercase">Fotka Adama</span>
+            <span class="px-3 text-center font-mono text-[11px] leading-tight">od ramien hore, uniforma, fonendoskop</span>
+            <span class="absolute bottom-2 left-2 bg-ink px-2 py-0.5 font-mono text-[10px] text-paper">HIGGSFIELD: 07-adam-recepcia</span>
+          </div>
+        </AspectRatio>
+        <figcaption class="sr-only">Zástupná plocha: fotka Adama Rudavského</figcaption>
+        <Sticker size="lg" rotation="medium-right" tape className="absolute -top-5 -left-4 font-display font-extrabold uppercase">{NALEPKA_NEMOCNICA}</Sticker>
+        <Stamp size="sm" rotation="slight" className="absolute -right-4 -bottom-5 font-mono uppercase">{PECIATKA}</Stamp>
+      </figure>
+
+      <div class="relative z-10 mx-auto w-full max-w-[380px] lg:absolute lg:bottom-0 lg:left-0 lg:mx-0 lg:w-[350px]">
+        <Monitor client:idle />
+      </div>
+
+      <CrossShape size={64} color="hsl(var(--destructive))" className="absolute top-[42%] left-[10%] hidden lg:block" aria-hidden="true" />
+    </div>
+  </div>
+
+  <!-- informačná tabuľa: rozcestník pavilónov -->
+  <div class="relative mx-auto w-full max-w-[1500px] px-4 pb-12 sm:px-6 lg:px-10">
+    <div class="border-3 border-ink bg-ink text-paper shadow-brutal-lg">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b-3 border-paper/25 px-4 py-3 sm:px-6">
+        <p class="flex items-center gap-3 font-display text-2xl font-extrabold uppercase sm:text-3xl">
+          <ArrowBadge size={44} color="hsl(var(--secondary))" strokeColor="hsl(var(--background))" aria-hidden="true" />
+          Informačná tabuľa
+        </p>
+        <Badge variant="secondary" className="font-mono">Kam ideš? Nasleduj písmeno.</Badge>
+      </div>
+      <ul class="grid sm:grid-cols-2" role="list">
+        {
+          ciele.map((m, i) => {
+            const Ikona = IKONY[m.id as keyof typeof IKONY];
+            const cie = m.id === 'vysetrenie';
+            return (
+              <li class:list={['border-paper/25', i > 0 && 'border-t-3', i === 1 && 'sm:border-t-0', i % 2 === 1 && 'sm:border-l-3']}>
+                <a
+                  href={`#${m.id}`}
+                  data-chod={m.id}
+                  class:list={['v07-riadok group flex min-h-16 items-center gap-3 px-4 py-3 sm:gap-4 sm:px-6', cie && 'bg-yellow text-ink']}
+                >
+                  <span class:list={['flex h-11 w-11 shrink-0 items-center justify-center border-3 font-display text-2xl font-extrabold', cie ? 'border-ink bg-ink text-yellow' : 'border-paper bg-yellow text-ink']}>
+                    {m.pismeno}
+                  </span>
+                  <Ikona class="hidden h-6 w-6 shrink-0 sm:block" aria-hidden="true" />
+                  <span class="flex min-w-0 flex-1 flex-col">
+                    <span class="font-display text-xl leading-none font-extrabold uppercase">{m.nazov}{cie && ' · cieľ'}</span>
+                    <span class:list={['mt-1 text-sm leading-snug', cie ? 'text-ink/80' : 'text-paper/75']}>{m.co}</span>
+                  </span>
+                  {m.id === 'vychod' ? (
+                    <ArrowDown class="v07-sipka h-7 w-7 shrink-0" aria-hidden="true" />
+                  ) : (
+                    <ArrowRight class="v07-sipka h-7 w-7 shrink-0" aria-hidden="true" />
+                  )}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </div>
+
+  <Marquee speed="slow" className="relative border-x-0 border-b-0 bg-yellow font-display text-lg font-extrabold uppercase" aria-label="Bežiaca tabuľa">
+    <MarqueeItem>Ordinačné hodiny {hodiny}</MarqueeItem>
+    <MarqueeSeparator>✚</MarqueeSeparator>
+    <MarqueeItem>{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</MarqueeItem>
+    <MarqueeSeparator>✚</MarqueeSeparator>
+    {
+      MARQUEE_FAKTY.map((f) => (
+        <>
+          <MarqueeItem>
+            {f.value} <span class="font-mono text-sm font-bold normal-case">· {f.note}</span>
+          </MarqueeItem>
+          <MarqueeSeparator>✚</MarqueeSeparator>
+        </>
+      ))
+    }
+  </Marquee>
+</section>

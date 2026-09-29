@@ -1,0 +1,169 @@
+---
+/** V7-04 · Triáž 1 · Príjem (hero). Vľavo: XVADUR podčiarknutý EKG čiarou, motto, kto je Adam jednou vetou, CTA a
+ *  triážna škála „kam môžeš vojsť“ (päť dverí webu). Vpravo: triážny lístok s fotkou (zástupná plocha 4 : 5,
+ *  štítok FOTKA ADAMA) v LayeredCard, trhacie pásiky piatich úrovní, tvary, pečiatka PRIJATÝ, X. Pod tým monitor
+ *  Vitálne funkcie (ostrov) a zástupná plocha záberu 04-T1 (sanitka + slučka majáka).
+ *  BoldKit kusy sa renderujú na serveri (bez JS), ostrovy iba Vitalne a Raster. */
+import { LayeredCard } from '@/components/ui/layered-card';
+import { Sticker, Stamp } from '@/components/ui/sticker';
+import { Badge } from '@/components/ui/badge';
+import { CrossShape, PillShape, Star4Shape, ScribbleUnderline } from '@/components/ui/shapes';
+import { CTA_KTO, MENO, MOTTO_1, MOTTO_2, NALEPKA_NEMOCNICA, VETA } from '@/components/hero/hero-data';
+import { ekgPath } from '@/components/v5/Symboly';
+import { cn } from '@/lib/utils';
+import { FARBA_TRIEDY, ROLA, ZONY } from './data';
+import Vitalne from './Vitalne';
+import Raster from './Raster';
+import Zaber from './Zaber.astro';
+---
+
+<div class="tx-dots relative overflow-hidden [--tx:14%]">
+  <div class="relative mx-auto grid w-full max-w-[1400px] items-start gap-14 px-4 pt-10 pb-12 sm:px-6 lg:grid-cols-[1.12fr_0.88fr] lg:gap-10 lg:px-10 lg:pt-14">
+    <!-- text -->
+    <div class="flex min-w-0 flex-col gap-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <Sticker variant="primary" rotation="slight" className="t-dopad">✚ Príjem otvorený</Sticker>
+        <Badge variant="outline" className="normal-case tracking-normal hover:translate-x-0 hover:translate-y-0">{ROLA}</Badge>
+      </div>
+
+      <h1 class="flex flex-col gap-3">
+        <span class="relative block w-full max-w-[640px]">
+          <img src="/brand/xvadur-ink.svg" alt="XVADUR" width="678" height="130" class="block h-auto w-full" fetchpriority="high" />
+          <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="ekg mt-2 block h-6 w-full overflow-hidden sm:h-8" aria-hidden="true">
+            <path d={ekgPath(1400)} fill="none" stroke="var(--color-stamp)" stroke-width="4" stroke-linejoin="miter" vector-effect="non-scaling-stroke"></path>
+          </svg>
+        </span>
+        <span lang="en" class="block font-display text-[clamp(2.4rem,1rem+5.4vw,5.4rem)] leading-[0.88] font-extrabold tracking-[-0.04em] uppercase">
+          <span class="block">{MOTTO_1}</span>
+          <span class="block">{MOTTO_2}</span>
+        </span>
+        <span class="sr-only">— {MENO}, {ROLA}.</span>
+      </h1>
+
+      <p class="max-w-xl text-xl leading-snug sm:text-2xl">
+        Ahoj, som <span class="font-serif text-[1.15em] italic">Adam</span>. {VETA}
+      </p>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <a
+          href="#termin"
+          data-track="konzultacia_klik"
+          data-track-miesto="prijem"
+          class="press inline-flex min-h-14 max-w-full items-center gap-3 border-3 border-ink bg-hot px-6 font-display text-lg font-extrabold text-ink uppercase shadow-brutal sm:text-xl"
+        >
+          Objednaj sa na vyšetrenie <span aria-hidden="true">→</span>
+        </a>
+        <a href="#anamneza" class="press inline-flex min-h-14 items-center gap-2 border-3 border-ink bg-white px-5 font-display text-lg font-extrabold uppercase shadow-brutal-sm">
+          {CTA_KTO.label}
+        </a>
+      </div>
+
+      <!-- triážna škála: päť dverí webu -->
+      <nav aria-labelledby="skala-h" class="mt-2 max-w-2xl">
+        <p id="skala-h" class="mb-3 flex items-center gap-3 font-mono text-sm font-bold tracking-[0.16em] uppercase">
+          Kam môžeš vojsť <span class="h-[3px] flex-1 bg-ink"></span> <span class="text-ink/60">triážna škála</span>
+        </p>
+        <ol class="border-3 border-ink bg-white shadow-brutal" role="list">
+          {
+            ZONY.map((z) => (
+              <li class={cn(z.n > 1 && 'border-t-3 border-ink')}>
+                <a
+                  href={z.n === 2 ? '#termin' : `#${z.id}`}
+                  class="group flex min-h-14 items-stretch gap-0 transition-colors hover:bg-paper"
+                  data-track={z.n === 2 ? 'konzultacia_klik' : undefined}
+                  data-track-miesto={z.n === 2 ? 'skala' : undefined}
+                >
+                  <span class={cn('flex w-14 shrink-0 items-center justify-center border-r-3 border-ink font-display text-2xl font-extrabold', FARBA_TRIEDY[z.farba])}>{z.n}</span>
+                  <span class="flex min-w-0 flex-1 flex-col justify-center px-4 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                    <span class="font-display text-lg leading-tight font-extrabold uppercase">{z.nazov}</span>
+                    <span class="font-mono text-[0.7rem] font-bold tracking-[0.12em] text-ink/60 uppercase">{z.uroven}</span>
+                  </span>
+                  <span class="flex w-12 shrink-0 items-center justify-center border-l-3 border-ink font-display text-xl transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+                </a>
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+    </div>
+
+    <!-- triážny lístok s fotkou -->
+    <div class="relative mx-auto w-[min(76vw,350px)] pt-6 pb-10 lg:mx-0 lg:ml-auto lg:w-full lg:max-w-[390px]">
+      <!-- raster v kruhu za lístkom: canvas iba ≥ 1024 px s myšou, inak CSS raster -->
+      <div class="absolute top-[42%] left-1/2 -z-0 aspect-square w-[128%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-3 border-ink bg-white" aria-hidden="true">
+        <div class="tx-halftone absolute inset-0 [--tx:45%]"></div>
+        <Raster client:media="(min-width: 1024px)" />
+      </div>
+
+      <LayeredCard layers="triple" layerColor="primary" offset="default" className="relative">
+        <div class="relative flex flex-col bg-white">
+          <!-- očko a šnúrka lístka -->
+          <div class="flex items-center justify-between border-b-3 border-ink px-3 py-2 font-mono text-[0.7rem] font-bold tracking-[0.14em] uppercase">
+            <span class="flex items-center gap-2"><span class="h-4 w-4 rounded-full border-3 border-ink bg-paper"></span>Triážny lístok</span>
+            <span>č. 04</span>
+          </div>
+          <div class="p-3">
+            <div role="img" aria-label="Zástupná plocha pre fotku Adama, pomer 4 : 5" class="relative aspect-[4/5] w-full overflow-hidden border-3 border-ink bg-paper shadow-brutal-sm">
+              <div class="tx-halftone absolute inset-0 [--tx:22%]"></div>
+              <svg viewBox="0 0 80 100" preserveAspectRatio="none" class="absolute inset-0 h-full w-full" aria-hidden="true">
+                <path d="M0 0 L80 100 M80 0 L0 100" stroke="var(--color-ink)" stroke-opacity="0.18" stroke-width="0.6" vector-effect="non-scaling-stroke"></path>
+              </svg>
+              <Sticker variant="secondary" rotation="slight" size="lg" className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-mono whitespace-nowrap">
+                Fotka Adama
+              </Sticker>
+              <span class="absolute bottom-2 left-2 border-2 border-ink bg-white px-1.5 font-mono text-[0.6rem] font-bold uppercase">HIGGSFIELD: 04-hero · 4 : 5</span>
+            </div>
+            <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 font-mono text-xs">
+              <dt class="font-bold uppercase text-ink/60">Meno</dt>
+              <dd class="font-bold">{MENO}</dd>
+              <dt class="font-bold uppercase text-ink/60">Rola</dt>
+              <dd>{ROLA}</dd>
+              <dt class="font-bold uppercase text-ink/60">Prax</dt>
+              <dd>{NALEPKA_NEMOCNICA}</dd>
+            </dl>
+          </div>
+          <!-- trhacie pásiky: päť úrovní -->
+          <div class="grid grid-cols-5 border-t-3 border-dashed border-ink" aria-hidden="true">
+            {
+              ZONY.map((z) => (
+                <span class={cn('flex h-9 items-center justify-center font-display text-lg font-extrabold', FARBA_TRIEDY[z.farba], z.n > 1 && 'border-l-3 border-dashed border-ink')}>
+                  {z.n}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </LayeredCard>
+
+      <!-- tvary a nálepky okolo lístka -->
+      <CrossShape size={70} strokeWidth={4} color="var(--color-stamp)" animation="spin-step" speed="slow" className="t-dopad absolute top-0 -left-7 sm:-left-10" />
+      <PillShape size={104} strokeWidth={4} color="var(--color-yellow)" className="absolute -right-8 bottom-24 -rotate-[24deg] sm:-right-12" />
+      <Star4Shape size={40} strokeWidth={3} color="var(--color-white)" animation="pulse-hard" speed="slow" className="absolute top-1/3 -right-6 sm:-right-9" />
+      <div class="t-dopad absolute -bottom-2 -left-6 sm:-left-12">
+        <Stamp variant="destructive" doubleRing size="default" rotation="slight">Prijatý</Stamp>
+      </div>
+      <img src="/brand/x.svg" alt="" width="80" height="80" class="absolute -top-8 right-2 w-16 rotate-12 sm:w-20" />
+      <Sticker variant="outline" rotation="medium-right" size="sm" tape className="absolute top-[38%] -left-5 sm:-left-10">
+        {NALEPKA_NEMOCNICA}
+      </Sticker>
+    </div>
+  </div>
+
+  <!-- vitálne funkcie + záber T1 -->
+  <div class="relative mx-auto grid w-full max-w-[1400px] gap-8 px-4 pb-16 sm:px-6 lg:grid-cols-[1fr_300px] lg:items-start lg:px-10 lg:pb-20">
+    <div class="min-w-0">
+      <div class="mb-4 flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p class="font-mono text-sm font-bold tracking-[0.16em] uppercase">✚ Monitor pri lôžku</p>
+          <h3 class="mt-1 font-display text-3xl leading-none font-extrabold uppercase sm:text-4xl">Vitálne funkcie</h3>
+        </div>
+        <ScribbleUnderline size={180} strokeWidth={5} color="var(--color-stamp)" className="hidden sm:block" />
+      </div>
+      <Vitalne client:visible />
+    </div>
+    <div class="flex flex-col gap-3 lg:pt-16">
+      <Zaber id="04-T1-sanitka" popis="sanitka pred urgentom" slucka="slučka 3 s: blikajúci maják" pomer="1 / 1" n={1} class="t-odhal" />
+      <p class="font-mono text-xs leading-snug text-ink/70">Triáž 1 v druhom kole: risografová sanitka a maják, ktorý bliká v slučke. Zatiaľ plagát.</p>
+    </div>
+  </div>
+</div>

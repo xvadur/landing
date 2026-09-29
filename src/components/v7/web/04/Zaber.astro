@@ -1,0 +1,36 @@
+---
+/** V7-04 · presná zástupná plocha pre budúci Higgsfield záber (prvé kolo bez médií). Vyzerá ako risografový plagát:
+ *  raster v farbe úrovne, obrysové číslo úrovne, piktogram a štítok HIGGSFIELD: <id>. Pomer strán = pomer záberu. */
+import { cn } from '@/lib/utils';
+
+interface Props {
+  id: string;
+  popis: string;
+  /** CSS aspect-ratio, napr. '4 / 3' */
+  pomer?: string;
+  /** úroveň 1–5 (farba a číslo) */
+  n: number;
+  /** slučka (video) namiesto obrázka */
+  slucka?: string;
+  class?: string;
+}
+const { id, popis, pomer = '4 / 3', n, slucka, class: trieda } = Astro.props;
+const FARBA: Record<number, string> = { 1: 'bg-stamp text-paper', 2: 'bg-white text-ink', 3: 'bg-yellow text-ink', 4: 'bg-white text-ink', 5: 'bg-ink text-paper' };
+---
+
+<figure
+  class={cn('relative overflow-hidden border-3 border-ink shadow-brutal', FARBA[n], trieda)}
+  style={`aspect-ratio: ${pomer}`}
+  role="img"
+  aria-label={`Zástupná plocha pre záber ${id}: ${popis}${slucka ? `, ${slucka}` : ''}`}
+>
+  <div class={cn('absolute inset-0', n === 1 || n === 5 ? 't-srafy-svetle' : 'tx-halftone [--tx:30%]')} aria-hidden="true"></div>
+  <span class="t-obrys absolute -right-2 -bottom-10 font-display text-[9rem] leading-none font-extrabold opacity-70 sm:text-[11rem]" aria-hidden="true">{n}</span>
+  <svg viewBox="0 0 100 100" class="absolute top-1/2 left-1/2 w-[34%] -translate-x-1/2 -translate-y-1/2" aria-hidden="true">
+    <path d="M38 8h24v30h30v24H62v30H38V62H8V38h30z" fill="currentColor" stroke="var(--color-ink)" stroke-width="4" stroke-linejoin="miter"></path>
+  </svg>
+  <figcaption class="absolute top-3 left-3 flex max-w-[calc(100%-1.5rem)] flex-col items-start gap-1">
+    <span class="border-2 border-ink bg-yellow px-2 py-0.5 font-mono text-[0.7rem] font-bold tracking-[0.1em] break-all text-ink uppercase shadow-[2px_2px_0_0_var(--color-ink)]">HIGGSFIELD: {id}</span>
+    <span class="border-2 border-ink bg-paper px-2 py-0.5 font-mono text-[0.7rem] text-ink">{popis}{slucka ? ` · ${slucka}` : ''} · {pomer.replace(/\s/g, '')}</span>
+  </figcaption>
+</figure>

@@ -1,0 +1,162 @@
+---
+/** V7-09 · Plagát cez dve obrazovky. Obrie XVADUR ide chrbtom plagátu: obrazovka 1 = „XVA“ + príjem (kto je Adam,
+ *  motto, fotka ako nálepka, výzva na vyšetrenie), obrazovka 2 = „DUR“ + vitálne funkcie (Korpus naživo, pečiatka).
+ *  Desktop: písmená pod sebou v stĺpci vľavo (spolu ~2 výšky okna), mobil: písmená v riadku nad obsahom.
+ *  Pohyb: CSS view() — písmená sa posúvajú do strán, listy sa dotáčajú (zin.css). Texty: hero-data.ts, v54/Prijem.astro. */
+import { MENO, MOTTO_1, MOTTO_2, VETA } from '@/components/hero/hero-data';
+import { KORPUS, MARQUEE_FAKTY } from '@/data/fakty';
+import { Sticker } from '@/components/ui/sticker';
+import { BurstShape, CrossShape, PillShape } from '@/components/ui/shapes';
+import { Marquee as MagicMarquee } from '@/components/vendor/magicui/marquee';
+import Nalepky from './Nalepky';
+import Vyzva from './Vyzva';
+import Vitalne from './Vitalne';
+
+const XVA = ['X', 'V', 'A'];
+const DUR = ['D', 'U', 'R'];
+const PAR = [26, -34, 42];
+---
+
+<div class="z9-plagat relative bg-paper">
+  <!-- ============ obrazovka 1: XVA + príjem ============ -->
+  <section id="prijem" class="z9-obr relative tx-dots [--tx:14%]" aria-labelledby="z9-h1">
+    <div aria-hidden="true" class="z9-spina">
+      {XVA.map((p, i) => <span class="z9-obri z9-obri-par" data-t={p} style={`--par:${PAR[i]}`}>{p}</span>)}
+    </div>
+
+    <div class="z9-obsah relative flex flex-col gap-6 px-4 pb-16 sm:px-6 lg:min-h-dvh lg:py-10 lg:pr-10 lg:pl-4">
+      <p class="flex items-center justify-between gap-3 border-b-3 border-ink pb-2 font-mono text-xs font-bold tracking-[0.18em] uppercase sm:text-sm">
+        <span>✚ Zin XVADUR · Príjem</span>
+        <span class="hidden sm:inline">zdravotník × AI agenti</span>
+        <span>str. 01</span>
+      </p>
+
+      <div class="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-10">
+        <!-- text -->
+        <div class="relative z-10 flex min-w-0 flex-col gap-5">
+          <CrossShape size={64} color="var(--color-stamp)" strokeWidth={4} animation="spin-step" speed="slow" className="absolute -top-2 right-0 h-auto w-12 sm:w-16" />
+          <h1 id="z9-h1" class="font-display text-[clamp(3rem,1.6rem+5.6vw,6.4rem)] leading-[0.86] font-extrabold tracking-[-0.04em]">
+            Ahoj, som <span class="font-serif font-normal tracking-normal italic">Adam</span><span class="text-hot">.</span>
+          </h1>
+          <p class="w-fit border-3 border-ink bg-ink px-3 py-1.5 font-mono text-sm font-bold tracking-[0.12em] text-yellow uppercase sm:text-base">
+            ✚ zdravotník, ktorý stavia AI agentov
+          </p>
+          <div class="z9-list relative max-w-xl" style="--r:-1.2deg; --r0:-8deg">
+            <span class="z9-paska" style="--pr:-5deg; left: 1.25rem; top: -0.9rem"></span>
+            <p class="z9-papier z9-biely p-5 font-display text-xl leading-snug font-bold sm:p-6 sm:text-2xl">{VETA}</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-4 pt-1">
+            <Vyzva client:idle />
+            <a href="#kto-som" class="press inline-flex min-h-14 items-center border-3 border-ink bg-white px-6 font-display text-lg font-extrabold uppercase shadow-brutal">Kto som ↓</a>
+          </div>
+        </div>
+
+        <!-- fotka ako nálepka -->
+        <div class="relative mx-auto w-[min(76vw,340px)] lg:mx-0 lg:mt-4 lg:w-full lg:max-w-[380px] lg:justify-self-end">
+          <span class="z9-par absolute -bottom-14 -left-16 block w-44 sm:w-56" style="--par:30" aria-hidden="true">
+            <BurstShape size={220} color="var(--color-yellow)" strokeWidth={3} animation="spin" speed="slow" className="h-auto w-full" />
+          </span>
+          <div class="z9-list relative" style="--r:2deg; --r0:14deg">
+            <span class="z9-paska z9-paska-biela" style="--pr:-8deg; left: 12%; top: -0.8rem"></span>
+            <span class="z9-paska z9-paska-biela" style="--pr:9deg; right: 10%; top: -0.7rem"></span>
+            <div class="z9-papier z9-raster relative aspect-[4/5] overflow-hidden" role="img" aria-label={`Fotka Adama (zástupná plocha): ${MENO} od ramien hore v uniforme s fonendoskopom`}>
+              <div class="absolute inset-x-0 bottom-0 h-1/3 bg-paper/85"></div>
+              <div class="absolute inset-0 grid place-items-center">
+                <Sticker variant="primary" size="xl" rotation="slight" shadow="colored" tape>FOTKA ADAMA</Sticker>
+              </div>
+              <p class="absolute inset-x-3 bottom-3 font-mono text-[11px] leading-tight font-bold tracking-[0.1em] uppercase">
+                HIGGSFIELD: 09-adam-kolaz · 4:5 · Soul ID<br /><span class="text-ink/70">od ramien hore, uniforma, fonendoskop</span>
+              </p>
+            </div>
+          </div>
+          <Nalepky client:idle />
+          <PillShape size={120} color="var(--color-white)" strokeWidth={3} className="absolute -right-4 -bottom-8 h-auto w-24 -rotate-[24deg] sm:w-28" />
+        </div>
+      </div>
+
+      <!-- motto: plagátové písmo cez celú šírku, risograf -->
+      <div class="relative mt-2 lg:-mt-6">
+        <p lang="en" class="font-display text-[clamp(2.7rem,0.9rem+7.4vw,8.4rem)] leading-[0.84] font-extrabold tracking-[-0.045em] uppercase">
+          <span class="z9-riso block" data-t={MOTTO_1}>{MOTTO_1}</span>
+          <span class="z9-par mt-2 inline-block -rotate-1 bg-ink px-[0.12em] pt-[0.06em] pb-[0.02em] text-yellow" style="--par:18">{MOTTO_2}</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ obrazovka 2: DUR + vitálne funkcie ============ -->
+  <section id="vitalne" class="z9-obr relative border-t-3 border-ink bg-yellow" aria-labelledby="z9-vit-h">
+    <div aria-hidden="true" class="z9-spina z9-spina-2">
+      {DUR.map((p, i) => <span class="z9-obri z9-obri-par" data-t={p} style={`--par:${-PAR[i]}`}>{p}</span>)}
+    </div>
+
+    <div class="z9-obsah relative flex flex-col gap-8 px-4 pt-6 pb-24 sm:px-6 lg:min-h-dvh lg:py-12 lg:pr-10 lg:pl-4">
+      <p class="flex items-center justify-between gap-3 border-b-3 border-ink pb-2 font-mono text-xs font-bold tracking-[0.18em] uppercase sm:text-sm">
+        <span>✚ Vitálne funkcie</span>
+        <span>str. 02</span>
+      </p>
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <h2 id="z9-vit-h" class="font-display text-[clamp(2.6rem,1.3rem+5vw,5.8rem)] leading-[0.86] font-extrabold tracking-[-0.04em] uppercase">
+          Pulz<br /><span class="z9-riso" data-t="naživo.">naživo.</span>
+        </h2>
+        <p class="max-w-sm text-lg leading-snug font-medium">
+          Každý deň píšem s AI. Korpus meria moje vlastné slová: {KORPUS.slova} od {KORPUS.od}. Čísla nižšie idú priamo z pulzu.
+        </p>
+      </div>
+      <div class="z9-list relative mt-6" style="--r:-0.8deg; --r0:6deg">
+        <span class="z9-paska" style="--pr:4deg; left: 42%; top: -0.9rem; --pw: 8rem"></span>
+        <Vitalne client:visible />
+      </div>
+    </div>
+
+    <!-- páska faktov cez plagát (Magic UI Marquee) -->
+    <div class="relative z-10 -mx-4 -mb-4 -rotate-2 border-y-3 lg:col-span-2 border-ink bg-ink text-paper">
+      <MagicMarquee duration={36} repeat={4} gap="2.5rem" className="py-3">
+        {
+          MARQUEE_FAKTY.map((f) => (
+            <span class="flex items-center gap-10 font-display text-2xl font-extrabold whitespace-nowrap uppercase sm:text-3xl">
+              {f.value.replace(/ /g, ' ')} <span class="text-yellow">✚</span>
+            </span>
+          ))
+        }
+      </MagicMarquee>
+    </div>
+  </section>
+</div>
+
+<style>
+  .z9-obr {
+    padding-top: 3.5rem; /* navigácia */
+  }
+  .z9-spina {
+    display: flex;
+    justify-content: center;
+    gap: 0.02em;
+    padding: 1.25rem 1rem 0.5rem;
+    font-size: clamp(6.5rem, 30vw, 11rem);
+    overflow: hidden;
+  }
+  @media (min-width: 640px) {
+    .z9-obr {
+      padding-top: 4rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .z9-obr {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .z9-spina {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.06em;
+      padding: 1.5rem 0.5rem 1.5rem 2.5rem;
+      font-size: min(33vh, 21vw);
+      overflow: visible;
+    }
+    .z9-spina-2 {
+      padding-top: 2.5rem;
+    }
+  }
+</style>
