@@ -128,7 +128,8 @@ export default function MotionPrimitives() {
               <p className="rounded-lg border-3 border-ink bg-yellow px-4 py-3 font-display text-2xl font-extrabold uppercase shadow-brutal">Drop</p>
             </InView>
           </Varianta>
-          <Varianta props="vlastné variants (x −100 % → 0, schody) · viewOptions={{ amount: 0.8 }} · as='section'">
+          <Varianta props="vlastné variants (x −100 % → 0, schody) · viewOptions={{ amount: 0.8 }} · as='section' · bez once (skryje sa pri odchode)">
+            <div className="w-full overflow-hidden">
             <InView
               as="section"
               viewOptions={{ amount: 0.8 }}
@@ -137,6 +138,7 @@ export default function MotionPrimitives() {
             >
               <p className="rounded-lg border-3 border-ink bg-ink px-4 py-3 font-display text-2xl font-extrabold uppercase text-paper">Schody</p>
             </InView>
+            </div>
           </Varianta>
         </Mriezka>
         <Realne zdroj="fakty.ts (PRIPAD_MAKLER)">

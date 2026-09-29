@@ -41,6 +41,9 @@ import { Kus, Mriezka, Realne, Varianta, Zakazane } from './shared';
 
 export default function NeoOverlay() {
   const [cmdOpen, setCmdOpen] = useState(false);
+  // cmdk pri mount-e volá scrollIntoView na prvú položku (v(6, ne) v cmdk/dist) → inline paleta, ktorá sa hydratuje mimo
+  // obrazu, strhne celú stránku k sebe. Preto sa inline paleta vykreslí až na klik.
+  const [inline, setInline] = useState(false);
   return (
     <>
       {/* ---------------- Dialog ---------------- */}
@@ -211,6 +214,11 @@ export default function NeoOverlay() {
       >
         <Mriezka cols={2}>
           <Varianta props='Command inline · CommandInput eyebrow="Kam?" · CommandEmpty · disabled item'>
+            {!inline ? (
+              <Button tone="white" onClick={() => setInline(true)}>
+                Rozbaliť inline paletu
+              </Button>
+            ) : (
             <Command className="h-auto">
               <CommandInput placeholder="Napíš: liečba, texty…" />
               <CommandList>
@@ -234,6 +242,7 @@ export default function NeoOverlay() {
                 </CommandGroup>
               </CommandList>
             </Command>
+            )}
           </Varianta>
           <Varianta props='CommandDialog title description · CommandInput eyebrow="Pacient?"'>
             <Button tone="white" onClick={() => setCmdOpen(true)}>

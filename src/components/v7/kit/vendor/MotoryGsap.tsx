@@ -44,7 +44,8 @@ export default function MotoryGsap() {
         // 2) SplitText: písmená sa „vyrazia“ jedno po druhom (ease steps(1) = zjavenie bez medzikroku)
         const text = el.querySelector<HTMLElement>('[data-gsap-text]');
         if (text) {
-          const split = SplitText.create(text, { type: 'chars', charsClass: 'inline-block' });
+          // 'words, chars' + nowrap slová: samotné 'chars' láme slová uprostred (vidieť na ScrambledText)
+          const split = SplitText.create(text, { type: 'words, chars', wordsClass: 'inline-block whitespace-nowrap', charsClass: 'inline-block' });
           gsap.from(split.chars, {
             opacity: 0,
             scale: 1.8,
@@ -88,7 +89,7 @@ export default function MotoryGsap() {
   );
 
   return (
-    <div ref={root}>
+    <div ref={root} className="grid gap-4">
       <Mriezka cols={3}>
         <Varianta props="fromTo · scrub · ease 'steps(4)' · CSS premenná --sh (tieň) tweenuje GSAP" plocha="bg-paper">
           <div
@@ -100,7 +101,7 @@ export default function MotoryGsap() {
             <p className="font-display text-2xl font-extrabold uppercase">{VLAJKA.trvanie}</p>
           </div>
         </Varianta>
-        <Varianta props="SplitText.create(chars) · from {opacity 0, scale 1.8} · ease 'steps(1)' · stagger 0.05">
+        <Varianta props="SplitText.create(words, chars) · from {opacity 0, scale 1.8} · ease 'steps(1)' · stagger 0.05">
           <p data-gsap-text className="font-display text-3xl font-extrabold uppercase leading-none">
             Príjem · Diagnóza · Liečba
           </p>

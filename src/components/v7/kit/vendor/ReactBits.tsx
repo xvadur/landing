@@ -63,7 +63,7 @@ export default function ReactBits() {
         </Mriezka>
         <Realne zdroj="hero-data.ts (CTA_HLAVNE)">
           <ClickSpark sparkColor="ink" sparkCount={10} sparkRadius={34} lineWidth={4}>
-            <Button variant="accent" size="lg">
+            <Button variant="accent" size="lg" className="h-auto min-h-12 max-w-full whitespace-normal py-2 text-left">
               {CTA_HLAVNE.label} <ArrowRightIcon weight="bold" />
             </Button>
           </ClickSpark>
@@ -193,7 +193,7 @@ export default function ReactBits() {
         </Mriezka>
         <Realne zdroj="hero-data.ts (CTA_HLAVNE)">
           <Magnet padding={120} magnetStrength={3}>
-            <Button variant="accent" size="xl">
+            <Button variant="accent" size="xl" className="h-auto min-h-12 max-w-full whitespace-normal py-2 text-left">
               {CTA_HLAVNE.label}
             </Button>
           </Magnet>

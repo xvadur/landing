@@ -242,7 +242,7 @@ export default function MagicUI() {
             </Dock>
           </Varianta>
         </Mriezka>
-        <Zakazane prop="bg / DockIcon color" tony={['pink', 'lilac', 'lime', 'sky']} />
+        <Zakazane prop="bg|color" tony={['pink', 'lilac', 'lime', 'sky']} />
         <Realne zdroj="nav.ts (NAV) — navigácia domova ako dock">
           <Dock bg="ink">
             <DockIcon label="Domov" href="/" color="yellow">

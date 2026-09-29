@@ -81,7 +81,7 @@ export default function NeoZaklad() {
         </Varianta>
         <Realne zdroj="hero-data.ts (CTA_HLAVNE, CTA_KTO)">
           <div className="flex flex-wrap gap-4">
-            <Button asChild tone="hot" size="lg">
+            <Button asChild tone="hot" size="lg" className="max-w-full whitespace-normal py-2 text-left">
               <a href="#podpis-korpus">
                 {CTA_HLAVNE.label} <ArrowRightIcon weight="bold" />
               </a>
@@ -194,7 +194,7 @@ export default function NeoZaklad() {
               </ul>
             </CardContent>
             <CardFooter className="border-t">
-              <Button tone="hot">{CTA_HLAVNE.label}</Button>
+              <Button tone="hot" className="max-w-full whitespace-normal py-2 text-left">{CTA_HLAVNE.label}</Button>
             </CardFooter>
           </Card>
         </Realne>

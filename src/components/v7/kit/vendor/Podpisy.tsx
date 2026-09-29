@@ -48,13 +48,14 @@ function OponaPoSchodoch() {
     return () => window.clearTimeout(t);
   }, [inView, beh, reduced]);
 
-  const vstup = (i: number) =>
+  // hero je pod oponou celý čas viditeľný (opona ho odhalí); po otvorení sa nálepky a pečiatka „vyrazia“ po schodoch
+  const vyraz = (i: number) =>
     reduced
-      ? { initial: { opacity: 0 }, animate: { opacity: otvorene ? 1 : 0 }, transition: { duration: 0.12 } }
+      ? { initial: false as const }
       : {
-          initial: { opacity: 0, y: 16 },
-          animate: otvorene ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 },
-          transition: { duration: 0.24, delay: 0.08 * i, ease: schody(3) },
+          initial: { opacity: 0, scale: 1.8, rotate: -10 },
+          animate: otvorene ? { opacity: 1, scale: 1, rotate: 0 } : { opacity: 0, scale: 1.8, rotate: -10 },
+          transition: { duration: 0.2, delay: 0.1 * i, ease: schody(3) },
         };
 
   return (
@@ -62,7 +63,7 @@ function OponaPoSchodoch() {
       id="podpis-opona"
       nazov="1 · Opona po schodoch → hero"
       subor="CSS (krídla, EKG) + Motion (obsah hera) + BoldKit Badge / Button / Sticker / Stamp"
-      veta="XVADUR sa rozdelí medzi A a D, pod ním sa po schodoch nakreslí EKG, krídla sa rozídu v piatich tvrdých krokoch a hero sa vyrazí na miesto."
+      veta="XVADUR sa rozdelí medzi A a D, pod ním sa po schodoch nakreslí EKG, krídla sa rozídu v piatich tvrdých krokoch, odhalia hero a nálepky sa naň vyrazia ako pečiatky."
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Pozn>Variant home/Opona.astro (nemenený): v javisku (cqw), štart vo viewporte, EKG namiesto rovnej čiary, steps(5), prehrať znova. Reduced motion = bez opony.</Pozn>
@@ -71,31 +72,31 @@ function OponaPoSchodoch() {
       <div ref={stage} className="kv-javisko aspect-[4/5] w-full rounded-lg border-3 border-ink bg-paper shadow-brutal sm:aspect-[16/9]">
         {/* hero pod oponou */}
         <div className="absolute inset-0 grid content-center gap-4 p-4 sm:gap-6 sm:p-10">
-          <motion.div {...vstup(0)}>
+          <motion.div {...vyraz(0)} className="w-fit origin-left">
             <Badge variant="secondary">Príjem otvorený</Badge>
           </motion.div>
-          <motion.p {...vstup(1)} className="font-display text-[clamp(2rem,1rem+6cqw,6rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.04em]">
+          <p className="font-display text-[clamp(2rem,1rem+6cqw,6rem)] font-extrabold uppercase leading-[0.86] tracking-[-0.04em]">
             <span lang="en" className="block">
               {MOTTO_1}
             </span>
             <span lang="en" className="block">
               {MOTTO_2}
             </span>
-          </motion.p>
-          <motion.p {...vstup(2)} className="max-w-xl text-base font-medium sm:text-lg">
-            {VETA}
-          </motion.p>
-          <motion.div {...vstup(3)} className="flex flex-wrap items-center gap-3">
-            <Button variant="accent" size="lg" asChild>
+          </p>
+          <p className="max-w-xl text-base font-medium sm:text-lg">{VETA}</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button variant="accent" size="lg" asChild className="h-auto min-h-12 max-w-full whitespace-normal py-2 text-left">
               <a href="#podpis-korpus">
                 {CTA_HLAVNE.label} <ArrowRightIcon weight="bold" />
               </a>
             </Button>
-            <Sticker variant="secondary" rotation="medium-right">
-              {NALEPKA_NEMOCNICA}
-            </Sticker>
-          </motion.div>
-          <motion.div {...vstup(4)} className="absolute top-4 right-4 hidden sm:block">
+            <motion.div {...vyraz(1)}>
+              <Sticker variant="secondary" rotation="medium-right">
+                {NALEPKA_NEMOCNICA}
+              </Sticker>
+            </motion.div>
+          </div>
+          <motion.div {...vyraz(2)} className="absolute top-4 right-4 hidden sm:block">
             <Stamp variant="destructive" size="default" rotation="slight" doubleRing>
               {MENO}
             </Stamp>
@@ -288,7 +289,7 @@ function KorpusNazivo() {
               className="font-display text-[clamp(3rem,1rem+8vw,7rem)] font-extrabold leading-none text-yellow"
             />
             <div className="mt-4 h-10 overflow-hidden border-t-3 border-paper/30" aria-hidden="true">
-              <svg className="kv-monitor-ekg h-10 w-[200%]" viewBox="0 0 2400 40" preserveAspectRatio="none">
+              <svg className="kv-monitor-ekg h-10 w-[200%] max-w-none" viewBox="0 0 2400 40" preserveAspectRatio="none">
                 <path d={ekgPath(2400, 200)} fill="none" stroke="var(--color-yellow)" strokeWidth={3} vectorEffect="non-scaling-stroke" />
               </svg>
             </div>
@@ -301,7 +302,7 @@ function KorpusNazivo() {
               <CardDescription>od {KORPUS.od}, k {KORPUS.kDatumu}</CardDescription>
             </CardHeader>
             <CardContent>
-              <NumberTicker key={beh} value={Number(KORPUS.slova.replace(/\s/g, ''))} suffix=" slov" className="font-display text-4xl font-extrabold" />
+              <NumberTicker key={beh} value={Number(KORPUS.slova.replace(/\s/g, ''))} suffix={'\u00a0slov'} className="font-display text-4xl font-extrabold" />
             </CardContent>
           </Card>
           <Card>

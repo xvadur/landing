@@ -57,6 +57,42 @@ function Hooky() {
   );
 }
 
+/** EKG pás s faktami: dráha sa počíta z reálnej šírky kontajnera (useDimensions), bez `responsive` škálovania —
+ *  inak by na 375 px boli štítky zmenšené na tretinu. Na mobile jedno opakovanie. */
+function EkgFakty() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { width, height } = useDimensions(ref);
+  const w = Math.max(1, Math.round(width));
+  const h = Math.max(1, Math.round(height));
+  // dráha je aspoň 720 px (aj keď kontajner má 311): štítky majú rozostup a časť z nich je práve mimo obrazu
+  const L = Math.max(w, 720);
+  return (
+    <div ref={ref} className="ekg-rovno relative h-40 w-full overflow-hidden rounded-lg border-3 border-ink bg-ink sm:h-56">
+      {width > 0 ? (
+        <MarqueeAlongSvgPath
+          key={w}
+          path={ekg(L, 200, h / 2 - 20)}
+          viewBox={`0 0 ${w} ${h}`}
+          width={w}
+          height={h}
+          showPath
+          pathClassName="text-yellow"
+          pathStrokeWidth={3}
+          baseVelocity={4}
+          repeat={w < 640 ? 1 : 2}
+          className="h-full w-full"
+        >
+          {MARQUEE_FAKTY.map((f) => (
+            <span key={f.label} className="block -translate-y-[70%] whitespace-nowrap rounded-lg border-3 border-ink bg-yellow px-2 py-1 font-mono text-sm font-bold">
+              {f.value}
+            </span>
+          ))}
+        </MarqueeAlongSvgPath>
+      ) : null}
+    </div>
+  );
+}
+
 function OdkazSoScramble({ href, label }: { href: string; label: string }) {
   const [on, setOn] = useState(false);
   return (
@@ -76,7 +112,6 @@ function OdkazSoScramble({ href, label }: { href: string; label: string }) {
 export default function Fancy() {
   const mounted = useMounted();
   const desktopFx = useDesktopFx();
-  const peelRef = useRef<HTMLDivElement>(null);
   const cutRef = useRef<VerticalCutRevealRef>(null);
   const [kluc, setKluc] = useState(0);
   const obrazky = DOKAZY.filter((d) => d.obrazok);
@@ -157,16 +192,8 @@ export default function Fancy() {
             </Pozn>
           </Varianta>
         </Mriezka>
-        <Realne zdroj="fakty.ts (MARQUEE_FAKTY) po EKG krivke (v5/Symboly ekgPath)">
-          <div className="ekg-rovno relative h-40 w-full overflow-hidden rounded-lg border-3 border-ink bg-ink sm:h-56">
-            <MarqueeAlongSvgPath path={ekg(1200, 200, 30)} viewBox="0 0 1200 100" showPath pathClassName="text-yellow" pathStrokeWidth={3} baseVelocity={4} repeat={2} responsive className="h-full w-full">
-              {MARQUEE_FAKTY.map((f) => (
-                <span key={f.label} className="block -translate-y-[70%] whitespace-nowrap rounded-lg border-3 border-ink bg-yellow px-2 py-1 font-mono text-sm font-bold">
-                  {f.value}
-                </span>
-              ))}
-            </MarqueeAlongSvgPath>
-          </div>
+        <Realne zdroj="fakty.ts (MARQUEE_FAKTY) po EKG krivke (tvar v5/Symboly ekgPath) · šírka z useDimensions">
+          <EkgFakty />
         </Realne>
       </Kus>
 
@@ -177,12 +204,12 @@ export default function Fancy() {
         subor="vendor/fancy/blocks/sticker-peel.tsx"
         veta="Nálepka s odlepeným rohom, ktorá sa pri hoveri odlepí viac a dá sa ťahať (Motion drag, aj dotykom)."
       >
-        <div ref={peelRef} className="relative grid min-h-56 grid-cols-2 place-items-center gap-6 rounded-lg border-3 border-dashed border-ink bg-paper p-6 sm:grid-cols-4 tx-dots">
+        <div className="relative grid min-h-56 grid-cols-2 place-items-center gap-6 rounded-lg border-3 border-dashed border-ink bg-paper p-6 sm:grid-cols-4 tx-dots">
           <StickerPeel>V stavbe</StickerPeel>
-          <StickerPeel colorClassName="bg-white" rotate={4} peelSize={40} restPeel={0.6} dragConstraints={peelRef}>
+          <StickerPeel colorClassName="bg-white" rotate={4} peelSize={40} restPeel={0.6}>
             peel 40
           </StickerPeel>
-          <StickerPeel colorClassName="bg-paper" rotate={-12} shadow={8} restPeel={0} dragConstraints={peelRef}>
+          <StickerPeel colorClassName="bg-paper" rotate={-12} shadow={8} restPeel={0}>
             tieň 8
           </StickerPeel>
           <StickerPeel draggable={false} rotate={0} label="Overené, nálepka">
@@ -191,7 +218,8 @@ export default function Fancy() {
         </div>
         <Pozn>
           props: colorClassName (bg-yellow | bg-white | bg-paper) · rotate · peelSize · restPeel · draggable · dragConstraints (ref) · shadow · label.
-          Posledná nálepka: draggable={'{false}'}. Reduced motion: bez pružiny a bez odlepenia, ťahanie ostáva.
+          Posledná nálepka: draggable={'{false}'}. dragConstraints (ref rodiča) sa pri zmene veľkosti okna prepočíta a nálepky vie
+          odhodiť do rohu rodiča — preto tu nie je; na webe radšej bez neho alebo s pevným boxom. Reduced motion: bez pružiny a bez odlepenia, ťahanie ostáva.
         </Pozn>
         <Realne zdroj="hero-data.ts (NALEPKA_NEMOCNICA)">
           <div className="relative grid h-40 place-items-center overflow-hidden rounded-lg border-3 border-ink bg-yellow">
