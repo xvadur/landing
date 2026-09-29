@@ -1,0 +1,80 @@
+---
+/** V7 · Katalóg surovín, skupina vendor (29. 9. 2026): kity mimo BoldKitu — neobrutalism.dev, Magic UI, React Bits,
+ *  Motion Primitives, Fancy — so všetkými props naživo, pohybové motory z package.json (GSAP + ScrollTrigger + SplitText,
+ *  Motion, Lenis, CSS animation-timeline, @paper-design/shaders-react, NumberFlow, canvas-confetti) po 2–3 ukážkach
+ *  v neobrutalizme a na konci 4 podpisové pohyby pre domov (BoldKit + vendor). Noindex. Poznámky: work/v7/katalog/vendor.md */
+import Base from '@/layouts/Base.astro';
+import NeoZaklad from '@/components/v7/kit/vendor/NeoZaklad';
+import NeoFormular from '@/components/v7/kit/vendor/NeoFormular';
+import NeoOverlay from '@/components/v7/kit/vendor/NeoOverlay';
+import MagicUI from '@/components/v7/kit/vendor/MagicUI';
+import ReactBits from '@/components/v7/kit/vendor/ReactBits';
+import MotionPrimitives from '@/components/v7/kit/vendor/MotionPrimitives';
+import Fancy from '@/components/v7/kit/vendor/Fancy';
+import Motory from '@/components/v7/kit/vendor/Motory';
+import Podpisy from '@/components/v7/kit/vendor/Podpisy';
+import '@/components/v7/kit/vendor/vendor-kit.css';
+
+const sekcie = [
+  { id: 'neobrutalism', cislo: '01', nazov: 'neobrutalism.dev', lic: 'MIT · Samuel Breznjak · Radix verzia', veta: '14 kusov formulárov a prekrytí, prefarbených cez theme.css na tokeny. Základ pre rezerváciu, zápis a navigáciu.' },
+  { id: 'magicui', cislo: '02', nazov: 'Magic UI', lic: 'MIT', veta: 'Pásy, terminál, počítadlá, dock, lesk rámu a konfety — dôkaz a čísla Korpusu.' },
+  { id: 'reactbits', cislo: '03', nazov: 'React Bits', lic: 'MIT + Commons Clause (len ako súčasť webu)', veta: 'Textové a kurzorové efekty, počítadlo, stepper, naklápacia karta, zrno. GSAP kusy sa načítajú lenivo.' },
+  { id: 'motionprimitives', cislo: '04', nazov: 'Motion Primitives', lic: 'MIT · ibelick', veta: 'Malé Motion stavebnice: číslo s pružinou, kurzor, odhalenie, magnet, morph dialóg, scramble, panely.' },
+  { id: 'fancy', cislo: '05', nazov: 'Fancy', lic: 'MIT · Daniel Petho (+ vlastný StickerPeel)', veta: 'Pás po SVG dráhe, odlepovacia nálepka, stopa za myšou, fyzika nálepiek, scramble a rez textu.' },
+  { id: 'motory', cislo: '06', nazov: 'Pohybové motory', lic: 'package.json', veta: 'Každá knižnica 2–3 ukážky v neobrutalizme: tvrdé, stupňovité, nie plávajúce. Kto je na čo, je v poznámkach.' },
+  { id: 'podpisy', cislo: '07', nazov: 'Podpisové pohyby', lic: 'BoldKit + vendor', veta: 'Štyri pohyby pre domov: opona, motto, Korpus naživo, vodorovná cesta.' },
+];
+const s = Object.fromEntries(sekcie.map((x) => [x.id, x]));
+---
+
+<Base
+  title="Kit · Vendor"
+  description="Katalóg V7: vendor kity (neobrutalism.dev, Magic UI, React Bits, Motion Primitives, Fancy), pohybové motory a 4 podpisové pohyby domova v tokenoch xvadur.com."
+  noindex
+  islands="full"
+>
+  <div id="top" class="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 lg:py-14">
+    <p class="eyebrow"><a href="/kit/" class="underline decoration-2 underline-offset-4">Kit</a> · skupina 06</p>
+    <h1 class="font-display text-display-sm font-extrabold uppercase">Vendor kity a pohyb</h1>
+    <p class="max-w-3xl text-lg">
+      Všetko okrem BoldKitu: päť vendorovaných kitov so všetkými props, ktoré majú, sedem pohybových knižníc v tvrdom neobrutalistickom
+      podaní a na konci štyri podpisové pohyby pre tvoj domov. Pohyb rešpektuje reduced motion (statické, 120 ms fade), ťažké efekty
+      bežia iba na desktope s myšou.
+    </p>
+    <nav aria-label="Obsah stránky" class="flex flex-wrap gap-2">
+      {
+        sekcie.map((x) => (
+          <a href={`#${x.id}`} class="inline-flex min-h-11 items-center rounded-md border-2 border-ink bg-white px-3 font-mono text-xs font-bold hover:bg-yellow">
+            {x.cislo} · {x.nazov}
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+
+  {
+    sekcie.map((x) => (
+      <section id={x.id} class="scroll-mt-24 border-t-3 border-ink py-12 sm:py-16" aria-labelledby={`${x.id}-h`}>
+        <div class="mx-auto w-full max-w-6xl px-4 sm:px-6">
+          <p class="eyebrow mb-3">{x.cislo} · {x.lic}</p>
+          <h2 id={`${x.id}-h`} class="font-display text-display-sm font-extrabold uppercase leading-[0.9] tracking-tight text-balance">{x.nazov}</h2>
+          <p class="mt-4 max-w-2xl text-lg font-medium text-ink/80">{x.veta}</p>
+          <div class="mt-10 grid min-w-0 gap-14">
+            {x.id === 'neobrutalism' && <NeoZaklad client:load />}
+            {x.id === 'neobrutalism' && <NeoFormular client:visible />}
+            {x.id === 'neobrutalism' && <NeoOverlay client:visible />}
+            {x.id === 'magicui' && <MagicUI client:visible />}
+            {x.id === 'reactbits' && <ReactBits client:visible />}
+            {x.id === 'motionprimitives' && <MotionPrimitives client:visible />}
+            {x.id === 'fancy' && <Fancy client:visible />}
+            {x.id === 'motory' && <Motory client:visible />}
+            {x.id === 'podpisy' && <Podpisy client:visible />}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+  <p class="mx-auto w-full max-w-6xl px-4 pb-16 font-mono text-sm sm:px-6">
+    Poznámky ku každému kusu: <code>work/v7/katalog/vendor.md</code> · {s.podpisy?.nazov} sú recepty pre domov.
+  </p>
+</Base>

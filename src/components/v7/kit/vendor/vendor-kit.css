@@ -1,0 +1,204 @@
+/* Katalóg V7 · skupina vendor — CSS pre /kit/vendor/ (29. 9. 2026). Iba tokeny (var(--color-*)), žiadny hex.
+   Scroll-driven ukážky (animation-timeline) + podpisový pohyb 1 (opona po schodoch) + drobnosti k vendor kusom.
+   Minifikátor zlučuje animation-timeline do skratky `animation` (Chrome ju potom ignoruje) → medzikrok cez --tl (ako global.css). */
+
+/* ---------- Fancy MarqueeAlongSvgPath: položky na EKG krivke ostanú rovno (vendor nemá prop na offset-rotate) ---------- */
+.ekg-rovno [style*='offset-path'] {
+  offset-rotate: 0deg;
+}
+
+/* ---------- CSS animation-timeline: view() / scroll() so schodmi ---------- */
+@supports (animation-timeline: view()) {
+  .kv-tl-drop {
+    --tl: view();
+    animation-name: kv-drop;
+    animation-timing-function: steps(4, end);
+    animation-fill-mode: both;
+    animation-duration: 1ms;
+    animation-timeline: var(--tl);
+    animation-range: entry 0% entry 60%;
+  }
+  .kv-tl-par {
+    --tl: view();
+    animation-name: kv-par;
+    animation-timing-function: steps(6, end);
+    animation-fill-mode: both;
+    animation-duration: 1ms;
+    animation-timeline: var(--tl);
+    animation-range: cover 0% cover 100%;
+  }
+}
+@supports (animation-timeline: scroll()) {
+  .kv-tl-bar {
+    --tl: scroll(nearest block);
+    transform: scaleX(0);
+    animation-name: kv-bar;
+    animation-timing-function: steps(10, end);
+    animation-fill-mode: both;
+    animation-duration: 1ms;
+    animation-timeline: var(--tl);
+  }
+}
+@keyframes kv-drop {
+  from {
+    opacity: 0;
+    transform: translate(-10px, -24px);
+    box-shadow: 0 0 0 0 var(--color-ink);
+  }
+  to {
+    opacity: 1;
+    transform: translate(0, 0);
+    box-shadow: var(--shadow-brutal);
+  }
+}
+@keyframes kv-par {
+  from { translate: 0 0; }
+  to { translate: 0 var(--par, -80px); }
+}
+@keyframes kv-bar {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* ---------- Podpis 1: opona po schodoch (variant src/components/home/Opona.astro, ten sa nemení) ----------
+   Rozdiely: je v javisku (container query jednotky cqw namiesto vw), podčiarknutie je EKG krivka kreslená po schodoch,
+   krídla sa rozídu v steps(5) s tvrdým tieňom na hrane, dá sa prehrať znova, štartuje až vo viewporte. */
+.kv-javisko {
+  container-type: inline-size;
+  position: relative;
+  overflow: hidden;
+}
+.kv-opona {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+}
+.kv-kridlo {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  overflow: hidden;
+  background-color: var(--color-yellow);
+  --tx: 26%;
+}
+.kv-kridlo-l {
+  left: 0;
+  border-right: 3px solid var(--color-ink);
+  box-shadow: 6px 0 0 0 var(--color-ink);
+}
+.kv-kridlo-r {
+  right: 0;
+  border-left: 3px solid var(--color-ink);
+  box-shadow: -6px 0 0 0 var(--color-ink);
+}
+.kv-vrstva {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100cqw;
+  height: 100%;
+}
+.kv-vrstva-r {
+  left: -50cqw;
+}
+.kv-wm {
+  --wmw: 84cqw;
+  position: absolute;
+  top: 42%;
+  left: calc(50cqw - var(--wmw) * 0.4764);
+  width: var(--wmw);
+  height: auto;
+  max-width: none;
+  transform: translateY(-50%);
+}
+.kv-ekg {
+  --wmw: 84cqw;
+  position: absolute;
+  top: calc(42% + var(--wmw) * 0.096 + 0.25rem);
+  left: calc(50cqw - var(--wmw) * 0.4764);
+  width: var(--wmw);
+  height: calc(var(--wmw) * 0.06);
+  overflow: visible;
+}
+.kv-ekg path {
+  fill: none;
+  stroke: var(--color-ink);
+  stroke-width: 5;
+  stroke-linejoin: miter;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.kv-motto {
+  --wmw: 84cqw;
+  position: absolute;
+  top: calc(42% + var(--wmw) * 0.16 + 0.75rem);
+  margin: 0;
+  max-width: calc(50cqw - 1rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(1rem, 0.4rem + 4cqw, 3.25rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+}
+.kv-motto-l {
+  right: calc(50cqw + 0.75rem);
+  text-align: right;
+}
+.kv-motto-r {
+  left: calc(50cqw + 0.75rem);
+  text-align: left;
+}
+.kv-opona.kv-go .kv-ekg path {
+  animation: kv-ekg 640ms steps(8, end) 150ms forwards;
+}
+.kv-opona.kv-go .kv-kridlo-l {
+  animation: kv-l 600ms steps(5, end) 950ms forwards;
+}
+.kv-opona.kv-go .kv-kridlo-r {
+  animation: kv-r 600ms steps(5, end) 950ms forwards;
+}
+@keyframes kv-ekg {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes kv-l {
+  to { transform: translateX(-104%); }
+}
+@keyframes kv-r {
+  to { transform: translateX(104%); }
+}
+
+/* ---------- Podpis 3: monitor, EKG pás beží po schodoch ---------- */
+.kv-monitor-ekg {
+  animation: kv-ekg-pas 2.4s steps(24, end) infinite;
+}
+@keyframes kv-ekg-pas {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ---------- Podpis 4: vodorovná cesta — mobil/reduced = natívny scroll so snapom ---------- */
+.kv-cesta-pas {
+  scroll-snap-type: x mandatory;
+}
+.kv-cesta-pas > * {
+  scroll-snap-align: start;
+}
+.kv-cesta[data-pin] .kv-cesta-pas {
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kv-tl-drop,
+  .kv-tl-par,
+  .kv-tl-bar,
+  .kv-monitor-ekg {
+    animation: none !important;
+    transform: none;
+    translate: none;
+  }
+}

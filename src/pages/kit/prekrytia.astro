@@ -1,0 +1,56 @@
+---
+/** V7 · Katalóg · Prekrytia (29. 9. 2026): dialog, alert-dialog, sheet, drawer, popover, hover-card, tooltip,
+ *  dropdown-menu, context-menu, command, sonner, tour + recepty „hry a projekty z domova bez odchodu zo stránky“.
+ *  Noindex. Poznámky: work/v7/katalog/prekrytia.md. */
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import Dialogy from '@/components/v7/kit/prekrytia/Dialogy';
+import Sheety from '@/components/v7/kit/prekrytia/Sheety';
+import Plavajuce from '@/components/v7/kit/prekrytia/Plavajuce';
+import Menu from '@/components/v7/kit/prekrytia/Menu';
+import Paleta from '@/components/v7/kit/prekrytia/Paleta';
+import Hlasenia from '@/components/v7/kit/prekrytia/Hlasenia';
+import Sprievodca from '@/components/v7/kit/prekrytia/Sprievodca';
+import Recepty from '@/components/v7/kit/prekrytia/Recepty';
+import { datumSk } from '@/components/texty/citanie';
+
+const texty = (await getCollection('texty')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const t = texty[0];
+const posledny = t ? { id: t.id, title: t.data.title, description: t.data.description, datum: datumSk(t.data.date) } : null;
+
+const KUSY = ['dialog', 'alert-dialog', 'sheet', 'drawer', 'popover', 'hover-card', 'tooltip', 'dropdown-menu', 'context-menu', 'command', 'sonner', 'tour'];
+---
+
+<Base title="Kit · Prekrytia" description="Prekrytia BoldKitu v tokenoch xvadur.com: dialóg, sheet, drawer, popover, menu, ⌘K, hlásenia, sprievodca a recepty hier." noindex islands="full">
+  <main class="mx-auto w-full max-w-6xl px-4 pb-24 pt-10 sm:px-6">
+    <header class="flex flex-col gap-4 pb-10">
+      <p class="eyebrow"><a href="/kit/" class="underline">Kit</a> · 05 · Prekrytia a interakcie</p>
+      <h1 class="font-display text-display-sm font-extrabold uppercase">Prekrytia</h1>
+      <p class="max-w-2xl text-lg">
+        Všetko, čo sa otvára nad stránkou. Každý kus je tu zatvorený (spúšťač) aj otvorený — klikni. Na konci recepty, ako
+        hry a projekty otvárať z domova bez odchodu zo stránky.
+      </p>
+      <nav aria-label="Kusy na stránke" class="flex flex-wrap gap-2">
+        {KUSY.map((k) => <a href={`#${k}`} class="inline-flex min-h-11 items-center rounded-lg border-3 border-ink bg-white px-3 font-mono text-sm shadow-brutal-sm">{k}</a>)}
+        <a href="#recepty" class="inline-flex min-h-11 items-center rounded-lg border-3 border-ink bg-yellow px-3 font-mono text-sm font-bold shadow-brutal-sm">recepty</a>
+      </nav>
+    </header>
+
+    <Dialogy client:load />
+    <Sheety client:visible />
+    <Plavajuce client:visible />
+    <Menu client:visible />
+    <Paleta client:visible />
+    <Hlasenia client:visible />
+    <Sprievodca client:visible />
+    <Recepty client:visible posledny={posledny} />
+  </main>
+</Base>
+
+<style is:global>
+  /* Recept 4: tour.tsx má anglické tlačidlá natvrdo. Keď krok nesie slovenskú navigáciu ([data-tour-sk]),
+     schováme posledný riadok okna (Skip / Previous / Next / Finish). Obchádzka, oprava patrí do tour.tsx (labels). */
+  [role='dialog'][aria-modal='true']:has([data-tour-sk]) > div:last-child {
+    display: none;
+  }
+</style>

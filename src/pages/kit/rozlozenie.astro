@@ -1,0 +1,57 @@
+---
+/** V7 · Katalóg · Rozloženie a navigácia (29. 9. 2026): 21 kusov BoldKitu vo všetkých variantoch s Adamovým obsahom,
+ *  na konci 4 recepty bio/príbehu a 2 recepty projektov. Noindex. Poznámky: work/v7/katalog/rozlozenie.md */
+import Base from '@/layouts/Base.astro';
+import Kontajnery from '@/components/v7/kit/rozlozenie/Kontajnery';
+import Karusel from '@/components/v7/kit/rozlozenie/Karusel';
+import Navigacia from '@/components/v7/kit/rozlozenie/Navigacia';
+import Drobnosti from '@/components/v7/kit/rozlozenie/Drobnosti';
+import ReceptyBio from '@/components/v7/kit/rozlozenie/ReceptyBio';
+import ReceptyProjekty from '@/components/v7/kit/rozlozenie/ReceptyProjekty';
+
+const kusy = [
+  'card', 'accordion', 'collapsible', 'tabs', 'separator', 'aspect-ratio', 'scroll-area', 'resizable', 'carousel',
+  'sidebar', 'navigation-menu', 'menubar', 'breadcrumb', 'pagination',
+  'timeline', 'tree-view', 'avatar', 'badge', 'kbd', 'alert', 'empty-state',
+];
+---
+
+<Base title="Kit · Rozloženie" description="Katalóg rozloženia a navigácie BoldKitu v tokenoch xvadur.com: karty, záložky, karusel, časová os, strom, menu a recepty bio a projektov." noindex islands="full">
+  <main class="mx-auto w-full max-w-7xl px-4 pt-10 pb-24 sm:px-6">
+    <header class="flex flex-col gap-4 pb-10">
+      <p class="font-mono text-sm"><a class="inline-flex min-h-11 items-center underline" href="/kit/">← Kit XVADUR</a></p>
+      <p class="font-mono text-sm font-bold uppercase tracking-[0.2em] text-ink/60">V7 · suroviny · 04</p>
+      <h1 class="font-display text-display-md leading-[0.86] font-extrabold uppercase">Rozloženie a navigácia</h1>
+      <p class="max-w-3xl text-lg">
+        21 kusov BoldKitu, každý so všetkými variantmi, ktoré jeho kód pozná, a s obsahom z webu. Na konci recepty: štyri spôsoby, ako povedať príbeh, a dva, ako ukázať
+        pacientov.
+      </p>
+      <nav aria-label="Obsah katalógu" class="mt-2">
+        <ul class="flex flex-wrap gap-2" role="list">
+          {
+            kusy.map((k) => (
+              <li>
+                <a href={`#${k}`} class="inline-flex min-h-11 items-center border-3 border-ink bg-white px-3 font-mono text-sm font-bold hover:bg-yellow">
+                  {k}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="#recepty-bio" class="inline-flex min-h-11 items-center border-3 border-ink bg-yellow px-3 font-mono text-sm font-bold">recepty bio</a>
+          </li>
+          <li>
+            <a href="#recepty-projekty" class="inline-flex min-h-11 items-center border-3 border-ink bg-yellow px-3 font-mono text-sm font-bold">recepty projekty</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <Kontajnery client:load />
+    <Karusel client:visible />
+    <Navigacia client:visible />
+    <Drobnosti client:visible />
+    <ReceptyBio client:visible />
+    <ReceptyProjekty client:visible />
+  </main>
+</Base>
