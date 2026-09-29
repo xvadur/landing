@@ -31,10 +31,14 @@
 - senior.xvadur.com a gramata.xvadur.com neodpovedajú (26. 9.), na webe sú bez odkazu.
 
 ## Ďalší krok
+- **Ponuka (nová konverzácia, Adam):** rozhodnúť vozidlo. Návrh na stole: lievik pre maklérov z hotových kusov — magnet Skóre webu (`/skore`) so zberom e-mailu, Neviditeľný maklér 9 €, hlavný produkt = Jakubov systém (web, rezervácie, CRM, agent v Telegrame), návrh ceny 1 900 € stavba + 190 €/mes. starostlivosť, oslovenie z datasetu 2 034 maklérov so skóre ich webu, reklama z Higgsfieldu. Nerozhodnuté.
+- **V7:** po ponuke push `v7-zaklad`, sieť Custom (`work/v7/SIET.md`), Higgsfield konektor + rozpočet + Soul ID, potom 10 sessions podľa `work/v7/SPUSTENIE.md`.
 - Dostavať V5 podľa Linearu, náhľad cez `wrangler versions upload`, Adam skontroluje, potom XDR-212 (domény a deploy).
 - XVD-001: publikovať prvý Substack článok (text je na webe v `/texty/`).
 
 ## Rozhodnutia
+- 2026-09-29 — **V7:** domov sa postaví v 10 naozaj rozdielnych variantoch cez cloudové sessions (kombinácie layoutu, komponentov, pohybu a Higgsfield médií), Adam vyberie; copy neskôr. Základ je BoldKit napojený na tokeny, neobrutalizmus a zdravotnícka línia ostávajú. [A]
+- 2026-09-29 — **Web nehovorí, čo XVADUR predáva.** Metafora (príjem, anamnéza, liečba) nemá pod sebou priamo povedanú ponuku; motto „DIVIDED, WE ARE USELESS.“ nemá hovoriaceho ani predmet. Chýba vozidlo: produkt s menom, cenou a distribúciou. Kým nie je ponuka, V7 sú obaly bez stredu. Porovnanie: aiktivista.sk („NAUČÍM ŤA AI“, rola a sloveso v prvom riadku). [A]
 - 2026-09-27 — **V5.4:** neobrutalizmus a zdravotnícky žargón ostávajú, mení sa rozloženie a podanie podľa cohesion.framer.ai (pohyb do strán ako aiaktivista). Smer V6 (redakčná vizitka bez neobrutalizmu) Adam zamietol. Znak XVADUR ako vodoznak cez celé hero. Nasadené na main. [A]
 - 2026-09-26 — **ZAMKNUTÉ: V5.3 zdravotnícka línia** je smer webu. Zdravotnícky žargón spája všetko (vyšetrenie, diagnóza, triáž, liečba, pacienti, vitálne funkcie); hero V5 s XVADUR podčiarknutým EKG čiarou, motto trvalo čitateľné a dešifruje sa každé 4 s, fotka = sticker od ramien hore v uniforme s fonendoskopom, pás čísel = monitor vitálnych funkcií; Kto som = normálna cesta nemocnica → vyhodili → AI → agenti → XVADUR; neobrutalizmus bez pastelov, tón cool. Zamietnuté: V5.2 spis/odtajňovanie („nie som policajt, som zdravotník“), „7 zastávok od sedemnástich“, vety, ktoré znižujú (maturita, Biblia), slovo „hlas“. [A]
 - 2026-09-26 — V5 = predajný web pripravený na platenú reklamu (mobil prvý): hero s obrím XVADUR a fotkou ako nálepkou, kto som, pred a po, izba dôkazov, služba a produkty, konzultácia s rezerváciou, zber e-mailov. Makléri, kvíz a skóre ostávajú na svojich URL, z domova a menu ustúpia. [A]
