@@ -16,10 +16,11 @@ interface MarqueeProps extends React.HTMLAttributes<HTMLDivElement> {
   repeat?: number
 }
 
-const speedClasses = {
-  slow: 'animate-marquee-slow',
-  normal: 'animate-marquee',
-  fast: 'animate-marquee-fast',
+/* násobok --marquee-duration (token, default 40s) na jednu stopu; keyframes bk-marquee sú v motion.css */
+const speedFactor = {
+  slow: 4,
+  normal: 2,
+  fast: 0.8,
 }
 
 const Marquee = React.forwardRef<HTMLDivElement, MarqueeProps>(
@@ -32,33 +33,32 @@ const Marquee = React.forwardRef<HTMLDivElement, MarqueeProps>(
       pauseOnHover = true,
       bordered = true,
       repeat = 4,
+      style,
       ...props
     },
     ref
   ) => {
-    // Use the speed-based class for both directions so `speed` is always
-    // honored; flip to a right-scroll via animation-direction (the dedicated
-    // *-reverse speed classes were never defined in the CSS).
-    const animationClass = speedClasses[speed]
+    // Dve rovnaké stopy s medzerou --bk-marquee-gap medzi sebou aj medzi kópiami; každá sa posunie o
+    // -100 % - medzera, takže koniec cyklu sedí presne na začiatku (bez skoku o pol medzery).
+    // Smer doprava = animation-direction reverse.
     const animationDirection = direction === 'right' ? 'reverse' : undefined
+    const trackStyle = { animationDirection } as React.CSSProperties
 
     return (
       <div
         ref={ref}
         className={cn(
-          'flex overflow-hidden',
+          'flex gap-(--bk-marquee-gap) overflow-hidden [--bk-marquee-gap:2rem]',
           bordered && 'border-3 border-foreground bg-background',
+          pauseOnHover && '[&:hover_.bk-marquee-track]:[animation-play-state:paused] [&:focus-within_.bk-marquee-track]:[animation-play-state:paused]',
           className
         )}
+        style={{ '--bk-marquee-speed': speedFactor[speed], ...style } as React.CSSProperties}
         {...props}
       >
         <div
-          className={cn(
-            'marquee-content flex shrink-0 items-center gap-8 py-3',
-            animationClass,
-            pauseOnHover && 'hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]'
-          )}
-          style={{ animationDirection }}
+          className="marquee-content bk-marquee-track flex shrink-0 items-center gap-(--bk-marquee-gap) py-3"
+          style={trackStyle}
         >
           {Array.from({ length: repeat }).map((_, i) => (
             <React.Fragment key={i}>{children}</React.Fragment>
@@ -68,12 +68,8 @@ const Marquee = React.forwardRef<HTMLDivElement, MarqueeProps>(
             focusable inside it is a tab stop within an aria-hidden subtree
             (axe `aria-hidden-focus`). */}
         <div
-          className={cn(
-            'marquee-content flex shrink-0 items-center gap-8 py-3',
-            animationClass,
-            pauseOnHover && 'hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]'
-          )}
-          style={{ animationDirection }}
+          className="marquee-content bk-marquee-track flex shrink-0 items-center gap-(--bk-marquee-gap) py-3"
+          style={trackStyle}
           aria-hidden="true"
           inert
         >

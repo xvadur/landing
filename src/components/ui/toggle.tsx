@@ -12,8 +12,9 @@ const toggleVariants = cva(
         outline: 'bg-background hover:bg-muted',
       },
       size: {
-        default: 'h-10 px-3 min-w-10',
-        sm: 'h-9 px-2.5 min-w-9',
+        default: 'h-11 px-3 min-w-11',
+        /* 36 px vizuálne, dotyková plocha 44 px cez ::before */
+        sm: 'relative h-9 px-2.5 min-w-9 before:absolute before:-inset-[7px] before:content-[""]',
         lg: 'h-11 px-5 min-w-11',
       },
     },

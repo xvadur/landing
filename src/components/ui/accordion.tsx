@@ -21,11 +21,12 @@ const AccordionTrigger = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Trigger>
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Header className="flex">
+  /* Radix obalí trigger do <h3>; globálne h3 (global.css) by mu dalo display písmo a veľkosť → vrátime telo textu */
+  <AccordionPrimitive.Header className="flex font-sans text-base font-normal leading-normal tracking-normal">
     <AccordionPrimitive.Trigger
       ref={ref}
       className={cn(
-        'flex flex-1 items-center justify-between bg-background py-4 px-4 font-bold uppercase tracking-wide transition duration-200 hover:bg-muted [&[data-state=open]]:bg-accent [&[data-state=open]>svg]:rotate-180',
+        'flex flex-1 items-center justify-between bg-background py-4 px-4 font-bold uppercase tracking-wide transition duration-200 hover:bg-muted [&[data-state=open]]:bg-secondary [&[data-state=open]]:text-secondary-foreground [&[data-state=open]>svg]:rotate-180',
         className
       )}
       {...props}

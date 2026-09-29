@@ -28,7 +28,8 @@ const buttonVariants = cva(
       },
       size: {
         default: 'h-11 px-5 py-2',
-        sm: 'h-9 px-4 text-xs',
+        /* 36 px vizuálne, dotyková plocha 44 px cez ::before */
+        sm: 'relative h-9 px-4 text-xs before:absolute before:-inset-y-[7px] before:inset-x-0 before:content-[""]',
         lg: 'h-12 px-8 text-base',
         xl: 'h-14 px-10 text-lg',
         icon: 'h-11 w-11',

@@ -9,6 +9,8 @@ interface StepperContextValue {
   setActiveStep: (step: number) => void
   totalSteps: number
   orientation: 'horizontal' | 'vertical'
+  /** useId() prefix: viac stepperov na stránke nemá duplicitné id */
+  baseId: string
 }
 
 const StepperContext = React.createContext<StepperContextValue | null>(null)
@@ -32,8 +34,9 @@ const stepVariants = cva(
         upcoming: 'bg-muted text-muted-foreground',
       },
       size: {
-        sm: 'h-8 w-8 text-sm',
-        md: 'h-10 w-10',
+        /* dotyková plocha ≥ 44 px cez ::before */
+        sm: 'relative h-8 w-8 text-sm before:absolute before:-inset-[9px] before:content-[""]',
+        md: 'relative h-10 w-10 before:absolute before:-inset-[5px] before:content-[""]',
         lg: 'h-12 w-12 text-lg',
       },
     },
@@ -87,6 +90,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     ref
   ) => {
     const [uncontrolledActiveStep, setUncontrolledActiveStep] = React.useState(0)
+    const baseId = React.useId()
 
     const isControlled = controlledActiveStep !== undefined
     const activeStep = isControlled ? controlledActiveStep : uncontrolledActiveStep
@@ -105,7 +109,7 @@ const Stepper = React.forwardRef<HTMLDivElement, StepperProps>(
     const totalSteps = totalStepsProp ?? countStepperItems(children)
 
     return (
-      <StepperContext.Provider value={{ activeStep, setActiveStep, totalSteps, orientation }}>
+      <StepperContext.Provider value={{ activeStep, setActiveStep, totalSteps, orientation, baseId }}>
         <div
           ref={ref}
           className={cn(
@@ -134,7 +138,7 @@ const StepperList = React.forwardRef<HTMLDivElement, StepperListProps>(
       <div
         ref={ref}
         role="group"
-        aria-label="Progress"
+        aria-label="Priebeh"
         className={cn(
           'flex items-center',
           orientation === 'horizontal' ? 'flex-row' : 'flex-col items-start',
@@ -153,6 +157,7 @@ StepperList.displayName = 'StepperList'
 interface StepperItemContextValue {
   index: number
   triggerId: string
+  panelId: string
 }
 
 const StepperItemContext = React.createContext<StepperItemContextValue | null>(null)
@@ -171,12 +176,13 @@ export interface StepperItemProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const StepperItem = React.forwardRef<HTMLDivElement, StepperItemProps>(
   ({ index, className, children, ...props }, ref) => {
-    const { orientation } = useStepperContext()
+    const { orientation, baseId } = useStepperContext()
 
-    const triggerId = `stepper-trigger-${index}`
+    const triggerId = `${baseId}-trigger-${index}`
+    const panelId = `${baseId}-panel-${index}`
 
     return (
-      <StepperItemContext.Provider value={{ index, triggerId }}>
+      <StepperItemContext.Provider value={{ index, triggerId, panelId }}>
         <div
           ref={ref}
           className={cn(
@@ -205,7 +211,7 @@ export interface StepperTriggerProps
 const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
   ({ size, showStepNumber = true, className, children, ...props }, ref) => {
     const { activeStep, setActiveStep } = useStepperContext()
-    const { index, triggerId } = useStepperItemContext()
+    const { index, triggerId, panelId } = useStepperItemContext()
 
     const state: 'completed' | 'active' | 'upcoming' =
       index < activeStep ? 'completed' : index === activeStep ? 'active' : 'upcoming'
@@ -216,7 +222,7 @@ const StepperTrigger = React.forwardRef<HTMLButtonElement, StepperTriggerProps>(
         id={triggerId}
         type="button"
         aria-current={state === 'active' ? 'step' : undefined}
-        aria-controls={`stepper-panel-${index}`}
+        aria-controls={panelId}
         onClick={() => setActiveStep(index)}
         className={cn(stepVariants({ state, size }), className)}
         {...props}
@@ -275,7 +281,7 @@ export interface StepperContentProps extends React.HTMLAttributes<HTMLDivElement
 
 const StepperContent = React.forwardRef<HTMLDivElement, StepperContentProps>(
   ({ index, className, children, ...props }, ref) => {
-    const { activeStep } = useStepperContext()
+    const { activeStep, baseId } = useStepperContext()
 
     if (index !== activeStep) {
       return null
@@ -284,11 +290,11 @@ const StepperContent = React.forwardRef<HTMLDivElement, StepperContentProps>(
     return (
       <div
         ref={ref}
-        id={`stepper-panel-${index}`}
+        id={`${baseId}-panel-${index}`}
         role="group"
-        aria-labelledby={`stepper-trigger-${index}`}
+        aria-labelledby={`${baseId}-trigger-${index}`}
         className={cn(
-          'mt-4 animate-[slide-in-from-bottom_200ms_ease-out]',
+          'mt-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-200',
           className
         )}
         {...props}
@@ -312,9 +318,9 @@ const StepperActions = React.forwardRef<HTMLDivElement, StepperActionsProps>(
   (
     {
       onComplete,
-      prevLabel = 'Previous',
-      nextLabel = 'Next',
-      completeLabel = 'Complete',
+      prevLabel = 'Späť',
+      nextLabel = 'Ďalej',
+      completeLabel = 'Dokončiť',
       className,
       children,
       ...props
@@ -353,7 +359,7 @@ const StepperActions = React.forwardRef<HTMLDivElement, StepperActionsProps>(
               onClick={handlePrev}
               disabled={isFirst}
               className={cn(
-                'px-4 py-2 border-3 border-foreground font-bold uppercase text-sm',
+                'min-h-11 px-4 py-2 border-3 border-foreground font-bold uppercase text-sm',
                 'bg-muted shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
                 'hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
                 'disabled:opacity-50 disabled:pointer-events-none',
@@ -366,7 +372,7 @@ const StepperActions = React.forwardRef<HTMLDivElement, StepperActionsProps>(
               type="button"
               onClick={handleNext}
               className={cn(
-                'px-4 py-2 border-3 border-foreground font-bold uppercase text-sm',
+                'min-h-11 px-4 py-2 border-3 border-foreground font-bold uppercase text-sm',
                 'bg-primary text-primary-foreground shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
                 'hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none',
                 'transition duration-200'

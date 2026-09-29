@@ -32,6 +32,7 @@ export interface SpinnerProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof spinnerVariants> {}
 
+
 const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
   ({ className, size, variant, ...props }, ref) => {
     const sizeClasses = {
@@ -50,7 +51,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         <div
           ref={ref}
           role="status"
-          aria-label="Loading"
+          aria-label="Načítava sa"
           className={cn(spinnerVariants({ size, variant }), 'gap-1', className)}
           {...props}
         >
@@ -66,7 +67,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         <div
           ref={ref}
           role="status"
-          aria-label="Loading"
+          aria-label="Načítava sa"
           className={cn(spinnerVariants({ size, variant }), 'gap-0.5', className)}
           {...props}
         >
@@ -82,11 +83,11 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         <div
           ref={ref}
           role="status"
-          aria-label="Loading"
+          aria-label="Načítava sa"
           className={cn(spinnerVariants({ size, variant }), 'relative', className)}
           {...props}
         >
-          <div className="relative animate-[brutal-blocks_1.2s_linear_infinite]">
+          <div className={cn('relative animate-[brutal-blocks_1.2s_steps(4,end)_infinite]', sizes.element)}>
             <div className={cn(sizes.block, 'absolute bg-foreground')} style={{ top: 0, left: '50%', transform: 'translateX(-50%)' }} />
             <div className={cn(sizes.block, 'absolute bg-foreground')} style={{ top: '50%', right: 0, transform: 'translateY(-50%)' }} />
             <div className={cn(sizes.block, 'absolute bg-foreground')} style={{ bottom: 0, left: '50%', transform: 'translateX(-50%)' }} />
@@ -101,13 +102,13 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
         <div
           ref={ref}
           role="status"
-          aria-label="Loading"
+          aria-label="Načítava sa"
           className={cn(spinnerVariants({ size, variant }), className)}
           {...props}
         >
           <div className={cn(sizes.ring, 'relative')}>
-            <div className="absolute inset-0 bg-foreground border-3 border-foreground" />
-            <div className="absolute inset-0 bg-foreground animate-[brutal-shadow-spin_1s_linear_infinite]" style={{ boxShadow: '3px 3px 0px hsl(var(--primary))' }} />
+            {/* ink štvorec s rotujúcim žltým tieňom (tieň ink na ink bol neviditeľný) */}
+            <div className="absolute inset-0 border-3 border-foreground bg-foreground animate-[brutal-shadow-spin_1s_steps(8,end)_infinite]" style={{ boxShadow: '4px 4px 0px hsl(var(--secondary))' }} />
           </div>
         </div>
       )
@@ -118,7 +119,7 @@ const Spinner = React.forwardRef<HTMLDivElement, SpinnerProps>(
       <div
         ref={ref}
         role="status"
-        aria-label="Loading"
+        aria-label="Načítava sa"
         className={cn(spinnerVariants({ size, variant }), className)}
         {...props}
       >
