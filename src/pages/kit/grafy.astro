@@ -1,0 +1,66 @@
+---
+/** V7 · Katalóg surovín, skupina grafy (29. 9. 2026): všetky grafy, ukazovatele a tabuľky BoldKitu naživo v tokenoch
+ *  xvadur.com, na konci „Korpus — návrh“ (heatmapa, widget do hero, bio, EKG). Noindex. Poznámky: work/v7/katalog/grafy.md */
+import Base from '@/layouts/Base.astro';
+import ChartKus from '@/components/v7/kit/grafy/ChartKus';
+import MaleKusy from '@/components/v7/kit/grafy/MaleKusy';
+import KruhoveKusy from '@/components/v7/kit/grafy/KruhoveKusy';
+import TokyKusy from '@/components/v7/kit/grafy/TokyKusy';
+import TabulkyKusy from '@/components/v7/kit/grafy/TabulkyKusy';
+import KorpusNavrh from '@/components/v7/kit/grafy/KorpusNavrh';
+
+const kusy = [
+  'chart',
+  'chart-toolbar',
+  'gauge-chart',
+  'sparkline',
+  'stat-card',
+  'progress',
+  'math-curve-progress',
+  'donut-chart',
+  'radar-chart',
+  'radial-bar-chart',
+  'funnel-chart',
+  'sankey-chart',
+  'treemap-chart',
+  'heatmap-chart',
+  'table',
+  'data-table',
+];
+---
+
+<Base title="Kit · Grafy" description="Grafy, ukazovatele a tabuľky BoldKitu vo všetkých režimoch, v tokenoch xvadur.com. Na konci návrh, ako rozsvietiť Korpus." noindex islands="full">
+  <main class="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 pb-24 pt-10 sm:px-6">
+    <header class="flex flex-col gap-4">
+      <p class="eyebrow"><a class="underline" href="/kit/">Kit</a> · 02 · grafy a dáta</p>
+      <h1 class="font-display text-display-md uppercase">Grafy a dáta</h1>
+      <p class="max-w-3xl text-lg">
+        16 kusov, každý vo všetkých režimoch, ktoré vie jeho zdrojový kód. Skutočné čísla sú iba z pulzu Korpusu a z fakty.ts, všetko ostatné nesie
+        žltý štítok <span class="border-2 border-ink bg-yellow px-1.5 font-mono text-xs font-bold uppercase">ukážkové dáta</span>.
+      </p>
+      <nav aria-label="Kusy na stránke">
+        <ul class="flex flex-wrap gap-2 font-mono text-sm">
+          {
+            kusy.map((k) => (
+              <li>
+                <a href={`#${k}`} class="brutal-flat inline-flex min-h-11 items-center rounded-lg bg-white px-3 hover:bg-paper-hover">
+                  {k}
+                </a>
+              </li>
+            ))
+          }
+          <li>
+            <a href="#korpus" class="brutal-flat inline-flex min-h-11 items-center rounded-lg bg-yellow px-3 font-bold hover:bg-yellow-hover">Korpus — návrh ↓</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <ChartKus client:load />
+    <MaleKusy client:visible />
+    <KruhoveKusy client:visible />
+    <TokyKusy client:visible />
+    <TabulkyKusy client:visible />
+    <KorpusNavrh client:visible />
+  </main>
+</Base>
