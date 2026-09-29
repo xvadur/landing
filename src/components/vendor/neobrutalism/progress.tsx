@@ -1,6 +1,6 @@
 /* neobrutalism.dev Progress (MIT, (c) 2023 Samuel Breznjak) — Radix verzia (be6e0e2), retheme cez tokeny xvadur v4.
    Zmeny: @radix-ui/react-progress → radix-ui Progress; „use client" odstránené; rám 3 px ink, radius 8, biela dráha,
-   indikátor v tóne z tokenov (default hot) s rámom vpravo; posun spring cez theme.css (reduced motion: skok);
+   indikátor v tóne z tokenov (default yellow; hot iba CTA) s rámom vpravo; posun spring cez theme.css (reduced motion: skok);
    voliteľný ProgressLabel/ProgressValue (z novšej verzie knižnice) — mono, tabular. */
 import * as React from 'react';
 import { Progress as ProgressPrimitive } from 'radix-ui';
@@ -26,7 +26,7 @@ const toneClass = {
 
 const sizeClass = { sm: 'h-3', default: 'h-5', lg: 'h-8' } as const;
 
-function Progress({ className, value, max = 100, tone = 'hot', size = 'default', ...props }: ProgressProps) {
+function Progress({ className, value, max = 100, tone = 'yellow', size = 'default', ...props }: ProgressProps) {
   const pct = Math.min(100, Math.max(0, ((value ?? 0) / max) * 100));
   return (
     <ProgressPrimitive.Root

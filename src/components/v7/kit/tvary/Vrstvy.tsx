@@ -104,7 +104,7 @@ export default function Vrstvy() {
             <span className="font-mono text-xs uppercase">
               {hriech.nazov} · {hriech.cislo} stránok
             </span>
-            <Button variant="accent" className="min-h-11 text-ink">
+            <Button variant="accent" className="min-h-11">
               Objednaj sa
             </Button>
           </LayeredCardFooter>

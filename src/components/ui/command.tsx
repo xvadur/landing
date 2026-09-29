@@ -1,17 +1,28 @@
 import * as React from 'react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { type DialogProps } from '@radix-ui/react-dialog'
-import { Command as CommandPrimitive } from 'cmdk'
+import { Command as CommandPrimitive, defaultFilter } from 'cmdk'
 import { Search } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Dialog, DialogPortal, DialogOverlay } from '@/components/ui/dialog'
 
+/** Zhodí diakritiku a veľkosť písmen: „skrtaci“ nájde „Škrtací test“, „medi“ nájde „médiá“. */
+function bezDiakritiky(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+}
+
+/** Predvolený filter palety: cmdk skóre nad textom bez diakritiky (Slováci píšu bez mäkčeňov). */
+export function commandFilterSk(value: string, search: string, keywords?: string[]): number {
+  return defaultFilter(bezDiakritiky(value), bezDiakritiky(search), keywords?.map(bezDiakritiky))
+}
+
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive>
->(({ className, ...props }, ref) => (
+>(({ className, filter = commandFilterSk, ...props }, ref) => (
   <CommandPrimitive
     ref={ref}
+    filter={filter}
     className={cn(
       'flex h-full w-full flex-col overflow-hidden bg-popover text-popover-foreground',
       className
@@ -26,12 +37,19 @@ interface CommandDialogProps extends DialogProps {
   title?: string
   /** Accessible description for the dialog (visually hidden). */
   description?: string
+  /** Trieda obsahu dialógu (šírka, poloha). */
+  className?: string
+  /** Props pre vnútorný Command: filter, shouldFilter, loop, value, onValueChange, label, vimBindings… */
+  commandProps?: Omit<React.ComponentPropsWithoutRef<typeof CommandPrimitive>, 'children'>
 }
 
+/* Na mobile 16 px okraje a výška najviac po spodok obrazovky; filter/loop idú cez commandProps (predtým išli do Dialogu). */
 const CommandDialog = ({
   children,
-  title = 'Command Menu',
-  description = 'Search for a command to run.',
+  title = 'Paleta príkazov',
+  description = 'Napíš, čo hľadáš.',
+  className,
+  commandProps,
   ...props
 }: CommandDialogProps) => {
   return (
@@ -39,11 +57,14 @@ const CommandDialog = ({
       <DialogPortal>
         <DialogOverlay />
         <DialogPrimitive.Content
-          className="fixed left-[50%] top-[20%] z-50 w-full max-w-lg translate-x-[-50%] border-3 border-foreground bg-background shadow-[8px_8px_0px_hsl(var(--shadow-color))] duration-100 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+          className={cn(
+            'fixed left-[50%] top-[max(1rem,12dvh)] z-50 flex max-h-[calc(100dvh-max(1rem,12dvh)-1rem)] w-[calc(100%-2rem)] max-w-lg translate-x-[-50%] flex-col overflow-hidden border-3 border-foreground bg-background shadow-[8px_8px_0px_hsl(var(--shadow-color))] duration-100 ease-out data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 [&_[cmdk-list]]:max-h-none [&_[cmdk-list]]:min-h-0 [&_[cmdk-list]]:flex-1 [&_[cmdk-root]]:min-h-0 [&_[cmdk-root]]:flex-1',
+            className
+          )}
         >
           <DialogPrimitive.Title className="sr-only">{title}</DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">{description}</DialogPrimitive.Description>
-          <Command className="[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12">
+          <Command {...commandProps} className="[&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-bold [&_[cmdk-group-heading]]:uppercase [&_[cmdk-group-heading]]:tracking-wide [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12">
             {children}
           </Command>
         </DialogPrimitive.Content>
@@ -133,7 +154,7 @@ const CommandItem = React.forwardRef<
   <CommandPrimitive.Item
     ref={ref}
     className={cn(
-      'relative flex cursor-pointer gap-2 select-none items-center px-3 py-2.5 text-sm font-medium outline-none transition-colors data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:border-l-3 data-[selected=true]:border-foreground data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/50',
+      'relative flex min-h-11 cursor-pointer gap-2 select-none items-center px-3 py-2.5 text-sm font-medium outline-none transition-colors data-[disabled=true]:pointer-events-none data-[selected=true]:bg-muted data-[selected=true]:border-l-3 data-[selected=true]:border-foreground data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-muted/50',
       className
     )}
     {...props}

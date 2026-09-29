@@ -44,13 +44,12 @@ const SPEED_MAP: Record<AsciiSpeed, number> = {
   fast:   2.2,
 }
 
+// Na papieri čitateľné tokeny (žltá a biela na paper zanikli, hot patrí CTA a X): ink, stamp, sivá.
 const MULTICOLOR_PALETTE = [
-  'hsl(var(--primary))',
-  'hsl(var(--secondary))',
-  'hsl(var(--accent))',
-  'hsl(var(--warning))',
-  'hsl(var(--info))',
-  'hsl(var(--success))',
+  'hsl(var(--foreground))',
+  'hsl(var(--destructive))',
+  'hsl(var(--foreground))',
+  'hsl(var(--muted-foreground))',
 ]
 
 // ============================================================================

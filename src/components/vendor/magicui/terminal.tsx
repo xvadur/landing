@@ -265,7 +265,7 @@ export const Terminal = ({ children, className, sequence = true, startOnView = t
         <div className="flex gap-2" aria-hidden="true">
           <span className="size-3 rounded-full border-2 border-ink bg-hot" />
           <span className="size-3 rounded-full border-2 border-ink bg-yellow" />
-          <span className="size-3 rounded-full border-2 border-ink bg-lime-deep" />
+          <span className="size-3 rounded-full border-2 border-ink bg-white" />
         </div>
         {title ? <span className="truncate font-mono text-xs font-bold uppercase tracking-wider opacity-70">{title}</span> : null}
       </div>

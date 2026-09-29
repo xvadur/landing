@@ -162,7 +162,7 @@ const Carousel = React.forwardRef<
           className={cn('relative', className)}
           role="region"
           aria-roledescription="carousel"
-          aria-label="Carousel"
+          aria-label="Karusel"
           {...props}
         >
           {children}
@@ -217,10 +217,12 @@ const CarouselItem = React.forwardRef<
 })
 CarouselItem.displayName = 'CarouselItem'
 
+/* Šípky: 44 px; na mobile vnútri karuselu (predtým -left-12 = mimo obrazovky), od sm vedľa neho.
+   Vertikálne centrovanie cez top/left calc, nie translate (hover:translate-y-0 z Buttonu by ho zrušil). */
 const CarouselPrevious = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof Button>
->(({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
+  React.ComponentProps<typeof Button> & { label?: string }
+>(({ className, variant = 'outline', size = 'icon', label = 'Predchádzajúca snímka', ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel()
 
   return (
@@ -229,12 +231,12 @@ const CarouselPrevious = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        'absolute h-10 w-10',
+        'absolute z-10 h-11 w-11',
         // Disable translate on hover - use scale instead for carousel buttons
         'hover:translate-x-0 hover:translate-y-0 hover:scale-105 hover:shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
         orientation === 'horizontal'
-          ? '-left-12 top-1/2 -translate-y-1/2'
-          : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
+          ? 'left-2 top-[calc(50%-1.375rem)] sm:-left-14'
+          : 'top-2 left-[calc(50%-1.375rem)] rotate-90 sm:-top-14',
         className
       )}
       disabled={!canScrollPrev}
@@ -242,7 +244,7 @@ const CarouselPrevious = React.forwardRef<
       {...props}
     >
       <ArrowLeft className="h-5 w-5 stroke-[3]" />
-      <span className="sr-only">Previous slide</span>
+      <span className="sr-only">{label}</span>
     </Button>
   )
 })
@@ -250,8 +252,8 @@ CarouselPrevious.displayName = 'CarouselPrevious'
 
 const CarouselNext = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof Button>
->(({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
+  React.ComponentProps<typeof Button> & { label?: string }
+>(({ className, variant = 'outline', size = 'icon', label = 'Nasledujúca snímka', ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel()
 
   return (
@@ -260,12 +262,12 @@ const CarouselNext = React.forwardRef<
       variant={variant}
       size={size}
       className={cn(
-        'absolute h-10 w-10',
+        'absolute z-10 h-11 w-11',
         // Disable translate on hover - use scale instead for carousel buttons
         'hover:translate-x-0 hover:translate-y-0 hover:scale-105 hover:shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
         orientation === 'horizontal'
-          ? '-right-12 top-1/2 -translate-y-1/2'
-          : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',
+          ? 'right-2 top-[calc(50%-1.375rem)] sm:-right-14'
+          : 'bottom-2 left-[calc(50%-1.375rem)] rotate-90 sm:-bottom-14',
         className
       )}
       disabled={!canScrollNext}
@@ -273,16 +275,17 @@ const CarouselNext = React.forwardRef<
       {...props}
     >
       <ArrowRight className="h-5 w-5 stroke-[3]" />
-      <span className="sr-only">Next slide</span>
+      <span className="sr-only">{label}</span>
     </Button>
   )
 })
 CarouselNext.displayName = 'CarouselNext'
 
+/* Bodka 12 px vizuálne, tlačidlo 44 × 44 (dotyk). */
 const CarouselDots = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement> & { getLabel?: (index: number, total: number) => string }
+>(({ className, getLabel = (i, n) => `Snímka ${i + 1} z ${n}`, ...props }, ref) => {
   const { selectedIndex, scrollSnaps, scrollTo } = useCarousel()
 
   if (scrollSnaps.length <= 1) return null
@@ -290,7 +293,7 @@ const CarouselDots = React.forwardRef<
   return (
     <div
       ref={ref}
-      className={cn('flex items-center justify-center gap-2 mt-4', className)}
+      className={cn('flex flex-wrap items-center justify-center mt-2', className)}
       {...props}
     >
       {scrollSnaps.map((snap, index) => (
@@ -298,15 +301,20 @@ const CarouselDots = React.forwardRef<
           key={snap}
           type="button"
           onClick={() => scrollTo(index)}
-          className={cn(
-            'h-3 w-3 border-2 border-foreground transition duration-200',
-            index === selectedIndex
-              ? 'bg-primary scale-110 shadow-[2px_2px_0px_hsl(var(--shadow-color))]'
-              : 'bg-muted hover:bg-muted/80'
-          )}
-          aria-label={`Go to slide ${index + 1} of ${scrollSnaps.length}`}
+          className="group flex h-11 w-11 items-center justify-center"
+          aria-label={getLabel(index, scrollSnaps.length)}
           aria-current={index === selectedIndex ? 'page' : undefined}
-        />
+        >
+          <span
+            aria-hidden="true"
+            className={cn(
+              'block h-3 w-3 border-2 border-foreground transition duration-200',
+              index === selectedIndex
+                ? 'bg-primary scale-110 shadow-[2px_2px_0px_hsl(var(--shadow-color))]'
+                : 'bg-muted group-hover:bg-muted/80'
+            )}
+          />
+        </button>
       ))}
     </div>
   )

@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 
 export interface ScrollProgressProps extends Omit<React.HTMLAttributes<HTMLElement>, keyof MotionProps> {
   ref?: React.Ref<HTMLDivElement>;
-  /** Farba pásu (token). @default 'hot' */
+  /** Farba pásu (token). @default 'ink' (hot iba CTA a X) */
   color?: 'hot' | 'yellow' | 'pink' | 'lilac' | 'lime' | 'sky' | 'ink';
 }
 
@@ -21,7 +21,7 @@ const COLOR: Record<NonNullable<ScrollProgressProps['color']>, string> = {
   ink: 'bg-ink',
 };
 
-export function ScrollProgress({ className, ref, color = 'hot', ...props }: ScrollProgressProps) {
+export function ScrollProgress({ className, ref, color = 'ink', ...props }: ScrollProgressProps) {
   const { scrollYProgress } = useScroll();
 
   return (

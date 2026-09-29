@@ -3,59 +3,16 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Toaster } from '@/components/ui/sonner';
-import { ThemeProvider } from '@/hooks/use-theme';
 import { cn } from '@/lib/utils';
 
 /** Vlastný toaster katalógu. Sonner 2 filtruje podľa `toasterId`, takže site Toaster (bez id) tieto hlásenia neukáže. */
 export const TOASTER = 'kit-formulare';
 
-/** Radix portály (popover, select, combobox, time-picker) sú mimo ostrova; Lenis by im zobral koliesko myši.
- *  Označíme ich `data-lenis-prevent`, aby sa zoznamy hodín a položiek dali skrolovať. */
-function useLenisPrevent() {
-  useEffect(() => {
-    const oznac = () =>
-      document
-        .querySelectorAll('[data-radix-popper-content-wrapper]:not([data-lenis-prevent])')
-        .forEach((el) => el.setAttribute('data-lenis-prevent', ''));
-    const mo = new MutationObserver(oznac);
-    mo.observe(document.body, { childList: true });
-    return () => mo.disconnect();
-  }, []);
-}
-
+/** Toaster katalógu: BoldKit sonner.tsx tak, ako je (unstyled + tokeny, bez ThemeProvider). Lenis prepúšťa koliesko
+ *  portálom (popover, select, combobox, time-picker) sám — site/Smooth.tsx (prevent). */
 export function KitToaster() {
-  useLenisPrevent();
-  return (
-    <ThemeProvider defaultTheme="light" storageKey="kit-formulare-tema">
-      {/* BoldKit Toaster dáva triedy cez group-[.toaster]:… v @layer utilities, no sonner vkladá svoje CSS mimo vrstiev
-          a to vyhrá (Tailwind 4) → toast vyzerá ako predvolený sonner. Obchádzka: unstyled + triedy v tokenoch. */}
-      <Toaster
-        id={TOASTER}
-        position="bottom-center"
-        toastOptions={{
-          unstyled: true,
-          classNames: {
-            toast:
-              'flex w-[min(92vw,420px)] items-center gap-3 rounded-lg border-3 border-ink px-4 py-3 font-sans shadow-brutal',
-            default: 'bg-white text-ink',
-            title: 'font-display text-base font-extrabold uppercase tracking-wide',
-            description: 'text-sm font-medium',
-            success: 'bg-yellow text-ink',
-            error: 'bg-stamp text-paper',
-            info: 'bg-white text-ink',
-            warning: 'bg-yellow text-ink',
-          },
-        }}
-      />
-    </ThemeProvider>
-  );
+  return <Toaster id={TOASTER} position="bottom-center" />;
 }
-
-/** Oprava tokenov pre Calendar: today a range_middle sú v BoldKite bg-accent (hot) s paper textom. */
-export const KAL_OPRAVA = {
-  today: 'bg-yellow text-ink border-2 border-foreground aria-selected:bg-ink aria-selected:text-paper',
-  range_middle: 'aria-selected:bg-yellow aria-selected:text-ink',
-};
 
 /** Dátumové ukážky sa vykreslia až v prehliadači: statické HTML by malo „dnes“ z času buildu a hydratácia by nesedela. */
 export function useKlient() {

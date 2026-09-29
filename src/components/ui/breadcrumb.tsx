@@ -98,7 +98,7 @@ const BreadcrumbEllipsis = ({
     {...props}
   >
     <MoreHorizontal className="h-4 w-4 stroke-[3]" />
-    <span className="sr-only">More</span>
+    <span className="sr-only">Ďalšie</span>
   </span>
 )
 BreadcrumbEllipsis.displayName = 'BreadcrumbEllipsis'

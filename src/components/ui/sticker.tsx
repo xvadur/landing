@@ -7,12 +7,14 @@ const stickerVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-accent text-accent-foreground',
+        /* default = žltá (hot patrí CTA a X); hot je iba explicitný `accent` s ink textom. neon = token hot (predtým hex #ff2d78) */
+        default: 'bg-secondary text-secondary-foreground',
+        accent: 'bg-accent text-accent-foreground',
         primary: 'bg-primary text-primary-foreground',
         secondary: 'bg-secondary text-secondary-foreground',
         destructive: 'bg-destructive text-destructive-foreground',
         outline: 'bg-background text-foreground',
-        neon: 'bg-[#ff2d78] text-white',
+        neon: 'bg-accent text-accent-foreground',
       },
       size: {
         sm: 'px-2 py-1 text-xs',
@@ -32,10 +34,11 @@ const stickerVariants = cva(
       shadow: {
         none: '',
         default: 'shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
+        /* colored = žltý tieň, double = žltý + ink (predtým oba ink = na pohľad ako default) */
         colored:
-          'shadow-[4px_4px_0px_hsl(var(--primary))]',
+          'shadow-[4px_4px_0px_hsl(var(--secondary))]',
         double:
-          'shadow-[3px_3px_0px_hsl(var(--primary)),6px_6px_0px_hsl(var(--shadow-color))]',
+          'shadow-[3px_3px_0px_hsl(var(--secondary)),6px_6px_0px_hsl(var(--shadow-color))]',
       },
     },
     defaultVariants: {
@@ -80,7 +83,7 @@ const Sticker = React.forwardRef<HTMLDivElement, StickerProps>(
         className={cn(
           stickerVariants({ variant, size, rotation, shadow }),
           dashed && 'before:absolute before:inset-[-6px] before:border-2 before:border-dashed before:border-foreground/50',
-          tape && 'after:absolute after:left-1/2 after:top-[-8px] after:-translate-x-1/2 after:rotate-[-2deg] after:w-[50px] after:h-[16px] after:bg-accent/80 after:border-2 after:border-foreground',
+          tape && 'after:absolute after:left-1/2 after:top-[-8px] after:-translate-x-1/2 after:rotate-[-2deg] after:w-[50px] after:h-[16px] after:bg-secondary/90 after:border-2 after:border-foreground',
           interactive && 'cursor-pointer hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none',
           className
         )}
@@ -157,11 +160,12 @@ const stickyNoteVariants = cva(
   {
     variants: {
       variant: {
-        yellow: 'bg-accent text-accent-foreground',
-        pink: 'bg-primary text-primary-foreground',
-        blue: 'bg-info text-info-foreground',
-        green: 'bg-success text-success-foreground',
-        purple: 'bg-secondary text-secondary-foreground',
+        /* mená = skutočné tokeny (predtým yellow = hot, pink = ink, blue = biela, green/purple = žltá) */
+        yellow: 'bg-secondary text-secondary-foreground',
+        white: 'bg-info text-info-foreground',
+        paper: 'bg-background text-foreground',
+        ink: 'bg-primary text-primary-foreground',
+        accent: 'bg-accent text-accent-foreground',
       },
       size: {
         sm: 'p-3 text-sm min-w-[120px]',

@@ -7,6 +7,7 @@ import { Sheet, SheetContent } from '@/components/ui/sheet'
 import {
   Tooltip,
   TooltipContent,
+  TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 
@@ -43,6 +44,8 @@ interface SidebarProviderProps extends React.HTMLAttributes<HTMLDivElement> {
   defaultOpen?: boolean
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  /** Kláves pre Ctrl/⌘ + kláves (predvolene 'b'); false = bez skratky (napr. druhý panel na stránke). */
+  keyboardShortcut?: string | false
 }
 
 const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
@@ -51,6 +54,7 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
       defaultOpen = true,
       open: controlledOpen,
       onOpenChange,
+      keyboardShortcut = SIDEBAR_KEYBOARD_SHORTCUT,
       className,
       style,
       children,
@@ -103,8 +107,11 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
     // Keyboard shortcut
     React.useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
+        // v textovom poli je Ctrl/⌘+B „tučné“ — neprepínaj panel
+        const t = e.target as HTMLElement | null
+        if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return
         if (
-          e.key === SIDEBAR_KEYBOARD_SHORTCUT &&
+          e.key === keyboardShortcut &&
           (e.metaKey || e.ctrlKey) &&
           !e.shiftKey &&
           !e.altKey
@@ -114,9 +121,10 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
         }
       }
 
+      if (!keyboardShortcut) return
       window.addEventListener('keydown', handleKeyDown)
       return () => window.removeEventListener('keydown', handleKeyDown)
-    }, [toggleSidebar])
+    }, [toggleSidebar, keyboardShortcut])
 
     const state = open ? 'expanded' : 'collapsed'
 
@@ -150,7 +158,8 @@ const SidebarProvider = React.forwardRef<HTMLDivElement, SidebarProviderProps>(
           )}
           {...props}
         >
-          {children}
+          {/* SidebarItem tooltip potrebuje Provider; bez neho Radix Tooltip hodil chybu */}
+          <TooltipProvider delayDuration={0}>{children}</TooltipProvider>
         </div>
       </SidebarContext.Provider>
     )
@@ -239,7 +248,8 @@ const SidebarToggle = React.forwardRef<
       ref={ref}
       variant="outline"
       size="icon"
-      className={cn('h-8 w-8 transition-transform duration-300', className)}
+      aria-label={props['aria-label'] ?? 'Prepnúť bočný panel'}
+      className={cn('relative h-9 w-9 transition-transform duration-300 before:absolute before:-inset-[7px] before:content-[""]', className)}
       onClick={toggleSidebar}
       {...props}
     >
@@ -249,7 +259,6 @@ const SidebarToggle = React.forwardRef<
           state === 'collapsed' && 'rotate-180'
         )}
       />
-      <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
 })
@@ -339,12 +348,12 @@ SidebarGroupLabel.displayName = 'SidebarGroupLabel'
 
 // Sidebar Item
 const sidebarItemVariants = cva(
-  'flex w-full items-center gap-3 px-3 py-2 text-sm transition duration-150',
+  'flex min-h-11 w-full items-center gap-3 px-3 py-2 text-sm transition duration-150',
   {
     variants: {
       variant: {
         default: 'hover:bg-muted',
-        active: 'bg-accent shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
+        active: 'bg-secondary text-secondary-foreground shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
       },
     },
     defaultVariants: {

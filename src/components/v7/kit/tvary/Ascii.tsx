@@ -4,7 +4,7 @@ import * as React from 'react';
 import * as A from '@/components/ui/ascii-shapes';
 import type { AsciiCharset, AsciiSize, AsciiSpeed, AsciiShapeProps } from '@/components/ui/ascii-shapes';
 import { KORPUS } from '@/data/fakty';
-import { Bunka, Chyba, FARBY, farbaCss, Kus, Panel, Pod, Prepinac, Vyber, type FarbaId } from './Spolocne';
+import { Bunka, Opravene, FARBY, farbaCss, Kus, Panel, Pod, Prepinac, Vyber, type FarbaId } from './Spolocne';
 
 type AsciiComp = React.ForwardRefExoticComponent<AsciiShapeProps & React.RefAttributes<HTMLPreElement>>;
 
@@ -79,11 +79,10 @@ export default function Ascii() {
           </div>
         </div>
       </Panel>
-      <Chyba>
-        <code>multicolor</code> strieda riadky v paleta primary, secondary, accent, warning, info, success. V tokenoch xvadur.com je info = biela
-        a success/warning = žltá, takže na bielom pozadí pre <code>&lt;pre&gt;</code> (bg-background = paper) časť riadkov zmizne. Na webe
-        používaj <code>color</code>, nie multicolor. Pri <code>animated=false</code> sa ukáže prvý snímok (t = 0).
-      </Chyba>
+      <Opravene>
+        <code>multicolor</code> strieda čitateľné tokeny ink, stamp, ink, sivá (žltá a biela na papieri zanikali, hot patrí CTA).
+        Pri <code>animated=false</code> sa ukáže prvý snímok (t = 0).
+      </Opravene>
 
       <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3" aria-label="Všetky ASCII tvary">
         {TVARY.map((t) => (

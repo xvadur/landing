@@ -55,7 +55,7 @@ const MathCurveLoader = React.forwardRef<SVGSVGElement, MathCurveLoaderProps>(
       headColor,
       strokeWidth = 4,
       headSize = 8,
-      'aria-label': ariaLabel = 'Loading',
+      'aria-label': ariaLabel = 'Načítava sa',
       ...props
     },
     ref

@@ -59,12 +59,6 @@ export default function Subory() {
         id="dropzone"
         meno="dropzone"
         veta="Plocha na pustenie súborov: kontrola typu, veľkosti a počtu, render-prop so stavom (isDragging, accepted, rejected), 3 varianty. FileList ukáže priebeh aj chybu."
-        pozor={[
-          'predvolené texty a hlásky po anglicky („Drag & drop files“, „File is larger…“)',
-          'aria-label „File upload area“ → prepíš propom',
-          'dragging: bg-primary/10 a tieň primary = sivé, nie žlté',
-          'tlačidlo odobrať v FileList 32 px',
-        ]}
       >
         <Mriezka>
           <Bunka nazov='variant="default" (predvolený obsah)' stlpec>

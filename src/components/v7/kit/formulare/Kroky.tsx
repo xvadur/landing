@@ -55,12 +55,6 @@ export default function Kroky() {
         id="stepper"
         meno="stepper"
         veta="Indikátor krokov s obsahom: controlled aj uncontrolled, vodorovne aj zvislo, 3 veľkosti, číslo alebo ikona, hotové tlačidlá StepperActions."
-        pozor={[
-          'id „stepper-trigger-N“ natvrdo: dva steppery na stránke = duplicitné id',
-          'StepperActions predvolene „Previous / Next / Complete“',
-          'klik na krok preskočí validáciu, ak ho neriadiš cez onStepChange',
-          'hotový krok = bg-success (žltá), aktívny = ink + scale-110',
-        ]}
       >
         <Mriezka className="lg:grid-cols-2">
           <Bunka nazov="horizontal · StepperActions s vlastnými popismi" stlpec>
@@ -159,7 +153,7 @@ export default function Kroky() {
         id="multi-step-form"
         meno="multi-step-form"
         veta="Mozog viackrokového formulára bez závislostí: hodnoty, chyby, touched, aktívny krok, validátor na krok, next / back / goTo / submit. Stepper je iba jeho obraz."
-        pozor={['next() nevráti, či prešiel → ak chceš hlásenie, pozri isStepValid', 'chyby sa ukážu až po pokuse ísť ďalej']}
+        pozor={['chyby sa ukážu až po pokuse ísť ďalej']}
       >
         <Recept nazov="zápis do čakárne (PRODUKTY)" badge="ukážka · nič sa neodosiela">
           <MultiStepForm<Cakaren>
@@ -260,7 +254,7 @@ function CakarenForm() {
           Späť
         </Button>
         {f.isLastStep ? (
-          <Button variant="accent" className="text-ink" onClick={f.submit}>
+          <Button variant="accent" onClick={f.submit}>
             Zapísať sa
           </Button>
         ) : (

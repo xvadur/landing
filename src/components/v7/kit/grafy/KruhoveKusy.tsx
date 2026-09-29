@@ -123,7 +123,7 @@ export default function KruhoveKusy() {
             <DonutChart data={[]} config={CFG_PROJEKTY} emptyState="Zatiaľ žiadne prompty" />
           </Varianta>
         </Mriezka>
-        <p className="text-sm">Bez vlastného <code>fill</code> berie <code>--chart-1</code> = hot, preto tu má každý kus fill z tokenov.</p>
+        <p className="text-sm">Bez vlastného <code>fill</code> berie <code>--chart-1…5</code> (ink, žltá, stamp, biela, sivá); popisy sú ink, na tmavom výseku papierové.</p>
       </Kus>
 
       {/* ---------------- radar-chart ---------------- */}

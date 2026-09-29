@@ -77,8 +77,9 @@ export function NumberTicker({
     [springValue, decimalPlaces, locale],
   );
 
+  // inline-block, nie inline-flex: flex položky orezali medzeru v prefix/suffix („16,3mld.“)
   return (
-    <span className={cn('inline-flex items-baseline', className)} {...props}>
+    <span className={cn('inline-block', className)} {...props}>
       {prefix ? <span>{prefix}</span> : null}
       <span ref={ref} className="inline-block tabular-nums">
         {formatTicker(direction === 'down' ? value : startValue, decimalPlaces, locale)}

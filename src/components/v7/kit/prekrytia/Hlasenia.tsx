@@ -5,9 +5,7 @@ import * as React from 'react';
 import { toast, type ExternalToast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { ZIVE_CISLA, ZIVE_CISLA_SNIMKA } from '@/data/fakty';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Blok, KIT_TOASTER, KIT_TOASTER_BOLDKIT, Kus, Stav } from './spolocne';
+import { Blok, KIT_TOASTER, Kus, Stav } from './spolocne';
 
 type Poz = NonNullable<ExternalToast['position']>;
 const POZICIE: Poz[] = ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'];
@@ -15,8 +13,7 @@ const streak = ZIVE_CISLA.find((z) => z.kluc === 'streak_days')!;
 
 export default function Hlasenia() {
   const [posledne, setPosledne] = React.useState<string>('—');
-  const [povodny, setPovodny] = React.useState(false);
-  const ciel = povodny ? KIT_TOASTER_BOLDKIT : KIT_TOASTER;
+  const ciel = KIT_TOASTER;
   const k = (o: ExternalToast = {}): ExternalToast => ({ toasterId: ciel, ...o });
   const spusti = (meno: string, f: () => void) => () => {
     setPosledne(meno);
@@ -85,15 +82,11 @@ export default function Hlasenia() {
     >
       <Blok
         nazov="Typy a voľby"
-        pozn="Oprava (vpravo dole): unstyled + tokeny, warning má červený okraj. Pôvodný BoldKit (vľavo dole): jeho triedy prebije CSS sonneru mimo @layer, success a warning sú navyše oba žlté."
+        pozn="BoldKit sonner.tsx: unstyled + tokeny (štýl sa naozaj prejaví), bez ThemeProvider. success = žltá, warning = biela s alarmovým okrajom, error = stamp."
       >
         <div className="mb-3 flex flex-wrap items-center gap-4">
           <Stav>zatvorené</Stav>
           <span className="font-mono text-sm">posledné: {posledne}</span>
-          <div className="flex min-h-11 items-center gap-2">
-            <Switch id="kit-sonner-povodny" checked={povodny} onCheckedChange={setPovodny} data-open="toast-povodny" />
-            <Label htmlFor="kit-sonner-povodny">pôvodný BoldKit sonner.tsx</Label>
-          </div>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {TYPY.map((t) => (

@@ -11,6 +11,8 @@ export interface SliderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
   onValueCommit?: (value: number[]) => void
   disabled?: boolean
   orientation?: 'horizontal' | 'vertical'
+  /** Text pre čítačku k hodnote (predvolene „6 z 20“). */
+  getValueText?: (value: number, max: number) => string
   // Jelly physics settings
   stiffness?: number
   damping?: number
@@ -37,6 +39,7 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
       stiffness = 400,
       damping = 28,
       mass = 1,
+      getValueText = (v: number, m: number) => `${v.toLocaleString('sk-SK')} z ${m.toLocaleString('sk-SK')}`,
       className,
       'aria-label': ariaLabel,
       'aria-labelledby': ariaLabelledby,
@@ -50,6 +53,15 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
     const isDraggingRef = React.useRef<boolean>(false)
     const keyboardDragTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
     const currentValueRef = React.useRef<number[]>(defaultValue)
+    // prefers-reduced-motion: jazdec ide rovno na cieľ, bez pružiny a rozpľasnutia
+    const reducedRef = React.useRef(false)
+    React.useEffect(() => {
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+      const sync = () => (reducedRef.current = mq.matches)
+      sync()
+      mq.addEventListener('change', sync)
+      return () => mq.removeEventListener('change', sync)
+    }, [])
 
     // Track active drag handlers for cleanup on unmount
     const dragHandlersRef = React.useRef<{
@@ -145,6 +157,13 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
         // React StrictMode double-invokes it — calling setSquishes in there
         // fired it twice per frame.
         const pendingSquishes: { scaleX: number; scaleY: number }[] = []
+
+        if (reducedRef.current) {
+          setSprings(targetsRef.current.map((t) => ({ position: t, velocity: 0 })))
+          setSquishes(targetsRef.current.map(() => ({ scaleX: 1, scaleY: 1 })))
+          animationRef.current = requestAnimationFrame(simulate)
+          return
+        }
 
         setSprings((prev) => {
           const newSprings: SpringState[] = []
@@ -507,7 +526,7 @@ const Slider = React.forwardRef<HTMLDivElement, SliderProps>(
             aria-valuemin={min}
             aria-valuemax={max}
             aria-valuenow={actualValue[index]}
-            aria-valuetext={`${actualValue[index]} of ${max}`}
+            aria-valuetext={getValueText(actualValue[index], max)}
             aria-disabled={disabled}
             aria-orientation={orientation}
             aria-label={ariaLabel}

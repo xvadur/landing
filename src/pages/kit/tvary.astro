@@ -31,7 +31,7 @@ const obsah = [
 ---
 
 <Base title="Kit · Tvary" description="Katalóg V7: všetky tvary, ASCII a canvas efekty, nálepky, krivky, načítavanie, pásy a pohyb BoldKitu v tokenoch xvadur.com." noindex islands="full">
-  <main class="kit-zaplata mx-auto flex w-full max-w-7xl flex-col gap-14 px-4 py-10 sm:px-6 lg:py-14">
+  <main class="mx-auto flex w-full max-w-7xl flex-col gap-14 px-4 py-10 sm:px-6 lg:py-14">
     <header class="flex flex-col gap-4">
       <p class="eyebrow"><a href="/kit/" class="underline decoration-2 underline-offset-4">Kit</a> · skupina 03</p>
       <h1 class="font-display text-display-sm font-extrabold uppercase">Tvary, nálepky, efekty</h1>
@@ -40,9 +40,8 @@ const obsah = [
         matematické krivky, načítavanie, pásy a pohybové recepty. Na konci tri návrhy rámu hera okolo tvojej fotky.
       </p>
       <p class="max-w-3xl rounded-lg border-3 border-ink bg-white px-4 py-3 text-sm">
-        <strong class="font-mono">Záplata katalógu:</strong> časť animácií kitu nemá CSS (plynulé animácie tvarov, spinner dots/bars/blocks/brutal,
-        marquee slow/fast). Aby bolo vidieť, čo mali robiť, dopĺňa ich štýl tejto stránky. Na webe by stáli — opravy sú v
-        <code>work/v7/katalog/tvary.md</code>.
+        Animácie tvarov, spinnerov a pásov idú zo stavebnice (<code>src/styles/motion.css</code>), nie zo štýlu tejto stránky.
+        Opravy kusov: <code>work/v7/katalog/OPRAVY.md</code>.
       </p>
       <nav aria-label="Obsah stránky" class="flex flex-wrap gap-2">
         {
@@ -69,50 +68,6 @@ const obsah = [
 </Base>
 
 <style is:global>
-  /* ---------- záplata katalógu (iba /kit/tvary/) ----------
-     1. plynulé animácie tvarov: shapes.tsx generuje shape-animate-{spin,pulse,float,wiggle,bounce,glitch}[-slow|-fast],
-        motion.css má iba stupňové varianty */
-  @keyframes kit-spin { to { transform: rotate(360deg); } }
-  @keyframes kit-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-  @keyframes kit-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  @keyframes kit-wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-8deg); } 75% { transform: rotate(8deg); } }
-  @keyframes kit-bounce { 0%, 100% { transform: translateY(0); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); } 50% { transform: translateY(-14%); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); } }
-  @keyframes kit-glitch {
-    0%, 100% { transform: translate(0); }
-    20% { transform: translate(-3px, 2px); }
-    40% { transform: translate(3px, -2px); }
-    60% { transform: translate(-2px, -1px); }
-    80% { transform: translate(2px, 1px); }
-  }
-  .kit-zaplata .shape-animate-spin { animation: kit-spin 3s linear infinite; }
-  .kit-zaplata .shape-animate-spin-slow { animation: kit-spin 6s linear infinite; }
-  .kit-zaplata .shape-animate-spin-fast { animation: kit-spin 1.2s linear infinite; }
-  .kit-zaplata .shape-animate-pulse { animation: kit-pulse 2s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-pulse-slow { animation: kit-pulse 3.5s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-pulse-fast { animation: kit-pulse 1s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-float { animation: kit-float 3s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-float-slow { animation: kit-float 5s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-float-fast { animation: kit-float 1.5s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-wiggle { animation: kit-wiggle 1s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-wiggle-slow { animation: kit-wiggle 2s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-wiggle-fast { animation: kit-wiggle 0.5s var(--ease-in-out) infinite; }
-  .kit-zaplata .shape-animate-bounce { animation: kit-bounce 1s infinite; }
-  .kit-zaplata .shape-animate-bounce-slow { animation: kit-bounce 2s infinite; }
-  .kit-zaplata .shape-animate-bounce-fast { animation: kit-bounce 0.5s infinite; }
-  .kit-zaplata .shape-animate-glitch { animation: kit-glitch 0.4s steps(2, end) infinite; }
-  .kit-zaplata .shape-animate-glitch-slow { animation: kit-glitch 0.9s steps(2, end) infinite; }
-  .kit-zaplata .shape-animate-glitch-fast { animation: kit-glitch 0.2s steps(2, end) infinite; }
-
-  /* 2. spinner.tsx volá keyframes, ktoré nikde nie sú */
-  @keyframes brutal-dots { 0%, 80%, 100% { transform: scale(0.4); opacity: 0.4; } 40% { transform: scale(1); opacity: 1; } }
-  @keyframes brutal-bars { 0%, 100% { transform: scaleY(0.4); } 50% { transform: scaleY(1); } }
-  @keyframes brutal-blocks { to { transform: rotate(360deg); } }
-  @keyframes brutal-shadow-spin { to { transform: rotate(360deg); } }
-
-  /* 3. marquee.tsx: animate-marquee-slow / -fast neexistujú (normal = token --animate-marquee) */
-  .kit-zaplata .animate-marquee-slow { animation: marquee 80s linear infinite; }
-  .kit-zaplata .animate-marquee-fast { animation: marquee 16s linear infinite; }
-
   /* ---------- vlastné ukážky katalógu ---------- */
   /* dráha easingu: kocka tam a späť cez celú šírku dráhy */
   .kit-draha { container-type: inline-size; }

@@ -265,10 +265,10 @@ function Strom() {
             onSelectedChange={(ids) => ids.length && setVyber(ids)}
             expandedIds={VSETKY}
             showIcons={false}
-            className="overflow-x-auto [&_[role=treeitem]>div:first-child]:min-h-11 [&_[role=treeitem]>div.bg-accent:first-child]:bg-yellow [&_[role=treeitem]>div>span:last-child]:font-bold"
+            className="overflow-x-auto [&_[role=treeitem]>div>span:last-child]:font-bold"
             aria-label="Strom rozhodnutí"
           />
-          <p className="font-mono text-xs">↑ ↓ pohyb · Home / End · Enter vybrať (strom je stále rozbalený: klik na rodiča by ho inak zbalil)</p>
+          <p className="font-mono text-xs">↑ ↓ pohyb · Home / End · Enter vybrať (klik na rodiča ho vyberie a nezbalí; zbalí šípka alebo ←)</p>
         </div>
         <Card className="self-start">
           <CardHeader className={z.id === 'odchod' ? 'bg-stamp text-paper' : z.doplni ? 'bg-paper' : 'bg-yellow'}>

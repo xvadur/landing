@@ -8,8 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { TERMINY } from '@/data/terminy';
 import { Bunka, Kus, KitToaster, Mriezka, Recept, Stav } from './Spolocne';
 
-/** hot je iba na CTA a text na hot je vždy ink: variant accent má v tokenoch text-accent-foreground = paper, preto text-ink. */
-const HOT = 'text-ink';
+/* hot je iba na CTA; text na hot je ink priamo z tokenu (--color-accent-foreground v boldkit.css). */
 
 const VARIANTY = [
   ['default', 'Primárne'],
@@ -49,17 +48,11 @@ export default function Tlacidla() {
         id="button"
         meno="button"
         veta="Tlačidlo: 9 variantov, 5 veľkostí, 6 animácií, asChild pre odkazy. Tvrdý tieň sa pri hoveri „zatlačí“."
-        pozor={[
-          'accent: text je paper na hot (porušenie) → pridaj text-ink',
-          'animation: keyframes brutal-* v CSS nie sú',
-          'sm 36 px < 44 px cieľ',
-          'bk-interactive nie je definované → bez prechodu',
-        ]}
       >
         <Mriezka>
           <Bunka nazov="variant" className="sm:col-span-2 lg:col-span-3">
             {VARIANTY.map(([v, t]) => (
-              <Button key={v} variant={v} className={v === 'accent' ? HOT : undefined}>
+              <Button key={v} variant={v}>
                 {t}
               </Button>
             ))}
@@ -106,7 +99,7 @@ export default function Tlacidla() {
         </Mriezka>
         <Recept nazov="CTA vyšetrenia (Konzultacia.astro, Liecba.astro)">
           <div className="flex flex-wrap items-center gap-4">
-            <Button variant="accent" size="xl" className={`${HOT} max-w-full whitespace-normal`}>
+            <Button variant="accent" size="xl" className="max-w-full whitespace-normal">
               Objednať sa na vyšetrenie <ArrowRight />
             </Button>
             <Button variant="outline" size="lg">
@@ -172,7 +165,6 @@ export default function Tlacidla() {
         id="toggle"
         meno="toggle"
         veta="Tlačidlo s dvoma stavmi (aria-pressed). Zapnuté sa zatlačí a sčernie."
-        pozor={['default 40 px a sm 36 px < 44 px cieľ']}
       >
         <Mriezka>
           <Bunka nazov="variant default · outline">

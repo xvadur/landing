@@ -26,7 +26,8 @@ const dropzoneVariants = cva(
     variants: {
       state: {
         idle: 'bg-background hover:bg-muted/30 shadow-[4px_4px_0px_hsl(var(--shadow-color))] hover:shadow-[6px_6px_0px_hsl(var(--shadow-color))] hover:translate-x-[-2px] hover:translate-y-[-2px]',
-        dragging: 'border-solid border-primary bg-primary/10 scale-[1.02] shadow-[8px_8px_0px_hsl(var(--primary))]',
+        /* ťahanie = žltá plocha (predtým bg-primary/10 = sivá) */
+        dragging: 'border-solid border-primary bg-secondary scale-[1.02] shadow-[8px_8px_0px_hsl(var(--primary))]',
         disabled: 'opacity-50 cursor-not-allowed shadow-none',
       },
       variant: {
@@ -53,6 +54,28 @@ export interface DropzoneProps
   maxFiles?: number
   disabled?: boolean
   children?: React.ReactNode | ((state: DropzoneState) => React.ReactNode)
+  /** Texty (predvolene slovensky). */
+  messages?: Partial<DropzoneMessages>
+}
+
+export interface DropzoneMessages {
+  title: string
+  dragging: string
+  hint: string
+  tooLarge: (max: string) => string
+  invalidType: string
+  tooMany: (max: number) => string
+  area: string
+}
+
+const DEFAULT_DROPZONE_MESSAGES: DropzoneMessages = {
+  title: 'Pretiahni súbory sem',
+  dragging: 'Pusti súbory sem',
+  hint: 'alebo klikni a vyber ich',
+  tooLarge: (max) => `Súbor je väčší ako ${max}`,
+  invalidType: 'Tento typ súboru nie je povolený',
+  tooMany: (max) => `Priveľa súborov. Najviac ${max}.`,
+  area: 'Nahratie súborov',
 }
 
 const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
@@ -67,10 +90,12 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       variant,
       className,
       children,
+      messages: messagesProp,
       ...props
     },
     ref
   ) => {
+    const messages = { ...DEFAULT_DROPZONE_MESSAGES, ...messagesProp }
     const [isDragging, setIsDragging] = React.useState(false)
     const [isFocused, setIsFocused] = React.useState(false)
     const [acceptedFiles, setAcceptedFiles] = React.useState<File[]>([])
@@ -101,7 +126,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
       if (file.size > maxSize) {
         errors.push({
           code: 'file-too-large',
-          message: `File is larger than ${formatBytes(maxSize)}`,
+          message: messages.tooLarge(formatBytes(maxSize)),
         })
       }
 
@@ -127,7 +152,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
         if (!isAccepted) {
           errors.push({
             code: 'file-invalid-type',
-            message: 'File type not accepted',
+            message: messages.invalidType,
           })
         }
       }
@@ -150,7 +175,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
         } else if (accepted.length >= maxFiles) {
           rejected.push({
             file,
-            errors: [{ code: 'too-many-files', message: `Too many files. Maximum is ${maxFiles}.` }],
+            errors: [{ code: 'too-many-files', message: messages.tooMany(maxFiles) }],
           })
         } else {
           accepted.push(file)
@@ -247,7 +272,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
         role="button"
         tabIndex={disabled ? -1 : 0}
         aria-disabled={disabled}
-        aria-label="File upload area"
+        aria-label={messages.area}
         {...props}
       >
         <input
@@ -269,7 +294,7 @@ const Dropzone = React.forwardRef<HTMLDivElement, DropzoneProps>(
         ) : children ? (
           children
         ) : (
-          <DefaultDropzoneContent isDragging={isDragging} variant={variant} />
+          <DefaultDropzoneContent isDragging={isDragging} variant={variant} messages={messages} />
         )}
       </div>
     )
@@ -281,9 +306,11 @@ Dropzone.displayName = 'Dropzone'
 function DefaultDropzoneContent({
   isDragging,
   variant,
+  messages,
 }: {
   isDragging: boolean
   variant: DropzoneProps['variant']
+  messages: DropzoneMessages
 }) {
   return (
     <div className="flex flex-col items-center gap-3 text-center">
@@ -303,10 +330,10 @@ function DefaultDropzoneContent({
       {variant !== 'minimal' && (
         <>
           <p className="font-black uppercase tracking-wide text-lg">
-            {isDragging ? 'Drop files here' : 'Drag & drop files'}
+            {isDragging ? messages.dragging : messages.title}
           </p>
           <p className="text-sm text-muted-foreground font-bold">
-            or click to browse
+            {messages.hint}
           </p>
         </>
       )}
@@ -393,12 +420,12 @@ function FileListItem({ file, progress, error, uploading, onRemove }: FileListIt
         // there would otherwise be N identically anonymous "button"s.
         <button
           type="button"
-          aria-label={`Remove ${file.name}`}
+          aria-label={`Odobrať ${file.name}`}
           onClick={(e) => {
             e.stopPropagation()
             onRemove()
           }}
-          className="flex items-center justify-center w-8 h-8 border-3 border-foreground bg-background hover:bg-destructive hover:text-destructive-foreground hover:shadow-[2px_2px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 transition"
+          className="relative flex items-center justify-center w-8 h-8 before:absolute before:-inset-[9px] before:content-[''] border-3 border-foreground bg-background hover:bg-destructive hover:text-destructive-foreground hover:shadow-[2px_2px_0px_hsl(var(--foreground))] hover:-translate-x-0.5 hover:-translate-y-0.5 transition"
         >
           <X className="h-4 w-4" />
         </button>
@@ -409,11 +436,12 @@ function FileListItem({ file, progress, error, uploading, onRemove }: FileListIt
 
 // Helpers
 function formatBytes(bytes: number): string {
-  if (bytes === 0) return '0 Bytes'
+  if (bytes === 0) return '0 B'
   const k = 1024
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB']
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.min(Math.floor(Math.log(bytes) / Math.log(k)), sizes.length - 1)
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+  // slovenský formát: desatinná čiarka („177,73 KB“)
+  return (bytes / Math.pow(k, i)).toLocaleString('sk-SK', { maximumFractionDigits: 2 }) + ' ' + sizes[i]
 }
 
 function getFileIcon(mimeType: string) {

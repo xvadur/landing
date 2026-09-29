@@ -49,15 +49,9 @@ export default function DecryptedText({
   initialEncrypted = false,
   ...props
 }: DecryptedTextProps) {
-  const [displayText, setDisplayText] = useState<string>(() => {
-    if (!initialEncrypted) return text;
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return text;
-    const pool = useOriginalCharsOnly ? text.replace(/\s/g, '') : characters;
-    return text
-      .split('')
-      .map((c) => (c === ' ' ? ' ' : pool[Math.floor(Math.random() * pool.length)] ?? c))
-      .join('');
-  });
+  // Server aj prvý render klienta = čistý text (inak náhodné znaky na serveri ≠ klient → React #418).
+  // initialEncrypted zamieša text až po mount-e (efekt nižšie).
+  const [displayText, setDisplayText] = useState<string>(text);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [revealedIndices, setRevealedIndices] = useState<Set<number>>(new Set());
   const [hasAnimated, setHasAnimated] = useState<boolean>(false);
@@ -66,6 +60,20 @@ export default function DecryptedText({
 
   const containerRef = useRef<HTMLSpanElement>(null);
   const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (!initialEncrypted) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const pool = useOriginalCharsOnly ? text.replace(/\s/g, '') : characters;
+    setDisplayText(
+      text
+        .split('')
+        .map((c) => (c === ' ' ? ' ' : pool[Math.floor(Math.random() * pool.length)] ?? c))
+        .join('')
+    );
+    // iba pri mount-e: ďalšie zmeny riadi animácia
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const orderRef = useRef<number[]>([]);
   const pointerRef = useRef<number>(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);

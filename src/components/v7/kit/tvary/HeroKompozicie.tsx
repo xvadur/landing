@@ -248,7 +248,7 @@ function Triaz() {
               </span>
             </div>
           </div>
-          <StickyNote variant="blue" pin rotation="left" size="sm" className="hidden max-w-xs sm:block">
+          <StickyNote variant="white" pin rotation="left" size="sm" className="hidden max-w-xs sm:block">
             <p className="font-serif text-lg leading-snug italic">„{CESTA[1].citat}“</p>
           </StickyNote>
         </div>

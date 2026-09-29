@@ -183,12 +183,12 @@ export default function MaleKusy() {
         <Podnadpis>Skutočné čísla (pulz + fakty.ts)</Podnadpis>
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
           <StatCard title="Slová tento mesiac" value={fmt(pulz.words_month)} colorScheme="secondary" icon={<PenLine />} />
-          <StatCard title="Prompty dnes" value={pulz.prompts_today} colorScheme="destructive" icon={<Activity className="text-paper" />} />
+          <StatCard title="Prompty dnes" value={pulz.prompts_today} colorScheme="destructive" icon={<Activity />} />
           <StatCard
             title="Dní v rade"
             value={pulz.streak_days}
             colorScheme="primary"
-            icon={<Flame className="text-paper" />}
+            icon={<Flame />}
             progress={{ value: Math.min(100, pulz.streak_days), label: 'k míľniku 100 dní (návrh)' }}
           />
           <StatCard title="Bežiace projekty" value={pulz.projects_active} colorScheme="info" icon={<FolderKanban />} />
@@ -203,14 +203,14 @@ export default function MaleKusy() {
         <Podnadpis>variant × trend × colorScheme</Podnadpis>
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           <StatCard variant="default" title="default · up" value="4 210" change="+12 %" trend="up" colorScheme="secondary" icon={<PenLine />} comparison="oproti minulému týždňu" />
-          <StatCard variant="compact" title="compact · down" value="61" change="−8 %" trend="down" colorScheme="destructive" icon={<Activity className="text-paper" />} comparison="oproti včerajšku" />
+          <StatCard variant="compact" title="compact · down" value="61" change="−8 %" trend="down" colorScheme="destructive" icon={<Activity />} comparison="oproti včerajšku" />
           <StatCard variant="default" title="neutral · bez ikony" value="5 120" change="0 %" trend="neutral" colorScheme="info" comparison="rovnako ako vlani" />
-          <StatCard title="primary (opravená ikona)" value="42" colorScheme="primary" icon={<Flame className="text-paper" />} />
+          <StatCard title="primary" value="42" colorScheme="primary" icon={<Flame />} />
           <StatCard title="success" value="42" colorScheme="success" icon={<Flame />} />
           <StatCard title="warning" value="42" colorScheme="warning" icon={<Flame />} progress={{ value: 42 }} />
         </div>
         <p className="flex flex-wrap items-center gap-2 text-sm">
-          <UkazkoveData /> Čísla v tejto mriežke sú ukážka tvaru. <b>accent</b> (hot) vynechaný. success = warning = secondary = žltá, info = biela.
+          <UkazkoveData /> Čísla v tejto mriežke sú ukážka tvaru. <b>accent</b> (hot) vynechaný. success = warning = secondary = žltá, info = biela; ikona na ink / stamp je papierová v kuse.
         </p>
       </Kus>
 

@@ -444,7 +444,8 @@ function ChartLegendContent({
               <div
                 className="h-3 w-3 shrink-0 border-2 border-foreground"
                 style={{
-                  backgroundColor: item.color,
+                  // farba zo série v configu (nie zo stroke: pri radare / plochách s ink obrysom boli všetky štvorčeky čierne)
+                  backgroundColor: itemConfig ? `var(--color-${key}, ${item.color})` : item.color,
                 }}
               />
             )}

@@ -39,9 +39,10 @@ function Calendar({
         className
       )}
       classNames={{
-        months: 'flex flex-col sm:flex-row gap-4',
+        // relative: navigácia (šípky absolute left/right) sa drží bloku mesiacov, nie okraja stránky
+        months: 'relative flex flex-col sm:flex-row gap-4',
         month: 'flex flex-col gap-4',
-        month_caption: 'flex justify-center pt-1 relative items-center min-h-9 px-11',
+        month_caption: 'flex justify-center relative items-center h-9 px-11',
         caption_label: 'flex items-center gap-1 text-sm font-bold uppercase tracking-wide',
         dropdowns: 'flex items-center gap-2',
         dropdown_root:
@@ -58,13 +59,15 @@ function Calendar({
         ),
         month_grid: 'w-full border-collapse space-y-1',
         weekdays: 'flex',
-        weekday: 'text-muted-foreground w-11 font-bold text-[0.8rem] uppercase',
+        week_number_header: 'w-11 min-w-9 shrink',
+        // stĺpec 44 px, v úzkom rodičovi sa zúži až na 36 px (výška dňa ostáva 44 px)
+        weekday: 'text-muted-foreground w-11 min-w-9 shrink font-bold text-[0.8rem] uppercase',
         week: 'flex w-full mt-1',
-        week_number: 'w-11 text-center text-xs text-muted-foreground',
-        day: 'relative p-0 text-center text-sm focus-within:relative focus-within:z-20',
+        week_number: 'w-11 min-w-9 shrink text-center text-xs text-muted-foreground',
+        day: 'relative w-11 min-w-9 shrink p-0 text-center text-sm focus-within:relative focus-within:z-20',
         day_button: cn(
           buttonVariants({ variant: 'ghost' }),
-          'h-11 w-11 p-0 font-medium border-0 normal-case aria-selected:opacity-100'
+          'h-11 w-full p-0 font-medium border-0 normal-case aria-selected:opacity-100'
         ),
         selected: 'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground border-2 border-foreground',
         today:

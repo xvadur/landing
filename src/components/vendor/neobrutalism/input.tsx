@@ -12,7 +12,7 @@ function Input({ className, type = 'text', ...props }: React.ComponentProps<'inp
       type={type}
       data-slot="input"
       className={cn(
-        'flex h-12 w-full min-w-0 rounded-lg border-3 border-ink bg-white px-4 py-2 font-sans text-base font-medium text-ink shadow-brutal-sm transition-shadow duration-(--duration-base) selection:bg-ink selection:text-yellow file:mr-3 file:border-0 file:bg-transparent file:font-display file:font-extrabold file:uppercase placeholder:text-ink/50 focus:shadow-brutal disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-hot aria-invalid:bg-pink',
+        'flex h-12 w-full min-w-0 rounded-lg border-3 border-ink bg-white px-4 py-2 font-sans text-base font-medium text-ink shadow-brutal-sm transition-shadow duration-(--duration-base) selection:bg-ink selection:text-yellow file:mr-3 file:border-0 file:bg-transparent file:font-display file:font-extrabold file:uppercase placeholder:text-ink/50 focus:shadow-brutal disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-stamp aria-invalid:bg-white aria-invalid:shadow-[4px_4px_0_0_var(--color-stamp)]',
         className,
       )}
       {...props}

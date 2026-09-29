@@ -135,7 +135,6 @@ export default function ReactBits() {
         subor="vendor/reactbits/DecryptedText.tsx"
         veta="Text sa dešifruje zo šumu znakov (čistý React, ~2 kB): pri zobrazení, hoveri alebo kliku; sekvenčne od začiatku, konca alebo stredu."
       >
-        {mounted ? (
         <Mriezka cols={3} key={`dt-${kluc}`}>
             <Varianta props="animateOn='view' sequential revealDirection='start' initialEncrypted">
               <DecryptedText text={MOTTO} animateOn="view" sequential revealDirection="start" initialEncrypted speed={40} className="font-display text-xl font-extrabold" encryptedClassName="font-display text-xl font-extrabold text-ink/40" />
@@ -156,10 +155,7 @@ export default function ReactBits() {
               <DecryptedText text="PRÍJEM OTVORENÝ" animateOn="inViewHover" characters="X×.:" maxIterations={14} className="font-display text-xl font-extrabold" encryptedClassName="font-display text-xl font-extrabold text-ink/40" />
             </Varianta>
           </Mriezka>
-        ) : (
-          <Pozn>DecryptedText s initialEncrypted sa vykreslí až po hydratácii (inak hydratačná chyba React #418).</Pozn>
-        )}
-        <Pozn>Čítačka vždy dostane pôvodný text (sr-only). Reduced motion = hotový text, žiadny interval.</Pozn>
+        <Pozn>Server a hydratácia dostanú čistý text; initialEncrypted ho zamieša až po mount-e (bez React #418). Čítačka vždy dostane pôvodný text (sr-only). Reduced motion = hotový text, žiadny interval.</Pozn>
       </Kus>
 
       {/* ---------------- Magnet ---------------- */}
@@ -249,7 +245,7 @@ export default function ReactBits() {
         id="rb-stepper"
         nazov="Stepper · Step"
         subor="vendor/reactbits/Stepper.tsx"
-        veta="Karta s krokmi: indikátory 44 px (biely / hot / hotový), ink spojky, Späť / Ďalej / Dokončiť, posun krokov (Motion)."
+        veta="Karta s krokmi: indikátory 44 px (biely / ink aktívny / žltý hotový), ink spojky, Späť / Ďalej / Dokončiť, posun krokov (Motion)."
       >
         <Mriezka cols={2}>
           <Varianta props={`default · onStepChange → krok ${krok} · onFinalStepCompleted · completedContent`}>
@@ -259,15 +255,15 @@ export default function ReactBits() {
               onFinalStepCompleted={() => setHotovo(true)}
               completedContent={<p className="font-display text-xl font-extrabold uppercase">Odovzdané{hotovo ? ' ✔' : ''}</p>}
             >
-              <Step className="px-5 sm:px-6">
+              <Step>
                 <p className="font-display text-2xl font-extrabold uppercase">Triáž</p>
                 <p>{VLAJKA.body[0]}</p>
               </Step>
-              <Step className="px-5 sm:px-6">
+              <Step>
                 <p className="font-display text-2xl font-extrabold uppercase">Diagnóza</p>
                 <p>{VLAJKA.body[1]}</p>
               </Step>
-              <Step className="px-5 sm:px-6">
+              <Step>
                 <p className="font-display text-2xl font-extrabold uppercase">Plán liečby</p>
                 <p>{VLAJKA.body[2]}</p>
               </Step>
@@ -282,9 +278,9 @@ export default function ReactBits() {
               nextButtonText="Pokračuj"
               completeButtonText="Zapíš ma"
             >
-              <Step className="px-5 sm:px-6">Krok 1</Step>
-              <Step className="px-5 sm:px-6">Len dopredu: indikátory sa nedajú klikať (kvíz).</Step>
-              <Step className="px-5 sm:px-6">Posledný krok.</Step>
+              <Step>Krok 1</Step>
+              <Step>Len dopredu: indikátory sa nedajú klikať (kvíz).</Step>
+              <Step>Posledný krok.</Step>
             </Stepper>
           </Varianta>
           <Varianta props="renderStepIndicator (vlastný indikátor: X pečiatka)">
@@ -305,10 +301,10 @@ export default function ReactBits() {
                 </button>
               )}
             >
-              <Step className="px-5 sm:px-6">Príjem</Step>
-              <Step className="px-5 sm:px-6">Anamnéza</Step>
-              <Step className="px-5 sm:px-6">Liečba</Step>
-              <Step className="px-5 sm:px-6">Kontrola</Step>
+              <Step>Príjem</Step>
+              <Step>Anamnéza</Step>
+              <Step>Liečba</Step>
+              <Step>Kontrola</Step>
             </Stepper>
           </Varianta>
           <Varianta props="stepContainerClassName='bg-ink' · contentClassName='bg-paper' · footerClassName='bg-paper' · backButtonProps">
@@ -319,8 +315,8 @@ export default function ReactBits() {
               backButtonProps={{ 'aria-label': 'Späť o krok' }}
               nextButtonProps={{ 'aria-describedby': 'rb-st-pozn' }}
             >
-              <Step className="px-5 sm:px-6">Indikátory na čiernom páse.</Step>
-              <Step className="px-5 sm:px-6">Obsah a pätička na papieri.</Step>
+              <Step>Indikátory na čiernom páse.</Step>
+              <Step>Obsah a pätička na papieri.</Step>
             </Stepper>
             <Pozn>
               <span id="rb-st-pozn">

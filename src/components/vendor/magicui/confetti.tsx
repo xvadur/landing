@@ -19,7 +19,8 @@ export type ConfettiRef = {
   fire: (options?: ConfettiOptions) => Promise<void> | void;
 };
 
-const TOKEN_COLORS = ['--color-yellow', '--color-pink', '--color-lilac', '--color-lime', '--color-sky', '--color-hot'];
+// V5.3 bez pastelov: žltá, hot, biela; ink a stamp sú OKLCH (canvas-confetti ich neparsuje) → prekladá sa v kite cez tokenHex
+const TOKEN_COLORS = ['--color-yellow', '--color-hot', '--color-yellow-deep'];
 
 /** Farby konfiet z tokenov (len hex hodnoty, canvas-confetti iné neparsuje). Prázdne pole = default knižnice. */
 export function brandConfettiColors(): string[] {

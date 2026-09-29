@@ -36,8 +36,6 @@ import { Kus, Mriezka, Variant } from './Kus';
 import { BIO } from './data';
 
 const noHover = 'hover:translate-x-0 hover:translate-y-0';
-/** Strom: riadok má py-1.5 (≈ 32 px); na 44 px ho natiahneme z koreňa. Výber bg-accent (= hot) → žltá. */
-const STROM = '[&_[role=treeitem]>div:first-child]:min-h-11 [&_[role=treeitem]>div.bg-accent:first-child]:bg-yellow';
 
 const EKOSYSTEM: TreeNode[] = [
   {
@@ -68,7 +66,7 @@ const EKOSYSTEM: TreeNode[] = [
   { id: 'korpus', label: `Korpus · ${KORPUS.slova} slov`, icon: <Database className="h-4 w-4" /> },
 ];
 
-/** Predvoľby majú texty natvrdo po anglicky; tu slovenské customTitle. */
+/** Predvoľby majú slovenské texty v kuse; tu kratšie customTitle pre mriežku. */
 const PRESETY: [EmptyStatePresetType, string][] = [
   ['no-results', 'Nič sa nenašlo'],
   ['no-data', 'Zatiaľ bez dát'],
@@ -188,7 +186,7 @@ export default function Drobnosti() {
       <Kus id="tree-view" meno="tree-view" subor="tree-view.tsx" veta="Strom s ARIA navigáciou (jedna zastávka Tab, šípky, Home/End), výber jeden alebo viac, zaškrtávanie, ikony. Na mapu ekosystému, register, strom rozhodnutí.">
         <Mriezka>
           <Variant props='selectionMode="none" · defaultExpandedIds · showIcons (predvolené) · disabled uzol'>
-            <TreeView data={EKOSYSTEM} defaultExpandedIds={['xvadur']} className={STROM} aria-label="Ekosystém XVADUR" />
+            <TreeView data={EKOSYSTEM} defaultExpandedIds={['xvadur']} aria-label="Ekosystém XVADUR" />
           </Variant>
           <Variant props='selectionMode="single" · kontrolované expandedIds + selectedIds · tlačidlá mimo stromu'>
             <div className="flex flex-col gap-3">
@@ -207,13 +205,12 @@ export default function Drobnosti() {
                 onExpandedChange={setRozbalene}
                 selectedIds={vybrane}
                 onSelectedChange={setVybrane}
-                className={STROM}
                 aria-label="Ekosystém, jeden výber"
               />
               <p className="font-mono text-xs">selectedIds = [{vybrane.join(', ')}]</p>
             </div>
           </Variant>
-          <Variant props='selectionMode="multiple" · showCheckboxes · showIcons={false} · pôvodný výber bg-accent'>
+          <Variant props='selectionMode="multiple" · showCheckboxes · showIcons={false} · výber žltý (v kuse)'>
             <TreeView
               data={EKOSYSTEM}
               selectionMode="multiple"
@@ -221,7 +218,6 @@ export default function Drobnosti() {
               showIcons={false}
               defaultExpandedIds={['pacienti', 'hriech']}
               defaultSelectedIds={['jakub', 'netopier']}
-              className="[&_[role=treeitem]>div:first-child]:min-h-11"
               aria-label="Ekosystém, viac výberov"
             />
           </Variant>
@@ -384,7 +380,7 @@ export default function Drobnosti() {
               <CalendarX className="h-5 w-5" />
               <AlertTitle>Termín je obsadený</AlertTitle>
               <AlertDescription>Vyber si iný čas v kalendári.</AlertDescription>
-              <AlertAction className="min-h-11">Vybrať iný termín</AlertAction>
+              <AlertAction>Vybrať iný termín</AlertAction>
             </Alert>
           </Variant>
           <Variant props='variant="warning" (= žltá) · AlertAction loading'>
@@ -392,7 +388,7 @@ export default function Drobnosti() {
               <AlertTriangle className="h-5 w-5" />
               <AlertTitle>Pred vydaním</AlertTitle>
               <AlertDescription>{PRIPAD_MAKLER.stav}</AlertDescription>
-              <AlertAction className="min-h-11" loading={nacitava} onClick={() => setNacitava((n) => !n)}>
+              <AlertAction loading={nacitava} onClick={() => setNacitava((n) => !n)}>
                 {nacitava ? 'Načítavam kontroly' : 'Skontrolovať znova'}
               </AlertAction>
             </Alert>
@@ -402,7 +398,7 @@ export default function Drobnosti() {
               <Check className="h-5 w-5" />
               <AlertTitle>Zapísané</AlertTitle>
               <AlertDescription>Termín je v kalendári. Potvrdenie príde e-mailom.</AlertDescription>
-              <AlertAction className="min-h-11" disabled>
+              <AlertAction disabled>
                 Zrušiť (disabled)
               </AlertAction>
             </Alert>
@@ -478,7 +474,7 @@ export default function Drobnosti() {
               ))}
             </div>
           </Variant>
-          <Variant props="EmptyStatePreset × 14 · customTitle (predvolené texty sú po anglicky) · iconColor z predvoľby" className="sm:col-span-2 lg:col-span-3">
+          <Variant props="EmptyStatePreset × 14 · customTitle (predvolené texty sú slovenské) · iconColor z predvoľby" className="sm:col-span-2 lg:col-span-3">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
               {PRESETY.map(([p, t]) => (
                 <div key={p} className="flex flex-col items-center gap-1">

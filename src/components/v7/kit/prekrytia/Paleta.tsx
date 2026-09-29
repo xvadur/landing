@@ -18,15 +18,7 @@ import { KbdCombo } from '@/components/ui/kbd';
 import { NAV } from '@/data/nav';
 import { Blok, Kus, Stav } from './spolocne';
 
-/** cmdk default filter (command-score) diakritiku nerieši: „skrtaci“ nenájde „Škrtací“. Toto ju zhodí. */
-const bezDiakritiky = (s: string) => s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
-export function filterSk(value: string, search: string, keywords?: string[]) {
-  const hay = bezDiakritiky([value, ...(keywords ?? [])].join(' '));
-  const slova = bezDiakritiky(search).split(/\s+/).filter(Boolean);
-  return slova.every((w) => hay.includes(w)) ? 1 : 0;
-}
-
-const POLOZKA = 'min-h-11 text-base';
+const POLOZKA = 'text-base';
 
 function Obsah({ onVyber }: { onVyber: (t: string) => void }) {
   return (
@@ -87,17 +79,17 @@ export default function Paleta() {
       veta="Vyhľadávacia paleta: píšeš a zoznam sa filtruje, šípky a Enter vyberú. Inline ako výber alebo v dialógu cez ⌘K."
     >
       <div className="grid gap-6 lg:grid-cols-2">
-        <Blok nazov="Inline Command · stále otvorený" pozn="loop, vlastný filter bez diakritiky (skús „skrtaci“ alebo „medi“), keywords, disabled, prázdny stav.">
+        <Blok nazov="Inline Command · stále otvorený" pozn="loop, predvolený filter bez diakritiky (skús „skrtaci“ alebo „medi“), keywords, disabled, prázdny stav.">
           <div className="mb-3 flex flex-wrap items-center gap-3">
             <Stav>otvorené</Stav>
             <span className="font-mono text-sm">vybraté: {vybrate ?? '—'}</span>
           </div>
-          <Command loop filter={filterSk} className="border-3 border-ink shadow-brutal-sm" label="Ukážková paleta">
+          <Command loop className="border-3 border-ink shadow-brutal-sm" label="Ukážková paleta">
             <Obsah onVyber={setVybrate} />
           </Command>
         </Blok>
 
-        <Blok nazov="CommandDialog · title, description" pozn="Dialóg top-[20%], w-full max-w-lg. Na mobile od okraja po okraj (className sa doň nedá poslať).">
+        <Blok nazov="CommandDialog · title, description" pozn="Na mobile 16 px okraje, výška do spodku obrazovky. className a commandProps (filter, loop…) sa dajú poslať.">
           <div className="flex flex-wrap items-center gap-3">
             <Stav>{open ? 'otvorené' : 'zatvorené'}</Stav>
             <Button onClick={() => setOpen(true)} data-open="command">

@@ -15,13 +15,14 @@ const statCardVariants = cva(
         large: 'md:col-span-2',
       },
       colorScheme: {
-        primary: '[&_.stat-icon]:bg-primary [&_.stat-bg]:bg-primary',
+        /* ikona na ink ploche je papierová (predtým ink na ink = neviditeľná) */
+        primary: '[&_.stat-icon]:bg-primary [&_.stat-icon]:text-primary-foreground [&_.stat-bg]:bg-primary',
         secondary: '[&_.stat-icon]:bg-secondary [&_.stat-bg]:bg-secondary',
         accent: '[&_.stat-icon]:bg-accent [&_.stat-bg]:bg-accent',
         success: '[&_.stat-icon]:bg-success [&_.stat-bg]:bg-success',
         warning: '[&_.stat-icon]:bg-warning [&_.stat-bg]:bg-warning',
         info: '[&_.stat-icon]:bg-info [&_.stat-bg]:bg-info',
-        destructive: '[&_.stat-icon]:bg-destructive [&_.stat-bg]:bg-destructive',
+        destructive: '[&_.stat-icon]:bg-destructive [&_.stat-icon]:text-destructive-foreground [&_.stat-bg]:bg-destructive',
       },
     },
     defaultVariants: {
@@ -58,7 +59,7 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
       trend = 'neutral',
       icon,
       progress,
-      comparison = 'vs last month',
+      comparison = 'oproti minulému mesiacu',
       ...props
     },
     ref
@@ -67,7 +68,8 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
     const resolvedColorScheme = colorScheme ?? color ?? 'primary'
 
     const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus
-    const trendColor = trend === 'up' ? 'text-success' : trend === 'down' ? 'text-destructive' : 'text-muted-foreground'
+    // up = ink (žltá text-success na bielej karte bola nečitateľná), down = alarmová červená
+    const trendColor = trend === 'up' ? 'text-foreground' : trend === 'down' ? 'text-destructive' : 'text-muted-foreground'
 
     return (
       <Card
@@ -105,9 +107,9 @@ const StatCard = React.forwardRef<HTMLDivElement, StatCardProps>(
             <div className="mt-4 pt-4 border-t-2 border-foreground/10">
               <div className="flex items-center justify-between text-sm mb-2">
                 <span className="text-muted-foreground">
-                  {progress.label || 'Progress'}
+                  {progress.label || 'Priebeh'}
                 </span>
-                <span className="font-bold">{progress.value}%</span>
+                <span className="font-bold">{progress.value} %</span>
               </div>
               <Progress value={progress.value} className="h-3" />
             </div>

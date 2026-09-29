@@ -43,7 +43,6 @@ export default function Volby() {
         id="checkbox"
         meno="checkbox"
         veta="Zaškrtávacie políčko (Radix): checked, unchecked, indeterminate, disabled. Tieň sa pri hoveri zatlačí."
-        pozor={['20 × 20 px: cieľ drž riadkom s Label', 'indeterminate ukazuje fajku, nie pomlčku']}
       >
         <Mriezka>
           <Bunka nazov="unchecked · checked · indeterminate">
@@ -95,7 +94,6 @@ export default function Volby() {
         id="radio-group"
         meno="radio-group"
         veta="Jedna voľba zo skupiny (Radix): šípky presúvajú výber, orientation pre klávesnicu, disabled na skupine aj položke."
-        pozor={['vybraté: bodka fill-primary na bg-primary = čierna na čiernej, bodka zmizne', '20 px položka → cieľ riadkom']}
       >
         <Mriezka>
           <Bunka nazov="zvislo (default)" stlpec>
@@ -137,7 +135,7 @@ export default function Volby() {
           <RadioGroup value={triaz} onValueChange={setTriaz} aria-label="Triáž" className="gap-1">
             {RIESENIA.map((r) => (
               <Label key={r.pozorovanie} className={RIADOK}>
-                <RadioGroupItem value={r.pozorovanie} className="bg-white data-[state=checked]:bg-white" />
+                <RadioGroupItem value={r.pozorovanie} />
                 {r.pozorovanie}
               </Label>
             ))}
@@ -156,7 +154,6 @@ export default function Volby() {
         id="switch"
         meno="switch"
         veta="Vypínač (Radix Switch) pre okamžité nastavenia: zapnutý sčernie, jazdec skočí doprava."
-        pozor={['28 px výška → cieľ riadkom s Label']}
       >
         <Mriezka>
           <Bunka nazov="off · on">
@@ -197,7 +194,7 @@ export default function Volby() {
         id="slider"
         meno="slider"
         veta="Vlastný posuvník s pružinou (jelly): jeden alebo dva jazdce, krok, zvislo, stiffness / damping / mass menia charakter pohybu."
-        pozor={['aria-valuetext po anglicky („6 of 20“)', 'nerešpektuje prefers-reduced-motion', 'bez name/form: do formulára ručne']}
+        pozor={['bez name/form: do formulára ručne']}
       >
         <Mriezka>
           <Bunka nazov="jeden jazdec · default" stlpec>
@@ -245,12 +242,7 @@ export default function Volby() {
         id="rating"
         meno="rating"
         veta="Hodnotenie ikonami: hviezda, srdce, kruh; 4 veľkosti, max, polovičky (precision 0.5), readOnly, disabled, onHoverChange."
-        pozor={[
-          'hover neukazuje náhľad, iba volá onHoverChange',
-          'polovičky iba šípkami, klik dá celé číslo',
-          'aria-label po anglicky („3 out of 5 stars“)',
-          'ikony 16–32 px < 44 px cieľ',
-        ]}
+        pozor={['polovičky iba šípkami, klik dá celé číslo']}
       >
         <Mriezka>
           <Bunka nazov='icon="star" · "heart" · "circle"' stlpec>

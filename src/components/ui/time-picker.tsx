@@ -244,7 +244,8 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             className={cn(
               'flex',
               // Responsive: stack on very small screens
-              'max-w-[calc(100vw-2rem)]'
+              // pevná šírka stĺpcov: bez nej sa popover (ScrollArea vo vnútri) roztiahol na celú šírku okna
+              'w-max max-w-[calc(100vw-2rem)]'
             )}
             style={{
               // Dynamic width based on column count
@@ -252,7 +253,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             }}
           >
             {/* Hours column */}
-            <div className="flex-1 min-w-[60px] border-r-3 border-foreground">
+            <div className="w-20 flex-none border-r-3 border-foreground">
               <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
                 {labels.hour}
               </div>
@@ -286,7 +287,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
 
             {/* Minutes column */}
             <div className={cn(
-              'flex-1 min-w-[60px]',
+              'w-20 flex-none',
               (showSeconds || format === '12h') && 'border-r-3 border-foreground'
             )}>
               <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
@@ -323,7 +324,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             {/* Seconds column */}
             {showSeconds && (
               <div className={cn(
-                'flex-1 min-w-[60px]',
+                'w-20 flex-none',
                 format === '12h' && 'border-r-3 border-foreground'
               )}>
                 <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
@@ -356,7 +357,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
 
             {/* AM/PM column */}
             {format === '12h' && (
-              <div className="flex-1 min-w-[50px]">
+              <div className="w-16 flex-none">
                 <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
                   <span className="hidden sm:inline">{labels.period}</span>
                   <span className="sm:hidden">{labels.periodShort}</span>

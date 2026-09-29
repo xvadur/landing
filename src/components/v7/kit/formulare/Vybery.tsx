@@ -50,7 +50,6 @@ const BEZNE = [
 ];
 
 /** Položka výberu: fokus v BoldKite je bg-accent (hot) s paper textom → porušenie; tu žltá s ink. */
-const POLOZKA = 'focus:bg-yellow focus:text-ink min-h-11';
 
 export default function Vybery() {
   const [tema, setTema] = useState<string>('');
@@ -70,7 +69,7 @@ export default function Vybery() {
         id="select"
         meno="select"
         veta="Rozbaľovací výber (Radix Select) s vlastným zoznamom: skupiny, popisy, oddeľovač, vypnuté položky, dve polohy zoznamu."
-        pozor={['fokus položky = bg-accent (hot) + paper text → prepíš className', 'SelectLabel pl-8 aj bez ikony']}
+        pozor={['SelectLabel pl-8 aj bez ikony']}
       >
         <Mriezka>
           <Bunka nazov="placeholder" stlpec>
@@ -79,10 +78,10 @@ export default function Vybery() {
                 <SelectValue placeholder="Vyber dĺžku" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem className={POLOZKA} value="30">
+                <SelectItem value="30">
                   30 minút
                 </SelectItem>
-                <SelectItem className={POLOZKA} value="60" disabled>
+                <SelectItem value="60" disabled>
                   60 minút (zatiaľ nie)
                 </SelectItem>
               </SelectContent>
@@ -97,7 +96,7 @@ export default function Vybery() {
                 <SelectGroup>
                   <SelectLabel>Operačný stôl</SelectLabel>
                   {NASTROJE.slice(0, 3).map((n) => (
-                    <SelectItem className={POLOZKA} key={n.v} value={n.v}>
+                    <SelectItem key={n.v} value={n.v}>
                       {n.t}
                     </SelectItem>
                   ))}
@@ -106,7 +105,7 @@ export default function Vybery() {
                 <SelectGroup>
                   <SelectLabel>U klienta</SelectLabel>
                   {NASTROJE.slice(3, 6).map((n) => (
-                    <SelectItem className={POLOZKA} key={n.v} value={n.v}>
+                    <SelectItem key={n.v} value={n.v}>
                       {n.t}
                     </SelectItem>
                   ))}
@@ -121,7 +120,7 @@ export default function Vybery() {
               </SelectTrigger>
               <SelectContent position="item-aligned">
                 {['po', 'ut', 'st', 'št', 'pi'].map((d) => (
-                  <SelectItem className={POLOZKA} key={d} value={d}>
+                  <SelectItem key={d} value={d}>
                     {d}
                   </SelectItem>
                 ))}
@@ -145,14 +144,14 @@ export default function Vybery() {
                 <SelectValue placeholder="Vyber jednu vec" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem className={POLOZKA} value="vysetrenie">
+                <SelectItem value="vysetrenie">
                   {VLAJKA.nazov} · {VLAJKA.trvanie}
                 </SelectItem>
                 <SelectSeparator />
                 <SelectGroup>
                   <SelectLabel>Čakáreň</SelectLabel>
                   {PRODUKTY.map((p) => (
-                    <SelectItem className={POLOZKA} key={p.id} value={p.id}>
+                    <SelectItem key={p.id} value={p.id}>
                       {p.nazov}
                     </SelectItem>
                   ))}
@@ -228,7 +227,7 @@ export default function Vybery() {
         id="combobox"
         meno="combobox"
         veta="Výber s vyhľadávaním (Popover + cmdk Command): jeden alebo viac, čipy s odobratím, skupiny, prázdny stav."
-        pozor={['hodnotu a popis v triggeri skladáš sám', 'čip = bg-accent (hot) mimo CTA', 'predvolené texty „Select...“ po anglicky']}
+        pozor={['hodnotu a popis v triggeri skladáš sám']}
       >
         <Mriezka>
           <Bunka nazov="jeden · hľadanie · prázdny stav" stlpec>
@@ -312,7 +311,7 @@ export default function Vybery() {
         id="tag-input"
         meno="tag-input"
         veta="Pole na štítky: Enter alebo oddeľovač pridá, Backspace zmaže, návrhy s klávesnicou, limit, vlastná kontrola, duplicity."
-        pozor={['chybové hlášky po anglicky („Maximum 3 tags allowed“, „Tag already exists“)', 'štítky uppercase']}
+        pozor={['štítky uppercase']}
       >
         <Mriezka>
           <Bunka nazov="default · Enter / čiarka" stlpec>

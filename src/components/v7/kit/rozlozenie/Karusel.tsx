@@ -15,9 +15,9 @@ import { CESTA } from '@/data/cesta';
 import { PRODUKTY } from '@/data/ponuka';
 import { Kus, Mriezka, Variant } from './Kus';
 
-/** Šípky BoldKitu sedia na -left-12/-right-12 (mimo karuselu) a majú 40 px. Na mobile by pretiekli, preto ich
- *  dávame pod karusel do riadku a zväčšíme na 44 px. */
-const SIPKA = 'static translate-x-0 translate-y-0 h-11 w-11';
+/** Šípky majú v kuse 44 px a na mobile sú vnútri karuselu (od sm vedľa neho). Tu ich zámerne dávame pod karusel
+ *  do riadku s počítadlom (static). */
+const SIPKA = 'static';
 
 function Ovladanie({ children }: { children?: React.ReactNode }) {
   return (

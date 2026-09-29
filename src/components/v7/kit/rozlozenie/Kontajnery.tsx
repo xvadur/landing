@@ -17,10 +17,9 @@ import { CESTA } from '@/data/cesta';
 import { Kus, Mriezka, Variant } from './Kus';
 import { ANAMNEZA } from './data';
 
-/** Accordion: otvorený stav je v BoldKite bg-accent (= hot). Hot patrí iba CTA, preto žltá. */
-/** Radix obalí trigger do <h3>; globálne h3 (global.css) mu dá display veľkosť → text-base vracia veľkosť BoldKitu. */
-const ACC_OPEN = '[&[data-state=open]]:bg-yellow min-h-14 text-left text-base';
-const ACC_VELKY = '[&[data-state=open]]:bg-yellow min-h-14 text-left';
+/** Otvorený riadok je žltý a písmo triggera nenafúkne globálne h3 — obe priamo v accordion.tsx. */
+const ACC_OPEN = 'min-h-14 text-left';
+const ACC_VELKY = 'min-h-14 text-left text-lg';
 const TAB = 'min-h-11';
 const TAB_Z = 'min-h-11 data-[state=active]:bg-yellow data-[state=active]:text-ink';
 const noHover = 'shadow-none hover:translate-x-0 hover:translate-y-0';
@@ -48,7 +47,7 @@ export default function Kontajnery() {
               </CardHeader>
               <CardContent className="text-sm">{VLAJKA.body[0]}</CardContent>
               <CardFooter className="gap-3">
-                <Button variant="accent" className="text-ink">
+                <Button variant="accent">
                   Objednať vyšetrenie
                 </Button>
               </CardFooter>
@@ -121,15 +120,15 @@ export default function Kontajnery() {
               ))}
             </Accordion>
           </Variant>
-          <Variant props="pôvodný open stav bg-accent (= hot) — len na porovnanie">
+          <Variant props="predvolený vzhľad (bez className)">
             <Accordion type="single" collapsible defaultValue="a">
               <AccordionItem value="a">
-                <AccordionTrigger className="min-h-14 text-left text-base">Pôvodný vzhľad BoldKitu</AccordionTrigger>
-                <AccordionContent>Otvorený riadok svieti hot. Na webe nie: hot je iba CTA a X.</AccordionContent>
+                <AccordionTrigger>Predvolený vzhľad BoldKitu</AccordionTrigger>
+                <AccordionContent>Otvorený riadok je žltý s ink textom (hot patrí iba CTA a X).</AccordionContent>
               </AccordionItem>
             </Accordion>
           </Variant>
-          <Variant props='bez tieňa, medzery · orientation="horizontal" · trigger bez text-base = display h3 z global.css'>
+          <Variant props='bez tieňa, medzery · orientation="horizontal" · trigger text-lg'>
             <Accordion type="single" collapsible orientation="horizontal" className="flex flex-col gap-3">
               {CESTA.slice(0, 3).map((k) => (
                 <AccordionItem key={k.nazov} value={k.nazov} className="border-b-3 shadow-none">

@@ -46,11 +46,3 @@ const KUSY = ['dialog', 'alert-dialog', 'sheet', 'drawer', 'popover', 'hover-car
     <Recepty client:visible posledny={posledny} />
   </main>
 </Base>
-
-<style is:global>
-  /* Recept 4: tour.tsx má anglické tlačidlá natvrdo. Keď krok nesie slovenskú navigáciu ([data-tour-sk]),
-     schováme posledný riadok okna (Skip / Previous / Next / Finish). Obchádzka, oprava patrí do tour.tsx (labels). */
-  [role='dialog'][aria-modal='true']:has([data-tour-sk]) > div:last-child {
-    display: none;
-  }
-</style>

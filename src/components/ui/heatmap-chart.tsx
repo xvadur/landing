@@ -65,7 +65,7 @@ const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
       showLabels = true,
       showTooltip = true,
       cellSize = 40,
-      ariaLabel = 'Heatmap chart',
+      ariaLabel = 'Teplotná mapa',
       onCellClick,
       emptyState,
       className,

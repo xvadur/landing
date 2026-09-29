@@ -116,6 +116,10 @@ const RadialBarChartComponent = React.forwardRef<HTMLDivElement, RadialBarChartP
                 ? {
                     position: 'insideStart',
                     fill: 'hsl(var(--foreground))',
+                    // papierový lem: číslo je čitateľné aj na ink oblúku
+                    stroke: 'hsl(var(--background))',
+                    strokeWidth: 3,
+                    paintOrder: 'stroke',
                     fontWeight: 700,
                     fontSize: 12,
                   }

@@ -93,8 +93,6 @@ const PLOCHY: TreemapChartData[] = [
   { name: 'Klienti', value: 24000 },
   { name: 'Korpus', value: 12000 },
 ];
-/** Treemap farby ignoruje `fill` a cyklí primary/secondary/accent(hot)/…; oprava cez CSS nad obalom (pozri poznámky). */
-const TREEMAP_OPRAVA = '[&_rect[style*=accent]]:!fill-white [&_rect[style*=primary]]:!fill-paper [&_rect[style*=info]]:!fill-white';
 
 /** Ukážka: prompty podľa dňa a časti dňa / hodiny. */
 const DNI = ['Po', 'Ut', 'St', 'Št', 'Pi', 'So', 'Ne'];
@@ -195,17 +193,17 @@ export default function TokyKusy() {
       >
         <Mriezka className="xl:grid-cols-2">
           <Varianta nazov="Vnorený" props="children · height={360}" ukazka>
-            <div className={TREEMAP_OPRAVA}>
+            <div>
               <TreemapChart data={STROM} height={360} ariaLabel="Slová podľa projektu, ukážka" />
             </div>
           </Varianta>
           <Varianta nazov="Plochý" props="value · height={260}" ukazka>
-            <div className={TREEMAP_OPRAVA}>
+            <div>
               <TreemapChart data={PLOCHY} height={260} ariaLabel="Slová podľa projektu, ukážka" />
             </div>
           </Varianta>
           <Varianta nazov="Bez tooltipu a animácie" props="showTooltip={false} · animated={false}" ukazka>
-            <div className={TREEMAP_OPRAVA}>
+            <div>
               <TreemapChart data={PLOCHY} height={200} showTooltip={false} animated={false} ariaLabel="Slová podľa projektu, ukážka" />
             </div>
           </Varianta>
@@ -214,7 +212,7 @@ export default function TokyKusy() {
           </Varianta>
         </Mriezka>
         <p className="text-sm">
-          Farby dlaždíc sa nedajú nastaviť cez props (fill sa ignoruje). Obal tu cez CSS prefarbí hot a ink dlaždice, inak by bol hot v dátach a text ink na ink.
+          Farba dlaždice ide z <code>fill</code> v dátach, inak z palety tokenov bez hot; na tmavej dlaždici (ink, stamp) je text papierový.
         </p>
       </Kus>
 

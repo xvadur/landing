@@ -5,7 +5,7 @@ import { CrossShape, PillShape } from '@/components/ui/shapes';
 import { MARQUEE_FAKTY } from '@/data/fakty';
 import { CESTA } from '@/data/cesta';
 import { MOTTO_1, MOTTO_2 } from '@/components/hero/hero-data';
-import { Chyba, Kus, Pod } from './Spolocne';
+import { Kus, Opravene, Pod } from './Spolocne';
 
 function Riadok({ popis, children }: { popis: string; children: React.ReactNode }) {
   return (
@@ -36,12 +36,11 @@ export default function Pas() {
       pocet="3 exporty"
       veta="Bežiaci pás faktov, mena alebo motta: rozdeľuje sekcie, nesie čísla (459 webov, 2 034 maklérov, 47 / 47), v hero môže bežať za fotkou."
     >
-      <Chyba>
-        <code>speed=&quot;slow&quot;</code> a <code>&quot;fast&quot;</code> používajú triedy <code>animate-marquee-slow / -fast</code>, ktoré v CSS <strong>nie sú</strong> →
-        pás stojí (v katalógu záplata). <code>normal</code> ide cez token <code>--animate-marquee</code> (posun −50 %, 40 s): obe polovice sa
-        hýbu o polovicu vlastnej šírky, takže pri <code>repeat</code> nepárnom alebo s medzerou <code>gap-8</code> na konci polovice pás poskočí.
-        Rýchlosť sa dá ladiť premennou <code>--marquee-duration</code> cez style. Reduced motion zastaví globálny guard v global.css (komponent sám nie).
-      </Chyba>
+      <Opravene>
+        <code>speed</code> slow / normal / fast ide cez keyframes <code>bk-marquee</code> v motion.css: každá stopa sa posunie o celú svoju
+        šírku + medzeru, takže slučka nemá skok. Rýchlosť = násobok <code>--marquee-duration</code> (slow 4×, normal 2×, fast 0,8×);
+        pri reduced motion pás stojí.
+      </Opravene>
       <Riadok popis='direction="left" speed="normal" (default) · pauseOnHover · bordered · repeat=4'>
         <Marquee className="bg-yellow">
           <Polozky />
@@ -52,7 +51,7 @@ export default function Pas() {
           <Polozky />
         </Marquee>
       </Riadok>
-      <Riadok popis='speed="slow" (záplata) · speed="fast" (záplata)'>
+      <Riadok popis='speed="slow" · speed="fast"'>
         <div className="flex flex-col gap-3">
           <Marquee speed="slow">
             <Polozky />
@@ -62,7 +61,7 @@ export default function Pas() {
           </Marquee>
         </div>
       </Riadok>
-      <Riadok popis="style={{ '--marquee-duration': '12s' }} · bez záplaty, ladí rýchlosť normal">
+      <Riadok popis="style={{ '--marquee-duration': '12s' }} · ladí rýchlosť">
         <Marquee style={{ ['--marquee-duration' as string]: '12s' }}>
           <Polozky />
         </Marquee>

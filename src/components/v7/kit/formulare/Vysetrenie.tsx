@@ -23,7 +23,7 @@ import { VLAJKA } from '@/data/ponuka';
 import { TERMINY, slotIso, vsetkyTerminy, type Den } from '@/data/terminy';
 import { slotText } from '@/lib/ics';
 import { cn } from '@/lib/utils';
-import { KAL_OPRAVA, TOASTER, useKlient } from './Spolocne';
+import { TOASTER, useKlient } from './Spolocne';
 
 type V = { datum: string; cas: string; meno: string; email: string; tema: string };
 const PRAZDNE: V = { datum: '', cas: '', meno: '', email: '', tema: '' };
@@ -259,7 +259,6 @@ function Formular({ dni, steps }: { dni: Den[]; steps: MultiStepFormStep<V>[] })
                   f.setValue('cas', '');
                   setOpenDen(false);
                 }}
-                classNames={KAL_OPRAVA}
                 className="border-0 shadow-none"
               />
             </PopoverContent>
@@ -414,7 +413,7 @@ function Formular({ dni, steps }: { dni: Den[]; steps: MultiStepFormStep<V>[] })
           </Button>
         )}
         {f.isLastStep ? (
-          <Button type="submit" variant="accent" size="lg" className="max-w-full whitespace-normal text-ink">
+          <Button type="submit" variant="accent" size="lg" className="max-w-full whitespace-normal">
             Objednať sa na vyšetrenie <ArrowRight />
           </Button>
         ) : (

@@ -272,9 +272,9 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
           <caption>{ariaLabel}</caption>
           <thead>
             <tr>
-              <th scope="col">From</th>
-              <th scope="col">To</th>
-              <th scope="col">Value</th>
+              <th scope="col">Odkiaľ</th>
+              <th scope="col">Kam</th>
+              <th scope="col">Hodnota</th>
             </tr>
           </thead>
           <tbody>

@@ -53,8 +53,6 @@ const STLPCE: ColumnDef<Riadok, unknown>[] = [
   },
 ];
 
-/** Obal: vybraný riadok v kuse je bg-accent (hot) → tu žltá. */
-const OPRAVA_VYBER = '[&_tr[data-state=selected]]:bg-yellow';
 
 export default function TabulkyKusy() {
   const pulz = usePulz();
@@ -135,7 +133,7 @@ export default function TabulkyKusy() {
         veta="Tabuľka s triedením, filtrom, výberom stĺpcov a riadkov a stránkovaním (TanStack Table 8). Pre stránku štatistík, archív textov, zoznam projektov."
       >
         <Varianta nazov="Všetko zapnuté" props="sorting · filtering · columnVisibility · rowSelection · pagination (pageSize=5)">
-          <div className={`overflow-x-auto ${OPRAVA_VYBER}`}>
+          <div className="overflow-x-auto">
             <div className="min-w-[640px]">
               <DataTable
                 columns={STLPCE}

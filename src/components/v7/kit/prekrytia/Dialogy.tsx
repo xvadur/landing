@@ -34,8 +34,6 @@ import { DOKAZY } from '@/data/fakty';
 import KitToaster from './KitToaster';
 import { Blok, KIT_TOASTER, Kus, Stav } from './spolocne';
 
-/** Dialog BoldKitu má na mobile w-full (od okraja po okraj) → vraciame 16 px okraje. */
-const MOBIL = 'w-[calc(100%-2rem)] max-h-[88dvh] overflow-y-auto';
 const hriech = DOKAZY.find((d) => d.id === 'hriech')!;
 
 export default function Dialogy() {
@@ -55,14 +53,14 @@ export default function Dialogy() {
         veta="Modálne okno nad stránkou: zamkne scroll a fokus, zavrie sa Esc, klikom mimo alebo krížikom. Na vyšetrenie, zápis, náhľad hry."
       >
         <div className="grid gap-6 lg:grid-cols-2">
-          <Blok nazov="Základ · Header, Title, Description, Footer, Close" pozn="Zatvorené = spúšťač. Otvorené = obsah v portáli nad overlayom bg-black/70.">
+          <Blok nazov="Základ · Header, Title, Description, Footer, Close" pozn="Zatvorené = spúšťač. Otvorené = obsah v portáli nad overlayom bg-overlay. Na mobile 16 px okraje a scroll.">
             <div className="flex flex-wrap items-center gap-3">
               <Stav>zatvorené</Stav>
               <Dialog>
                 <DialogTrigger asChild>
                   <Button data-open="dialog">Vyšetrenie · detail</Button>
                 </DialogTrigger>
-                <DialogContent className={MOBIL}>
+                <DialogContent>
                   <DialogHeader>
                     <p className="eyebrow">✚ {VLAJKA.trvanie} · {VLAJKA.cena}</p>
                     <DialogTitle className="font-display text-2xl font-extrabold">{VLAJKA.nazov}</DialogTitle>
@@ -82,7 +80,7 @@ export default function Dialogy() {
                     <DialogClose asChild>
                       <Button variant="outline">Zatvoriť</Button>
                     </DialogClose>
-                    <Button asChild variant="accent" className="text-ink">
+                    <Button asChild variant="accent">
                       <a href="/konzultacia/#termin">Vybrať termín</a>
                     </Button>
                   </DialogFooter>
@@ -100,7 +98,7 @@ export default function Dialogy() {
                     Zápis do čakárne
                   </Button>
                 </DialogTrigger>
-                <DialogContent className={MOBIL}>
+                <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Čakáreň · Postav si prvého agenta</DialogTitle>
                     <DialogDescription>Kohorta so štartom v januári. Daj e-mail a ozvem sa ako prvému.</DialogDescription>
@@ -137,7 +135,7 @@ export default function Dialogy() {
                     Anamnéza · celá cesta
                   </Button>
                 </DialogTrigger>
-                <DialogContent className={`${MOBIL} max-h-[80dvh] sm:max-w-xl`}>
+                <DialogContent className="max-h-[80dvh] sm:max-w-xl">
                   <DialogHeader>
                     <DialogTitle>Z nemocnice k agentom</DialogTitle>
                     <DialogDescription>Päť zastávok. Zvyšok je záznam.</DialogDescription>
@@ -157,7 +155,7 @@ export default function Dialogy() {
             </div>
           </Blok>
 
-          <Blok nazov="Široký · obrázok · bez krížika" pozn="className sm:max-w-2xl p-0; krížik skrytý cez [&>button:last-child]:hidden, zatvára vlastné tlačidlo.">
+          <Blok nazov="Široký · obrázok · bez krížika" pozn="className sm:max-w-2xl p-0; krížik skrytý propom hideClose, zatvára vlastné tlačidlo.">
             <div className="flex flex-wrap items-center gap-3">
               <Stav>zatvorené</Stav>
               <Dialog>
@@ -166,7 +164,7 @@ export default function Dialogy() {
                     Hriech · náhľad
                   </Button>
                 </DialogTrigger>
-                <DialogContent className={`${MOBIL} gap-0 overflow-hidden p-0 sm:max-w-2xl [&>button:last-child]:hidden`}>
+                <DialogContent hideClose className="gap-0 overflow-hidden p-0 sm:max-w-2xl">
                   <img
                     src={hriech.obrazok!}
                     alt="Hriech — náhľad publikácie"
@@ -211,7 +209,7 @@ export default function Dialogy() {
               </Button>
               <span className="font-mono text-sm">otvorené {pocet}×</span>
               <Dialog open={kontrola} onOpenChange={setKontrola}>
-                <DialogContent className={MOBIL}>
+                <DialogContent>
                   <DialogHeader>
                     <DialogTitle>Otvorené z kódu</DialogTitle>
                     <DialogDescription>
@@ -233,7 +231,7 @@ export default function Dialogy() {
                   </Button>
                 </DialogTrigger>
                 <DialogContent
-                  className={`${MOBIL} sm:max-w-sm`}
+                  className="sm:max-w-sm"
                   onInteractOutside={(e) => e.preventDefault()}
                 >
                   <DialogHeader>
@@ -263,7 +261,7 @@ export default function Dialogy() {
                     Zrušiť termín
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="w-[calc(100%-2rem)]">
+                <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Zrušiť vyšetrenie?</AlertDialogTitle>
                     <AlertDialogDescription>Termín sa uvoľní pre ďalšieho pacienta. Nový si vieš vybrať kedykoľvek.</AlertDialogDescription>
@@ -291,7 +289,7 @@ export default function Dialogy() {
                     Odísť zo Škrtacieho testu
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="w-[calc(100%-2rem)]">
+                <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Odísť z hry?</AlertDialogTitle>
                     <AlertDialogDescription>Tvoj text a škrty sa neuložia. Hra beží iba v tvojom prehliadači.</AlertDialogDescription>
@@ -314,7 +312,7 @@ export default function Dialogy() {
                     Presunúť termín
                   </Button>
                 </AlertDialogTrigger>
-                <AlertDialogContent className="w-[calc(100%-2rem)]">
+                <AlertDialogContent>
                   <AlertDialogHeader>
                     <AlertDialogTitle>Presunúť na najbližší voľný?</AlertDialogTitle>
                     <AlertDialogDescription>Termíny sú Po–Pi 14:00–19:00. Tu sa nič nepresúva, je to ukážka.</AlertDialogDescription>

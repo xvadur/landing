@@ -1,6 +1,6 @@
 /** Kit · Prekrytia: tour.tsx — sprievodca s reflektorom: placement top/right/bottom/left/center, spotlightPadding,
  *  showProgress, showSkipButton, onComplete/onSkip, content s useTour() (skok na krok). Prechádza sekcie tejto stránky.
- *  Popisky tlačidiel BoldKitu sú natvrdo anglicky (Skip Tour, Previous, Next, Finish) — slovenský recept je v Recepty.tsx. */
+ *  Tlačidlá sú slovensky priamo v tour.tsx (labels: Preskočiť, Späť, Ďalej, Hotovo), dajú sa prepísať propom labels. */
 import * as React from 'react';
 import { toast } from 'sonner';
 import { Tour, useTour, type TourStep } from '@/components/ui/tour';

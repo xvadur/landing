@@ -116,15 +116,17 @@ const sizeClasses: Record<SizeVariant, string> = {
   xl: '[&_svg]:h-8 [&_svg]:w-8',
 }
 
-const iconLabel: Record<IconType, string> = {
-  star: 'stars',
-  heart: 'hearts',
-  circle: 'circles',
+// Slovenské tvary: 1 hviezdička · 2–4 hviezdičky · 5+ hviezdičiek
+const iconLabel: Record<IconType, [string, string, string]> = {
+  star: ['hviezdička', 'hviezdičky', 'hviezdičiek'],
+  heart: ['srdce', 'srdcia', 'sŕdc'],
+  circle: ['kruh', 'kruhy', 'kruhov'],
 }
 
-// "1 stars" reads wrong in an accessible name. Vue's Rating already singularises.
-const iconLabelFor = (icon: IconType, count: number) =>
-  count === 1 ? iconLabel[icon].slice(0, -1) : iconLabel[icon]
+const iconLabelFor = (icon: IconType, count: number) => {
+  const [one, few, many] = iconLabel[icon]
+  return count === 1 ? one : count >= 2 && count <= 4 ? few : many
+}
 
 // ── Component ────────────────────────────────────────────────────────────────
 
@@ -152,6 +154,8 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
   const gradientId = `rating-half-${React.useId().replace(/:/g, '')}`
 
   const currentValue = isControlled ? controlledValue! : internalValue
+  // náhľad pri hoveri: ikony sa vyplnia po kurzor (predtým iba callback)
+  const [hoverValue, setHoverValue] = React.useState<number | null>(null)
 
   const setValue = (next: number) => {
     if (!isControlled) setInternalValue(next)
@@ -199,11 +203,13 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
   }
 
   const handleMouseLeave = () => {
+    setHoverValue(null)
     onHoverChange?.(null)
   }
 
   const handleStarMouseMove = (_e: React.MouseEvent<HTMLButtonElement>, starIndex: number) => {
     if (!interactive) return
+    setHoverValue(starIndex)
     onHoverChange?.(starIndex)
   }
 
@@ -212,16 +218,12 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
     setValue(starIndex)
   }
 
-  const valueText =
-    icon === 'heart'
-      ? `${currentValue} out of ${max} hearts`
-      : icon === 'circle'
-        ? `${currentValue} out of ${max} circles`
-        : `${currentValue} out of ${max} stars`
+  const valueText = `${currentValue.toLocaleString('sk-SK')} z ${max}`
+  const shownValue = hoverValue ?? currentValue
 
   function renderIcon(index: number) {
-    const filled = index <= currentValue
-    const half = !filled && index - 0.5 <= currentValue && precision === 0.5
+    const filled = index <= shownValue
+    const half = !filled && index - 0.5 <= shownValue && precision === 0.5
     if (icon === 'heart') return <HeartIcon filled={filled} />
     if (icon === 'circle') return <CircleIcon filled={filled} />
     return <StarIcon filled={filled} half={half} gradientId={gradientId} />
@@ -238,7 +240,7 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
         else if (ref) ref.current = node
       }}
       role="group"
-      aria-label={`Rating: ${valueText}`}
+      aria-label={`Hodnotenie: ${valueText}`}
       // A read-only rating is still meaningful content, so expose it as
       // read-only rather than removing it from the a11y tree entirely.
       aria-readonly={readOnly || undefined}
@@ -272,7 +274,9 @@ export const Rating = React.forwardRef<HTMLDivElement, RatingProps>(function Rat
             onMouseMove={(e) => handleStarMouseMove(e, starIndex)}
             className={cn(
               'flex items-center justify-center transition-transform focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-              interactive && 'hover:scale-110 cursor-pointer',
+              // dotyková plocha 44 × 44 px cez ::before (vizuálna veľkosť ikon a medzery ostávajú)
+              interactive &&
+                'relative before:absolute before:left-1/2 before:top-1/2 before:h-11 before:w-11 before:-translate-x-1/2 before:-translate-y-1/2 before:content-[""] hover:scale-110 cursor-pointer',
               !interactive && 'cursor-default'
             )}
           >

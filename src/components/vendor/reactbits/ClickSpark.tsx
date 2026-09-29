@@ -36,7 +36,7 @@ interface Spark {
 }
 
 export default function ClickSpark({
-  sparkColor = 'hot',
+  sparkColor = 'ink', // hot iba CTA a X (Hero.tsx posiela hot explicitne)
   sparkSize = 12,
   sparkRadius = 22,
   sparkCount = 8,

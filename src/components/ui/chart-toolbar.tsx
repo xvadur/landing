@@ -46,15 +46,15 @@ export const ChartToolbar = React.forwardRef<HTMLDivElement, ChartToolbarProps>(
 
     return (
       <div ref={innerRef} className={cn('relative', className)} {...props}>
-        <div data-chart-export-controls className="absolute right-2 top-2 z-10 flex gap-1">
+        <div data-chart-export-controls className="absolute right-2 top-2 z-10 flex gap-2">
           {png && (
             <Button
               type="button"
               variant="outline"
               size="icon"
-              className="h-8 w-8"
-              aria-label="Export chart as PNG"
-              title="Export PNG"
+              className="relative h-9 w-9 before:absolute before:-inset-[7px] before:content-['']"
+              aria-label="Stiahnuť graf ako PNG"
+              title="PNG"
               onClick={withContainer((el) => void exportPNG(el, `${filename}.png`))}
             >
               <Image />
@@ -65,9 +65,9 @@ export const ChartToolbar = React.forwardRef<HTMLDivElement, ChartToolbarProps>(
               type="button"
               variant="outline"
               size="icon"
-              className="h-8 w-8"
-              aria-label="Export chart as SVG"
-              title="Export SVG"
+              className="relative h-9 w-9 before:absolute before:-inset-[7px] before:content-['']"
+              aria-label="Stiahnuť graf ako SVG"
+              title="SVG"
               onClick={withContainer((el) => exportSVG(el, `${filename}.svg`))}
             >
               <Download />
@@ -78,9 +78,9 @@ export const ChartToolbar = React.forwardRef<HTMLDivElement, ChartToolbarProps>(
               type="button"
               variant="outline"
               size="icon"
-              className="h-8 w-8"
-              aria-label="Download chart data as CSV"
-              title="Download CSV"
+              className="relative h-9 w-9 before:absolute before:-inset-[7px] before:content-['']"
+              aria-label="Stiahnuť dáta grafu ako CSV"
+              title="CSV"
               onClick={() => downloadCSV(data, `${filename}.csv`)}
             >
               <FileText />
@@ -91,9 +91,9 @@ export const ChartToolbar = React.forwardRef<HTMLDivElement, ChartToolbarProps>(
               type="button"
               variant="outline"
               size="icon"
-              className="h-8 w-8"
-              aria-label="Toggle fullscreen"
-              title="Fullscreen"
+              className="relative h-9 w-9 before:absolute before:-inset-[7px] before:content-['']"
+              aria-label="Celá obrazovka"
+              title="Celá obrazovka"
               onClick={withContainer(toggleFullscreen)}
             >
               <Maximize />

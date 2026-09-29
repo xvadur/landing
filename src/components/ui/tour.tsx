@@ -21,6 +21,24 @@ export interface TourProps {
   onSkip?: () => void
   showSkipButton?: boolean
   showProgress?: boolean
+  /** Texty tlačidiel (predvolene slovensky). */
+  labels?: Partial<TourLabels>
+}
+
+export interface TourLabels {
+  skip: string
+  previous: string
+  next: string
+  finish: string
+  close: string
+}
+
+const DEFAULT_TOUR_LABELS: TourLabels = {
+  skip: 'Preskočiť',
+  previous: 'Späť',
+  next: 'Ďalej',
+  finish: 'Hotovo',
+  close: 'Zavrieť',
 }
 
 interface TourContextValue {
@@ -132,7 +150,7 @@ function TourOverlay({ targetRect, spotlightPadding }: TourOverlayProps) {
   if (!targetRect) {
     // Center placement - full overlay
     return (
-      <div className="fixed inset-0 z-[9998] bg-black/70" />
+      <div className="fixed inset-0 z-[9998] bg-overlay" />
     )
   }
 
@@ -143,17 +161,22 @@ function TourOverlay({ targetRect, spotlightPadding }: TourOverlayProps) {
     height: targetRect.height + spotlightPadding * 2,
   }
 
+  // Reflektor = jeden obdĺžnik s obrovským tieňom v tokene overlay (predtým dva prekrížené gradienty svietili ako „+“
+  // cez celý riadok a stĺpec cieľa). Priehľadná vrstva pod ním chytá kliky mimo sprievodcu.
   return (
-    <div
-      className="fixed inset-0 z-[9998]"
-      style={{
-        background: `
-          linear-gradient(to right, rgba(0,0,0,0.7) ${spotlightRect.left}px, transparent ${spotlightRect.left}px, transparent ${spotlightRect.left + spotlightRect.width}px, rgba(0,0,0,0.7) ${spotlightRect.left + spotlightRect.width}px),
-          linear-gradient(to bottom, rgba(0,0,0,0.7) ${spotlightRect.top}px, transparent ${spotlightRect.top}px, transparent ${spotlightRect.top + spotlightRect.height}px, rgba(0,0,0,0.7) ${spotlightRect.top + spotlightRect.height}px)
-        `,
-        backgroundBlendMode: 'multiply',
-      }}
-    />
+    <>
+      <div className="fixed inset-0 z-[9998]" />
+      <div
+        className="pointer-events-none fixed z-[9998] border-3 border-secondary"
+        style={{
+          top: spotlightRect.top,
+          left: spotlightRect.left,
+          width: spotlightRect.width,
+          height: spotlightRect.height,
+          boxShadow: '0 0 0 200vmax var(--color-overlay)',
+        }}
+      />
+    </>
   )
 }
 
@@ -163,6 +186,7 @@ interface TourPopoverProps {
   targetRect: DOMRect | null
   showSkipButton: boolean
   showProgress: boolean
+  labels: TourLabels
 }
 
 function TourPopover({
@@ -170,6 +194,7 @@ function TourPopover({
   targetRect,
   showSkipButton,
   showProgress,
+  labels,
 }: TourPopoverProps) {
   const { currentStep, totalSteps, nextStep, prevStep, close, skip } = useTour()
   const popoverRef = React.useRef<HTMLDivElement>(null)
@@ -270,7 +295,7 @@ function TourPopover({
       aria-describedby={descriptionId}
       tabIndex={-1}
       className={cn(
-        'fixed z-[9999] w-80 border-3 border-foreground bg-popover p-4',
+        'fixed z-[9999] w-80 max-w-[calc(100vw-2rem)] border-3 border-foreground bg-popover p-4',
         'shadow-[8px_8px_0px_hsl(var(--shadow-color))]',
         'ease-out animate-in fade-in-0 zoom-in-95 duration-200',
         'focus:outline-none'
@@ -282,19 +307,19 @@ function TourPopover({
         type="button"
         onClick={close}
         className={cn(
-          'absolute -right-3 -top-3 border-2 border-foreground bg-background p-1',
+          'absolute -right-3 -top-3 inline-flex h-8 w-8 items-center justify-center border-2 border-foreground bg-background before:absolute before:-inset-[8px] before:content-[""]',
           'shadow-[2px_2px_0px_hsl(var(--shadow-color))]',
           'hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none',
           'transition duration-150'
         )}
       >
-        <X className="h-3 w-3 stroke-[3]" />
-        <span className="sr-only">Close</span>
+        <X className="h-4 w-4 stroke-[3]" />
+        <span className="sr-only">{labels.close}</span>
       </button>
 
       {/* Content */}
       <div className="space-y-3">
-        <h3 id={titleId} className="text-base font-bold uppercase tracking-wide">
+        <h3 id={titleId} className="font-sans text-base font-bold uppercase leading-tight tracking-wide">
           {step.title}
         </h3>
         <p id={descriptionId} className="text-sm text-muted-foreground">
@@ -328,18 +353,18 @@ function TourPopover({
               onClick={skip}
               className="text-muted-foreground"
             >
-              Skip Tour
+              {labels.skip}
             </Button>
           )}
         </div>
         <div className="flex items-center gap-2">
           {!isFirst && (
             <Button variant="outline" size="sm" onClick={prevStep}>
-              Previous
+              {labels.previous}
             </Button>
           )}
           <Button size="sm" onClick={nextStep}>
-            {isLast ? 'Finish' : 'Next'}
+            {isLast ? labels.finish : labels.next}
           </Button>
         </div>
       </div>
@@ -358,6 +383,7 @@ const Tour = React.forwardRef<HTMLDivElement, TourProps>(
       onSkip,
       showSkipButton = true,
       showProgress = true,
+      labels: labelsProp,
     },
     ref
   ) => {
@@ -494,6 +520,7 @@ const Tour = React.forwardRef<HTMLDivElement, TourProps>(
               targetRect={targetRect}
               showSkipButton={showSkipButton}
               showProgress={showProgress}
+              labels={{ ...DEFAULT_TOUR_LABELS, ...labelsProp }}
             />
           </TourContext.Provider>,
           document.body

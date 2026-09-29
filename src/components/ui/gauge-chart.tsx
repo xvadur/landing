@@ -47,9 +47,9 @@ export interface GaugeChartProps
 }
 
 const DEFAULT_ZONES: GaugeChartZone[] = [
-  { from: 0, to: 33, color: 'hsl(var(--destructive))', label: 'Low' },
-  { from: 33, to: 66, color: 'hsl(var(--warning))', label: 'Medium' },
-  { from: 66, to: 100, color: 'hsl(var(--success))', label: 'High' },
+  { from: 0, to: 33, color: 'hsl(var(--destructive))', label: 'Nízke' },
+  { from: 33, to: 66, color: 'hsl(var(--warning))', label: 'Stredné' },
+  { from: 66, to: 100, color: 'hsl(var(--primary))', label: 'Vysoké' },
 ]
 
 /**
@@ -141,6 +141,19 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
 
     const isMeter = resolvedVariant === 'meter'
 
+    // Hodnota a popis ležia pod čapom ručičky (predtým centerY + 20 → prekryv s čapom a orezanie pri sm).
+    // full: v dolnej polovici kruhu, semicircle/meter: pod stredom; výška SVG sa dopočíta.
+    const valueY =
+      resolvedVariant === 'full'
+        ? centerY + config.radius * 0.5
+        : centerY + 12 + config.fontSize
+    const labelY = valueY + config.labelSize + 4
+    const minMaxY = centerY + config.strokeWidth / 2 + config.labelSize + 4
+    const svgHeight =
+      resolvedVariant === 'full'
+        ? config.height
+        : Math.ceil(Math.max(label ? labelY : valueY, minMaxY) + 6)
+
     const needleLength = config.radius - 8
 
     // Convert a percentage (0–100) along the arc to an SVG angle in radians
@@ -201,14 +214,14 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
         aria-valuemin={min}
         aria-valuemax={max}
         aria-valuetext={valueFormatter(normalizedValue)}
-        aria-label={label ?? 'Gauge'}
+        aria-label={label ?? 'Budík'}
         className={cn(gaugeChartVariants({ size, variant }), className)}
         style={{ maxWidth: config.width }}
         {...props}
       >
         <svg
           className="h-auto w-full"
-          viewBox={`0 0 ${config.width} ${config.height}`}
+          viewBox={`0 0 ${config.width} ${svgHeight}`}
         >
           {/* Background track */}
           <path
@@ -295,7 +308,8 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
                 transform: `rotate(${needleAngle}deg)`,
                 transformOrigin: `${centerX}px ${centerY}px`,
                 transition: animated ? 'transform 0.5s ease-out' : 'none',
-                filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.3))',
+                // tvrdý tieň bez rozmazania (zákon: tiene bez blur)
+                filter: 'drop-shadow(2px 2px 0 hsl(var(--shadow-color)))',
               }}
             >
               {/* Needle body */}
@@ -341,7 +355,7 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
           {/* Value display */}
           <text
             x={centerX}
-            y={centerY + 20}
+            y={valueY}
             textAnchor="middle"
             fill="hsl(var(--foreground))"
             fontWeight="900"
@@ -355,7 +369,7 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
           {label && (
             <text
               x={centerX}
-              y={centerY + 20 + config.fontSize}
+              y={labelY}
               textAnchor="middle"
               fill="hsl(var(--muted-foreground))"
               fontWeight="700"
@@ -370,9 +384,9 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
           {resolvedVariant !== 'full' && (
             <>
               <text
-                x={centerX - config.radius - 8}
-                y={centerY + 4}
-                textAnchor="end"
+                x={centerX - config.radius}
+                y={minMaxY}
+                textAnchor="middle"
                 fill="hsl(var(--muted-foreground))"
                 fontWeight="600"
                 fontSize={config.labelSize}
@@ -380,9 +394,9 @@ const GaugeChart = React.forwardRef<HTMLDivElement, GaugeChartProps>(
                 {min}
               </text>
               <text
-                x={centerX + config.radius + 8}
-                y={centerY + 4}
-                textAnchor="start"
+                x={centerX + config.radius}
+                y={minMaxY}
+                textAnchor="middle"
                 fill="hsl(var(--muted-foreground))"
                 fontWeight="600"
                 fontSize={config.labelSize}

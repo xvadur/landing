@@ -308,21 +308,22 @@ function TreeNodeItem({ node, level }: TreeNodeProps) {
         // must not also activate this node.
         e.stopPropagation()
         setFocusedId(node.id)
-        if (hasChildren) {
-          toggleExpanded(node.id)
+        if (selectionMode === 'none') {
+          if (hasChildren) toggleExpanded(node.id)
+          return
         }
-        if (selectionMode !== 'none') {
-          toggleSelected(node.id)
-        }
+        // Pri výbere klik na rodiča vyberie a (ak je zbalený) rozbalí — nezbalí ho. Zbalenie: šípka alebo ←.
+        toggleSelected(node.id)
+        if (hasChildren && !isExpanded) toggleExpanded(node.id)
       }}
       className="focus:outline-none"
     >
       <div
         className={cn(
-          'flex items-center gap-2 px-2 py-1.5 cursor-pointer transition-colors',
+          'flex min-h-11 items-center gap-2 px-2 py-1.5 cursor-pointer transition-colors',
           'hover:bg-muted',
           isFocused && 'bg-muted',
-          isSelected && 'bg-accent',
+          isSelected && 'bg-secondary text-secondary-foreground',
           node.disabled && 'opacity-50 cursor-not-allowed'
         )}
         style={{ paddingLeft: `${level * 16 + 8}px` }}
@@ -334,6 +335,13 @@ function TreeNodeItem({ node, level }: TreeNodeProps) {
         {hasChildren ? (
           <ChevronRight
             aria-hidden="true"
+            onClick={(e) => {
+              // šípka vždy prepne rozbalenie (bez zmeny výberu)
+              if (node.disabled || selectionMode === 'none') return
+              e.stopPropagation()
+              setFocusedId(node.id)
+              toggleExpanded(node.id)
+            }}
             className={cn(
               'h-4 w-4 shrink-0 stroke-[3] transition-transform duration-200',
               isExpanded && 'rotate-90'

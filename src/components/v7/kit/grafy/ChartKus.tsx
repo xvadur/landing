@@ -82,12 +82,11 @@ const CFG_MESIAC: ChartConfig = {
   slova: { label: 'Slová za deň', color: FARBA.zlta },
   priemer: { label: 'Priemer 7 dní', color: FARBA.ink },
 };
-/** Pre čiary: ChartContainer nasilu farbí každý path na ink (3 px). Farbu čiary vráti iba !important cez triedu série. */
+/** Čiary si nechávajú farbu zo série (config / stroke); ChartContainer im dá iba hrúbku 3 px. */
 const CFG_MESIAC_L: ChartConfig = {
   slova: { label: 'Slová za deň', color: FARBA.ink },
   priemer: { label: 'Priemer 7 dní', color: FARBA.alarm },
 };
-const OPRAVA_CIAR = '[&_.l-priemer_.recharts-line-curve]:![stroke:var(--color-priemer)]';
 const CFG_TRH: ChartConfig = { pocet: { label: 'Počet', color: FARBA.zlta } };
 
 const OS = { tickLine: false, axisLine: false, tickMargin: 8, fontSize: 11, minTickGap: 32 } as const;
@@ -208,15 +207,15 @@ export default function ChartKus() {
               </AreaChart>
             </ChartContainer>
           </Varianta>
-          <Varianta nazov="Čiara + priemer" props="LineChart · 2 série · Line className + oprava farby" ukazka>
-            <ChartContainer config={CFG_MESIAC_L} className={`${CONT} ${OPRAVA_CIAR}`} aria-label="Slová za deň za 30 dní, ukážka">
+          <Varianta nazov="Čiara + priemer" props="LineChart · 2 série · stroke zo série" ukazka>
+            <ChartContainer config={CFG_MESIAC_L} className={CONT} aria-label="Slová za deň za 30 dní, ukážka">
               <LineChart data={MESIAC} margin={{ left: 0, right: 8 }}>
                 <CartesianGrid vertical={false} strokeDasharray="3 3" />
                 <XAxis dataKey="den" {...OS} />
                 <YAxis {...OS} width={40} tickFormatter={kilo} />
                 <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
                 <Line dataKey="slova" type="monotone" stroke="var(--color-slova)" strokeWidth={3} dot={false} />
-                <Line dataKey="priemer" className="l-priemer" type="monotone" stroke="var(--color-priemer)" strokeWidth={2} strokeDasharray="6 4" dot={false} />
+                <Line dataKey="priemer" type="monotone" stroke="var(--color-priemer)" strokeWidth={2} strokeDasharray="6 4" dot={false} />
               </LineChart>
             </ChartContainer>
           </Varianta>
@@ -273,7 +272,7 @@ export default function ChartKus() {
           ))}
         </Mriezka>
         <p className="text-sm">
-          <b>accent</b> vynechaný: tieň aj pozadie sú hot, zákon ju dovoľuje iba na CTA a X.
+          <b>accent</b> vynechaný (od 29. 9. je to žltá plocha s ink tieňom, rovnaký jazyk ako <b>filled</b>).
         </p>
 
         <Podnadpis>Tooltip · ChartTooltipContent (otvorený cez defaultIndex)</Podnadpis>
@@ -395,7 +394,7 @@ export default function ChartKus() {
           </Varianta>
         </Mriezka>
         <p className="text-sm">
-          <b>bold</b> (obsahuje hot a trikrát žltú), <b>vibrant</b> a <b>pastel</b> (pevné HSL mimo tokenov) sa na web nehodia, preto tu nie sú.
+          Palety <b>bold / vibrant / pastel</b> sú od 29. 9. iba z tokenov (ink, žltá, stamp, biela, sivá; bez hot a pastelov); tu ukážka monochrome a vlastnej.
         </p>
       </Kus>
 

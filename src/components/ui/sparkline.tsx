@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 
-export interface SparklineProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SparklineProps extends React.HTMLAttributes<HTMLSpanElement> {
   data: number[]
   type?: 'line' | 'area' | 'bar'
   color?: string
@@ -25,7 +25,7 @@ export interface SparklineProps extends React.HTMLAttributes<HTMLDivElement> {
   ariaLabel?: string
 }
 
-const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
+const Sparkline = React.forwardRef<HTMLSpanElement, SparklineProps>(
   (
     {
       data,
@@ -49,8 +49,12 @@ const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
     const accessibleLabel =
       ariaLabel ??
       (data && data.length
-        ? `Sparkline, ${data.length} points, from ${data[0]} to ${data[data.length - 1]}`
-        : 'Sparkline, no data')
+        ? `Mini graf, ${data.length} bodov, od ${data[0].toLocaleString('sk-SK')} po ${data[data.length - 1].toLocaleString('sk-SK')}`
+        : 'Mini graf bez dát')
+    // Koreň je <span> (dá sa vložiť do vety v <p>). Recharts kreslí <div>, preto sa graf vykreslí až po hydratácii:
+    // statické HTML má iba prázdny span s rozmermi, parser tak nerozbije <p> a hydratácia sedí.
+    const [mounted, setMounted] = React.useState(false)
+    React.useEffect(() => setMounted(true), [])
     // Unique ID per instance prevents gradient collision when multiple sparklines render on the same page
     const uid = React.useId().replace(/:/g, '')
 
@@ -60,17 +64,18 @@ const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
     // "Rendered more hooks than during the previous render".
     const resolvedColor = React.useMemo(() => {
       if (color) return color
-      if (trend === 'up') return 'hsl(var(--success))'
+      // up = ink, down = alarmová červená, neutral = sivá (žltá čiara na bielom bola nečitateľná)
+      if (trend === 'up') return 'hsl(var(--foreground))'
       if (trend === 'down') return 'hsl(var(--destructive))'
-      return 'hsl(var(--primary))'
+      return 'hsl(var(--muted-foreground))'
     }, [color, trend])
 
     if (!data || data.length === 0) {
       return (
-        <div
+        <span
           ref={ref}
           role="img"
-          aria-label={ariaLabel ?? 'Sparkline, no data'}
+          aria-label={ariaLabel ?? 'Mini graf bez dát'}
           className={cn('inline-block border-b-2 border-dashed border-foreground/30', className)}
           style={{ width, height }}
           {...props}
@@ -107,15 +112,15 @@ const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
 
     if (type === 'bar') {
       return (
-        <div
+        <span
           ref={ref}
           role="img"
           aria-label={accessibleLabel}
-          className={cn('inline-block', className)}
+          className={cn('inline-block align-middle', className)}
           style={{ width, height }}
           {...props}
         >
-          <ResponsiveContainer width="100%" height="100%">
+          {mounted && (<ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
               <Bar
                 dataKey="value"
@@ -126,22 +131,22 @@ const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
                 animationDuration={300}
               />
             </BarChart>
-          </ResponsiveContainer>
-        </div>
+          </ResponsiveContainer>)}
+        </span>
       )
     }
 
     if (type === 'area') {
       return (
-        <div
+        <span
           ref={ref}
           role="img"
           aria-label={accessibleLabel}
-          className={cn('inline-block', className)}
+          className={cn('inline-block align-middle', className)}
           style={{ width, height }}
           {...props}
         >
-          <ResponsiveContainer width="100%" height="100%">
+          {mounted && (<ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
               <defs>
                 <linearGradient id={`sparkline-gradient-${uid}`} x1="0" y1="0" x2="0" y2="1">
@@ -161,22 +166,22 @@ const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
                 activeDot={false}
               />
             </AreaChart>
-          </ResponsiveContainer>
-        </div>
+          </ResponsiveContainer>)}
+        </span>
       )
     }
 
     // Default: line
     return (
-      <div
+      <span
         ref={ref}
         role="img"
         aria-label={accessibleLabel}
-        className={cn('inline-block', className)}
+        className={cn('inline-block align-middle', className)}
         style={{ width, height }}
         {...props}
       >
-        <ResponsiveContainer width="100%" height="100%">
+        {mounted && (<ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 2, right: 2, bottom: 2, left: 2 }}>
             <Line
               type="monotone"
@@ -189,8 +194,8 @@ const Sparkline = React.forwardRef<HTMLDivElement, SparklineProps>(
               animationDuration={300}
             />
           </LineChart>
-        </ResponsiveContainer>
-      </div>
+        </ResponsiveContainer>)}
+      </span>
     )
   }
 )

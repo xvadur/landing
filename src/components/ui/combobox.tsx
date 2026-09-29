@@ -21,7 +21,7 @@ const ComboboxTrigger = React.forwardRef<
     value?: string
     open?: boolean
   }
->(({ className, placeholder = 'Select...', value, open, ...props }, ref) => (
+>(({ className, placeholder = 'Vyber…', value, open, ...props }, ref) => (
   <PopoverTrigger asChild>
     <button
       ref={ref}
@@ -60,7 +60,7 @@ const ComboboxMultiTrigger = React.forwardRef<
     open?: boolean
     onRemove?: (value: string) => void
   }
->(({ className, placeholder = 'Select...', values = [], open, onRemove, ...props }, ref) => (
+>(({ className, placeholder = 'Vyber…', values = [], open, onRemove, ...props }, ref) => (
   // The chips live OUTSIDE the trigger button. They used to be inside it, so
   // each chip's remove control had to be a bare <svg onClick> — mouse-only,
   // unfocusable and unnamed — because a real <button> there would have been
@@ -74,12 +74,12 @@ const ComboboxMultiTrigger = React.forwardRef<
     {values.map(({ value, label }) => (
       <span
         key={value}
-        className="flex items-center gap-1 border-2 border-foreground bg-accent px-1.5 py-0.5 text-xs font-bold"
+        className="flex items-center gap-1 border-2 border-foreground bg-secondary px-1.5 py-0.5 text-xs font-bold text-secondary-foreground"
       >
         {label}
         <button
           type="button"
-          aria-label={`Remove ${label}`}
+          aria-label={`Odobrať ${label}`}
           onClick={e => {
             e.stopPropagation()
             onRemove?.(value)

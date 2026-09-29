@@ -203,7 +203,8 @@ function SlideTransition({ children, direction, reduced, onHeightReady }: SlideT
       animate="center"
       exit="exit"
       transition={{ duration: reduced ? 0.12 : 0.3 }}
-      style={{ position: 'absolute', left: 0, right: 0, top: 0 }}
+      // padding: inherit → padding z contentClassName odsadí aj absolútne uložený obsah kroku (predtým lepil na rám)
+      style={{ position: 'absolute', left: 0, right: 0, top: 0, padding: 'inherit' }}
     >
       {children}
     </motion.div>
@@ -252,8 +253,8 @@ function StepIndicator({ step, currentStep, onClickStep, disableStepIndicators =
       className={cn(
         'flex h-11 w-11 flex-none items-center justify-center rounded-lg border-3 border-ink font-display text-base font-extrabold transition-colors duration-(--duration-base)',
         status === 'inactive' && 'bg-white text-ink',
-        status === 'active' && 'bg-hot text-ink shadow-brutal-sm',
-        status === 'complete' && 'bg-lime text-ink',
+        status === 'active' && 'bg-ink text-paper shadow-brutal-sm', // aktívny = ink (hot iba CTA a X)
+        status === 'complete' && 'bg-yellow text-ink',
         clickable ? 'press cursor-pointer hover:bg-white-hover' : 'cursor-default',
         disableStepIndicators && status === 'inactive' && 'opacity-60',
       )}

@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils';
 /** Toaster tohto katalógu má id „kit“, aby hlásenia nešli aj do site Toastera z Base (ten nemá id). */
 export const KIT_TOASTER = 'kit';
 /** Druhý Toaster: BoldKit sonner.tsx bez opravy (vľavo dole), na porovnanie. */
-export const KIT_TOASTER_BOLDKIT = 'kit-boldkit';
 
 /** Rám jedného kusu: meno (Geist Mono), jedna veta, deti = mriežka variantov a reálna kombinácia. */
 export function Kus({
@@ -80,8 +79,8 @@ export function useMaloOkno(query = '(max-width: 639px)') {
   return malo;
 }
 
-/** Menu položky BoldKitu majú focus:bg-accent (= hot, text paper). Hot patrí iba CTA a X → prebíjame na žltú s ink. */
-export const POLOZKA = 'min-h-11 cursor-pointer text-base focus:bg-yellow focus:text-ink data-[state=open]:bg-yellow';
+/** Veľkosť písma položiek v ukážkach. Fokus = žltá s ink textom a výška 44 px sú priamo v menu kusoch (29. 9.). */
+export const POLOZKA = 'cursor-pointer text-base';
 
 /* ---------------- dáta ---------------- */
 

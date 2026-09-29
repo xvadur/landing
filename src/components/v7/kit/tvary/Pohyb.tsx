@@ -8,22 +8,22 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CESTA } from '@/data/cesta';
 import { VLAJKA, PRECO_NIE_CHATGPT } from '@/data/ponuka';
-import { Bunka, Chyba, Kus, Pod, Posuvnik } from './Spolocne';
+import { Bunka, Kus, Opravene, Pod, Posuvnik } from './Spolocne';
 
 const SMERY: RevealDirection[] = ['up', 'down', 'left', 'right'];
 
 const EASINGY: { v: string; zdroj: string; co: string }[] = [
-  { v: '--bk-ease-snap', zdroj: 'boldkit.css / motion.css', co: 'tlačidlá, press, reveal (mierny prekmit)' },
-  { v: '--bk-ease-step', zdroj: 'boldkit.css / motion.css', co: 'steps(4): slide-hard, skeleton-scan' },
-  { v: '--bk-ease-step-2', zdroj: 'boldkit.css / motion.css', co: 'steps(2): shake, skeleton-stamp' },
-  { v: '--bk-ease-stamp', zdroj: 'boldkit.css / motion.css', co: 'pečiatka: pomaly a potom úder' },
-  { v: '--bk-ease-rubber', zdroj: 'boldkit.css / motion.css', co: 'guma: veľký prekmit' },
-  { v: '--bk-ease-linear', zdroj: 'boldkit.css / motion.css', co: 'pásy, progress' },
+  { v: '--bk-ease-snap', zdroj: 'motion.css', co: 'tlačidlá, press, reveal (mierny prekmit)' },
+  { v: '--bk-ease-step', zdroj: 'motion.css', co: 'steps(4): slide-hard, skeleton-scan' },
+  { v: '--bk-ease-step-2', zdroj: 'motion.css', co: 'steps(2): shake, skeleton-stamp' },
+  { v: '--bk-ease-stamp', zdroj: 'motion.css', co: 'pečiatka: pomaly a potom úder' },
+  { v: '--bk-ease-rubber', zdroj: 'motion.css', co: 'guma: veľký prekmit' },
+  { v: '--bk-ease-linear', zdroj: 'motion.css', co: 'pásy, progress' },
   { v: '--ease-spring', zdroj: 'tokens.css', co: 'linear() pružina, card-drop' },
   { v: '--ease-out-hard', zdroj: 'tokens.css', co: 'tvrdý dobeh' },
-  { v: '--ease-out', zdroj: 'boldkit.css (prepisuje Tailwind)', co: 'všetky ease-out utility = out-quart' },
-  { v: '--ease-in-out', zdroj: 'boldkit.css (prepisuje Tailwind)', co: 'in-out-cubic' },
-  { v: '--ease-in', zdroj: 'boldkit.css (prepisuje Tailwind)', co: 'in-cubic, iba na odchod' },
+  { v: '--ease-out', zdroj: 'Tailwind (predvoľba)', co: 'ease-out utility' },
+  { v: '--ease-in-out', zdroj: 'Tailwind (predvoľba)', co: 'ease-in-out utility' },
+  { v: '--ease-in', zdroj: 'Tailwind (predvoľba)', co: 'iba na odchod' },
   { v: '--ease-out-quad', zdroj: 'boldkit.css', co: 'najslabší dobeh' },
   { v: '--ease-out-cubic', zdroj: 'boldkit.css', co: '' },
   { v: '--ease-out-quart', zdroj: 'boldkit.css', co: '' },
@@ -237,7 +237,7 @@ export default function Pohyb() {
             aria-describedby="kit-email-stav"
             className="min-h-12 flex-1 rounded-lg border-3 border-ink bg-paper px-3 font-mono"
           />
-          <Button type="submit" variant="accent" className="min-h-12 text-ink">
+          <Button type="submit" variant="accent" className="min-h-12">
             Chcem vedieť ako prvý
           </Button>
         </div>
@@ -349,11 +349,11 @@ export default function Pohyb() {
           </li>
         ))}
       </ul>
-      <Chyba>
-        <code>--bk-*</code> easingy a trvania sú definované dvakrát (boldkit.css <code>@theme</code> aj motion.css <code>:where(:root)</code>) — rovnaké
-        hodnoty, ale dva zdroje pravdy. Trvania v dráhach sú 4× spomalené, aby bolo vidieť rozdiel. <code>--ease-out / --ease-in-out</code> v
-        boldkit.css prepisujú Tailwind predvoľby pre celý web, nielen BoldKit.
-      </Chyba>
+      <Opravene>
+        <code>--bk-*</code> easingy a trvania sú definované raz (motion.css <code>:where(:root)</code>). Trvania v dráhach sú 4× spomalené,
+        aby bolo vidieť rozdiel. BoldKit už neprepisuje Tailwind <code>--ease-out / --ease-in-out / --ease-in</code>; silnejšie krivky sú
+        pomenované (<code>--ease-out-quart</code> …).
+      </Opravene>
 
       <Pod poznamka="Reveal + Stagger na bloku „prečo nie iba ChatGPT“ (ponuka.ts).">Kombinácia s Adamovým obsahom</Pod>
       <Stagger key={`k${kolo}`} delay={120} className="grid gap-3 md:grid-cols-2">

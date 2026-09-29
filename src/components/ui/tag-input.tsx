@@ -19,6 +19,24 @@ export interface TagInputProps
   allowDuplicates?: boolean
   delimiter?: string | RegExp
   validateTag?: (tag: string) => boolean | string
+  /** Hlášky a aria texty (predvolene slovensky). */
+  messages?: Partial<TagInputMessages>
+}
+
+export interface TagInputMessages {
+  maxTags: (max: number) => string
+  duplicate: string
+  invalid: string
+  remove: (tag: string) => string
+  suggestions: string
+}
+
+const DEFAULT_TAG_MESSAGES: TagInputMessages = {
+  maxTags: (max) => `Najviac ${max} štítkov`,
+  duplicate: 'Tento štítok už je pridaný',
+  invalid: 'Neplatný štítok',
+  remove: (tag) => `Odobrať ${tag}`,
+  suggestions: 'Návrhy',
 }
 
 const TagInput = React.forwardRef<TagInputHandle, TagInputProps>(
@@ -32,13 +50,15 @@ const TagInput = React.forwardRef<TagInputHandle, TagInputProps>(
       allowDuplicates = false,
       delimiter = ',',
       validateTag,
-      placeholder = 'Add tag...',
+      placeholder = 'Pridaj štítok…',
       disabled,
       className,
+      messages: messagesProp,
       ...props
     },
     ref
   ) => {
+    const messages = { ...DEFAULT_TAG_MESSAGES, ...messagesProp }
     const [uncontrolledTags, setUncontrolledTags] = React.useState<string[]>(defaultValue)
     const [inputValue, setInputValue] = React.useState('')
     const [showSuggestions, setShowSuggestions] = React.useState(false)
@@ -100,17 +120,17 @@ const TagInput = React.forwardRef<TagInputHandle, TagInputProps>(
         if (!trimmedTag) continue
 
         if (maxTags && working.length >= maxTags) {
-          nextError = `Maximum ${maxTags} tags allowed`
+          nextError = messages.maxTags(maxTags)
           break
         }
         if (!allowDuplicates && working.includes(trimmedTag)) {
-          nextError = 'Tag already exists'
+          nextError = messages.duplicate
           continue
         }
         if (validateTag) {
           const validationResult = validateTag(trimmedTag)
           if (validationResult !== true) {
-            nextError = typeof validationResult === 'string' ? validationResult : 'Invalid tag'
+            nextError = typeof validationResult === 'string' ? validationResult : messages.invalid
             continue
           }
         }
@@ -249,8 +269,8 @@ const TagInput = React.forwardRef<TagInputHandle, TagInputProps>(
                     e.stopPropagation()
                     removeTag(index)
                   }}
-                  className="hover:bg-primary-foreground/20 rounded-sm p-0.5 transition-colors"
-                  aria-label={`Remove ${tag}`}
+                  className="relative rounded-sm p-0.5 transition-colors before:absolute before:-inset-[14px] before:content-[''] hover:bg-primary-foreground/20"
+                  aria-label={messages.remove(tag)}
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -299,7 +319,7 @@ const TagInput = React.forwardRef<TagInputHandle, TagInputProps>(
           <div
             id={listboxId}
             role="listbox"
-            aria-label="Suggestions"
+            aria-label={messages.suggestions}
             className={cn(
               'absolute z-50 mt-1 w-full',
               'border-3 border-foreground bg-popover',
@@ -319,7 +339,7 @@ const TagInput = React.forwardRef<TagInputHandle, TagInputProps>(
                 className={cn(
                   'w-full cursor-pointer px-3 py-2 text-left text-sm transition-colors',
                   'hover:bg-muted',
-                  index === selectedSuggestionIndex && 'bg-accent'
+                  index === selectedSuggestionIndex && 'bg-secondary text-secondary-foreground'
                 )}
               >
                 {suggestion}

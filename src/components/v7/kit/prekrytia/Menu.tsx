@@ -1,6 +1,6 @@
 /** Kit · Prekrytia: dropdown-menu.tsx a context-menu.tsx — všetky časti (Item, inset, disabled, Shortcut, Label,
  *  Separator, Group, CheckboxItem, RadioGroup/RadioItem, Sub/SubTrigger/SubContent). Obsah: izba dôkazov (fakty.ts).
- *  Položky BoldKitu svietia pri fokuse bg-accent (= hot) → v ukážke prebité cez POLOZKA na žltú. */
+ *  Položky svietia pri fokuse žltou s ink textom (priamo v kuse, hot patrí iba CTA a X). */
 import * as React from 'react';
 import { toast } from 'sonner';
 import { ChevronDown, Copy, Download, ExternalLink, Share2, SlidersHorizontal } from 'lucide-react';

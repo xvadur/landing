@@ -16,7 +16,7 @@ import { Recept } from './ReceptyBio';
 import { PROJEKTY, domena, type Projekt } from './data';
 
 const noHover = 'shadow-none hover:translate-x-0 hover:translate-y-0';
-const ACC_OPEN = '[&[data-state=open]]:bg-yellow min-h-14 text-left text-base';
+const ACC_OPEN = 'min-h-14 text-left';
 
 function Odkaz({ p, tmavy }: { p: Projekt; tmavy?: boolean }) {
   if (!p.url) return <Badge variant="outline" className={noHover}>{p.stav}</Badge>;

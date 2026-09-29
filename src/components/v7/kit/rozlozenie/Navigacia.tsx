@@ -15,7 +15,6 @@ import {
   SidebarToggle,
   useSidebar,
 } from '@/components/ui/sidebar';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -69,8 +68,6 @@ import { Kus, Mriezka, Variant } from './Kus';
 import { BIO, SEKCIE } from './data';
 
 const noHover = 'shadow-none hover:translate-x-0 hover:translate-y-0';
-/** Aktívna položka / výber je v BoldKite bg-accent (= hot). Hot iba CTA → žltá. */
-const AKTIVNA = 'bg-yellow';
 
 function SidebarStav() {
   const { state, isMobile } = useSidebar();
@@ -114,7 +111,6 @@ function SidebarUkazka() {
           ))}
         </ToggleGroup>
       </div>
-      <TooltipProvider delayDuration={100}>
         <SidebarProvider className={`h-[440px] min-h-0 overflow-hidden border-3 border-ink ${side === 'right' ? 'flex-row-reverse' : ''}`}>
           <Sidebar collapsible={collapsible} side={side} className="bg-paper">
             <SidebarHeader className="min-h-16 gap-3">
@@ -130,7 +126,7 @@ function SidebarUkazka() {
                     icon={p.icon}
                     tooltip={p.label}
                     variant={p.id === akt ? 'active' : 'default'}
-                    className={`min-h-11 font-bold uppercase ${p.id === akt ? AKTIVNA : ''}`}
+                    className="font-bold uppercase"
                     aria-current={p.id === akt ? 'page' : undefined}
                     onClick={() => setAkt(p.id)}
                   >
@@ -163,7 +159,6 @@ function SidebarUkazka() {
             </p>
           </SidebarInset>
         </SidebarProvider>
-      </TooltipProvider>
     </div>
   );
 }
@@ -190,12 +185,12 @@ export default function Navigacia() {
       {/* ---------------- NAVIGATION-MENU ---------------- */}
       <Kus id="navigation-menu" meno="navigation-menu" subor="navigation-menu.tsx" veta="Hlavné menu s rozbaľovacími panelmi (Radix), otvára sa na hover aj klik, šípky z klávesnice. Na hlavičku webu a ekosystému.">
         <Mriezka className="lg:grid-cols-1">
-          <Variant props='defaultValue="liecba" (otvorené pri načítaní) · Trigger + Content (panel priamo pod položkou) · Link s navigationMenuTriggerStyle() · Indicator · Liečba: open žltý (className), Anamnéza: pôvodný hot'>
+          <Variant props='defaultValue="liecba" (otvorené pri načítaní) · Trigger + Content (panel priamo pod položkou) · Link s navigationMenuTriggerStyle() · Indicator · open a fokus = žltá s ink textom (v kuse)'>
             <div className="min-h-[27rem] sm:min-h-72">
               <NavigationMenu defaultValue="liecba" className="max-w-full justify-start">
                 <NavigationMenuList className="flex-wrap justify-start gap-3">
                   <NavigationMenuItem value="liecba">
-                    <NavigationMenuTrigger className="h-11 focus:bg-yellow focus:text-ink data-[state=open]:bg-yellow data-[state=open]:text-ink">Liečba</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>Liečba</NavigationMenuTrigger>
                     <NavigationMenuContent className="w-[min(88vw,30rem)]">
                       <ul className="grid gap-0 sm:grid-cols-2">
                         {PRODUKTY.slice(0, 4).map((p) => (
@@ -210,7 +205,7 @@ export default function Navigacia() {
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="h-11">Anamnéza</NavigationMenuTrigger>
+                    <NavigationMenuTrigger>Anamnéza</NavigationMenuTrigger>
                     <NavigationMenuContent className="w-[min(88vw,22rem)] p-3">
                       <ol className="flex flex-col gap-1">
                         {BIO.map((b, i) => (
@@ -221,7 +216,6 @@ export default function Navigacia() {
                           </li>
                         ))}
                       </ol>
-                      <p className="mt-2 font-mono text-[11px]">tento trigger má pôvodný open stav bg-accent (hot, text paper)</p>
                     </NavigationMenuContent>
                   </NavigationMenuItem>
                   <NavigationMenuItem>
@@ -268,36 +262,36 @@ export default function Navigacia() {
                   <MenubarContent>
                     <MenubarLabel>Pacient</MenubarLabel>
                     <MenubarGroup>
-                      <MenubarItem className="min-h-11 focus:bg-yellow focus:text-ink">
+                      <MenubarItem>
                         Nový záznam <MenubarShortcut>⌘N</MenubarShortcut>
                       </MenubarItem>
-                      <MenubarItem className="min-h-11 focus:bg-yellow focus:text-ink">
+                      <MenubarItem>
                         Otvoriť <MenubarShortcut>⌘O</MenubarShortcut>
                       </MenubarItem>
-                      <MenubarItem className="min-h-11" disabled>
+                      <MenubarItem disabled>
                         Zdieľať (disabled)
                       </MenubarItem>
                     </MenubarGroup>
                     <MenubarSeparator />
                     <MenubarSub>
-                      <MenubarSubTrigger className="min-h-11 focus:bg-yellow data-[state=open]:bg-yellow">Exportovať</MenubarSubTrigger>
+                      <MenubarSubTrigger>Exportovať</MenubarSubTrigger>
                       <MenubarSubContent>
-                        <MenubarItem className="min-h-11 focus:bg-yellow focus:text-ink">PDF</MenubarItem>
-                        <MenubarItem className="min-h-11 focus:bg-yellow focus:text-ink">Markdown</MenubarItem>
+                        <MenubarItem>PDF</MenubarItem>
+                        <MenubarItem>Markdown</MenubarItem>
                       </MenubarSubContent>
                     </MenubarSub>
-                    <MenubarItem inset className="min-h-11">
+                    <MenubarItem inset>
                       inset položka
                     </MenubarItem>
                   </MenubarContent>
                 </MenubarMenu>
                 <MenubarMenu>
-                  <MenubarTrigger className="min-h-11 data-[state=open]:bg-yellow data-[state=open]:text-ink">Zobraziť</MenubarTrigger>
+                  <MenubarTrigger>Zobraziť</MenubarTrigger>
                   <MenubarContent>
-                    <MenubarCheckboxItem className="min-h-11" checked={vitalne} onCheckedChange={setVitalne}>
+                    <MenubarCheckboxItem checked={vitalne} onCheckedChange={setVitalne}>
                       Vitálne funkcie
                     </MenubarCheckboxItem>
-                    <MenubarCheckboxItem className="min-h-11" checked={ekg} onCheckedChange={setEkg}>
+                    <MenubarCheckboxItem checked={ekg} onCheckedChange={setEkg}>
                       EKG čiara
                     </MenubarCheckboxItem>
                   </MenubarContent>
@@ -306,11 +300,11 @@ export default function Navigacia() {
                   <MenubarTrigger className="min-h-11">Liečba</MenubarTrigger>
                   <MenubarContent>
                     <MenubarRadioGroup value={tonovanie} onValueChange={setTon}>
-                      <MenubarRadioItem className="min-h-11" value="vysetrenie">
+                      <MenubarRadioItem value="vysetrenie">
                         {VLAJKA.nazov}
                       </MenubarRadioItem>
                       {PRODUKTY.slice(0, 3).map((p) => (
-                        <MenubarRadioItem key={p.id} className="min-h-11" value={p.id}>
+                        <MenubarRadioItem key={p.id} value={p.id}>
                           {p.nazov}
                         </MenubarRadioItem>
                       ))}
@@ -322,7 +316,7 @@ export default function Navigacia() {
             <p className="font-mono text-xs">
               vitálne = {String(vitalne)} · ekg = {String(ekg)} · liečba = {tonovanie}
             </p>
-            <p className="text-sm">Prvé menu má pôvodný focus bg-accent prepísaný na žltú, „Liečba“ ostáva v pôvodnej farbe na porovnanie.</p>
+            <p className="text-sm">Fokus a otvorené menu sú žlté s ink textom priamo v kuse; položky majú 44 px.</p>
           </div>
         </Variant>
       </Kus>

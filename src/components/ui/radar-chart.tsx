@@ -65,17 +65,19 @@ const RadarChartComponent = React.forwardRef<HTMLDivElement, RadarChartProps>(
             strokeWidth: 3,
           }
         case 'filled':
+          // plná plocha s ink obrysom
           return {
             fill: baseColor,
-            fillOpacity: fillOpacity,
+            fillOpacity: Math.max(fillOpacity, 0.9),
             stroke: 'hsl(var(--foreground))',
             strokeWidth: 3,
           }
         default:
+          // priesvitná plocha, obrys vo farbe série (predtým identické s filled)
           return {
             fill: baseColor,
             fillOpacity: fillOpacity,
-            stroke: 'hsl(var(--foreground))',
+            stroke: baseColor,
             strokeWidth: 3,
           }
       }

@@ -31,7 +31,6 @@ import { KORPUS } from '@/data/fakty';
 import { SUBSTACK_URL } from '@/components/texty/citanie';
 import { cn } from '@/lib/utils';
 import { HRY, PROJEKTY, STAV_TEXT, useMaloOkno, type ProjektDetail } from './spolocne';
-import { filterSk } from './Paleta';
 
 export type Text = { id: string; title: string; description: string; datum: string };
 
@@ -104,7 +103,7 @@ function Okno({
     );
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[88dvh] w-[calc(100%-2rem)] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl font-extrabold">{title}</DialogTitle>
           <DialogDescription className="text-base text-ink/75">{description}</DialogDescription>
@@ -177,42 +176,26 @@ function DetailProjektu({ p, open, onOpenChange }: { p: ProjektDetail | null; op
 
 /* ---------------- 4. sprievodca domovom ---------------- */
 
-/** Slovenské tlačidlá cez useTour(); anglické tlačidlá BoldKitu skrýva štýl na stránke ([data-tour-sk]). */
-function NavSk() {
-  const { currentStep, totalSteps, nextStep, prevStep, close } = useTour();
-  const posledny = currentStep === totalSteps - 1;
+/** Počítadlo krokov cez useTour(); tlačidlá sú slovenské priamo v tour.tsx (labels). */
+function KrokSk() {
+  const { currentStep, totalSteps } = useTour();
   return (
-    <div data-tour-sk="" className="mt-2 flex flex-col gap-3">
-      <p className="font-mono text-xs uppercase tracking-wider">
-        krok {currentStep + 1} zo {totalSteps}
-      </p>
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <Button variant="ghost" onClick={close} className="min-h-11 px-2 normal-case">
-          Preskočiť
-        </Button>
-        <div className="flex gap-2">
-          {currentStep > 0 && (
-            <Button variant="outline" onClick={prevStep}>
-              Späť
-            </Button>
-          )}
-          <Button onClick={nextStep}>{posledny ? 'Hotovo' : 'Ďalej'}</Button>
-        </div>
-      </div>
-    </div>
+    <p className="mt-2 font-mono text-xs uppercase tracking-wider">
+      krok {currentStep + 1} zo {totalSteps}
+    </p>
   );
 }
 
 const KROKY_DOMOV: TourStep[] = [
-  { target: '#uvod', title: '1 · Príjem', description: 'Ahoj, som Adam. Zdravotník, ktorý stavia AI agentov. Tu zistíš, kto ťa prijíma.', placement: 'bottom', content: <NavSk /> },
-  { target: '#anamneza', title: '2 · Anamnéza', description: 'Z nemocnice k agentom: päť zastávok mojej cesty.', placement: 'right', content: <NavSk /> },
-  { target: '#liecba', title: '3 · Liečba', description: 'Triáž, zásah, odovzdanie. Postup ako na zmene.', placement: 'left', content: <NavSk /> },
+  { target: '#uvod', title: '1 · Príjem', description: 'Ahoj, som Adam. Zdravotník, ktorý stavia AI agentov. Tu zistíš, kto ťa prijíma.', placement: 'bottom', content: <KrokSk /> },
+  { target: '#anamneza', title: '2 · Anamnéza', description: 'Z nemocnice k agentom: päť zastávok mojej cesty.', placement: 'right', content: <KrokSk /> },
+  { target: '#liecba', title: '3 · Liečba', description: 'Triáž, zásah, odovzdanie. Postup ako na zmene.', placement: 'left', content: <KrokSk /> },
   {
     target: '#konzultacia',
     title: '4 · Vyšetrenie',
     description: `${VLAJKA.trvanie}, ${VLAJKA.cena.toLowerCase()}. ${VLAJKA.titulok}`,
     placement: 'top',
-    content: <NavSk />,
+    content: <KrokSk />,
   },
 ];
 
@@ -352,7 +335,7 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
         <Okno open={hra} onOpenChange={setHra} title="Škrtací test" description="Vlož svoj text. Škrtneme frázy, ktoré má každý. Beží iba v tvojom prehliadači.">
           <NahladHry />
           <div className="mt-5 flex flex-wrap gap-3">
-            <Button asChild variant="accent" className="text-ink">
+            <Button asChild variant="accent">
               <a href="/hry/skrtaci-test/">
                 Celá hra <ArrowRight aria-hidden="true" />
               </a>
@@ -385,7 +368,7 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
         <DetailProjektu p={projekt} open={sheet} onOpenChange={setSheet} />
       </Recept>
 
-      <Recept cislo="3" nazov="Kam chceš ísť? ⌘K" veta="Jedna paleta pre celý ekosystém XVADUR. Hra, projekty a vyšetrenie sa otvoria na mieste; von vedú iba texty a overené odkazy." kusy="command (Dialog + Command, lebo CommandDialog nepustí filter) · dialog · sheet · tour · filter bez diakritiky">
+      <Recept cislo="3" nazov="Kam chceš ísť? ⌘K" veta="Jedna paleta pre celý ekosystém XVADUR. Hra, projekty a vyšetrenie sa otvoria na mieste; von vedú iba texty a overené odkazy." kusy="command (Dialog + Command) · dialog · sheet · tour · filter bez diakritiky (predvolený)">
         <div className="flex flex-wrap items-center gap-4">
           <Button size="lg" variant="secondary" onClick={() => setPaleta(true)} data-open="recept-paleta">
             Kam chceš ísť?
@@ -393,12 +376,12 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
           <KbdCombo keys={['⌘', 'K']} />
           <span className="text-sm">alebo Ctrl K</span>
         </div>
-        {/* CommandDialog BoldKitu nepustí filter do Command → skladáme Dialog + Command sami (filter bez diakritiky). */}
+        {/* Dialog + Command: vlastná poloha okna; filter bez diakritiky je v Command predvolený. */}
         <Dialog open={paleta} onOpenChange={setPaleta}>
-          <DialogContent className="top-[12%] w-[calc(100%-2rem)] translate-y-0 gap-0 p-0 sm:max-w-xl data-[state=closed]:slide-out-to-top-[10%] data-[state=open]:slide-in-from-top-[10%] [&>button:last-child]:hidden">
+          <DialogContent hideClose className="top-[12%] translate-y-0 gap-0 p-0 sm:max-w-xl">
             <DialogTitle className="sr-only">Kam chceš ísť?</DialogTitle>
             <DialogDescription className="sr-only">Ekosystém XVADUR: texty, Hriech, Netopier, Korpus, hry, vyšetrenie</DialogDescription>
-            <Command loop filter={filterSk} label="Kam chceš ísť?">
+            <Command loop label="Kam chceš ísť?">
           <CommandInput placeholder="Hry, Hriech, Korpus, texty, vyšetrenie…" />
           <CommandList className="max-h-[60dvh]">
             <CommandEmpty>Nič také tu nie je.</CommandEmpty>
@@ -466,7 +449,7 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
         </Dialog>
 
         <Dialog open={vysetrenie} onOpenChange={setVysetrenie}>
-          <DialogContent className="w-[calc(100%-2rem)]">
+          <DialogContent>
             <DialogHeader>
               <p className="eyebrow">
                 ✚ {VLAJKA.trvanie} · {VLAJKA.cena}
@@ -475,7 +458,7 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
               <DialogDescription className="text-base text-ink/75">{VLAJKA.titulok}</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button asChild variant="accent" className="text-ink">
+              <Button asChild variant="accent">
                 <a href="/konzultacia/#termin">Vybrať termín</a>
               </Button>
             </DialogFooter>
@@ -484,7 +467,7 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
 
         {posledny && (
           <Dialog open={text} onOpenChange={setText}>
-            <DialogContent className="w-[calc(100%-2rem)] sm:max-w-xl">
+            <DialogContent className="sm:max-w-xl">
               <DialogHeader>
                 <p className="eyebrow">Posledný text · {posledny.datum}</p>
                 <DialogTitle className="font-display text-2xl font-extrabold">{posledny.title}</DialogTitle>
@@ -500,14 +483,14 @@ export default function Recepty({ posledny }: { posledny: Text | null }) {
         )}
       </Recept>
 
-      <Recept cislo="4" nazov="Prehliadka domova v 4 krokoch" veta="Tour so slovenskými tlačidlami cez content + useTour(). Ciele majú skutočné id domova, na webe stačí zmeniť iba spúšťač." kusy="tour · useTour · #uvod #anamneza #liecba #konzultacia">
+      <Recept cislo="4" nazov="Prehliadka domova v 4 krokoch" veta="Tour so slovenskými tlačidlami (predvolené labels) a počítadlom cez useTour(). Ciele majú skutočné id domova, na webe stačí zmeniť iba spúšťač." kusy="tour · useTour · #uvod #anamneza #liecba #konzultacia">
         <div className="mb-5 flex flex-wrap items-center gap-3">
           <Button onClick={() => setTour(true)} data-open="recept-tour" size="lg">
             <Map aria-hidden="true" /> Preveď ma domovom
           </Button>
         </div>
         <MiniDomov />
-        <Tour steps={krokyDomov} open={tour} onOpenChange={setTour} showProgress={false} showSkipButton={false} />
+        <Tour steps={krokyDomov} open={tour} onOpenChange={setTour} showProgress={false} />
       </Recept>
     </section>
   );

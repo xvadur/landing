@@ -58,7 +58,7 @@ export const TriangleShape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -146,7 +146,7 @@ export const OctagonShape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -168,7 +168,7 @@ export const CrossShape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -260,7 +260,7 @@ export const Star5Shape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -466,7 +466,7 @@ export const ArrowBadge = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size * 0.6}
       viewBox="0 0 100 60"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -577,7 +577,7 @@ export const PriceTagShape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size * 0.6}
       viewBox="0 0 100 60"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -633,7 +633,7 @@ export const CouponShape = React.forwardRef<SVGSVGElement, ShapeProps>(
         stroke={strokeFor(filled, color, strokeColor)}
         strokeWidth={strokeWidth}
       />
-      <line x1="35" y1="10" x2="35" y2="40" stroke={strokeFor(filled, color, strokeColor)} strokeWidth={strokeWidth - 1} strokeDasharray="4,4" />
+      <line x1="35" y1="10" x2="35" y2="40" stroke={strokeFor(filled, color, strokeColor)} strokeWidth={Math.max(0, strokeWidth - 1)} strokeDasharray="4,4" />
     </svg>
   )
 )
@@ -819,7 +819,7 @@ export const Star6Shape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size}
       viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -1041,7 +1041,7 @@ export const ScribbleCircle = React.forwardRef<SVGSVGElement, ShapeProps>(
         d="M20 50 Q30 30 50 25 Q70 20 80 40 Q85 60 70 75 Q50 90 30 75 Q15 60 20 50"
         fill="none"
         stroke={strokeFor(filled, color, strokeColor)}
-        strokeWidth={strokeWidth - 1}
+        strokeWidth={Math.max(0, strokeWidth - 1)}
         strokeDasharray="5,5"
       />
     </svg>
@@ -1050,13 +1050,16 @@ export const ScribbleCircle = React.forwardRef<SVGSVGElement, ShapeProps>(
 ScribbleCircle.displayName = 'ScribbleCircle'
 
 export const ScribbleUnderline = React.forwardRef<SVGSVGElement, ShapeProps>(
-  ({ size = 100, strokeWidth = 3, animation = 'none', speed = 'normal', className, ...props }, ref) => (
+  // filled / color / strokeColor sa deštruktúrujú (inak padli do DOM ako neplatné atribúty); čiara = strokeColor ?? color ?? currentColor
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  ({ size = 100, strokeWidth = 3, filled: _filled, color, strokeColor, animation = 'none', speed = 'normal', className, style, ...props }, ref) => (
     <svg
       ref={ref}
       width={size}
       height={size * 0.2}
       viewBox="0 0 100 20"
       className={cn('text-primary', getAnimClass(animation, speed), className)}
+      style={strokeColor || color ? { color: strokeColor ?? color, ...style } : style}
       aria-hidden="true"
       {...props}
     >
@@ -1071,7 +1074,7 @@ export const ScribbleUnderline = React.forwardRef<SVGSVGElement, ShapeProps>(
         d="M5 16 Q15 10 25 16 Q35 20 45 12 Q55 8 65 16 Q75 20 85 12 Q95 8 98 14"
         fill="none"
         stroke="currentColor"
-        strokeWidth={strokeWidth - 1}
+        strokeWidth={Math.max(0, strokeWidth - 1)}
         strokeLinecap="round"
         opacity="0.5"
       />
@@ -1167,7 +1170,7 @@ export const WavyRectangleShape = React.forwardRef<SVGSVGElement, ShapeProps>(
       width={size}
       height={size * 0.7}
       viewBox="0 0 100 70"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}
     >
@@ -1234,7 +1237,7 @@ HeptagonShape.displayName = 'HeptagonShape'
 export const DecagonShape = React.forwardRef<SVGSVGElement, ShapeProps>(
   ({ size = 100, strokeWidth = 3, filled = true, color, strokeColor, animation = 'none', speed = 'normal', className, ...props }, ref) => (
     <svg ref={ref} width={size} height={size} viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}>
       {/* 10 vertices: k=0..9, angle = k*π/5 - π/2 */}
@@ -1366,7 +1369,7 @@ const FIBONACCI_PATH = buildFibonacciPath()
 export const FibonacciSpiralShape = React.forwardRef<SVGSVGElement, ShapeProps>(
   ({ size = 100, strokeWidth = 3, filled: _filled = false, color, strokeColor, animation = 'none', speed = 'normal', className, ...props }, ref) => (
     <svg ref={ref} width={size} height={size} viewBox="0 0 100 100"
-      className={cn('text-accent', getAnimClass(animation, speed), className)}
+      className={cn('text-secondary', getAnimClass(animation, speed), className)}
       aria-hidden="true"
       {...props}>
       <path d={FIBONACCI_PATH}

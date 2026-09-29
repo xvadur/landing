@@ -46,7 +46,7 @@ export default function Sheety() {
         veta="Panel, ktorý vyjde z okraja obrazovky (side: top, right, bottom, left). Detail projektu vedľa zoznamu, mobilné menu, pás čísel, výber liečby."
       >
         <div className="grid gap-6 md:grid-cols-2">
-          <Blok nazov="side=right (default) · detail projektu" pozn="w-3/4, od 640 px max-w-sm. Krížik vpravo hore (28 px — pod cieľom 44 px).">
+          <Blok nazov="side=right (default) · detail projektu" pozn="w-3/4, od 640 px max-w-sm. Krížik vpravo hore (dotyková plocha 44 px, „Zavrieť“).">
             <div className="flex flex-wrap items-center gap-3">
               <Stav>zatvorené</Stav>
               <Sheet>
@@ -104,7 +104,7 @@ export default function Sheety() {
                       </SheetClose>
                     ))}
                   </nav>
-                  <Button asChild variant="accent" size="lg" className="mt-4 text-ink">
+                  <Button asChild variant="accent" size="lg" className="mt-4">
                     <a href={KONZULTACIA_CTA.href}>{KONZULTACIA_CTA.label}</a>
                   </Button>
                 </SheetContent>
@@ -195,7 +195,7 @@ export default function Sheety() {
                       <Badge variant="outline">{VLAJKA.cena}</Badge>
                     </div>
                     <DrawerFooter>
-                      <Button asChild variant="accent" size="lg" className="text-ink">
+                      <Button asChild variant="accent" size="lg">
                         <a href="/konzultacia/#termin">Vybrať termín</a>
                       </Button>
                       <DrawerClose asChild>
@@ -265,7 +265,7 @@ export default function Sheety() {
             </div>
           </Blok>
 
-          <Blok nazov="dismissible={false} · kontrolovaný" pozn="Ťah, klik mimo ani Esc nezatvorí. Pozor: ani DrawerClose — vaul ignoruje onOpenChange(false), treba open + setOpen(false).">
+          <Blok nazov="dismissible={false} · kontrolovaný" pozn="Ťah, klik mimo ani Esc nezatvorí. DrawerClose zavrie (drawer.tsx drží stav a zavrie cez kontext).">
             <div className="flex flex-wrap items-center gap-3">
               <Stav>{pevny ? 'otvorené' : 'zatvorené'}</Stav>
               <Drawer dismissible={false} open={pevny} onOpenChange={setPevny}>
@@ -281,7 +281,9 @@ export default function Sheety() {
                       <DrawerDescription>Škrtací test beží iba v tvojom prehliadači. Nič sa neukladá ani neodosiela.</DrawerDescription>
                     </DrawerHeader>
                     <DrawerFooter>
-                      <Button onClick={() => setPevny(false)}>Rozumiem</Button>
+                      <DrawerClose asChild>
+                        <Button>Rozumiem</Button>
+                      </DrawerClose>
                     </DrawerFooter>
                   </div>
                 </DrawerContent>

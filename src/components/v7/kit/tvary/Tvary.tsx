@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { CESTA } from '@/data/cesta';
 import { VLAJKA } from '@/data/ponuka';
 import { POSTAVIL } from '@/data/fakty';
-import { Bunka, Chyba, FARBY, farbaCss, Kus, Panel, Pod, Posuvnik, Prepinac, Vyber, type FarbaId } from './Spolocne';
+import { Bunka, FARBY, farbaCss, Kus, Opravene, Panel, Pod, Posuvnik, Prepinac, Vyber, type FarbaId } from './Spolocne';
 
 type ShapeComp = React.ForwardRefExoticComponent<
   React.SVGProps<SVGSVGElement> & {
@@ -173,12 +173,11 @@ export default function Tvary() {
         <Vyber label="speed" hodnoty={RYCHLOSTI} hodnota={speed} onZmena={setSpeed} />
         <pre className="overflow-x-auto rounded-md border-2 border-ink bg-white p-2 font-mono text-[0.7rem] sm:col-span-2 lg:col-span-2">{kod}</pre>
       </Panel>
-      <Chyba>
-        Plynulé animácie <code>spin, pulse, float, wiggle, bounce, glitch</code> nemajú v <code>src/styles/motion.css</code> žiadne CSS
-        (existujú len stupňové <code>spin-step, pulse-hard, marquee-stamp</code>). Na webe by tvar stál. V katalógu ich dopĺňa záplata v
-        <code> src/pages/kit/tvary.astro</code> (trieda <code>kit-zaplata</code>). Východzie farby tvarov sú často <code>text-accent</code> = hot,
-        čo zákon dizajnu dovoľuje iba na CTA a X — preto je v paneli predvolená žltá.
-      </Chyba>
+      <Opravene>
+        Plynulé animácie <code>spin, pulse, float, wiggle, bounce, glitch</code> (aj <code>-slow / -fast</code>) sú v <code>src/styles/motion.css</code>
+        vedľa stupňových <code>spin-step, pulse-hard, marquee-stamp</code>; pri reduced motion stoja. Východzia farba tvarov je žltá
+        (<code>text-secondary</code>), hot iba cez <code>color</code> na CTA a X.
+      </Opravene>
 
       <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6" aria-label="Všetky tvary">
         {ZOZNAM.map((t) => (
@@ -236,7 +235,7 @@ export default function Tvary() {
             popis={
               <>
                 animation=&quot;{a}&quot;{' '}
-                {['spin-step', 'pulse-hard', 'marquee-stamp'].includes(a) ? <span className="text-ink/70">(v motion.css)</span> : <strong>(záplata)</strong>}
+                <span className="text-ink/70">(motion.css)</span>
               </>
             }
           >

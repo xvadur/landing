@@ -4,15 +4,13 @@ import { useMemo, useState } from 'react';
 import { addDays, format, startOfMonth, startOfWeek, subDays } from 'date-fns';
 import type { DateRange } from 'react-day-picker';
 import { sk } from 'react-day-picker/locale';
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
 import { Calendar } from '@/components/ui/calendar';
-import { cn } from '@/lib/utils';
 import { DatePicker } from '@/components/ui/date-picker';
 import { DateRangePicker, type DateRangePickerPreset } from '@/components/ui/date-range-picker';
 import { TimePicker } from '@/components/ui/time-picker';
 import { Button } from '@/components/ui/button';
 import { vsetkyTerminy, TERMINY } from '@/data/terminy';
-import { Bunka, KAL_OPRAVA, Kus, Mriezka, Recept, Stav, useKlient } from './Spolocne';
+import { Bunka, Kus, Mriezka, Recept, Stav, useKlient } from './Spolocne';
 
 
 const kluc = (d: Date) => format(d, 'yyyy-MM-dd');
@@ -29,22 +27,6 @@ const naCas = (h: number, m = 0) => {
   return d;
 };
 
-/** captionLayout="dropdown": BoldKit nemá štýly pre dropdowns a rdp style.css sa nenačítava → natívny select je
- *  vidno vedľa popisu. Oprava: select neviditeľne cez popis, popis ako tlačidlo. */
-const DROPDOWN_OPRAVA = {
-  month_caption: 'flex justify-center items-center pt-1 relative px-10',
-  dropdowns: 'flex items-center gap-2',
-  dropdown_root: 'relative inline-flex min-h-9 items-center border-2 border-foreground bg-background px-2',
-  dropdown: 'absolute inset-0 w-full cursor-pointer opacity-0',
-  caption_label: 'flex items-center gap-1 text-sm font-bold uppercase tracking-wide',
-};
-
-/** Calendar mapuje Chevron iba na vľavo / vpravo; dropdown pýta „down“ a dostane šípku doprava. */
-function Sipka({ orientation, className }: { orientation?: 'up' | 'down' | 'left' | 'right'; className?: string }) {
-  const Ikona = orientation === 'left' ? ChevronLeft : orientation === 'right' ? ChevronRight : orientation === 'up' ? ChevronUp : ChevronDown;
-  return <Ikona className={cn('h-4 w-4 stroke-[3]', className)} />;
-}
-
 function Kostra() {
   return <div className="h-72 animate-pulse rounded-lg border-3 border-ink/30 bg-white motion-reduce:animate-none" aria-busy="true" />;
 }
@@ -57,12 +39,6 @@ export default function Cas() {
         id="calendar"
         meno="calendar"
         veta="Mesačný kalendár (react-day-picker 9): single, multiple, range, viac mesiacov, locale, zakázané dni, čísla týždňov, rozbaľovací mesiac, pätička, modifikátory."
-        pozor={[
-          'today a range_middle = bg-accent (hot) s paper textom → classNames oprava',
-          'bez locale je po anglicky a týždeň začína nedeľou',
-          'deň 36 px < 44 px cieľ',
-          'captionLayout="dropdown" nemá štýly',
-        ]}
       >
         {klient ? <KalendarUkazky /> : <Kostra />}
       </Kus>
@@ -70,11 +46,6 @@ export default function Cas() {
         id="date-picker"
         meno="date-picker"
         veta="Tlačidlo, ktoré otvorí kalendár v popoveri. Controlled aj uncontrolled, formát popisu cez date-fns."
-        pozor={[
-          'neprepúšťa props kalendára: nedá sa dať locale, disabled dni ani weekStartsOn',
-          'predvolený text „Pick a date“ a formát „LLL dd, y“ po anglicky',
-          'šírka 260 px natvrdo (prepíš className)',
-        ]}
       >
         {klient ? <DatePickerUkazky /> : <Kostra />}
       </Kus>
@@ -82,11 +53,6 @@ export default function Cas() {
         id="date-range-picker"
         meno="date-range-picker"
         veta="Výber rozsahu s predvoľbami vľavo; na mobile (< 640 px) jeden mesiac a predvoľby hore. minDate / maxDate, vlastné predvoľby."
-        pozor={[
-          'nadpis „Presets“ a predvolené predvoľby po anglicky',
-          'range_middle aj vybraná predvoľba = hot (nedá sa prepísať zvonka)',
-          'popis rozsahu vždy „LLL dd, y“',
-        ]}
       >
         {klient ? <RozsahUkazky /> : <Kostra />}
       </Kus>
@@ -94,12 +60,7 @@ export default function Cas() {
         id="time-picker"
         meno="time-picker"
         veta="Výber času v stĺpcoch: 12h / 24h, krok minút 1–30, sekundy, minTime / maxTime (zakázané hodnoty sú disabled)."
-        pozor={[
-          'hlavičky „Hour / Min / Sec / Period“ po anglicky',
-          'prvý klik na hodinu zdedí aktuálne minúty (napr. 14:37 pri kroku 30)',
-          'mimo minTime/maxTime klik ticho nič neurobí',
-          'riadky ~30 px < 44 px cieľ',
-        ]}
+        pozor={['mimo minTime/maxTime je hodina vypnutá, ale kombinácia s minútou môže ticho neprejsť']}
       >
         {klient ? <CasUkazky /> : <Kostra />}
       </Kus>
@@ -120,18 +81,18 @@ function KalendarUkazky() {
   return (
     <>
       <Mriezka>
-        <Bunka nazov="surový: bez locale, today = hot">
+        <Bunka nazov="predvolený (sk, dnes žltý)">
           <Calendar mode="single" />
         </Bunka>
-        <Bunka nazov="single · locale sk · oprava today">
-          <Calendar mode="single" selected={jeden} onSelect={setJeden} locale={sk} classNames={KAL_OPRAVA} />
+        <Bunka nazov="single · selected">
+          <Calendar mode="single" selected={jeden} onSelect={setJeden} locale={sk} />
         </Bunka>
         <Bunka nazov='mode="multiple" · showOutsideDays={false}'>
-          <Calendar mode="multiple" selected={viac} onSelect={setViac} locale={sk} showOutsideDays={false} classNames={KAL_OPRAVA} />
+          <Calendar mode="multiple" selected={viac} onSelect={setViac} locale={sk} showOutsideDays={false} />
         </Bunka>
         <Bunka nazov='mode="range" · numberOfMonths={2}' className="sm:col-span-2">
           <div className="-mx-1 w-full overflow-x-auto px-1 pb-2" data-lenis-prevent>
-            <Calendar mode="range" selected={rozsah} onSelect={setRozsah} numberOfMonths={2} locale={sk} classNames={KAL_OPRAVA} className="w-max" />
+            <Calendar mode="range" selected={rozsah} onSelect={setRozsah} numberOfMonths={2} locale={sk} className="w-max" />
           </div>
         </Bunka>
         <Bunka nazov="disabled víkendy + minulosť · showWeekNumber">
@@ -140,13 +101,13 @@ function KalendarUkazky() {
             locale={sk}
             showWeekNumber
             disabled={[{ dayOfWeek: [0, 6] }, { before: dnes }]}
-            classNames={{ ...KAL_OPRAVA, week_number: 'w-9 text-center font-mono text-xs text-muted-foreground', week_number_header: 'w-9' }}
+            classNames={{ week_number: 'w-11 min-w-9 shrink text-center font-mono text-xs text-muted-foreground' }}
           />
         </Bunka>
-        <Bunka nazov='captionLayout="dropdown" · surový'>
-          <Calendar mode="single" locale={sk} captionLayout="dropdown" startMonth={new Date(2025, 0)} endMonth={new Date(2026, 11)} defaultMonth={new Date(2025, 0)} classNames={KAL_OPRAVA} />
+        <Bunka nazov='captionLayout="dropdown"'>
+          <Calendar mode="single" locale={sk} captionLayout="dropdown" startMonth={new Date(2025, 0)} endMonth={new Date(2026, 11)} defaultMonth={new Date(2025, 0)} />
         </Bunka>
-        <Bunka nazov="dropdown opravený (classNames + Chevron) · footer">
+        <Bunka nazov="dropdown · footer">
           <Calendar
             mode="single"
             locale={sk}
@@ -155,8 +116,6 @@ function KalendarUkazky() {
             endMonth={new Date(2026, 11)}
             defaultMonth={new Date(2025, 0)}
             footer={<p className="pt-2 text-xs font-bold">Január 2025: začiatok s AI.</p>}
-            classNames={{ ...KAL_OPRAVA, ...DROPDOWN_OPRAVA }}
-            components={{ Chevron: Sipka }}
           />
         </Bunka>
       </Mriezka>
@@ -172,7 +131,7 @@ function KalendarUkazky() {
             disabled={(d) => !dni.some((x) => x.datum === kluc(d))}
             modifiers={{ volne }}
             modifiersClassNames={{ volne: 'font-bold [&>button]:underline [&>button]:decoration-2 [&>button]:underline-offset-4' }}
-            classNames={KAL_OPRAVA}
+           
             className="self-start bg-white"
           />
           <div className="flex min-w-0 flex-col gap-3">
@@ -202,7 +161,7 @@ function DatePickerUkazky() {
   return (
     <>
       <Mriezka>
-        <Bunka nazov="surový (predvolené texty)">
+        <Bunka nazov="predvolené texty (sk)">
           <DatePicker />
         </Bunka>
         <Bunka nazov='placeholder · dateFormat "d. M. yyyy"'>
@@ -241,7 +200,7 @@ function RozsahUkazky() {
   return (
     <>
       <Mriezka>
-        <Bunka nazov="surový (predvoľby EN, 2 mesiace)" stlpec>
+        <Bunka nazov="predvolené predvoľby (sk), 2 mesiace" stlpec>
           <DateRangePicker />
         </Bunka>
         <Bunka nazov="vlastné predvoľby · placeholder" stlpec>
@@ -270,11 +229,11 @@ function CasUkazky() {
   return (
     <>
       <Mriezka>
-        <Bunka nazov='format="12h" (predvolené)'>
-          <TimePicker />
+        <Bunka nazov='format="12h"'>
+          <TimePicker format="12h" />
         </Bunka>
-        <Bunka nazov='format="24h"'>
-          <TimePicker format="24h" placeholder="Vyber čas" value={t} onChange={setT} />
+        <Bunka nazov='format="24h" (predvolený)'>
+          <TimePicker value={t} onChange={setT} />
           <Stav>value = {hhmm(t)}</Stav>
         </Bunka>
         <Bunka nazov="minuteStep={15}">
@@ -298,16 +257,12 @@ function CasUkazky() {
           minTime={naCas(14)}
           maxTime={naCas(19)}
           value={volanie}
-          onChange={(d) => {
-            // obchádzka: prvý klik na hodinu zdedí aktuálne minúty; zarovnáme na krok 30
-            if (d && d.getMinutes() % 30 !== 0) d.setMinutes(0, 0, 0);
-            setVolanie(d);
-          }}
+          onChange={setVolanie}
           placeholder="Vyber čas"
           size="lg"
           className="w-full max-w-[220px] bg-white"
         />
-        <Stav>value = {hhmm(volanie)} · zarovnané na :00 / :30</Stav>
+        <Stav>value = {hhmm(volanie)} · prvý klik na hodinu = celá hodina</Stav>
       </Recept>
     </>
   );

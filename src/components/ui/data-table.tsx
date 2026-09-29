@@ -74,7 +74,7 @@ function DataTableColumnHeader<TData, TValue>({
     <Button
       variant="ghost"
       size="sm"
-      className={cn('-ml-3 h-8 data-[state=open]:bg-accent', className)}
+      className={cn('-ml-3 h-8 data-[state=open]:bg-secondary', className)}
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >
       <span>{title}</span>
@@ -89,24 +89,58 @@ function DataTableColumnHeader<TData, TValue>({
   )
 }
 
+// Texty (predvolene slovensky, prepíš cez `labels`)
+export interface DataTableLabels {
+  columns: string
+  selected: (count: number, total: number) => string
+  rowsPerPage: string
+  page: (current: number, total: number) => string
+  previous: string
+  next: string
+  selectAll: string
+  selectRow: string
+}
+
+export const DATA_TABLE_LABELS: DataTableLabels = {
+  columns: 'Stĺpce',
+  selected: (count, total) => `Vybraté ${count} z ${total}`,
+  rowsPerPage: 'Riadkov na stranu',
+  page: (current, total) => `Strana ${current} z ${total}`,
+  previous: 'Späť',
+  next: 'Ďalej',
+  selectAll: 'Vybrať všetky',
+  selectRow: 'Vybrať riadok',
+}
+
+/** Názov stĺpca pre výber viditeľnosti: meta.label → textový header → id. */
+function columnLabel<TData>(column: ReturnType<TanstackTable<TData>['getAllColumns']>[number]): string {
+  const meta = column.columnDef.meta as { label?: string } | undefined
+  if (meta?.label) return meta.label
+  const header = column.columnDef.header
+  return typeof header === 'string' ? header : column.id
+}
+
 // Toolbar
 interface DataTableToolbarProps<TData> {
   table: TanstackTable<TData>
   filterPlaceholder?: string
   filterColumn?: string
   showColumnVisibility?: boolean
+  labels?: Partial<DataTableLabels>
 }
 
 function DataTableToolbar<TData>({
   table,
-  filterPlaceholder = 'Filter...',
+  filterPlaceholder = 'Filtrovať…',
   filterColumn,
   showColumnVisibility = true,
+  labels: labelsProp,
 }: DataTableToolbarProps<TData>) {
+  const labels = { ...DATA_TABLE_LABELS, ...labelsProp }
   const column = filterColumn ? table.getColumn(filterColumn) : null
 
   return (
-    <div className="flex items-center justify-between py-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 py-4">
       <div className="flex flex-1 items-center space-x-2">
         {column && (
           <div className="relative">
@@ -115,7 +149,7 @@ function DataTableToolbar<TData>({
               placeholder={filterPlaceholder}
               value={String(column.getFilterValue() ?? '')}
               onChange={(event) => column.setFilterValue(event.target.value)}
-              className="h-9 w-[150px] pl-9 lg:w-[250px]"
+              className="h-11 w-[180px] max-w-full pl-9 lg:w-[250px]"
             />
           </div>
         )}
@@ -123,9 +157,9 @@ function DataTableToolbar<TData>({
       {showColumnVisibility && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="ml-auto h-9">
+            <Button variant="outline" className="ml-auto">
               <Settings2 className="mr-2 h-4 w-4" />
-              Columns
+              {labels.columns}
               <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -137,11 +171,10 @@ function DataTableToolbar<TData>({
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
-                    className="capitalize"
                     checked={column.getIsVisible()}
                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                   >
-                    {column.id}
+                    {columnLabel(column)}
                   </DropdownMenuCheckboxItem>
                 )
               })}
@@ -156,32 +189,32 @@ function DataTableToolbar<TData>({
 interface DataTablePaginationProps<TData> {
   table: TanstackTable<TData>
   pageSizeOptions?: number[]
+  labels?: Partial<DataTableLabels>
 }
 
+/* flex-wrap: na 375 px sa stránkovanie zalomí namiesto pretečenia */
 function DataTablePagination<TData>({
   table,
   pageSizeOptions = [10, 20, 30, 50],
+  labels: labelsProp,
 }: DataTablePaginationProps<TData>) {
+  const labels = { ...DATA_TABLE_LABELS, ...labelsProp }
   return (
-    <div className="flex items-center justify-between py-4">
-      <div className="flex-1 text-sm text-muted-foreground">
-        {table.getFilteredSelectedRowModel().rows.length > 0 && (
-          <>
-            {table.getFilteredSelectedRowModel().rows.length} of{' '}
-            {table.getFilteredRowModel().rows.length} row(s) selected.
-          </>
-        )}
+    <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-4">
+      <div className="min-w-[10rem] flex-1 text-sm text-muted-foreground">
+        {table.getFilteredSelectedRowModel().rows.length > 0 &&
+          labels.selected(table.getFilteredSelectedRowModel().rows.length, table.getFilteredRowModel().rows.length)}
       </div>
-      <div className="flex items-center space-x-6 lg:space-x-8">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3 lg:gap-x-8">
         <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Rows per page</p>
+          <p className="text-sm font-medium">{labels.rowsPerPage}</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
             }}
           >
-            <SelectTrigger className="h-9 w-[85px]">
+            <SelectTrigger className="h-11 w-[85px]">
               <SelectValue placeholder={table.getState().pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
@@ -193,9 +226,8 @@ function DataTablePagination<TData>({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {table.getState().pagination.pageIndex + 1} of{' '}
-          {table.getPageCount()}
+        <div className="flex items-center justify-center whitespace-nowrap text-sm font-medium">
+          {labels.page(table.getState().pagination.pageIndex + 1, Math.max(1, table.getPageCount()))}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -204,7 +236,7 @@ function DataTablePagination<TData>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            {labels.previous}
           </Button>
           <Button
             variant="outline"
@@ -212,7 +244,7 @@ function DataTablePagination<TData>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {labels.next}
           </Button>
         </div>
       </div>
@@ -244,6 +276,9 @@ export interface DataTableProps<TData, TValue> {
   emptyMessage?: string
   isLoading?: boolean
 
+  /** Texty panelov (predvolene slovensky) */
+  labels?: Partial<DataTableLabels>
+
   // Callbacks
   onRowSelectionChange?: (selectedRows: TData[]) => void
 }
@@ -259,9 +294,10 @@ function DataTable<TData, TValue>({
   pageSize = 10,
   pageSizeOptions = [10, 20, 30, 50],
   filterColumn,
-  filterPlaceholder = 'Filter...',
-  emptyMessage = 'No results.',
+  filterPlaceholder = 'Filtrovať…',
+  emptyMessage = 'Žiadne výsledky.',
   isLoading = false,
+  labels,
   onRowSelectionChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -282,14 +318,14 @@ function DataTable<TData, TValue>({
             (table.getIsSomePageRowsSelected() && 'indeterminate')
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
+          aria-label={labels?.selectAll ?? DATA_TABLE_LABELS.selectAll}
         />
       ),
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
           onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
+          aria-label={labels?.selectRow ?? DATA_TABLE_LABELS.selectRow}
         />
       ),
       enableSorting: false,
@@ -297,7 +333,7 @@ function DataTable<TData, TValue>({
     }
 
     return [selectionColumn, ...columns]
-  }, [columns, enableRowSelection])
+  }, [columns, enableRowSelection, labels?.selectAll, labels?.selectRow])
 
   const table = useReactTable({
     data,
@@ -356,6 +392,7 @@ function DataTable<TData, TValue>({
             filterPlaceholder={filterPlaceholder}
             filterColumn={filterColumn}
             showColumnVisibility={enableColumnVisibility}
+            labels={labels}
           />
         )}
 
@@ -422,7 +459,7 @@ function DataTable<TData, TValue>({
 
         {/* Pagination */}
         {enablePagination && (
-          <DataTablePagination table={table} pageSizeOptions={pageSizeOptions} />
+          <DataTablePagination table={table} pageSizeOptions={pageSizeOptions} labels={labels} />
         )}
       </div>
     </DataTableContext.Provider>

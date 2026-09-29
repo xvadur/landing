@@ -33,7 +33,7 @@ export default function Vstupy() {
         id="input"
         meno="input"
         veta="Jednoriadkové pole. Pri fokuse sa zatlačí do tieňa. Vie všetky natívne typy."
-        pozor={['aria-invalid nemá štýl', 'hranaté rohy vs. rounded-lg zo zákona dizajnu', 'md:text-sm = 14 px na desktope']}
+        pozor={['hranaté rohy vs. rounded-lg zo zákona dizajnu', 'md:text-sm = 14 px na desktope']}
       >
         <Mriezka>
           <Bunka nazov='type="text" · placeholder' stlpec>
@@ -149,7 +149,6 @@ export default function Vstupy() {
         id="input-otp"
         meno="input-otp"
         veta="Kód po znakoch (knižnica input-otp): skupiny, oddeľovač, vzor povolených znakov, onComplete."
-        pozor={['animate-caret-blink neexistuje → kurzor nebliká', 'sloty v skupine bez medzery: tiene sa prekrývajú']}
       >
         <Mriezka>
           <Bunka nazov="6 číslic · 2 skupiny · separator">

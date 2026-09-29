@@ -105,6 +105,16 @@ export function Chyba({ children }: { children: React.ReactNode }) {
   );
 }
 
+/** Poznámka: chyba kusu je opravená pri zdroji (src/components/ui, src/styles). Zoznam: work/v7/katalog/OPRAVY.md */
+export function Opravene({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="flex max-w-3xl items-start gap-2 rounded-lg border-3 border-ink bg-white px-3 py-2 text-sm">
+      <span className="font-mono font-bold">✓</span>
+      <span>{children}</span>
+    </p>
+  );
+}
+
 /** Skupina tlačidiel na výber jednej hodnoty (ciele ≥ 44 px). */
 export function Vyber<T extends string>({
   label,
