@@ -259,15 +259,15 @@ export default function ReactBits() {
               onFinalStepCompleted={() => setHotovo(true)}
               completedContent={<p className="font-display text-xl font-extrabold uppercase">Odovzdané{hotovo ? ' ✔' : ''}</p>}
             >
-              <Step>
+              <Step className="px-5 sm:px-6">
                 <p className="font-display text-2xl font-extrabold uppercase">Triáž</p>
                 <p>{VLAJKA.body[0]}</p>
               </Step>
-              <Step>
+              <Step className="px-5 sm:px-6">
                 <p className="font-display text-2xl font-extrabold uppercase">Diagnóza</p>
                 <p>{VLAJKA.body[1]}</p>
               </Step>
-              <Step>
+              <Step className="px-5 sm:px-6">
                 <p className="font-display text-2xl font-extrabold uppercase">Plán liečby</p>
                 <p>{VLAJKA.body[2]}</p>
               </Step>
@@ -281,11 +281,10 @@ export default function ReactBits() {
               backButtonText="Naspäť"
               nextButtonText="Pokračuj"
               completeButtonText="Zapíš ma"
-              nextButtonProps={{ 'aria-describedby': 'rb-st-pozn' }}
             >
-              <Step>Krok 1</Step>
-              <Step>Len dopredu: indikátory sa nedajú klikať (kvíz).</Step>
-              <Step>Posledný krok.</Step>
+              <Step className="px-5 sm:px-6">Krok 1</Step>
+              <Step className="px-5 sm:px-6">Len dopredu: indikátory sa nedajú klikať (kvíz).</Step>
+              <Step className="px-5 sm:px-6">Posledný krok.</Step>
             </Stepper>
           </Varianta>
           <Varianta props="renderStepIndicator (vlastný indikátor: X pečiatka)">
@@ -306,15 +305,28 @@ export default function ReactBits() {
                 </button>
               )}
             >
-              <Step>Príjem</Step>
-              <Step>Anamnéza</Step>
-              <Step>Liečba</Step>
-              <Step>Kontrola</Step>
+              <Step className="px-5 sm:px-6">Príjem</Step>
+              <Step className="px-5 sm:px-6">Anamnéza</Step>
+              <Step className="px-5 sm:px-6">Liečba</Step>
+              <Step className="px-5 sm:px-6">Kontrola</Step>
             </Stepper>
           </Varianta>
-          <Varianta props="contentClassName · footerClassName · stepContainerClassName">
+          <Varianta props="stepContainerClassName='bg-ink' · contentClassName='bg-paper' · footerClassName='bg-paper' · backButtonProps">
+            <Stepper
+              stepContainerClassName="bg-ink"
+              contentClassName="bg-paper"
+              footerClassName="bg-paper"
+              backButtonProps={{ 'aria-label': 'Späť o krok' }}
+              nextButtonProps={{ 'aria-describedby': 'rb-st-pozn' }}
+            >
+              <Step className="px-5 sm:px-6">Indikátory na čiernom páse.</Step>
+              <Step className="px-5 sm:px-6">Obsah a pätička na papieri.</Step>
+            </Stepper>
             <Pozn>
-              <span id="rb-st-pozn">Hotový krok je bg-lime (pastel) — v Stepper.tsx riadok s `status === 'complete'`; zákon V5.3 by chcel bg-yellow alebo bg-ink.</span>
+              <span id="rb-st-pozn">
+                Hotový krok je bg-lime (pastel) — Stepper.tsx, StepIndicator `status === 'complete'`; zákon V5.3 by chcel bg-yellow alebo bg-ink. Step
+                potrebuje vlastný px: obsah je absolute left/right 0, padding z contentClassName ho neodsadí.
+              </span>
             </Pozn>
           </Varianta>
         </Mriezka>

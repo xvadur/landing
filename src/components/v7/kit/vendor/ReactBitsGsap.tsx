@@ -7,6 +7,22 @@ import { VLAJKA } from '@/data/ponuka';
 import { CESTA } from '@/data/cesta';
 import { Kus, Mriezka, Pozn, Realne, Varianta, Znova } from './shared';
 
+/** ScrambledText delí iba na znaky (type 'chars') → slová sa lámu uprostred. Obchádzka: každé slovo v nowrap spane
+ *  (SplitText rešpektuje vnorené prvky). */
+function Slova({ text }: { text: string }) {
+  const w = text.split(' ');
+  return (
+    <>
+      {w.map((x, i) => (
+        <span key={i}>
+          <span className="whitespace-nowrap">{x}</span>
+          {i < w.length - 1 ? ' ' : ''}
+        </span>
+      ))}
+    </>
+  );
+}
+
 export default function ReactBitsGsap() {
   const [kluc, setKluc] = useState(0);
   return (
@@ -19,22 +35,24 @@ export default function ReactBitsGsap() {
       >
         <Mriezka cols={3}>
           <Varianta props="radius=100 duration=1.2 speed=0.5 scrambleChars='X×.:' (default)">
-            <ScrambledText className="font-mono text-base">Prejdi myšou po texte. Znaky sa rozsypú na X a bodky.</ScrambledText>
+            <ScrambledText className="font-mono text-base">
+              <Slova text="Prejdi myšou po texte. Znaky sa rozsypú na X a bodky." />
+            </ScrambledText>
           </Varianta>
           <Varianta props="radius=40 duration=0.4 speed=1 scrambleChars='01'">
             <ScrambledText radius={40} duration={0.4} speed={1} scrambleChars="01" className="font-mono text-base">
-              Malý polomer, rýchle binárne miešanie.
+              <Slova text="Malý polomer, rýchle binárne miešanie." />
             </ScrambledText>
           </Varianta>
           <Varianta props="as='h4' radius=160 duration=2 scrambleChars='ÁČĎÉÍĽŇÓŠŤÚÝŽ'">
             <ScrambledText as="h4" radius={160} duration={2} scrambleChars="ÁČĎÉÍĽŇÓŠŤÚÝŽ" className="font-display text-2xl font-extrabold uppercase">
-              Diakritika ostáva
+              <Slova text="Diakritika ostáva" />
             </ScrambledText>
           </Varianta>
         </Mriezka>
         <Realne zdroj="ponuka.ts (VLAJKA.titulok)">
           <ScrambledText as="p" radius={120} className="font-display text-display-xs font-extrabold uppercase leading-[0.95]">
-            {VLAJKA.titulok}
+            <Slova text={VLAJKA.titulok} />
           </ScrambledText>
         </Realne>
       </Kus>
