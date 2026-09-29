@@ -1,0 +1,113 @@
+---
+/** V7-09 · Liečba ako tri plagáty 01–03 (Triáž · Zásah · Odovzdanie) s obrími obrysovými číslami v risografe.
+ *  01 = recept (Rp.) s tromi bodmi vyšetrenia, 02 = agent + Accordion „chat vs. agent“, 03 = Carousel produktov učenia.
+ *  Texty doslovne z v54/Liecba.astro a src/data/ponuka.ts. */
+import { PRODUKTY, VLAJKA } from '@/data/ponuka';
+import { Badge } from '@/components/ui/badge';
+import { CrossShape, LightningShape, WaveShape } from '@/components/ui/shapes';
+import LiecbaAkordeon from './LiecbaAkordeon';
+import LiecbaKarusel from './LiecbaKarusel';
+
+const agent = PRODUKTY.find((p) => p.id === 'agent-pre-teba')!;
+---
+
+<section id="liecba" class="relative border-t-3 border-ink bg-paper" aria-labelledby="z9-lie-h">
+  <div class="mx-auto w-full max-w-[1500px] px-4 pt-24 pb-28 sm:px-6 sm:pt-32 lg:px-10">
+    <p class="flex items-center justify-between gap-3 border-b-3 border-ink pb-2 font-mono text-xs font-bold tracking-[0.18em] uppercase sm:text-sm">
+      <span>✚ Liečba</span>
+      <span>str. 06</span>
+    </p>
+    <div class="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <h2 id="z9-lie-h" class="font-display text-[clamp(3rem,1.2rem+7vw,8.5rem)] leading-[0.84] font-extrabold tracking-[-0.045em] uppercase">
+        Triáž.<br /><span class="z9-riso" data-t="Zásah.">Zásah.</span><br />Odovzdanie.
+      </h2>
+      <p class="max-w-xl text-lg sm:text-xl">
+        Postup ako na zmene. Najprv zistím, čo bolí. Potom najmenší zásah, ktorý pomôže. Na konci ti to odovzdám tak, aby to išlo aj bezo mňa.
+      </p>
+    </div>
+
+    <ol class="mt-16 flex flex-col gap-20 lg:gap-28" role="list">
+      <!-- 01 Triáž -->
+      <li class="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
+        <div class="relative">
+          <span class="z9-obrys block text-[clamp(8rem,5rem+12vw,16rem)]" aria-hidden="true">01</span>
+          <h3 class="-mt-[0.4em] font-display text-5xl leading-none font-extrabold uppercase">Triáž</h3>
+          <p class="mt-3 font-mono text-sm font-bold tracking-[0.14em] uppercase">{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</p>
+          <div class="pointer-events-none absolute top-4 right-2 w-16 lg:right-10" aria-hidden="true">
+            <CrossShape size={64} color="var(--color-stamp)" strokeWidth={4} animation="pulse-hard" className="h-auto w-full" />
+          </div>
+        </div>
+        <div class="z9-list relative" style="--r:1deg; --r0:-9deg">
+          <span class="z9-paska" style="--pr:-4deg; left: 8%; top: -0.9rem"></span>
+          <span class="z9-paska" style="--pr:5deg; right: 8%; left: auto; top: -0.9rem"></span>
+          <div class="z9-trhany">
+            <div class="z9-trhany-list bg-white p-5 sm:p-8">
+              <div class="flex items-baseline justify-between gap-4 border-b-3 border-ink pb-3">
+                <p class="font-serif text-5xl italic">Rp.</p>
+                <p class="font-mono text-xs font-bold tracking-[0.14em] uppercase">recept · vyšetrenie</p>
+              </div>
+              <p class="mt-5 font-display text-3xl leading-tight font-extrabold sm:text-4xl">{VLAJKA.titulok}</p>
+              <ol class="mt-6 grid gap-4" role="list">
+                {
+                  VLAJKA.body.map((b, i) => (
+                    <li class="flex gap-4 border-3 border-ink bg-paper p-4">
+                      <span class="flex h-10 w-10 shrink-0 items-center justify-center border-3 border-ink bg-yellow font-mono font-bold">{i + 1}</span>
+                      <span class="text-lg leading-snug">{b}</span>
+                    </li>
+                  ))
+                }
+              </ol>
+              <a href="#vysetrenie" data-track="konzultacia_klik" data-track-miesto="v7-09-liecba" class="press mt-7 inline-flex min-h-14 items-center gap-2 border-3 border-ink bg-hot px-7 font-display text-lg font-extrabold text-ink uppercase shadow-brutal">
+                Vyber si termín →
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <!-- 02 Zásah -->
+      <li class="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
+        <div class="relative">
+          <span class="z9-obrys block text-[clamp(8rem,5rem+12vw,16rem)]" aria-hidden="true">02</span>
+          <h3 class="-mt-[0.4em] font-display text-5xl leading-none font-extrabold uppercase">Zásah</h3>
+          <div class="mt-3 flex flex-wrap gap-2">
+            <Badge variant="default" className="shadow-none hover:translate-x-0 hover:translate-y-0">{agent.nalepka}</Badge>
+            <Badge variant="outline" className="shadow-none hover:translate-x-0 hover:translate-y-0">{agent.pre}</Badge>
+          </div>
+          <div class="pointer-events-none absolute top-6 right-4 w-20 rotate-12 lg:right-12" aria-hidden="true">
+            <LightningShape size={80} color="var(--color-yellow)" strokeWidth={3} animation="wiggle" speed="slow" className="h-auto w-full" />
+          </div>
+        </div>
+        <div class="z9-list relative flex flex-col gap-6" style="--r:-1.2deg; --r0:10deg">
+          <span class="z9-paska z9-paska-biela" style="--pr:6deg; left: 40%; top: -0.9rem"></span>
+          <div class="z9-papier z9-zlty p-5 sm:p-8">
+            <p class="font-display text-3xl leading-tight font-extrabold sm:text-4xl">{agent.nazov}. {agent.popis}</p>
+            <ul class="mt-4 flex flex-wrap gap-2" role="list">
+              {agent.body.map((b) => <li class="border-2 border-ink bg-white px-2 py-0.5 text-sm font-bold">{b}</li>)}
+            </ul>
+          </div>
+          <div>
+            <p class="mb-3 font-mono text-sm font-bold tracking-[0.14em] uppercase">Prečo nie iba chat? Otvor riadok.</p>
+            <LiecbaAkordeon client:visible />
+          </div>
+        </div>
+      </li>
+
+      <!-- 03 Odovzdanie -->
+      <li class="grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
+        <div class="relative">
+          <span class="z9-obrys block text-[clamp(8rem,5rem+12vw,16rem)]" aria-hidden="true">03</span>
+          <h3 class="-mt-[0.4em] font-display text-5xl leading-none font-extrabold uppercase">Odovzdanie</h3>
+          <p class="mt-3 font-mono text-sm font-bold tracking-[0.14em] uppercase">Aby to išlo aj bezo mňa</p>
+          <div class="pointer-events-none mt-6 w-40" aria-hidden="true">
+            <WaveShape size={160} color="var(--color-ink)" strokeWidth={3} filled={false} className="h-auto w-full" />
+          </div>
+        </div>
+        <div class="flex min-w-0 flex-col gap-6">
+          <p class="font-display text-3xl leading-tight font-extrabold sm:text-4xl">Naučím ťa robiť to, čo robím ja. Po slovensky, na tvojej vlastnej úlohe.</p>
+          <LiecbaKarusel client:visible />
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>

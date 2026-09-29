@@ -1,0 +1,484 @@
+/* V7-01 · Monitor JIS — štýly variantu (iba stránka /v7/01/). Farby iba z tokenov, tvrdé tiene, pohyb po schodoch
+   (--bk-ease-step, steps()). Reduced motion: alarmy, stopy a pásy stoja (global.css skráti zvyšok na 120 ms). */
+
+:root {
+  --m01-pas: 96px; /* výška horného pásu; skript ju zmeria */
+  --m01-ekg: 64px; /* výška EKG navigácie dole */
+}
+
+body {
+  padding-bottom: var(--m01-ekg);
+  background: var(--color-paper);
+}
+
+/* plávajúce tlačidlo z Base (KonzultaciaPlavajuca) by sedelo na EKG lište; CTA je v hornom pase a v lište */
+[data-kpl] {
+  display: none !important;
+}
+
+.m01 {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem 1rem 2rem;
+  background-color: var(--color-paper);
+  background-image:
+    linear-gradient(color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+@media (min-width: 640px) {
+  .m01 {
+    gap: 1.75rem;
+    padding: 1.75rem 1.5rem 2.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .m01 {
+    padding: 2rem 2rem 3rem;
+  }
+}
+
+/* ---------- horný pás ---------- */
+.m01-alarmy .bk-marquee-track {
+  padding-block: 0.4rem;
+}
+
+/* ---------- obrazovka ---------- */
+.m01-obr {
+  border: 3px solid var(--color-ink);
+  box-shadow: 4px 4px 0 0 var(--color-ink);
+  scroll-margin-top: calc(var(--m01-pas) + 12px);
+  scroll-snap-align: start;
+}
+@media (min-width: 1024px) {
+  .m01-obr {
+    box-shadow: 6px 6px 0 0 var(--color-ink);
+    min-height: calc(100dvh - var(--m01-pas) - var(--m01-ekg) - 3rem);
+  }
+}
+.m01-obr-hlava {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.75rem;
+  border-bottom: 3px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.m01-obr[data-ton='ink'] .m01-obr-hlava,
+.bg-ink.m01-obr .m01-obr-hlava {
+  background: var(--color-yellow);
+  color: var(--color-ink);
+}
+.m01-obr-cislo {
+  color: var(--color-yellow);
+}
+.bg-ink.m01-obr .m01-obr-cislo {
+  color: var(--color-ink);
+}
+.m01-obr-nazov {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.m01-obr-alarm {
+  display: none;
+  padding: 0 0.4rem;
+  background: var(--color-stamp);
+  color: var(--color-paper);
+}
+.m01-obr-stav {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.m01-obr-kanal {
+  display: none;
+  opacity: 0.65;
+}
+@media (min-width: 640px) {
+  .m01-obr-kanal {
+    display: inline;
+  }
+}
+.m01-obr-telo {
+  padding: 1.25rem 1rem 1.75rem;
+}
+@media (min-width: 640px) {
+  .m01-obr-telo {
+    padding: 1.75rem 1.5rem 2.25rem;
+  }
+}
+@media (min-width: 1024px) {
+  .m01-obr-telo {
+    padding: 2.25rem 2.25rem 2.75rem;
+  }
+}
+
+/* ---------- podpis: alarm pri príchode na obrazovku ---------- */
+.m01-obr[data-alarm] .m01-obr-alarm {
+  display: inline-block;
+  animation: m01-alarm-stitok 1100ms steps(1, end) both;
+}
+.m01-obr[data-alarm] .m01-obr-hlava {
+  animation: m01-alarm-hlava 1100ms steps(1, end) both;
+}
+.m01-obr[data-alarm] {
+  animation: m01-alarm-ram 1100ms steps(1, end) both;
+}
+@keyframes m01-alarm-hlava {
+  0%,
+  33%,
+  66% {
+    background: var(--color-stamp);
+    color: var(--color-paper);
+  }
+  16%,
+  50%,
+  83% {
+    background: var(--color-yellow);
+    color: var(--color-ink);
+  }
+}
+@keyframes m01-alarm-stitok {
+  0%,
+  33%,
+  66% {
+    background: var(--color-paper);
+    color: var(--color-stamp);
+  }
+  16%,
+  50%,
+  83% {
+    background: var(--color-stamp);
+    color: var(--color-paper);
+  }
+}
+@keyframes m01-alarm-ram {
+  0%,
+  33%,
+  66% {
+    border-color: var(--color-stamp);
+    box-shadow: 8px 8px 0 0 var(--color-stamp);
+  }
+  16%,
+  50%,
+  83% {
+    border-color: var(--color-ink);
+    box-shadow: 8px 8px 0 0 var(--color-yellow);
+  }
+}
+
+/* ---------- drobnosti monitora ---------- */
+.m01-bod {
+  display: inline-block;
+  width: 0.6rem;
+  height: 0.6rem;
+  flex-shrink: 0;
+  border: 2px solid currentColor;
+  background: var(--color-stamp);
+  animation: m01-bod 1.2s steps(2, end) infinite;
+}
+.m01-bod-zlta {
+  background: var(--color-yellow);
+  border-color: var(--color-yellow);
+}
+.m01-bod-stoji {
+  background: transparent;
+  animation: none;
+}
+@keyframes m01-bod {
+  50% {
+    opacity: 0.15;
+  }
+}
+.m01-riadky {
+  background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--color-paper) 7%, transparent) 0 1px, transparent 1px 4px);
+}
+.m01-ekg-static path {
+  animation: m01-stopa 4s steps(24, end) infinite;
+}
+@keyframes m01-stopa {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.m01-ekg-bije {
+  stroke-dasharray: 260;
+  stroke-dashoffset: 260;
+  animation: m01-bije 1.6s steps(10, end) infinite;
+}
+@keyframes m01-bije {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* rola v príjme: striedanie po schodoch (5 rolí × 3 s) */
+.m01-rola-r {
+  opacity: 0;
+  animation: m01-rola 15s steps(1, end) infinite;
+  animation-delay: calc(var(--i) * 3s);
+}
+.m01-rola-r:first-child {
+  opacity: 1;
+}
+@keyframes m01-rola {
+  0%,
+  19.9% {
+    opacity: 1;
+    transform: none;
+  }
+  20%,
+  100% {
+    opacity: 0;
+    transform: translateY(-0.4em);
+  }
+}
+
+/* moduly nástrojov a pacienti: tvrdé zatlačenie po schodoch */
+.m01-modul,
+.m01-pacient {
+  transition:
+    transform var(--bk-dur-quick) var(--bk-ease-step),
+    box-shadow var(--bk-dur-quick) var(--bk-ease-step);
+}
+.m01-pacient:hover,
+.m01-pacient:focus-visible {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+.m01-cta-velke,
+.m01-cta {
+  transition:
+    transform var(--bk-dur-snap) var(--bk-ease-step),
+    box-shadow var(--bk-dur-snap) var(--bk-ease-step);
+}
+.m01-cta-velke:hover,
+.m01-cta:hover {
+  transform: translate(3px, 3px);
+  box-shadow: 2px 2px 0 0 var(--color-ink);
+}
+
+/* ---------- EKG navigácia ---------- */
+.m01-ekg {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 45;
+  height: var(--m01-ekg);
+  display: flex;
+  align-items: stretch;
+  border-top: 3px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+.m01-ekg-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
+  min-width: 0;
+  padding: 0 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  order: 2;
+  flex: 1;
+}
+.m01-ekg-cislo {
+  color: var(--color-yellow);
+}
+.m01-ekg-nazov {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.m01-ekg-krok,
+.m01-ekg-menu {
+  flex-shrink: 0;
+  width: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 3px solid color-mix(in srgb, var(--color-paper) 25%, transparent);
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-paper);
+}
+.m01-ekg-krok[data-m01-krok='-1'] {
+  order: 1;
+  border-left: 0;
+  border-right: 3px solid color-mix(in srgb, var(--color-paper) 25%, transparent);
+}
+.m01-ekg-krok[data-m01-krok='1'] {
+  order: 4;
+}
+.m01-ekg-menu {
+  order: 5;
+  background: var(--color-yellow);
+  color: var(--color-ink);
+}
+.m01-ekg-krok:hover,
+.m01-ekg-krok:focus-visible {
+  background: var(--color-yellow);
+  color: var(--color-ink);
+}
+.m01-ekg-stopa {
+  position: relative;
+  order: 3;
+  flex: 1.4;
+  min-width: 0;
+}
+.m01-ekg-stopa svg {
+  position: absolute;
+  inset: 8px 0;
+  width: 100%;
+  height: calc(100% - 16px);
+  overflow: visible;
+}
+.m01-ekg-seg {
+  fill: none;
+  stroke: color-mix(in srgb, var(--color-paper) 55%, transparent);
+  stroke-width: 2;
+  stroke-linejoin: miter;
+}
+.m01-ekg-seg[data-on] {
+  stroke: var(--color-yellow);
+  stroke-width: 3;
+}
+.m01-ekg-seg[data-alarm] {
+  animation: m01-seg-alarm 1100ms steps(1, end);
+}
+@keyframes m01-seg-alarm {
+  0%,
+  33%,
+  66% {
+    stroke: var(--color-stamp);
+    stroke-width: 4;
+  }
+  16%,
+  50%,
+  83% {
+    stroke: var(--color-yellow);
+  }
+}
+.m01-ekg-hlava {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  margin: -5px 0 0 -5px;
+  background: var(--color-yellow);
+  border: 2px solid var(--color-ink);
+  transform: translateX(var(--x, 0px));
+  pointer-events: none;
+}
+.m01-ekg-kmity {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .m01-ekg-info {
+    order: 1;
+    flex: 0 0 13rem;
+    padding-left: 1rem;
+    font-size: 0.72rem;
+  }
+  .m01-ekg-krok {
+    display: none;
+  }
+  .m01-ekg-stopa {
+    order: 2;
+    flex: 1;
+  }
+  .m01-ekg-menu {
+    order: 3;
+    width: 64px;
+  }
+  .m01-ekg-kmity {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .m01-ekg-kmity a {
+    position: relative;
+    display: block;
+    height: 100%;
+    outline-offset: -4px;
+  }
+  .m01-ekg-kmity a:hover,
+  .m01-ekg-kmity a:focus-visible,
+  .m01-ekg-kmity a[aria-current='true'] {
+    background: color-mix(in srgb, var(--color-paper) 10%, transparent);
+  }
+  .m01-ekg-stitok {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 10px);
+    translate: -50% 0;
+    padding: 0.2rem 0.5rem;
+    border: 3px solid var(--color-ink);
+    background: var(--color-yellow);
+    color: var(--color-ink);
+    box-shadow: 3px 3px 0 0 var(--color-ink);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    visibility: hidden;
+  }
+  .m01-ekg-kmity a:hover .m01-ekg-stitok,
+  .m01-ekg-kmity a:focus-visible .m01-ekg-stitok {
+    visibility: visible;
+  }
+}
+
+/* mobil: jemný snap obrazoviek (desktop rieši lenis/snap v skripte) */
+@media (max-width: 1023px) {
+  html {
+    scroll-snap-type: y proximity;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-snap-type: none;
+  }
+  .m01-obr[data-alarm],
+  .m01-obr[data-alarm] .m01-obr-hlava,
+  .m01-obr[data-alarm] .m01-obr-alarm,
+  .m01-ekg-seg[data-alarm],
+  .m01-ekg-static path,
+  .m01-ekg-bije,
+  .m01-bod,
+  .m01-rola-r {
+    animation: none !important;
+  }
+  .m01-ekg-bije {
+    stroke-dashoffset: 0;
+  }
+  .m01-rola-r:not(:first-child) {
+    display: none;
+  }
+}

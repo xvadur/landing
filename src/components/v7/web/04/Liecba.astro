@@ -1,0 +1,148 @@
+---
+/** V7-04 · Triáž 3 · Liečba (telo zóny). Postup ako na zmene: 01 triáž, 02 zásah, 03 odovzdanie (v54/Liecba.astro,
+ *  data/ponuka.ts). Cesta klienta ako lievik (ostrov CestaKlienta), chat vs. agent v tabuľke, produkty odovzdania ako
+ *  karty s nálepkou, pás inštrumentára (Marquee, v54/Nastroje.astro) a zástupná plocha záberu T3. */
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Sticker } from '@/components/ui/sticker';
+import { Badge } from '@/components/ui/badge';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { CrossShape, LightningShape, Star5Shape } from '@/components/ui/shapes';
+import { PRECO_NIE_CHATGPT, PRODUKTY, VLAJKA } from '@/data/ponuka';
+import { cn } from '@/lib/utils';
+import Instrumentar from './Instrumentar';
+import CestaKlienta from './CestaKlienta';
+import Zaber from './Zaber.astro';
+
+const agent = PRODUKTY.find((p) => p.id === 'agent-pre-teba')!;
+const ucenie = PRODUKTY.filter((p) => p.id !== 'agent-pre-teba');
+const CISLO = 'font-display text-[clamp(5rem,3rem+8vw,10rem)] leading-[0.8] font-extrabold tracking-[-0.05em] t-obrys';
+---
+
+<div class="relative mx-auto flex w-full max-w-[1400px] flex-col gap-16 px-4 py-14 sm:px-6 lg:px-10 lg:py-20">
+  <!-- úvod + lievik -->
+  <div class="grid items-center gap-10 lg:grid-cols-[1fr_1fr]">
+    <div class="flex flex-col gap-5">
+      <h3 class="font-display text-[clamp(2.6rem,1.3rem+5vw,5.6rem)] leading-[0.86] font-extrabold tracking-tighter uppercase">
+        Triáž. Zásah.<br />Odovzdanie.
+      </h3>
+      <p class="max-w-xl text-lg sm:text-xl">
+        Postup ako na zmene. Najprv zistím, čo bolí. Potom najmenší zásah, ktorý pomôže. Na konci ti to odovzdám tak, aby to išlo aj bezo mňa.
+      </p>
+      <Zaber id="04-T3-monitor" popis="monitor vitálnych funkcií" pomer="16 / 9" n={3} class="t-odhal hidden max-w-md lg:block" />
+    </div>
+    <figure class="flex min-w-0 flex-col gap-3 border-3 border-ink bg-white p-4 shadow-brutal sm:p-6">
+      <figcaption class="flex flex-wrap items-center justify-between gap-2">
+        <span class="font-display text-2xl leading-none font-extrabold uppercase">Cesta pacienta</span>
+        <Badge variant="outline" className="hover:translate-x-0 hover:translate-y-0">minúty z 30</Badge>
+      </figcaption>
+      <p class="text-sm text-ink/75">Vyšetrenie sa zužuje: z tridsiatich minút na jeden písomný ďalší krok.</p>
+      <CestaKlienta client:visible />
+    </figure>
+  </div>
+
+  <ol class="flex flex-col" role="list">
+    <!-- 01 triáž -->
+    <li class="grid gap-6 border-t-3 border-ink py-10 lg:grid-cols-[minmax(260px,0.7fr)_1.3fr] lg:gap-12">
+      <div class="lg:sticky lg:top-28 lg:self-start">
+        <span class={CISLO} aria-hidden="true">01</span>
+        <h4 class="mt-2 font-display text-4xl leading-none font-extrabold uppercase">Triáž</h4>
+        <p class="mt-3 font-mono text-sm font-bold tracking-[0.14em] uppercase">{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</p>
+      </div>
+      <div class="relative flex flex-col gap-5">
+        <p class="font-display text-3xl leading-tight font-extrabold sm:text-4xl">{VLAJKA.titulok}</p>
+        <ul class="grid gap-3 sm:grid-cols-3" role="list">
+          {
+            VLAJKA.body.map((b, i) => (
+              <li class="t-odhal flex flex-col gap-3 border-3 border-ink bg-white p-4 shadow-brutal-sm">
+                <span class="flex h-10 w-10 items-center justify-center border-3 border-ink bg-yellow font-mono font-bold">{i + 1}</span>
+                <span class="text-base leading-snug">{b}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <a
+          href="#termin"
+          data-track="konzultacia_klik"
+          data-track-miesto="liecba"
+          class="press inline-flex min-h-14 w-fit items-center gap-2 border-3 border-ink bg-hot px-7 font-display text-lg font-extrabold text-ink uppercase shadow-brutal"
+        >
+          Vyber si termín →
+        </a>
+        <CrossShape size={64} strokeWidth={4} color="var(--color-stamp)" animation="spin-step" speed="slow" className="absolute -top-6 right-0 hidden lg:block" />
+      </div>
+    </li>
+
+    <!-- 02 zásah -->
+    <li class="grid gap-6 border-t-3 border-ink py-10 lg:grid-cols-[minmax(260px,0.7fr)_1.3fr] lg:gap-12">
+      <div class="lg:sticky lg:top-28 lg:self-start">
+        <span class={CISLO} aria-hidden="true">02</span>
+        <h4 class="mt-2 font-display text-4xl leading-none font-extrabold uppercase">Zásah</h4>
+        <p class="mt-3 font-mono text-sm font-bold tracking-[0.14em] uppercase">{agent.nalepka} · {agent.pre}</p>
+      </div>
+      <div class="relative flex min-w-0 flex-col gap-5">
+        <p class="font-display text-3xl leading-tight font-extrabold sm:text-4xl">{agent.nazov}. {agent.popis}</p>
+        <div class="overflow-hidden border-3 border-ink bg-white shadow-brutal">
+          <Table className="text-base">
+            <TableHeader>
+              <TableRow className="border-b-3 border-ink hover:bg-transparent">
+                <TableHead className="w-1/2 font-display text-lg text-ink">Chat</TableHead>
+                <TableHead className="w-1/2 border-l-3 border-ink bg-yellow font-display text-lg text-ink">Agent</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {
+                PRECO_NIE_CHATGPT.map((r) => (
+                  <TableRow className="hover:bg-transparent">
+                    <TableCell className="align-top whitespace-normal text-ink/70 line-through decoration-stamp decoration-2">{r.chat}</TableCell>
+                    <TableCell className="border-l-3 border-ink align-top whitespace-normal">{r.agent}</TableCell>
+                  </TableRow>
+                ))
+              }
+            </TableBody>
+          </Table>
+        </div>
+        <LightningShape size={56} strokeWidth={4} color="var(--color-yellow)" animation="wiggle" speed="slow" className="absolute -top-10 right-2 hidden lg:block" />
+      </div>
+    </li>
+
+    <!-- 03 odovzdanie -->
+    <li class="grid gap-6 border-t-3 border-ink py-10 lg:grid-cols-[minmax(260px,0.7fr)_1.3fr] lg:gap-12">
+      <div class="lg:sticky lg:top-28 lg:self-start">
+        <span class={CISLO} aria-hidden="true">03</span>
+        <h4 class="mt-2 font-display text-4xl leading-none font-extrabold uppercase">Odovzdanie</h4>
+        <p class="mt-3 font-mono text-sm font-bold tracking-[0.14em] uppercase">Aby to išlo aj bezo mňa</p>
+      </div>
+      <div class="relative flex flex-col gap-6">
+        <p class="font-display text-3xl leading-tight font-extrabold sm:text-4xl">Naučím ťa robiť to, čo robím ja. Po slovensky, na tvojej vlastnej úlohe.</p>
+        <div class="grid gap-6 pt-3 sm:grid-cols-3">
+          {
+            ucenie.map((p, i) => (
+              <Card className={cn('relative flex flex-col', p.farba === 'bg-yellow' ? 'bg-yellow' : 'bg-white')} role="group">
+                <Sticker variant={i === 1 ? 'primary' : 'outline'} size="sm" rotation={i % 2 ? 'slight-right' : 'slight'} className="t-dopad absolute -top-4 left-4">
+                  {p.nalepka}
+                </Sticker>
+                <CardHeader className="pt-8">
+                  <CardTitle className="font-display text-2xl leading-none font-extrabold">{p.nazov}</CardTitle>
+                  <CardDescription className="font-mono text-xs font-bold uppercase text-ink/70">{p.pre}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 pt-4 text-base leading-snug">{p.popis}</CardContent>
+                <CardFooter className="border-t-3 border-ink p-4">
+                  <a href="#zapis" class="inline-flex min-h-11 items-center font-display text-base font-extrabold uppercase underline decoration-3 underline-offset-4">
+                    Chcem vedieť ako prvý →
+                  </a>
+                </CardFooter>
+              </Card>
+            ))
+          }
+        </div>
+        <Star5Shape size={60} strokeWidth={4} color="var(--color-white)" animation="spin-step" speed="slow" className="absolute -top-12 right-0 hidden lg:block" />
+      </div>
+    </li>
+  </ol>
+</div>
+
+<!-- inštrumentár: pás nástrojov -->
+<div class="border-t-3 border-ink bg-ink py-4 text-paper">
+  <p class="sr-only">Inštrumentár: nástroje, s ktorými pracujem</p>
+  <Instrumentar />
+</div>

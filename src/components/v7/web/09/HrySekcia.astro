@@ -1,0 +1,30 @@
+---
+/** V7-09 · Hry ako výstrižky (hrajú sa na mieste v dialógu / zásuvke). Texty doslovne z v5/TextyHry.astro. */
+import { TicketShape } from '@/components/ui/shapes';
+import Hry from './Hry';
+
+---
+
+<section id="hry" class="relative border-t-3 border-ink bg-white" aria-labelledby="z9-hry-h">
+  <div aria-hidden="true" class="tx-dots pointer-events-none absolute inset-0 [--tx:14%]"></div>
+  <div class="relative mx-auto w-full max-w-[1500px] px-4 pt-24 pb-24 sm:px-6 sm:pt-32 lg:px-10">
+    <p class="flex items-center justify-between gap-3 border-b-3 border-ink pb-2 font-mono text-xs font-bold tracking-[0.18em] uppercase sm:text-sm">
+      <span>✚ Hry · vystrihni si</span>
+      <span>str. 07</span>
+    </p>
+    <div class="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <h2 id="z9-hry-h" class="font-display text-[clamp(2.6rem,1.2rem+5.4vw,6.8rem)] leading-[0.86] font-extrabold tracking-[-0.04em] uppercase">
+        Veci, ktoré si vyskúšaš namiesto brožúry.
+      </h2>
+      <div class="relative">
+        <p class="max-w-xl text-lg">Ďalšie hry staviam. Jedna už beží: vlož svoj text a škrtneme frázy, ktoré má každý.</p>
+        <div class="pointer-events-none absolute -top-24 right-0 hidden w-32 rotate-6 lg:block" aria-hidden="true">
+          <TicketShape size={128} color="var(--color-yellow)" strokeWidth={3} className="h-auto w-full" />
+        </div>
+      </div>
+    </div>
+    <div class="mt-14">
+      <Hry client:visible />
+    </div>
+  </div>
+</section>

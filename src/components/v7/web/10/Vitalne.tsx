@@ -45,8 +45,8 @@ function Monitor() {
       </h2>
       <div className="relative mt-auto overflow-hidden border-3 border-paper/25 bg-ink">
         <div className="v10-ekg-mriezka absolute inset-0" aria-hidden="true" />
-        <svg viewBox="0 0 600 40" preserveAspectRatio="none" className="relative h-16 w-[200%] max-w-none" aria-hidden="true">
-          <path className="v10-ekg-beh" d={ekgPath(1200)} fill="none" stroke="var(--color-yellow)" strokeWidth="3" vectorEffect="non-scaling-stroke" />
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" className="v10-ekg-beh relative block h-16 w-[200%] max-w-none" aria-hidden="true">
+          <path d={ekgPath(1200)} fill="none" stroke="var(--color-yellow)" strokeWidth="3" vectorEffect="non-scaling-stroke" />
         </svg>
       </div>
       <p className="font-mono text-xs text-paper/70">snímka pulzu {p.cas}</p>

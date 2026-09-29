@@ -1,0 +1,40 @@
+---
+/** V7-01 · EKG krivka pod celou stránkou ako navigácia: každý kmit = jedna obrazovka monitora, klik na kmit = skok
+ *  na blok (Lenis anchors). Aktuálny kmit svieti žlto, hlava stopy ide po krivke podľa scrollu, pri alarme obrazovky
+ *  kmit zabliká alarmovou. Mobil: kmity sú iba obraz, ovláda sa ▲ / ▼ a paletou (44 px ciele). 0 kB React,
+ *  logiku rieši skript monitora v stránke (src/pages/v7/01.astro). */
+import { OBRAZOVKY, POCET } from './data';
+
+const W = 100; // šírka jedného kmitu vo viewBoxe
+const uder = (i: number) => {
+  const x = i * W;
+  return `M${x} 30 L${x + 30} 30 L${x + 36} 26 L${x + 42} 30 L${x + 46} 30 L${x + 49} 36 L${x + 53} 4 L${x + 57} 44 L${x + 60} 30 L${x + 70} 30 L${x + 77} 24 L${x + 84} 30 L${x + W} 30`;
+};
+---
+
+<nav class="m01-ekg" aria-label="EKG navigácia obrazoviek" data-m01-ekg>
+  <div class="m01-ekg-info" aria-hidden="true">
+    <span class="m01-ekg-cislo" data-m01-ekg-cislo>01/{POCET}</span>
+    <span class="m01-ekg-nazov" data-m01-ekg-nazov>{OBRAZOVKY[0]!.nazov}</span>
+  </div>
+  <button type="button" class="m01-ekg-krok" data-m01-krok="-1" aria-label="Predchádzajúca obrazovka">▲</button>
+  <div class="m01-ekg-stopa">
+    <svg viewBox={`0 0 ${OBRAZOVKY.length * W} 48`} preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      {OBRAZOVKY.map((o, i) => <path d={uder(i)} class="m01-ekg-seg" data-seg={o.id} vector-effect="non-scaling-stroke" />)}
+    </svg>
+    <span class="m01-ekg-hlava" data-m01-ekg-hlava aria-hidden="true"></span>
+    <ol class="m01-ekg-kmity" role="list">
+      {
+        OBRAZOVKY.map((o, i) => (
+          <li>
+            <a href={`#${o.id}`} data-m01-kmit={o.id} aria-label={`${String(i + 1).padStart(2, '0')} ${o.nazov}`}>
+              <span class="m01-ekg-stitok">{o.kratko}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+  <button type="button" class="m01-ekg-krok" data-m01-krok="1" aria-label="Ďalšia obrazovka">▼</button>
+  <button type="button" class="m01-ekg-menu" data-m01-paleta aria-label="Všetky obrazovky a ekosystém (Cmd K)">☰</button>
+</nav>

@@ -24,7 +24,7 @@ import { PRECO_NIE_CHATGPT, PRODUKTY, VLAJKA } from '@/data/ponuka';
 import { DOKAZY, OVERENE_DNA_TEXT } from '@/data/fakty';
 import { SUBSTACK_URL } from '@/components/texty/citanie';
 import { cn } from '@/lib/utils';
-import { ANAMNEZA, BIO, HRA, HRY_V_STAVBE, PROJEKTY, STAV, domena, miesto, type Projekt } from './data';
+import { ANAMNEZA, BIO, HRA, HRY_V_STAVBE, PROJEKTY, STAV, domena, miesto, type MiestoId, type Projekt } from './data';
 import { Portal } from './Portal';
 import { useChodba } from './kontext';
 import { otvor } from './navigacia';
@@ -33,10 +33,11 @@ import { Halftone } from './Halftone';
 export type Text = { id: string; title: string; description: string; datum: string };
 
 /** Obal pavilónu: vodorovne rad (výška okna), inak stĺpec. */
-function Pavilon({ id, children, className }: { id: string; children: React.ReactNode; className?: string }) {
+function Pavilon({ id, children, className }: { id: MiestoId; children: React.ReactNode; className?: string }) {
   const { vodorovne } = useChodba();
+  const m = miesto(id);
   return (
-    <article id={id} data-miesto={id} aria-label={`Pavilón ${miesto(id as never).pismeno}: ${miesto(id as never).nazov}`} className={cn('v07-pav relative', vodorovne ? 'flex h-full shrink-0' : 'flex flex-col border-b-3 border-ink', className)}>
+    <article id={id} data-miesto={id} aria-label={`Pavilón ${m.pismeno}: ${m.nazov}`} className={cn('v07-pav relative', vodorovne ? 'flex h-full shrink-0' : 'flex flex-col border-b-3 border-ink', className)}>
       {children}
     </article>
   );
@@ -563,8 +564,14 @@ export function Dvere() {
   const { vodorovne: v } = useChodba();
   return (
     <div className={cn('relative shrink-0 overflow-hidden border-ink bg-ink text-paper', v ? 'h-full w-[88vw] max-w-[1200px] border-l-3' : 'border-b-3')}>
-      <Halftone className="absolute inset-0 opacity-60" />
-      <MathCurveBackground curve="lissajous" speed="slow" opacity={0.35} trackColor="hsl(var(--background) / 0.2)" headColor="hsl(var(--secondary))" className="pointer-events-none absolute inset-0" />
+      {v ? (
+        <>
+          <Halftone className="absolute inset-0 opacity-60" />
+          <MathCurveBackground curve="lissajous" speed="slow" opacity={0.35} trackColor="hsl(var(--background) / 0.2)" headColor="hsl(var(--secondary))" className="pointer-events-none absolute inset-0" />
+        </>
+      ) : (
+        <div className="tx-halftone absolute inset-0 text-yellow opacity-40 [--tx:30%]" aria-hidden="true" />
+      )}
       <span className="absolute top-3 left-3 z-10 bg-paper px-2 py-0.5 font-mono text-[10px] text-ink">HIGGSFIELD: 07-chodba-dolly · 6 s · 21:9</span>
       <div className={cn('relative z-10 flex h-full items-center gap-10', v ? 'px-16' : 'mx-auto max-w-[1500px] flex-col px-4 py-16 sm:px-6 lg:flex-row lg:px-10')}>
         <div className="flex max-w-lg flex-col gap-5">

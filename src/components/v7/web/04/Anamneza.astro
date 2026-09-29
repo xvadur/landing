@@ -1,0 +1,40 @@
+---
+/** V7-04 · Triáž 4 · Anamnéza (bio). Zvislá os záznamov (BoldKit Timeline) s ôsmimi zastávkami v poradí zo zadania;
+ *  zastávky bez textu na webe majú štítok „text doplní Adam“. Vľavo lepkavý stĺpec: citát na lístočku, nálepka
+ *  8 rokov pri lôžku, StatCard (prax a Korpus celkom z fakty.ts) a tézy v akordeóne (ostrov Tezy). */
+import { StickyNote, Sticker } from '@/components/ui/sticker';
+import { ANAMNEZA } from './data';
+import AnamnezaOs from './AnamnezaOs';
+import Tezy from './Tezy';
+import BioCisla from './BioCisla';
+---
+
+<div class="relative mx-auto grid w-full max-w-[1400px] gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16 lg:px-10 lg:py-20">
+  <div class="flex min-w-0 flex-col gap-7">
+    <div>
+      <p class="font-mono text-sm font-bold tracking-[0.16em] uppercase">✚ Anamnéza</p>
+      <h3 class="mt-2 font-display text-[clamp(2.4rem,1.2rem+4.4vw,4.8rem)] leading-[0.88] font-extrabold tracking-tight uppercase">
+        Z nemocnice<br />k agentom
+      </h3>
+    </div>
+    <div class="relative max-w-md pt-3">
+      <StickyNote variant="yellow" pin rotation="left" size="lg" className="t-dopad">
+        <p class="font-serif text-2xl leading-snug italic">„{ANAMNEZA.citat}“</p>
+      </StickyNote>
+      <Sticker variant="destructive" rotation="medium-right" size="sm" className="absolute -right-2 -bottom-4 sm:-right-6">8 rokov pri lôžku</Sticker>
+    </div>
+    <p class="max-w-md text-lg">{ANAMNEZA.dovetok}</p>
+    <BioCisla />
+    <div class="flex flex-col gap-3">
+      <p class="font-mono text-sm font-bold tracking-[0.16em] uppercase">Zo záznamov · čo som si zapísal</p>
+      <Tezy client:visible />
+    </div>
+  </div>
+
+  <div class="min-w-0">
+    <AnamnezaOs />
+    <a href="#termin" data-track="konzultacia_klik" data-track-miesto="anamneza" class="press ml-[3.75rem] inline-flex min-h-14 items-center border-3 border-ink bg-hot px-6 font-display text-lg font-extrabold text-ink uppercase shadow-brutal sm:ml-[4.5rem]">
+      {ANAMNEZA.cta}
+    </a>
+  </div>
+</div>

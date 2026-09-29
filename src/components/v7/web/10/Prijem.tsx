@@ -56,7 +56,7 @@ function Motto() {
 function EkgPodciarknutie() {
   return (
     <svg viewBox="0 0 600 40" preserveAspectRatio="none" className="v10-ekg h-7 w-full max-w-[560px] text-ink sm:h-9" aria-hidden="true">
-      <path d={ekgPath(600, 200)} fill="none" stroke="currentColor" strokeWidth="4" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
+      <path d={ekgPath(600, 200)} pathLength={1} fill="none" stroke="currentColor" strokeWidth="4" strokeLinejoin="miter" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }

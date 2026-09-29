@@ -1,0 +1,27 @@
+---
+/** V7-10 · podnos = sekcia domova. Štítok podnosu ako záložka (číslo + názov), vedľa krátka poznámka, pod ním kovový
+ *  podnos s bodkovanou textúrou a na ňom bento mriežka dlaždíc (ostrov v slote). */
+interface Props {
+  id: string;
+  cislo: string;
+  nazov: string;
+  /** krátky popis vedľa štítku */
+  pozn?: string;
+}
+const { id, cislo, nazov, pozn } = Astro.props;
+---
+
+<section id={id} class="v10-podnos scroll-mt-20" aria-label={`Podnos ${cislo}: ${nazov}`}>
+  <div class="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10">
+    <div class="flex items-end gap-3">
+      <p class="v10-zalozka">
+        <span class="text-yellow">{cislo}</span>
+        <span>{nazov}</span>
+      </p>
+      {pozn && <p class="hidden pb-1.5 font-mono text-xs font-bold tracking-[0.12em] text-ink/60 uppercase sm:block">{pozn}</p>}
+    </div>
+    <div class="v10-plocha">
+      <slot />
+    </div>
+  </div>
+</section>

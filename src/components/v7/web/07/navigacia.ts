@@ -7,7 +7,6 @@ import type { MiestoId } from './data';
 declare global {
   interface Window {
     __v707chodba?: { pozicia: (id: string) => number | null } | null;
-    __lenis?: { scrollTo: (t: number | HTMLElement, o?: Record<string, unknown>) => void } | null;
   }
 }
 

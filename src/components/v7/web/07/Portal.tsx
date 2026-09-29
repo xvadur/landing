@@ -2,7 +2,7 @@
  *  vstupe do obrazu — podpisový pohyb), piktogram (zástupná plocha statického záberu pavilónu), veta, čo tu je, a smer
  *  ďalej. Vo vodorovnej chodbe je to zvislý stĺp (420 px), na mobile a pri reduced motion tabuľa cez celú šírku. */
 import * as React from 'react';
-import { ArrowRight, BookOpen, ClipboardList, Gamepad2, Pill, Stethoscope, UserRound, type LucideIcon } from 'lucide-react';
+import { ArrowRight, BookOpen, ClipboardList, DoorOpen, Gamepad2, Pill, Stethoscope, UserRound, type LucideIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { dalsie, type Miesto } from './data';
 import { SplitFlap } from './SplitFlap';
@@ -15,6 +15,7 @@ export const IKONY: Record<string, LucideIcon> = {
   herna: Gamepad2,
   kniznica: BookOpen,
   vysetrenie: Stethoscope,
+  vychod: DoorOpen,
 };
 
 export function Portal({ m, farba = 'yellow' }: { m: Miesto; farba?: 'yellow' | 'white' | 'ink' }) {

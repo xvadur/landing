@@ -1,0 +1,81 @@
+---
+/** V7-09 · Mimo ordinácie: posledný text ako výstrižok z novín, Hriech, Substack (HoverCard).
+ *  Texty doslovne z v5/TextyHry.astro; odkazy overené v DOKAZY / citanie.ts. */
+import { getCollection } from 'astro:content';
+import { DOKAZY, OVERENE_DNA_TEXT } from '@/data/fakty';
+import { datumSk } from '@/components/texty/citanie';
+import Substack from './Substack';
+
+const texty = (await getCollection('texty')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posledny = texty[0];
+const hriech = DOKAZY.find((d) => d.id === 'hriech')!;
+const BTN = 'press inline-flex min-h-12 items-center gap-2 border-3 border-ink px-5 font-display text-base font-extrabold uppercase shadow-brutal-sm';
+---
+<section id="texty" class="relative border-t-3 border-ink bg-paper" aria-labelledby="z9-tx-h">
+  <div class="mx-auto w-full max-w-[1500px] px-4 pt-24 pb-28 sm:px-6 sm:pt-32 lg:px-10">
+    <p class="flex items-center justify-between gap-3 border-b-3 border-ink pb-2 font-mono text-xs font-bold tracking-[0.18em] uppercase sm:text-sm">
+      <span>✚ Texty · Hriech</span>
+      <span>str. 10</span>
+    </p>
+    <div class="mt-8 grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <h2 id="z9-tx-h" class="font-display text-[clamp(3rem,1.2rem+7vw,8.5rem)] leading-[0.84] font-extrabold tracking-[-0.045em] uppercase">
+        Mimo<br /><span class="z9-riso" data-t="ordinácie.">ordinácie.</span>
+      </h2>
+      <p class="max-w-md text-lg">Píšem o tom, čo staviam. A v Hriechu stanovujem diagnózu slovenským médiám.</p>
+    </div>
+
+    <div class="mt-14 grid gap-12 lg:grid-cols-[1.5fr_1fr] lg:gap-10">
+      {
+        posledny && (
+          <div class="z9-list relative" style="--r:-1deg; --r0:9deg">
+            <span class="z9-paska" style="--pr:-5deg; left: 10%; top: -0.9rem" />
+            <span class="z9-paska" style="--pr:6deg; right: 10%; top: -0.9rem" />
+            <article class="z9-papier z9-biely flex flex-col gap-4 p-6 sm:p-8">
+              <p class="flex flex-wrap items-center justify-between gap-2 border-b-3 border-ink pb-2 font-mono text-xs font-bold tracking-[0.14em] uppercase">
+                <span>Posledný text</span>
+                <span>{datumSk(posledny.data.date)}</span>
+              </p>
+              <h3 class="font-display text-[clamp(2rem,1.2rem+2.6vw,3.6rem)] leading-[0.92] font-extrabold tracking-tight uppercase">
+                <a href={`/texty/${posledny.id}/`} class="hover:underline hover:decoration-[4px]">
+                  {posledny.data.title}
+                </a>
+              </h3>
+              <p class="max-w-prose font-serif text-2xl leading-snug italic sm:columns-1">{posledny.data.description}</p>
+              <div class="mt-auto flex flex-wrap gap-3 pt-2">
+                <a href={`/texty/${posledny.id}/`} class:list={[BTN, 'bg-yellow']}>
+                  Čítať →
+                </a>
+                <a href="/texty/" class:list={[BTN, 'bg-white']}>
+                  Všetky texty
+                </a>
+                <Substack client:visible className={`${BTN} bg-white`} />
+              </div>
+            </article>
+          </div>
+        )
+      }
+
+      <div class="z9-list relative lg:mt-16" style="--r:1.8deg; --r0:-12deg">
+        <span class="z9-paska z9-paska-biela" style="--pr:4deg; left: 35%; top: -0.9rem" />
+        <article class="z9-papier z9-cierny flex flex-col gap-3 overflow-hidden p-0">
+          {
+            hriech.obrazok && (
+              <div class="border-b-3 border-paper bg-yellow">
+                <img src={hriech.obrazok} alt="Hriech — náhľad publikácie" width="960" height="600" loading="lazy" decoding="async" class="aspect-[16/10] w-full object-cover object-top mix-blend-multiply grayscale contrast-125" />
+              </div>
+            )
+          }
+          <div class="flex flex-1 flex-col gap-3 px-6 pb-6">
+            <p class="font-mono text-xs font-bold tracking-[0.14em] text-yellow uppercase">Diagnóza médií</p>
+            <h3 class="font-display text-4xl font-extrabold uppercase">Hriech</h3>
+            <p class="text-base">{hriech.riadok}</p>
+            <a href={hriech.url!} target="_blank" rel="noopener noreferrer" data-track="dokaz_klik" data-track-miesto="v7-09-texty" class:list={[BTN, 'mt-auto self-start bg-white text-ink']}>
+              hriech.xvadur.com ↗
+            </a>
+            <p class="font-mono text-xs tracking-[0.1em] uppercase">overené {OVERENE_DNA_TEXT}</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,497 @@
+---
+/** V7-05 · Komiks (29. 9. 2026, work/v7/BUILD_ZADANIE.md, koncept work/v7/koncepty/05-komiks.md).
+ *  Domov ako komiksový zošit: sedem strán z panelov rôznych veľkostí, bubliny, onomatopoje (BEEP, BUM, KLIK),
+ *  chorobopisy ako epizódy v karuseli, posledný panel „Pokračovanie nabudúce: ty“ = funkčná rezervácia.
+ *  Motor: Motion (panely vpadnú s prekmitom a zatrasením). Podpis: pri scrollovaní sa farebné platne rámov na zlomok
+ *  sekundy posunú ako tlač s posunom farieb. Panely s Adamom sú zástupné plochy (raster, tvary), žiadne generované obrázky.
+ *  Komponenty: src/components/v7/web/05/. Poznámky: work/v7/vystup/05/README.md. */
+import { getCollection } from 'astro:content';
+import Base from '@/layouts/Base.astro';
+import OponaKomiks from '@/components/v7/web/05/OponaKomiks.astro';
+import Nav05 from '@/components/v7/web/05/Nav05';
+import Korpus05 from '@/components/v7/web/05/Korpus05';
+import Epizody05 from '@/components/v7/web/05/Epizody05';
+import Hry05 from '@/components/v7/web/05/Hry05';
+import Liecba05 from '@/components/v7/web/05/Liecba05';
+import Vysetrenie05 from '@/components/v7/web/05/Vysetrenie05';
+import Zapis05 from '@/components/v7/web/05/Zapis05';
+import Nadpis05 from '@/components/v7/web/05/Nadpis05';
+import HriechNahlad from '@/components/v7/web/05/HriechNahlad';
+import { Bublina, Ekg, FotkaAdama, Kresba, Titulok, Zvuk } from '@/components/v7/web/05/Komiks';
+import { ANAMNEZA, POVOD } from '@/components/v7/web/05/data';
+import '@/components/v7/web/05/komiks.css';
+import Wizard from '@/components/port/Wizard';
+import ClickSpark from '@/components/vendor/reactbits/ClickSpark';
+import { StickerPeel } from '@/components/vendor/fancy/blocks/sticker-peel';
+import { LayeredCard } from '@/components/ui/layered-card';
+import { Badge } from '@/components/ui/badge';
+import { Sticker, StickyNote, Stamp } from '@/components/ui/sticker';
+import { Marquee, MarqueeItem, MarqueeSeparator } from '@/components/ui/marquee';
+import { Separator } from '@/components/ui/separator';
+import { CrossShape, PillShape, ScribbleUnderline, SpeechBubble, Star4Shape } from '@/components/ui/shapes';
+import { MENO, MOTTO_1, MOTTO_2, VETA, NALEPKA_NEMOCNICA, PECIATKA } from '@/components/hero/hero-data';
+import { MARQUEE_FAKTY } from '@/data/fakty';
+import { LAKADLO, NEWSLETTER, PRODUKTY, VLAJKA } from '@/data/ponuka';
+import { PRIEBEH } from '@/components/konzultacia/data';
+import { datumSk, SUBSTACK_URL } from '@/components/texty/citanie';
+
+const texty = (await getCollection('texty')).sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const posledny = texty[0] ?? null;
+const agent = PRODUKTY.find((p) => p.id === 'agent-pre-teba')!;
+const ucenie = PRODUKTY.filter((p) => p.id !== 'agent-pre-teba');
+
+const PANEL = 'k-panel';
+const OBAL = 'mx-auto w-full max-w-[1500px] px-4 sm:px-6 lg:px-10';
+const GRID = 'grid gap-5 sm:gap-6';
+---
+
+<Base
+  title="V7-05 · Komiks"
+  description="Domov XVADUR ako komiksový zošit: Adam, zdravotník, ktorý stavia AI agentov, v siedmich stranách panelov. Variant V7-05."
+  noindex
+  islands="full"
+  header="none"
+>
+  <script is:inline>
+    (() => {
+      const h = document.documentElement;
+      h.classList.add('k05-js');
+      setTimeout(() => {
+        if (!window.__k05motion) h.classList.add('k05-bez');
+      }, 3000);
+    })();
+  </script>
+  <OponaKomiks />
+  <Nav05 client:load posledny={posledny ? { id: posledny.id, title: posledny.data.title } : null} />
+
+  <div class="k05 k05-papier">
+    <!-- ================= STRANA 1 · PRÍJEM ================= -->
+    <section id="prijem" class:list={['k-strana pt-6 pb-10 sm:pt-8 sm:pb-14', OBAL]} aria-labelledby="prijem-h">
+      <div class="grid gap-5 sm:gap-6 lg:grid-cols-12">
+        <!-- P1 titulka -->
+        <div class={`${PANEL} lg:col-span-7`} data-panel data-rot="-1.2">
+          <LayeredCard layers="double" offset="sm" layerColor="primary" className="h-full">
+            <div class="relative flex h-full min-h-[420px] flex-col justify-between gap-6 overflow-hidden bg-yellow p-5 sm:p-8">
+              <div aria-hidden="true" class="pointer-events-none absolute inset-0 tx-halftone [--tx:22%]" style="background-size: 10px 10px"></div>
+              <div class="relative flex flex-wrap items-start justify-between gap-3">
+                <Titulok tmavy>Strana 1 · Príjem</Titulok>
+                <Sticker variant="outline" size="sm" rotation="slight-right">Zdravotník · AI agenti</Sticker>
+              </div>
+              <div class="relative">
+                <img src="/brand/xvadur-ink.svg" alt="XVADUR" width="678" height="130" class="w-[min(100%,560px)] -rotate-2" />
+                <ScribbleUnderline size={420} color="var(--color-ink)" strokeWidth={4} className="mt-1 h-auto w-[min(80%,420px)]" />
+              </div>
+              <h1 id="prijem-h" lang="en" class="k-motto relative font-display text-[clamp(2.6rem,1rem+6.2vw,6.4rem)] leading-[0.86] font-extrabold tracking-[-0.04em] uppercase">
+                <span class="block">{MOTTO_1}</span>
+                <span class="block">{MOTTO_2}</span>
+              </h1>
+              <p class="relative font-mono text-sm font-bold tracking-[0.12em] uppercase">
+                {MENO} · <span class="font-serif text-lg tracking-normal normal-case italic">zdravotník, ktorý stavia AI agentov</span>
+              </p>
+            </div>
+          </LayeredCard>
+        </div>
+
+        <!-- P2 fotka Adama + bublina s vetou -->
+        <div class={`${PANEL} lg:col-span-5 lg:row-span-2`} data-panel data-rot="1.4">
+          <LayeredCard layers="double" offset="sm" layerColor="secondary" className="h-full">
+            <div class="relative flex h-full flex-col gap-4 bg-white p-4 sm:p-6">
+              <Zvuk zvuk={{ text: 'BEEP!', tvar: 'burst', farba: 'yellow' }} size={118} rot={10} className="-top-5 -right-3 sm:-right-5" />
+              <Bublina chvost="dole-vlavo" className="relative z-10 mr-10 sm:mr-16">
+                <p class="font-display text-xl leading-tight font-extrabold sm:text-2xl">{VETA}</p>
+              </Bublina>
+              <div class="relative mt-3">
+                <FotkaAdama peciatka={PECIATKA} />
+                <div class="absolute -bottom-4 -left-2 z-20 sm:-left-4">
+                  <StickerPeel client:idle colorClassName="bg-white" rotate={-7} label={NALEPKA_NEMOCNICA}>
+                    <span class="font-display text-lg font-extrabold uppercase">{NALEPKA_NEMOCNICA}</span>
+                  </StickerPeel>
+                </div>
+              </div>
+              <p class="mt-4 text-right font-mono text-xs font-bold tracking-[0.12em] uppercase">Panel 2 · {MENO}</p>
+            </div>
+          </LayeredCard>
+        </div>
+
+        <!-- P3 CTA -->
+        <div class={`${PANEL} lg:col-span-7`} data-panel data-rot="-0.8">
+          <LayeredCard layers="single" offset="default" layerColor="primary" className="h-full">
+            <div class="relative flex h-full flex-col gap-5 overflow-hidden bg-ink p-5 text-paper sm:p-8">
+              <Zvuk zvuk={{ text: 'KLIK!', tvar: 'explozia', farba: 'yellow' }} size={124} rot={-12} className="-right-2 -bottom-4 hidden sm:grid" />
+              <Titulok>{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</Titulok>
+              <p class="max-w-2xl font-display text-3xl leading-[1.02] font-extrabold sm:text-4xl">{VLAJKA.titulok}</p>
+              <div class="flex flex-wrap items-center gap-4">
+                <ClickSpark client:idle sparkColor="yellow" sparkRadius={30} sparkCount={10} className="inline-block">
+                  <a href="#vysetrenie" class="k-cta" data-track="konzultacia_klik" data-track-miesto="v7-05-hero">Objednaj sa na vyšetrenie →</a>
+                </ClickSpark>
+                <a href="#povod" class="k-cta k-cta-2">Kto som</a>
+              </div>
+            </div>
+          </LayeredCard>
+        </div>
+
+        <!-- P4 Korpus -->
+        <div id="korpus" class={`${PANEL} lg:col-span-12`} data-panel data-rot="0.6">
+          <LayeredCard layers="double" offset="sm" layerColor="secondary">
+            <div class="relative bg-ink p-5 text-paper sm:p-8">
+              <Zvuk zvuk={{ text: 'BEEP!', tvar: 'burst', farba: 'yellow' }} size={104} rot={-10} className="-top-6 right-6 hidden md:grid" />
+              <div class="mb-5 flex flex-wrap items-end justify-between gap-3 border-b-3 border-paper/30 pb-4">
+                <div>
+                  <p class="font-mono text-xs font-bold tracking-[0.14em] text-yellow uppercase">Panel 4 · Korpus</p>
+                  <h2 class="font-display text-[clamp(2rem,1.2rem+3vw,3.5rem)] leading-none font-extrabold uppercase">Vitálne funkcie</h2>
+                </div>
+                <p class="max-w-md text-base text-paper/80">Čísla naživo z pulzu Korpusu.</p>
+              </div>
+              <Korpus05 client:visible />
+            </div>
+          </LayeredCard>
+        </div>
+      </div>
+    </section>
+
+    <!-- pás faktov medzi stranami -->
+    <div class="border-y-3 border-ink bg-yellow" aria-label="Overené fakty">
+      <Marquee speed="slow" bordered={false} repeat={4} className="py-3">
+        {
+          MARQUEE_FAKTY.map((f) => (
+            <MarqueeItem className="font-display text-2xl font-extrabold whitespace-nowrap uppercase sm:text-3xl">
+              {f.value}
+              <MarqueeSeparator>
+                <CrossShape size={26} color="var(--color-white)" strokeColor="var(--color-ink)" />
+              </MarqueeSeparator>
+            </MarqueeItem>
+          ))
+        }
+      </Marquee>
+    </div>
+
+    <!-- ================= STRANA 2 · PÔVOD HRDINU ================= -->
+    <section id="povod" class:list={['k-strana py-12 sm:py-16', OBAL]} aria-labelledby="povod-h">
+      <header class="k-hlavicka-strany mb-8 flex-wrap p-4 sm:p-5">
+        <div>
+          <p class="font-mono text-xs font-bold tracking-[0.14em] text-yellow uppercase">Strana 2 · Anamnéza</p>
+          <h2 id="povod-h" class="font-display text-[clamp(2.4rem,1.2rem+5vw,5.5rem)] leading-[0.9] font-extrabold uppercase">
+            <Nadpis05 client:load text="Pôvod hrdinu" />
+          </h2>
+        </div>
+        <p class="max-w-md self-end text-base text-paper/80 sm:text-lg">Z nemocnice k agentom.</p>
+      </header>
+
+      <ol class="grid auto-rows-auto gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-4" role="list">
+        {
+          POVOD.map((p, i) => (
+            <li class:list={[PANEL, p.span]} data-panel data-rot={String(i % 2 ? 1.4 : -1.4)}>
+              <LayeredCard layers="single" offset="sm" layerColor={p.plocha === 'bg-ink' ? 'secondary' : 'primary'} className="h-full">
+                <article class:list={['relative flex h-full flex-col', p.plocha, p.plocha === 'bg-ink' && 'text-paper']}>
+                  {p.zvuk && <Zvuk zvuk={p.zvuk} size={p.id === 'nemocnica' ? 120 : 100} rot={i % 2 ? 9 : -9} className="-top-6 -right-3" />}
+                  <div class="flex items-center justify-between gap-2 border-b-3 border-ink bg-ink px-3 py-1.5 font-mono text-[11px] font-bold tracking-[0.12em] text-paper uppercase">
+                    <span>Panel {String(i + 1).padStart(2, '0')}</span>
+                    <span class="text-yellow">{p.kedy}</span>
+                  </div>
+                  <div class="border-b-3 border-ink">
+                    <Kresba druh={p.kresba} />
+                  </div>
+                  <div class="flex flex-1 flex-col gap-3 p-4">
+                    <Titulok tmavy={p.plocha === 'bg-yellow'} className="self-start">
+                      {p.nazov}
+                      {p.kde ? ` · ${p.kde}` : ''}
+                    </Titulok>
+                    {p.text && <p class="text-base leading-snug">{p.text}</p>}
+                    {p.citat && (
+                      <Bublina chvost="hore-vlavo" className="mt-3">
+                        <p class="font-serif text-xl leading-snug italic">„{p.citat}“</p>
+                      </Bublina>
+                    )}
+                    {p.doplni && (
+                      <div class="mt-auto flex flex-col gap-2">
+                        <div class="h-3 w-4/5 border-2 border-dashed border-ink/40" aria-hidden="true" />
+                        <div class="h-3 w-3/5 border-2 border-dashed border-ink/40" aria-hidden="true" />
+                        <Badge variant="outline" className="self-start shadow-none">
+                          text doplní Adam
+                        </Badge>
+                      </div>
+                    )}
+                  </div>
+                </article>
+              </LayeredCard>
+            </li>
+          ))
+        }
+        <li class={`${PANEL} sm:col-span-2 lg:col-span-2`} data-panel data-rot="1">
+          <div class="relative flex h-full flex-col justify-between gap-5 border-3 border-ink bg-yellow p-5 shadow-brutal sm:p-6">
+            <Titulok tmavy className="self-start">Rozprávač</Titulok>
+            <blockquote class="font-display text-3xl leading-[1.02] font-extrabold uppercase sm:text-4xl">„{ANAMNEZA.citat}“</blockquote>
+            <p class="text-lg">{ANAMNEZA.dovetok}</p>
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <a href="#vysetrenie" class="k-cta">{ANAMNEZA.cta}</a>
+              <Stamp variant="outline" size="default" rotation="slight">{ANAMNEZA.peciatka}</Stamp>
+            </div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ================= STRANA 3 · EPIZÓDY ================= -->
+    <section id="epizody" class="k-strana border-y-3 border-ink bg-ink py-12 text-paper sm:py-16" aria-labelledby="epizody-h">
+      <div class={OBAL}>
+        <header class="mb-8 flex flex-wrap items-end justify-between gap-5">
+          <div>
+            <p class="font-mono text-xs font-bold tracking-[0.14em] text-yellow uppercase">Strana 3 · Chorobopisy</p>
+            <h2 id="epizody-h" class="font-display text-[clamp(2.4rem,1.2rem+5vw,5.5rem)] leading-[0.9] font-extrabold uppercase">
+              <Nadpis05 client:load text="Čo som postavil" />
+            </h2>
+          </div>
+          <div class="flex max-w-md flex-col gap-3">
+            <p class="text-base text-paper/80 sm:text-lg">Každý systém so stavom, ako naozaj je. Kde je odkaz, dá sa otvoriť.</p>
+            <div class="flex flex-wrap gap-2">
+              <Badge variant="secondary">Jakub</Badge>
+              <Badge variant="secondary">Lucia</Badge>
+              <Badge variant="secondary">Hriech</Badge>
+              <Badge variant="secondary">Korpus</Badge>
+              <Badge variant="outline">+ ďalšie záznamy</Badge>
+            </div>
+          </div>
+        </header>
+        <div class={PANEL} data-panel data-rot="0.5">
+          <div class="border-3 border-paper/40 bg-paper p-4 text-ink sm:p-6">
+            <Epizody05 client:idle />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= STRANA 4 · HRY ================= -->
+    <section id="hry" class:list={['k-strana py-12 sm:py-16', OBAL]} aria-labelledby="hry-h">
+      <div class="grid gap-6 lg:grid-cols-12">
+        <div class={`${PANEL} lg:col-span-4`} data-panel data-rot="-1.2">
+          <div class="relative flex h-full flex-col gap-5 border-3 border-ink bg-white p-5 shadow-brutal sm:p-7">
+            <Zvuk zvuk={{ text: 'ŠKRT!', tvar: 'splat', farba: 'stamp' }} size={110} rot={8} className="-top-6 -right-3" />
+            <Titulok className="self-start">Strana 4 · Hry</Titulok>
+            <h2 id="hry-h" class="font-display text-[clamp(2.2rem,1.2rem+3.4vw,4rem)] leading-[0.92] font-extrabold uppercase">
+              Veci, ktoré si vyskúšaš namiesto brožúry.
+            </h2>
+            <p class="text-lg">Ďalšie hry staviam. Jedna už beží: vlož svoj text a škrtneme frázy, ktoré má každý.</p>
+            <StickyNote variant="yellow" rotation="left" pin className="mt-auto self-start">
+              <span class="font-bold">Škrtací test</span> beží iba v tvojom prehliadači.
+            </StickyNote>
+          </div>
+        </div>
+        <div class={`${PANEL} lg:col-span-8`} data-panel data-rot="1">
+          <Hry05 client:idle />
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= STRANA 5 · LIEČBA ================= -->
+    <section id="liecba" class="k-strana border-y-3 border-ink bg-white py-12 sm:py-16" aria-labelledby="liecba-h">
+      <div class={OBAL}>
+        <header class="mb-8 flex flex-wrap items-end justify-between gap-5">
+          <div>
+            <Titulok>Strana 5 · Liečba</Titulok>
+            <h2 id="liecba-h" class="mt-3 font-display text-[clamp(2.4rem,1.2rem+5vw,5.5rem)] leading-[0.9] font-extrabold uppercase">
+              <Nadpis05 client:load text="Triáž. Zásah. Odovzdanie." />
+            </h2>
+          </div>
+          <p class="max-w-lg text-lg">Postup ako na zmene. Najprv zistím, čo bolí. Potom najmenší zásah, ktorý pomôže. Na konci ti to odovzdám tak, aby to išlo aj bezo mňa.</p>
+        </header>
+
+        <ol class="grid gap-6 lg:grid-cols-3" role="list">
+          <!-- 01 Triáž -->
+          <li class={PANEL} data-panel data-rot="-1.4">
+            <LayeredCard layers="single" offset="sm" layerColor="primary" className="h-full">
+              <article class="relative flex h-full flex-col gap-4 bg-paper p-5 sm:p-6">
+                <p class="k-reg-text font-display text-7xl leading-none font-extrabold">01</p>
+                <h3 class="font-display text-3xl leading-none font-extrabold uppercase">Triáž</h3>
+                <p class="font-mono text-xs font-bold tracking-[0.12em] uppercase">{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</p>
+                <p class="font-display text-2xl leading-tight font-extrabold">{VLAJKA.titulok}</p>
+                <ol class="grid gap-3" role="list">
+                  {
+                    VLAJKA.body.map((b, i) => (
+                      <li class="flex gap-3 border-3 border-ink bg-white p-3">
+                        <span class="grid h-9 w-9 shrink-0 place-items-center border-3 border-ink bg-yellow font-mono font-bold">{i + 1}</span>
+                        <span class="text-base leading-snug">{b}</span>
+                      </li>
+                    ))
+                  }
+                </ol>
+                <a href="#vysetrenie" class="k-cta mt-auto self-start" data-track="konzultacia_klik" data-track-miesto="v7-05-liecba">Vyber si termín →</a>
+              </article>
+            </LayeredCard>
+          </li>
+          <!-- 02 Zásah -->
+          <li class={PANEL} data-panel data-rot="1.2">
+            <LayeredCard layers="single" offset="sm" layerColor="secondary" className="h-full">
+              <article class="relative flex h-full flex-col gap-4 bg-yellow p-5 sm:p-6">
+                <Zvuk zvuk={{ text: 'ZAP!', tvar: 'burst', farba: 'white' }} size={96} rot={12} className="-top-5 -right-3" />
+                <p class="k-reg-text font-display text-7xl leading-none font-extrabold">02</p>
+                <h3 class="font-display text-3xl leading-none font-extrabold uppercase">Zásah</h3>
+                <p class="font-mono text-xs font-bold tracking-[0.12em] uppercase">{agent.nalepka} · {agent.pre}</p>
+                <Bublina chvost="dole-vlavo" className="mb-3">
+                  <p class="font-display text-xl leading-tight font-extrabold">{agent.nazov}. {agent.popis}</p>
+                </Bublina>
+                <Liecba05 client:visible />
+              </article>
+            </LayeredCard>
+          </li>
+          <!-- 03 Odovzdanie -->
+          <li class={PANEL} data-panel data-rot="-1">
+            <LayeredCard layers="single" offset="sm" layerColor="primary" className="h-full">
+              <article class="relative flex h-full flex-col gap-4 bg-paper p-5 sm:p-6">
+                <p class="k-reg-text font-display text-7xl leading-none font-extrabold">03</p>
+                <h3 class="font-display text-3xl leading-none font-extrabold uppercase">Odovzdanie</h3>
+                <p class="font-mono text-xs font-bold tracking-[0.12em] uppercase">Aby to išlo aj bezo mňa</p>
+                <p class="font-display text-2xl leading-tight font-extrabold">Naučím ťa robiť to, čo robím ja. Po slovensky, na tvojej vlastnej úlohe.</p>
+                <ul class="grid gap-3" role="list">
+                  {
+                    ucenie.map((p, i) => (
+                      <li class:list={['relative flex flex-col gap-1.5 border-3 border-ink p-4 shadow-brutal-sm', p.farba]}>
+                        <Sticker variant={i % 2 ? 'secondary' : 'outline'} size="sm" rotation={i % 2 ? 'slight-right' : 'slight'} shadow="none" className="self-start">
+                          {p.nalepka}
+                        </Sticker>
+                        <h4 class="font-display text-xl leading-none font-extrabold uppercase">{p.nazov}</h4>
+                        <p class="text-sm leading-snug">{p.popis}</p>
+                        <a href="#zapis" class="mt-1 inline-flex min-h-11 items-center font-display text-sm font-extrabold uppercase underline decoration-3 underline-offset-4">
+                          Chcem vedieť ako prvý →
+                        </a>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </article>
+            </LayeredCard>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= STRANA 6 · TEXTY A ZÁPIS ================= -->
+    <section id="texty" class:list={['k-strana py-12 sm:py-16', OBAL]} aria-labelledby="texty-h">
+      <header class="k-hlavicka-strany mb-8 flex-wrap p-4 sm:p-5">
+        <div>
+          <p class="font-mono text-xs font-bold tracking-[0.14em] text-yellow uppercase">Strana 6 · Texty · Hriech</p>
+          <h2 id="texty-h" class="font-display text-[clamp(2.4rem,1.2rem+5vw,5.5rem)] leading-[0.9] font-extrabold uppercase">
+            <Nadpis05 client:load text="Mimo ordinácie." />
+          </h2>
+        </div>
+        <p class="max-w-md self-end text-base text-paper/80 sm:text-lg">Píšem o tom, čo staviam. A v Hriechu stanovujem diagnózu slovenským médiám.</p>
+      </header>
+
+      <div class="grid gap-6 lg:grid-cols-12">
+        {
+          posledny && (
+            <div class={`${PANEL} lg:col-span-7`} data-panel data-rot="-1">
+              <LayeredCard layers="double" offset="sm" layerColor="primary" className="h-full">
+                <article class="relative flex h-full flex-col gap-4 bg-white p-5 sm:p-8">
+                  <SpeechBubble size={70} color="var(--color-yellow)" strokeColor="var(--color-ink)" className="absolute top-4 right-4" />
+                  <Titulok className="self-start">Posledný text · {datumSk(posledny.data.date)}</Titulok>
+                  <h3 class="pr-16 font-display text-[clamp(1.9rem,1.2rem+2.4vw,3.2rem)] leading-[0.95] font-extrabold uppercase">
+                    <a href={`/texty/${posledny.id}/`} class="hover:underline hover:decoration-4">
+                      {posledny.data.title}
+                    </a>
+                  </h3>
+                  <p class="max-w-prose font-serif text-2xl leading-snug italic">{posledny.data.description}</p>
+                  <div class="mt-auto flex flex-wrap gap-3 pt-2">
+                    <a href={`/texty/${posledny.id}/`} class="k-cta k-cta-2">Čítať →</a>
+                    <a href="/texty/" class="k-cta k-cta-2">Všetky texty</a>
+                    <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer" class="k-cta k-cta-2">Substack ↗</a>
+                  </div>
+                </article>
+              </LayeredCard>
+            </div>
+          )
+        }
+        <div class={`${PANEL} lg:col-span-5`} data-panel data-rot="1.2">
+          <div class="relative flex h-full flex-col gap-4 overflow-hidden border-3 border-ink bg-ink text-paper shadow-brutal">
+            <div class="k-raster relative border-b-3 border-ink">
+              <img src="/assets/dokazy/hriech.webp" alt="Hriech — náhľad publikácie" width="960" height="600" loading="lazy" decoding="async" class="aspect-[16/10] w-full object-cover object-top grayscale contrast-125" />
+            </div>
+            <Zvuk zvuk={{ text: 'BUM!', tvar: 'splat', farba: 'stamp' }} size={96} rot={-10} className="top-3 right-3" />
+            <div class="flex flex-1 flex-col gap-3 px-5 pb-6">
+              <p class="font-mono text-xs font-bold tracking-[0.14em] text-yellow uppercase">Diagnóza médií</p>
+              <h3 class="font-display text-4xl font-extrabold uppercase">Hriech</h3>
+              <p class="text-base">Publikácia a mapa súvislostí: 10 redakcií, 558 ľudí.</p>
+              <div class="mt-auto">
+                <HriechNahlad client:visible />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zápis -->
+        <div id="zapis" class={`${PANEL} lg:col-span-12`} data-panel data-rot="-0.5">
+          <LayeredCard layers="double" offset="sm" layerColor="secondary">
+            <div class="grid gap-6 bg-ink p-5 text-paper sm:p-8 lg:grid-cols-2 lg:gap-10">
+              <div class="flex flex-col gap-4">
+                <Titulok>Zadarmo za e-mail</Titulok>
+                <h3 class="font-display text-[clamp(2rem,1.2rem+2.6vw,3.4rem)] leading-[0.95] font-extrabold uppercase">{LAKADLO.nazov}</h3>
+                <p class="text-lg text-paper/85">{LAKADLO.popis}</p>
+                <Zapis05 client:visible id="k05-lakadlo" zdroj="lakadlo" produkt={LAKADLO.id} tlacidlo="Pošli mi návod" tmavy hotovo="Hotovo. Návod ti pošlem, keď ho dopíšem." />
+              </div>
+              <div class="relative flex flex-col gap-4 border-3 border-paper bg-yellow p-5 text-ink shadow-[7px_7px_0_0_var(--color-paper)] sm:p-6">
+                <PillShape size={90} color="var(--color-white)" strokeColor="var(--color-ink)" className="absolute -top-5 right-4 rotate-12" />
+                <p class="font-mono text-xs font-bold tracking-[0.14em] uppercase">Newsletter</p>
+                <h3 class="font-display text-4xl leading-none font-extrabold uppercase">{NEWSLETTER.nazov}</h3>
+                <p class="text-lg">{NEWSLETTER.popis}</p>
+                <Zapis05 client:visible id="k05-vydanie" zdroj="newsletter" produkt={NEWSLETTER.id} tlacidlo="Odoberať" hotovo="Hotovo. Prvé vydanie ti príde do e-mailu." />
+              </div>
+            </div>
+          </LayeredCard>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= STRANA 7 · POKRAČOVANIE NABUDÚCE: TY ================= -->
+    <section id="vysetrenie" class="k-strana border-t-3 border-ink bg-yellow py-12 sm:py-16" aria-labelledby="vysetrenie-h">
+      <div aria-hidden="true" class="pointer-events-none absolute inset-0 tx-halftone [--tx:18%]" style="background-size: 12px 12px"></div>
+      <div class:list={['relative', OBAL]}>
+        <div class={PANEL} data-panel data-rot="-0.6">
+          <LayeredCard layers="triple" offset="sm" layerColor="primary">
+            <div class="relative grid gap-8 bg-paper p-5 sm:p-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12 lg:p-10">
+              <Zvuk zvuk={{ text: 'KLIK!', tvar: 'burst', farba: 'yellow' }} size={120} rot={-10} className="-top-8 -left-4 hidden lg:grid" />
+              <div class="flex min-w-0 flex-col gap-5">
+                <Titulok tmavy className="self-start">Strana 7 · Posledný panel</Titulok>
+                <h2 id="vysetrenie-h" class="font-display text-[clamp(2.6rem,1.2rem+5.4vw,6rem)] leading-[0.86] font-extrabold uppercase">
+                  <span class="block text-[0.42em] tracking-[0.02em]">Pokračovanie nabudúce:</span>
+                  <span class="k-reg-text block">Ty.</span>
+                </h2>
+                <Bublina chvost="dole-vlavo" className="mr-6 mb-3">
+                  <p class="font-display text-xl leading-tight font-extrabold sm:text-2xl">Objednaj sa na vyšetrenie. {VLAJKA.titulok}</p>
+                </Bublina>
+                <p class="font-mono text-sm font-bold tracking-[0.12em] uppercase">{VLAJKA.nazov} · {VLAJKA.trvanie} · {VLAJKA.cena}</p>
+                <Separator className="bg-ink" />
+                <p class="font-mono text-xs font-bold tracking-[0.14em] uppercase">Priebeh vyšetrenia</p>
+                <ol class="grid gap-2" role="list">
+                  {
+                    PRIEBEH.map((k) => (
+                      <li class="flex gap-3 border-3 border-ink bg-white px-4 py-3 shadow-[4px_4px_0_0_var(--color-yellow)]">
+                        <span class="w-20 shrink-0 font-mono text-sm font-bold">{k.cas}</span>
+                        <span class="text-base leading-snug font-bold">{k.vznikne}</span>
+                      </li>
+                    ))
+                  }
+                </ol>
+              </div>
+              <div class="flex min-w-0 flex-col gap-5">
+                <Vysetrenie05 client:visible />
+                <div class="flex flex-col gap-3 border-3 border-ink bg-ink p-4 text-paper sm:flex-row sm:items-center sm:justify-between">
+                  <p class="font-bold">Radšej píšeš? Štyri otázky a WhatsApp pripraví správu.</p>
+                  <span data-track="whatsapp_klik" data-track-miesto="v7-05">
+                    <Wizard client:idle label="Napísať cez WhatsApp" variant="white" className="w-full sm:w-auto" />
+                  </span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <Star4Shape size={28} color="var(--color-ink)" animation="spin-step" />
+                  <p class="font-mono text-xs font-bold tracking-[0.12em] uppercase">Koniec zošita · {MENO} · XVADUR</p>
+                </div>
+              </div>
+            </div>
+          </LayeredCard>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    import '@/components/v7/web/05/tlac';
+  </script>
+</Base>
