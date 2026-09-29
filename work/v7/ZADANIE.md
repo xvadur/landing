@@ -8,6 +8,12 @@ Postaviť **domov xvadur.com (`/`) ako pôsobivý web**: iný a lepší ako konk
 
 Rozdielne znamená iná stavba stránky, iný pohyb a iná práca s médiami, nie iný font ani iná farba.
 
+## Stred (rovnaký vo všetkých variantoch, rozhodnutie Adama 29. 9. 2026)
+
+- **Kto:** Adam je zdravotná sestra, ktorá sa naučila pracovať s AI a teraz učí ostatných o AI a o svete tak, ako sa o ňom dozvedel sám. Nie agentúra, nie marketér.
+- **Web je vstup do ekosystému XVADUR**, do ktorého sa dá vojsť od prvého dňa, nie výklad izolovaných projektov. Každý blok sú dvere niekam: texty a newsletter, Hriech (mediálna kritika), Netopier (dáta o tom, ako pracujú médiá), živé čísla Korpusu, systémy postavené pre Luciu a Jakuba, nástroje, ktoré Adam používa a prečo, vyšetrenie (konzultácia).
+- Návštevník musí do 5 sekúnd vedieť, kto to je a kam môže vojsť. Metafora (príjem, anamnéza, liečba) smie obaľovať, nesmie nahradiť priamu vetu.
+
 ## Pravidlá, ktoré pre V7 prepisujú STACK.md a AGENTS.md
 
 Adam 29. 9. 2026 výslovne povolil:
