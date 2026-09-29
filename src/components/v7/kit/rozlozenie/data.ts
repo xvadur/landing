@@ -36,8 +36,9 @@ const xvadur = krok('XVADUR');
 
 export const BIO: Zastavka[] = [
   { id: 'skola', kedy: '—', nazov: 'Elektrotechnická', kde: 'stredná škola, Bratislava', doplni: true, kapitola: 'zaklad' },
-  // Viera a psychológia: Adamove ratifikované vety zo src/data/beaty.ts (beat 1 a 3, 19. 9. 2026). Adam 29. 9.: „musím to vidieť“.
-  { id: 'viera', kedy: '2017', nazov: 'Viera v Boha', text: BEATY[0].text, kapitola: 'zaklad' },
+  // Viera: text napíšeme s Adamom (29. 9.: celý beat 1 nie, „Zmaturoval som dobre“ znižuje). Dovtedy bez textu.
+  // Psychológia: Adamova ratifikovaná veta zo src/data/beaty.ts (beat 3, 19. 9. 2026).
+  { id: 'viera', kedy: '2017', nazov: 'Viera v Boha', doplni: true, kapitola: 'zaklad' },
   { id: 'nemocnica', kedy: nemocnica.kedy, nazov: nemocnica.nazov, kde: 'urgentný príjem', text: nemocnica.text, kapitola: 'sluzba' },
   { id: 'psychologia', kedy: 'Jung', nazov: 'Psychológia', text: BEATY.find((x) => x.titulok === 'Psychológia cez Junga')!.text, kapitola: 'sluzba' },
   { id: 'odchod', kedy: vyhodili.kedy, nazov: vyhodili.nazov, text: vyhodili.text, citat: vyhodili.citat, kapitola: 'sluzba' },
