@@ -1,0 +1,243 @@
+/* V7-05 · Komiks — štýly strany. Farby iba z tokenov (ink, paper, white, yellow, stamp; hot iba CTA a X cez BoldKit).
+ * Motor: Motion (panely vpadnú, tlac.ts), CSS nafúknutie bublín a onomatopojí (--bk-ease-rubber),
+ * podpis: „zlá registrácia“ farebných platní na rámoch panelov pri scrollovaní (tlac.ts nastaví --k-reg a [data-tlac]). */
+
+.k05 {
+  --k-reg: 0;
+  overflow-x: clip;
+  background-color: var(--color-paper);
+}
+
+/* papier zošita: jemný raster bodiek */
+.k05-papier {
+  background-image: radial-gradient(color-mix(in oklab, var(--color-ink) 12%, transparent) 1px, transparent 1.5px);
+  background-size: 14px 14px;
+}
+
+/* strana: hrubý rám a hlavička (masthead) */
+.k-strana {
+  position: relative;
+  scroll-margin-top: 4.5rem;
+}
+.k-hlavicka-strany {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 3px solid var(--color-ink);
+  background: var(--color-ink);
+  color: var(--color-paper);
+}
+
+/* ---------- panel: vstup (Motion) + platne tlače (podpis) ---------- */
+.k-panel {
+  position: relative;
+  min-width: 0;
+}
+.k-panel::before,
+.k-panel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  border: 3px solid var(--color-stamp);
+  opacity: 0;
+  transform: translate(0, 0);
+  transition:
+    transform 90ms steps(2, end),
+    opacity 90ms steps(2, end);
+}
+.k-panel::after {
+  border-color: var(--color-yellow);
+}
+.k05[data-tlac] .k-panel[data-in]::before {
+  opacity: 0.95;
+  transform: translate(calc(var(--k-reg) * 6px), calc(var(--k-reg) * -4px));
+}
+.k05[data-tlac] .k-panel[data-in]::after {
+  opacity: 0.95;
+  transform: translate(calc(var(--k-reg) * -5px), calc(var(--k-reg) * 5px));
+}
+/* aj text s „registráciou“ (čísla epizód, motto) sa pri tlači posunie */
+.k-reg-text {
+  text-shadow:
+    2px 2px 0 var(--color-yellow),
+    -1px -1px 0 color-mix(in oklab, var(--color-stamp) 55%, transparent);
+  transition: text-shadow 90ms steps(2, end);
+}
+.k05[data-tlac] .k-reg-text {
+  text-shadow:
+    calc(2px + var(--k-reg) * 5px) calc(2px - var(--k-reg) * 3px) 0 var(--color-yellow),
+    calc(-1px - var(--k-reg) * 4px) calc(-1px + var(--k-reg) * 4px) 0 var(--color-stamp);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* kým Motion panel nepustí, je skrytý (iba s JS; bez JS / pri chybe ho po 3 s odkryje k05-bez) */
+  html.k05-js:not(.k05-bez) .k05 [data-panel]:not([data-in]) {
+    opacity: 0;
+  }
+}
+
+/* ---------- bubliny ---------- */
+.k-bublina {
+  transform-origin: 20% 110%;
+}
+.k-bublina[data-chvost]::after {
+  content: '';
+  position: absolute;
+  width: 26px;
+  height: 22px;
+  background: var(--color-ink);
+  clip-path: polygon(0 0, 100% 0, 18% 100%);
+}
+.k-bublina[data-chvost]::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  width: 18px;
+  height: 15px;
+  background: inherit;
+  clip-path: polygon(0 0, 100% 0, 18% 100%);
+}
+.k-bublina[data-chvost='dole-vlavo']::after { left: 22px; bottom: -22px; }
+.k-bublina[data-chvost='dole-vlavo']::before { left: 26px; bottom: -14px; }
+.k-bublina[data-chvost='dole-vpravo']::after { right: 22px; bottom: -22px; transform: scaleX(-1); }
+.k-bublina[data-chvost='dole-vpravo']::before { right: 26px; bottom: -14px; transform: scaleX(-1); }
+.k-bublina[data-chvost='hore-vlavo'] { transform-origin: 20% -10%; }
+.k-bublina[data-chvost='hore-vlavo']::after { left: 22px; top: -22px; transform: scaleY(-1); }
+.k-bublina[data-chvost='hore-vlavo']::before { left: 26px; top: -14px; transform: scaleY(-1); }
+.k-bublina[data-chvost='vlavo'] { transform-origin: -10% 50%; }
+.k-bublina[data-chvost='vlavo']::after { left: -24px; top: 18px; width: 24px; height: 24px; clip-path: polygon(100% 0, 100% 100%, 0 30%); }
+.k-bublina[data-chvost='vlavo']::before { left: -15px; top: 23px; width: 16px; height: 14px; clip-path: polygon(100% 0, 100% 100%, 0 30%); }
+.k-mysel[data-chvost]::after,
+.k-mysel[data-chvost]::before {
+  display: none;
+}
+.k-mysel {
+  box-shadow:
+    4px 4px 0 0 var(--color-ink),
+    -14px 26px 0 -6px var(--color-white),
+    -14px 26px 0 -3px var(--color-ink);
+}
+
+/* ---------- onomatopoje ---------- */
+.k-zvuk {
+  transform: rotate(var(--r, -8deg)) scale(1);
+}
+.k-zvuk-text {
+  letter-spacing: -0.02em;
+  line-height: 1;
+  -webkit-text-stroke: 1px var(--color-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.k05-js .k05 [data-panel] .k-bublina {
+    transform: scale(0.2);
+    opacity: 0;
+    transition:
+      transform 480ms var(--bk-ease-rubber) 260ms,
+      opacity 120ms linear 260ms;
+  }
+  html.k05-js .k05 [data-panel][data-in] .k-bublina,
+  html.k05-bez .k05 .k-bublina {
+    transform: scale(1);
+    opacity: 1;
+  }
+  html.k05-js .k05 [data-panel] .k-zvuk {
+    transform: rotate(var(--r, -8deg)) scale(0);
+    transition: transform 520ms var(--bk-ease-rubber) 180ms;
+  }
+  html.k05-js .k05 [data-panel][data-in] .k-zvuk,
+  html.k05-bez .k05 .k-zvuk {
+    transform: rotate(var(--r, -8deg)) scale(1);
+  }
+  /* onomatopoja potom tepe po krokoch */
+  .k05 [data-panel][data-in] .k-zvuk-text {
+    animation: k-zvuk-tep 1.6s steps(2, end) 900ms infinite;
+  }
+}
+@keyframes k-zvuk-tep {
+  50% { transform: scale(1.08) rotate(-2deg); }
+}
+
+/* ---------- EKG a monitor ---------- */
+.k-ekg {
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
+  animation: k-ekg 3.2s linear infinite;
+}
+@keyframes k-ekg {
+  to { stroke-dashoffset: -700; }
+}
+.k-svieti {
+  color: var(--color-yellow);
+  text-shadow:
+    0 0 14px color-mix(in oklab, var(--color-yellow) 55%, transparent),
+    3px 3px 0 var(--color-stamp);
+}
+.k-monitor {
+  background-image: repeating-linear-gradient(0deg, color-mix(in oklab, var(--color-paper) 7%, transparent) 0 1px, transparent 1px 4px);
+}
+.k-raster {
+  position: relative;
+}
+.k-raster::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background-color: var(--color-yellow);
+  background-image: radial-gradient(color-mix(in oklab, var(--color-ink) 45%, transparent) 1.1px, transparent 1.6px);
+  background-size: 5px 5px;
+  opacity: 0.9;
+}
+
+/* obrí titulok s mottom: tlačové platne v tieni */
+.k-motto {
+  text-shadow:
+    4px 4px 0 var(--color-white),
+    7px 7px 0 var(--color-ink);
+}
+
+/* hranaté tlačidlo hot v Astro (bez Reactu) */
+.k-cta {
+  display: inline-flex;
+  min-height: 3.5rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: 3px solid var(--color-ink);
+  background: var(--color-hot);
+  color: var(--color-ink);
+  padding: 0 1.5rem;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  box-shadow: 5px 5px 0 0 var(--color-ink);
+  transition:
+    transform 120ms var(--bk-ease-snap, ease-out),
+    box-shadow 120ms var(--bk-ease-snap, ease-out);
+}
+.k-cta:hover,
+.k-cta:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0 0 0 0 var(--color-ink);
+}
+.k-cta-2 {
+  background: var(--color-white);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .k-panel::before,
+  .k-panel::after {
+    display: none;
+  }
+  .k-ekg {
+    animation: none;
+    stroke-dashoffset: 0;
+    stroke-dasharray: none;
+  }
+}

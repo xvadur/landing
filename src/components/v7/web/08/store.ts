@@ -120,7 +120,11 @@ export type Udalost =
   | { typ: 'hlasenie'; text: string; popis?: string; druh?: 'info' | 'success' | 'warning' | 'error' }
   | { typ: 'zapis'; zdroj: 'newsletter' | 'lakadlo' | 'cakacka'; produkt: string };
 
+/** Posledná voľba zápisu (okno Zápis sa môže hydratovať až po udalosti). */
+export let predvolbaZapisu: { zdroj: 'newsletter' | 'lakadlo' | 'cakacka'; produkt: string } | null = null;
+
 export function posli(u: Udalost) {
+  if (u.typ === 'zapis') predvolbaZapisu = { zdroj: u.zdroj, produkt: u.produkt };
   window.dispatchEvent(new CustomEvent('v708', { detail: u }));
 }
 
