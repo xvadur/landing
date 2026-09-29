@@ -21,14 +21,21 @@ export interface TreemapChartProps extends React.HTMLAttributes<HTMLDivElement> 
   emptyState?: React.ReactNode
 }
 
+// Iba tokeny, bez hot (accent). Tmavé dlaždice (ink, stamp) dostanú papierový text.
 const NEUBRUTALISM_COLORS = [
-  'hsl(var(--primary))',
   'hsl(var(--secondary))',
-  'hsl(var(--accent))',
-  'hsl(var(--success))',
   'hsl(var(--info))',
-  'hsl(var(--warning))',
+  'hsl(var(--primary))',
+  'hsl(var(--muted))',
+  'hsl(var(--destructive))',
+  'hsl(var(--background))',
 ]
+
+const DARK_FILLS = ['--primary', '--foreground', '--destructive', '--color-ink', '--color-stamp', '--chart-1', '--chart-3']
+
+function isDarkFill(fill: string): boolean {
+  return DARK_FILLS.some((token) => fill.includes(`${token})`) || fill.includes(`${token} `))
+}
 
 interface CustomContentProps {
   x?: number
@@ -39,12 +46,18 @@ interface CustomContentProps {
   value?: number
   depth?: number
   index?: number
+  /** z dát: vlastná farba dlaždice a textu */
+  fill?: string
+  textColor?: string
 }
 
 function CustomTreemapContent(props: CustomContentProps) {
   const { x = 0, y = 0, width = 0, height = 0, name, value, depth = 0, index = 0 } = props
   const colorIndex = (depth * 7 + index) % NEUBRUTALISM_COLORS.length
-  const fill = NEUBRUTALISM_COLORS[colorIndex]
+  // `fill` z dát má prednosť (predtým sa ignoroval)
+  const fill = typeof props.fill === 'string' && props.fill !== '' ? props.fill : NEUBRUTALISM_COLORS[colorIndex]
+  const textFill =
+    props.textColor ?? (isDarkFill(fill) ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))')
   const isSmall = width < 60 || height < 40
 
   if (depth === 0) return null
@@ -65,7 +78,7 @@ function CustomTreemapContent(props: CustomContentProps) {
             y={y + height / 2 - (value !== undefined ? 8 : 0)}
             textAnchor="middle"
             dominantBaseline="central"
-            fill="hsl(var(--foreground))"
+            fill={textFill}
             style={{ fontFamily: 'inherit', fontSize: Math.min(14, width / 6), fontWeight: 900 }}
           >
             {name}
@@ -76,10 +89,10 @@ function CustomTreemapContent(props: CustomContentProps) {
               y={y + height / 2 + 10}
               textAnchor="middle"
               dominantBaseline="central"
-              fill="hsl(var(--foreground))"
-              style={{ fontFamily: "'DM Mono', monospace", fontSize: Math.min(11, width / 8), fontWeight: 700, opacity: 0.75 }}
+              fill={textFill}
+              style={{ fontFamily: 'var(--font-mono)', fontSize: Math.min(11, width / 8), fontWeight: 700, opacity: 0.75 }}
             >
-              {value.toLocaleString()}
+              {value.toLocaleString('sk-SK')}
             </text>
           )}
         </>
@@ -95,7 +108,7 @@ const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
       showTooltip = true,
       animated = true,
       height = 320,
-      ariaLabel = 'Treemap chart',
+      ariaLabel = 'Stromová mapa',
       emptyState,
       className,
       ...props
@@ -132,13 +145,13 @@ const TreemapChart = React.forwardRef<HTMLDivElement, TreemapChartProps>(
                   boxShadow: '4px 4px 0px hsl(var(--foreground))',
                   background: 'hsl(var(--background))',
                   color: 'hsl(var(--foreground))',
-                  fontFamily: "'DM Mono', monospace",
+                  fontFamily: 'var(--font-mono)',
                   fontSize: 12,
                 }}
                 itemStyle={{ color: 'hsl(var(--foreground))' }}
                 labelStyle={{ color: 'hsl(var(--foreground))' }}
                 formatter={(value, name) => [
-                  typeof value === 'number' ? value.toLocaleString() : String(value ?? ''),
+                  typeof value === 'number' ? value.toLocaleString('sk-SK') : String(value ?? ''),
                   String(name ?? ''),
                 ]}
               />

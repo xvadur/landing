@@ -39,35 +39,37 @@ export type ChartAnnotation =
 
 // Neubrutalism color palettes for charts
 export const CHART_PALETTES = {
+  // Iba tokeny (V5.3): ink, žltá, stamp, biela, sivá. Hot (accent) nie je séria — patrí CTA a X.
+  // `vibrant` a `pastel` ostávajú kvôli API, ale mapujú sa na tokeny (žiadne pastely ani pevné HSL mimo tokenov).
   bold: [
     'hsl(var(--primary))',
     'hsl(var(--secondary))',
-    'hsl(var(--accent))',
-    'hsl(var(--success))',
-    'hsl(var(--warning))',
+    'hsl(var(--destructive))',
     'hsl(var(--info))',
+    'hsl(var(--chart-5))',
+    'hsl(var(--muted))',
   ],
   vibrant: [
-    'hsl(0 84% 60%)',      // Coral red
-    'hsl(174 62% 50%)',    // Teal
-    'hsl(49 100% 60%)',    // Yellow
-    'hsl(280 65% 60%)',    // Purple
-    'hsl(145 63% 49%)',    // Green
-    'hsl(212 100% 60%)',   // Blue
+    'hsl(var(--destructive))',
+    'hsl(var(--secondary))',
+    'hsl(var(--primary))',
+    'hsl(var(--info))',
+    'hsl(var(--chart-5))',
+    'hsl(var(--muted))',
   ],
   pastel: [
-    'hsl(0 84% 75%)',      // Light coral
-    'hsl(174 62% 70%)',    // Light teal
-    'hsl(49 100% 75%)',    // Light yellow
-    'hsl(280 65% 75%)',    // Light purple
-    'hsl(145 63% 70%)',    // Light green
-    'hsl(212 100% 75%)',   // Light blue
+    'hsl(var(--secondary))',
+    'hsl(var(--info))',
+    'hsl(var(--muted))',
+    'hsl(var(--secondary) / 0.5)',
+    'hsl(var(--chart-5) / 0.5)',
+    'hsl(var(--background))',
   ],
   monochrome: [
     'hsl(var(--foreground))',
-    'hsl(var(--foreground) / 0.8)',
-    'hsl(var(--foreground) / 0.6)',
-    'hsl(var(--foreground) / 0.4)',
+    'hsl(var(--foreground) / 0.7)',
+    'hsl(var(--foreground) / 0.5)',
+    'hsl(var(--foreground) / 0.35)',
     'hsl(var(--foreground) / 0.2)',
     'hsl(var(--foreground) / 0.1)',
   ],
@@ -123,8 +125,10 @@ function useChart() {
   return context
 }
 
+// Plochy (stĺpce, výseky, oblasti) dostanú ink obrys 3 px a plnú výplň. Čiary (Line) si nechávajú farbu zo série
+// (config / stroke) a iba hrúbku 3 px — predtým ink prebil každú cestu a farba série sa ignorovala.
 const chartContainerVariants = cva(
-  'flex aspect-video justify-center overflow-hidden text-xs [&_.recharts-cartesian-axis-tick_text]:fill-foreground [&_.recharts-cartesian-grid_line[stroke="#ccc"]]:stroke-muted-foreground/30 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-muted-foreground [&_.recharts-polar-grid_[stroke="#ccc"]]:stroke-foreground [&_.recharts-reference-line_[stroke="#ccc"]]:stroke-foreground [&_.recharts-dot[stroke="#fff"]]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke="#fff"]]:stroke-foreground [&_.recharts-surface]:outline-hidden [&_.recharts-layer_path]:[fill-opacity:1] [&_.recharts-layer_path]:[stroke-width:3] [&_.recharts-layer_path]:[stroke:hsl(var(--foreground))]',
+  'flex aspect-video justify-center overflow-hidden text-xs [&_.recharts-cartesian-axis-tick_text]:fill-foreground [&_.recharts-cartesian-grid_line[stroke="#ccc"]]:stroke-muted-foreground/30 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-muted-foreground [&_.recharts-polar-grid_[stroke="#ccc"]]:stroke-foreground [&_.recharts-reference-line_[stroke="#ccc"]]:stroke-foreground [&_.recharts-dot[stroke="#fff"]]:stroke-transparent [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke="#fff"]]:stroke-foreground [&_.recharts-surface]:outline-hidden [&_path:is(.recharts-rectangle:not(.recharts-tooltip-cursor),.recharts-sector,.recharts-area-area)]:[fill-opacity:1] [&_path:is(.recharts-rectangle:not(.recharts-tooltip-cursor),.recharts-sector,.recharts-area-curve)]:[stroke:hsl(var(--foreground))] [&_path:is(.recharts-rectangle:not(.recharts-tooltip-cursor),.recharts-sector,.recharts-area-curve,.recharts-line-curve)]:[stroke-width:3]',
   {
     variants: {
       variant: {
@@ -133,7 +137,8 @@ const chartContainerVariants = cva(
         flat: 'border-3 border-foreground bg-background p-4',
         filled: 'border-3 border-foreground bg-muted/30 p-4 shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
         minimal: 'bg-background p-4',
-        accent: 'border-3 border-foreground bg-accent/10 p-4 shadow-[4px_4px_0px_hsl(var(--accent))]',
+        /* hot patrí iba CTA a X → accent kontajner = žltá plocha s ink tieňom */
+        accent: 'border-3 border-foreground bg-secondary/20 p-4 shadow-[6px_6px_0px_hsl(var(--shadow-color))]',
         primary: 'border-3 border-foreground bg-primary/10 p-4 shadow-[4px_4px_0px_hsl(var(--primary))]',
       },
     },
@@ -362,7 +367,7 @@ function ChartTooltipContent({
                   )}
                   <div
                     className={cn(
-                      'flex flex-1 justify-between leading-none',
+                      'flex flex-1 justify-between gap-3 leading-none',
                       nestLabel ? 'items-end' : 'items-center'
                     )}
                   >
@@ -374,7 +379,7 @@ function ChartTooltipContent({
                     </div>
                     {item.value !== undefined && Number.isFinite(Number(item.value)) && (
                       <span className="font-mono font-bold tabular-nums text-foreground">
-                        {Number(item.value).toLocaleString()}
+                        {Number(item.value).toLocaleString('sk-SK')}
                       </span>
                     )}
                   </div>
@@ -502,7 +507,7 @@ export interface ChartEmptyProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const ChartEmpty = React.forwardRef<HTMLDivElement, ChartEmptyProps>(
-  ({ message = 'No data', className, ...props }, ref) => {
+  ({ message = 'Žiadne dáta', className, ...props }, ref) => {
     return (
       <div
         ref={ref}
@@ -538,7 +543,7 @@ export interface ChartLoadingProps extends React.HTMLAttributes<HTMLDivElement> 
 }
 
 const ChartLoading = React.forwardRef<HTMLDivElement, ChartLoadingProps>(
-  ({ label = 'Loading chart', bars = BAR_HEIGHTS.length, className, ...props }, ref) => {
+  ({ label = 'Graf sa načítava', bars = BAR_HEIGHTS.length, className, ...props }, ref) => {
     return (
       <div
         ref={ref}

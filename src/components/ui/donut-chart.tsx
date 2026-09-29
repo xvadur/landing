@@ -25,6 +25,20 @@ export interface DonutChartProps extends React.HTMLAttributes<HTMLDivElement> {
   emptyState?: React.ReactNode
 }
 
+interface DonutLabelProps {
+  x?: number
+  y?: number
+  cx?: number
+  cy?: number
+  midAngle?: number
+  innerRadius?: number
+  outerRadius?: number
+  percent?: number
+  name?: string
+  index?: number
+  textAnchor?: 'start' | 'middle' | 'end' | 'inherit'
+}
+
 const DonutChart = React.forwardRef<HTMLDivElement, DonutChartProps>(
   (
     {
@@ -78,9 +92,31 @@ const DonutChart = React.forwardRef<HTMLDivElement, DonutChartProps>(
             animationDuration={400}
             label={
               showLabels === 'outside'
-                ? ({ name, percent }: { name?: string; percent?: number }) => `${name ?? ''}: ${((percent ?? 0) * 100).toFixed(0)}%`
+                ? (p: DonutLabelProps) => (
+                    <text x={p.x} y={p.y} textAnchor={p.textAnchor} dominantBaseline="central" fill="hsl(var(--foreground))" className="text-xs font-bold">
+                      {`${p.name ?? ''}: ${((p.percent ?? 0) * 100).toFixed(0)} %`}
+                    </text>
+                  )
                 : showLabels === 'inside'
-                ? ({ percent }: { percent?: number }) => `${((percent ?? 0) * 100).toFixed(0)}%`
+                ? (p: DonutLabelProps) => {
+                    // v strede prstenca; text ink, na tmavom výseku papier (predtým farba výseku = nečitateľné)
+                    const r = ((p.innerRadius ?? 0) + (p.outerRadius ?? 0)) / 2
+                    const a = (-(p.midAngle ?? 0) * Math.PI) / 180
+                    const slice = data[p.index ?? 0]?.fill || `hsl(var(--chart-${((p.index ?? 0) % 5) + 1}))`
+                    const dark = /--(primary|foreground|destructive|chart-1|chart-3|color-ink|color-stamp)\)/.test(slice)
+                    return (
+                      <text
+                        x={(p.cx ?? 0) + r * Math.cos(a)}
+                        y={(p.cy ?? 0) + r * Math.sin(a)}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                        fill={dark ? 'hsl(var(--primary-foreground))' : 'hsl(var(--foreground))'}
+                        className="text-xs font-bold"
+                      >
+                        {`${((p.percent ?? 0) * 100).toFixed(0)} %`}
+                      </text>
+                    )
+                  }
                 : false
             }
             labelLine={showLabels === 'outside'}

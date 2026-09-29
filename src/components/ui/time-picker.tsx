@@ -22,6 +22,24 @@ export interface TimePickerProps
   disabled?: boolean
   placeholder?: string
   className?: string
+  /** Nadpisy stĺpcov (predvolene slovensky). */
+  labels?: Partial<TimePickerLabels>
+}
+
+export interface TimePickerLabels {
+  hour: string
+  minute: string
+  second: string
+  period: string
+  periodShort: string
+}
+
+const DEFAULT_LABELS: TimePickerLabels = {
+  hour: 'Hodina',
+  minute: 'Min',
+  second: 'Sek',
+  period: 'Časť dňa',
+  periodShort: 'AP',
 }
 
 const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
@@ -40,16 +58,19 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
       value: controlledValue,
       defaultValue,
       onChange,
-      format = '12h',
+      format = '24h',
       minuteStep = 1,
       showSeconds = false,
       minTime,
       maxTime,
       disabled = false,
-      placeholder = 'Select time',
+      placeholder = 'Vyber čas',
       className,
+      labels: labelsProp,
       ...props
     } = allProps
+    const labels = { ...DEFAULT_LABELS, ...labelsProp }
+    const listRef = React.useRef<HTMLDivElement>(null)
 
     const [open, setOpen] = React.useState(false)
     const [uncontrolledValue, setUncontrolledValue] = React.useState<Date | undefined>(defaultValue)
@@ -92,7 +113,10 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
       second?: number,
       period?: 'AM' | 'PM'
     ) => {
-      const newDate = new Date(selectedTime || new Date())
+      // Bez hodnoty začni na celej hodine: prvý klik na 14 = 14:00 (nie 14:37 z aktuálneho času).
+      const newDate = selectedTime ? new Date(selectedTime) : new Date()
+      if (!selectedTime) newDate.setMinutes(0, 0, 0)
+      else newDate.setMilliseconds(0)
 
       if (hour !== undefined) {
         let h = hour
@@ -169,6 +193,21 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
       return false
     }
 
+    // Po otvorení posuň každý stĺpec k vybranej (alebo prvej povolenej) hodnote — pri 19:00–19:00 netreba rolovať 00…18.
+    React.useEffect(() => {
+      if (!open) return
+      const raf = requestAnimationFrame(() => {
+        listRef.current?.querySelectorAll<HTMLElement>('[role="listbox"]').forEach((list) => {
+          const target =
+            list.querySelector<HTMLElement>('[aria-selected="true"]') ??
+            list.querySelector<HTMLElement>('button:not(:disabled)')
+          const viewport = list.closest<HTMLElement>('[data-radix-scroll-area-viewport]')
+          if (target && viewport) viewport.scrollTop = Math.max(0, target.offsetTop - 4)
+        })
+      })
+      return () => cancelAnimationFrame(raf)
+    }, [open])
+
     // Calculate number of columns for responsive width
     const columnCount = 2 + (showSeconds ? 1 : 0) + (format === '12h' ? 1 : 0)
 
@@ -201,6 +240,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
           sideOffset={4}
         >
           <div
+            ref={listRef}
             className={cn(
               'flex',
               // Responsive: stack on very small screens
@@ -214,10 +254,10 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             {/* Hours column */}
             <div className="flex-1 min-w-[60px] border-r-3 border-foreground">
               <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
-                Hour
+                {labels.hour}
               </div>
               <ScrollArea className="h-[200px]">
-                <div className="p-1" role="listbox" aria-label="Hour">
+                <div className="p-1" role="listbox" aria-label={labels.hour}>
                   {hoursArray.map((hour) => (
                     <button
                       key={hour}
@@ -229,7 +269,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                       disabled={isTimeDisabled(hour, selectedMinute ?? 0)}
                       onClick={() => updateTime(hour)}
                       className={cn(
-                        'w-full px-2 py-1.5 text-center text-sm',
+                        'min-h-11 w-full px-2 py-1.5 text-center text-sm',
                         'transition duration-150 ease-out',
                         'hover:bg-muted hover:scale-105',
                         'focus:outline-none focus:bg-muted',
@@ -250,10 +290,10 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
               (showSeconds || format === '12h') && 'border-r-3 border-foreground'
             )}>
               <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
-                Min
+                {labels.minute}
               </div>
               <ScrollArea className="h-[200px]">
-                <div className="p-1" role="listbox" aria-label="Minute">
+                <div className="p-1" role="listbox" aria-label={labels.minute}>
                   {minutesArray.map((minute) => (
                     <button
                       key={minute}
@@ -265,7 +305,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                       disabled={isTimeDisabled(selectedHour ?? 0, minute)}
                       onClick={() => updateTime(undefined, minute)}
                       className={cn(
-                        'w-full px-2 py-1.5 text-center text-sm',
+                        'min-h-11 w-full px-2 py-1.5 text-center text-sm',
                         'transition duration-150 ease-out',
                         'hover:bg-muted hover:scale-105',
                         'focus:outline-none focus:bg-muted',
@@ -287,10 +327,10 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                 format === '12h' && 'border-r-3 border-foreground'
               )}>
                 <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
-                  Sec
+                  {labels.second}
                 </div>
                 <ScrollArea className="h-[200px]">
-                  <div className="p-1" role="listbox" aria-label="Second">
+                  <div className="p-1" role="listbox" aria-label={labels.second}>
                     {secondsArray.map((second) => (
                       <button
                         key={second}
@@ -299,7 +339,7 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
                         aria-selected={selectedSecond === second}
                         onClick={() => updateTime(undefined, undefined, second)}
                         className={cn(
-                          'w-full px-2 py-1.5 text-center text-sm',
+                          'min-h-11 w-full px-2 py-1.5 text-center text-sm',
                           'transition duration-150 ease-out',
                           'hover:bg-muted hover:scale-105',
                           'focus:outline-none focus:bg-muted',
@@ -318,8 +358,8 @@ const TimePicker = React.forwardRef<HTMLButtonElement, TimePickerProps>(
             {format === '12h' && (
               <div className="flex-1 min-w-[50px]">
                 <div className="px-2 py-2 text-center text-xs font-bold uppercase tracking-wide text-muted-foreground border-b-3 border-foreground bg-muted/30">
-                  <span className="hidden sm:inline">Period</span>
-                  <span className="sm:hidden">AP</span>
+                  <span className="hidden sm:inline">{labels.period}</span>
+                  <span className="sm:hidden">{labels.periodShort}</span>
                 </div>
                 <div className="p-1 space-y-1">
                   {(['AM', 'PM'] as const).map((period) => (

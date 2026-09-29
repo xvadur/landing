@@ -20,14 +20,17 @@ interface MultiStepFormContextValue<V> {
   errors: Record<string, string>
   touched: Record<string, boolean>
   activeStep: number
-  next: () => void
+  /** true = posun prebehol; false = krok má chyby (sú v `errors`) */
+  next: () => boolean
   back: () => void
-  goTo: (step: number) => void
+  /** Dopredu overí každý krok medzi aktuálnym a cieľom; pri chybe zastaví na prvom neplatnom kroku a vráti false. */
+  goTo: (step: number) => boolean
   canGoNext: boolean
   isStepValid: boolean
   isFirstStep: boolean
   isLastStep: boolean
-  submit: () => void
+  /** Overí všetky kroky; pri chybe prejde na prvý neplatný krok a vráti false. */
+  submit: () => boolean
 }
 
 // One context object reused for every value type; consumers read it through the
@@ -89,24 +92,43 @@ export function MultiStepForm<V>({
     return validator ? validator(values) === null : true
   }, [steps, activeStep, values])
 
-  const goTo = React.useCallback(
-    (step: number) => {
-      if (step < 0 || step >= totalSteps) return
-      // Backward navigation is unguarded; forward runs the current validator.
-      if (step > activeStep) {
-        if (!validateStep(activeStep)) return
-      } else {
-        setErrors({})
+  // Prvý neplatný krok v rozsahu [from, to) alebo -1. Preskočiť krok dopredu sa nesmie bez jeho validácie
+  // (goTo(3) z kroku 0 predtým overil iba krok 0 a kroky 1–2 obišiel).
+  const firstInvalid = React.useCallback(
+    (from: number, to: number): number => {
+      for (let i = from; i < to; i++) {
+        const validator = steps[i]?.validate
+        if (validator && validator(values) !== null) return i
       }
-      setActiveStep(step)
+      return -1
     },
-    [activeStep, totalSteps, validateStep]
+    [steps, values]
   )
 
-  const next = React.useCallback(() => {
-    if (isLastStep) return
-    if (!validateStep(activeStep)) return
+  const goTo = React.useCallback(
+    (step: number): boolean => {
+      if (step < 0 || step >= totalSteps) return false
+      // Backward navigation is unguarded; forward validates every step in between.
+      if (step > activeStep) {
+        const bad = firstInvalid(activeStep, step)
+        if (bad !== -1) {
+          setActiveStep(bad)
+          validateStep(bad)
+          return false
+        }
+      }
+      setErrors({})
+      setActiveStep(step)
+      return true
+    },
+    [activeStep, totalSteps, firstInvalid, validateStep]
+  )
+
+  const next = React.useCallback((): boolean => {
+    if (isLastStep) return false
+    if (!validateStep(activeStep)) return false
     setActiveStep((s) => Math.min(s + 1, totalSteps - 1))
+    return true
   }, [activeStep, isLastStep, totalSteps, validateStep])
 
   const back = React.useCallback(() => {
@@ -114,11 +136,18 @@ export function MultiStepForm<V>({
     setActiveStep((s) => Math.max(s - 1, 0))
   }, [])
 
-  const submit = React.useCallback(() => {
-    if (!isLastStep) return
-    if (!validateStep(activeStep)) return
+  const submit = React.useCallback((): boolean => {
+    if (!isLastStep) return false
+    const bad = firstInvalid(0, totalSteps)
+    if (bad !== -1) {
+      setActiveStep(bad)
+      validateStep(bad)
+      return false
+    }
+    setErrors({})
     onSubmit(values)
-  }, [activeStep, isLastStep, onSubmit, validateStep, values])
+    return true
+  }, [isLastStep, firstInvalid, totalSteps, onSubmit, validateStep, values])
 
   const ctx: MultiStepFormContextValue<V> = {
     values,

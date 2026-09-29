@@ -21,12 +21,13 @@ export interface FunnelChartProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const NEUBRUTALISM_COLORS = [
+  // iba tokeny, bez hot (accent patrí CTA a X)
   'hsl(var(--primary))',
   'hsl(var(--secondary))',
-  'hsl(var(--accent))',
-  'hsl(var(--success))',
+  'hsl(var(--destructive))',
   'hsl(var(--info))',
-  'hsl(var(--warning))',
+  'hsl(var(--chart-5))',
+  'hsl(var(--muted))',
 ]
 
 const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
@@ -37,7 +38,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       showTooltip = true,
       animated = true,
       height = 300,
-      ariaLabel = 'Funnel chart',
+      ariaLabel = 'Lievikový graf',
       emptyState,
       className,
       ...props
@@ -78,7 +79,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
                   fill="hsl(var(--foreground))"
                   stroke="none"
                   dataKey="name"
-                  style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, fontWeight: 700 }}
+                  style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700 }}
                 />
               )}
             </Funnel>
@@ -90,12 +91,12 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
                   boxShadow: '4px 4px 0px hsl(var(--foreground))',
                   background: 'hsl(var(--background))',
                   color: 'hsl(var(--foreground))',
-                  fontFamily: "'DM Mono', monospace",
+                  fontFamily: 'var(--font-mono)',
                   fontSize: 12,
                 }}
                 itemStyle={{ color: 'hsl(var(--foreground))' }}
                 labelStyle={{ color: 'hsl(var(--foreground))' }}
-                formatter={(value, name) => [`${Number(value ?? 0).toLocaleString()}`, String(name ?? '')]}
+                formatter={(value, name) => [`${Number(value ?? 0).toLocaleString('sk-SK')}`, String(name ?? '')]}
               />
             )}
           </RechartsFC>

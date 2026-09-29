@@ -2,6 +2,8 @@ import * as React from 'react'
 import { format, subDays, startOfMonth, endOfMonth, subMonths, isSameDay } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import type { DateRange } from 'react-day-picker'
+import { sk } from 'react-day-picker/locale'
+import type { Locale } from 'date-fns'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -30,6 +32,12 @@ export interface DateRangePickerProps
   placeholder?: string
   align?: 'start' | 'center' | 'end'
   className?: string
+  /** Jazyk kalendára aj popisu (predvolene slovenčina). */
+  locale?: Locale
+  /** date-fns formát dátumu v tlačidle. */
+  dateFormat?: string
+  /** Nadpis panelu predvolieb. */
+  presetsLabel?: string
 }
 
 const getDefaultPresets = (): DateRangePickerPreset[] => {
@@ -38,23 +46,23 @@ const getDefaultPresets = (): DateRangePickerPreset[] => {
 
   return [
     {
-      label: 'Today',
+      label: 'Dnes',
       value: { from: today, to: today },
     },
     {
-      label: 'Last 7 days',
+      label: 'Posledných 7 dní',
       value: { from: subDays(today, 6), to: today },
     },
     {
-      label: 'Last 30 days',
+      label: 'Posledných 30 dní',
       value: { from: subDays(today, 29), to: today },
     },
     {
-      label: 'This month',
+      label: 'Tento mesiac',
       value: { from: startOfMonth(today), to: today },
     },
     {
-      label: 'Last month',
+      label: 'Minulý mesiac',
       value: { from: startOfMonth(lastMonth), to: endOfMonth(lastMonth) },
     },
   ]
@@ -79,9 +87,12 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
       minDate,
       maxDate,
       disabled = false,
-      placeholder = 'Pick a date range',
+      placeholder = 'Vyber obdobie',
       align = 'start',
       className,
+      locale = sk,
+      dateFormat = 'd. M. yyyy',
+      presetsLabel = 'Rýchly výber',
       ...props
     } = allProps
 
@@ -124,8 +135,8 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
 
     const formatDateRange = (range: DateRange) => {
       if (!range.from) return placeholder
-      if (!range.to) return format(range.from, 'LLL dd, y')
-      return `${format(range.from, 'LLL dd, y')} - ${format(range.to, 'LLL dd, y')}`
+      if (!range.to) return format(range.from, dateFormat, { locale })
+      return `${format(range.from, dateFormat, { locale })} – ${format(range.to, dateFormat, { locale })}`
     }
 
     // Use single month on mobile
@@ -184,10 +195,10 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
                 'p-3 bg-muted',
                 isMobile
                   ? 'border-b-3 border-foreground'
-                  : 'min-w-[160px] border-r-3 border-foreground'
+                  : 'w-44 shrink-0 border-r-3 border-foreground'
               )}>
                 <p className="mb-3 text-[11px] font-black uppercase tracking-widest text-muted-foreground">
-                  Presets
+                  {presetsLabel}
                 </p>
                 <div className={cn(
                   isMobile
@@ -202,7 +213,7 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
                         type="button"
                         onClick={() => handlePresetClick(preset)}
                         className={cn(
-                          'text-left text-sm font-bold border-3 border-foreground bg-background transition duration-150',
+                          'min-h-11 text-left text-sm font-bold border-3 border-foreground bg-background transition duration-150',
                           isMobile
                             ? 'px-2 py-1 text-xs shadow-[2px_2px_0px_hsl(var(--shadow-color))]'
                             : 'w-full px-3 py-2 shadow-[3px_3px_0px_hsl(var(--shadow-color))]',
@@ -211,7 +222,7 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
                             ? 'hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none focus-visible:translate-x-[2px] focus-visible:translate-y-[2px] focus-visible:shadow-none'
                             : 'hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none focus-visible:translate-x-[3px] focus-visible:translate-y-[3px] focus-visible:shadow-none',
                           'focus-visible:outline-none',
-                          selected && 'bg-accent text-accent-foreground shadow-none ' + (isMobile ? 'translate-x-[2px] translate-y-[2px]' : 'translate-x-[3px] translate-y-[3px]')
+                          selected && 'bg-secondary text-secondary-foreground shadow-none ' + (isMobile ? 'translate-x-[2px] translate-y-[2px]' : 'translate-x-[3px] translate-y-[3px]')
                         )}
                       >
                         {preset.label}
@@ -226,6 +237,7 @@ const DateRangePicker = React.forwardRef<HTMLButtonElement, DateRangePickerProps
             <div className="p-3">
               <Calendar
                 mode="range"
+                locale={locale}
                 defaultMonth={selectedRange?.from}
                 selected={selectedRange}
                 onSelect={handleSelect}

@@ -134,7 +134,7 @@ const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
               <div
                 key={col}
                 className="flex items-end justify-center pb-1"
-                style={{ fontSize: 10, fontFamily: "'DM Mono', monospace", fontWeight: 700 }}
+                style={{ fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 700 }}
               >
                 <span style={{ transform: 'rotate(-45deg)', transformOrigin: 'bottom center', whiteSpace: 'nowrap' }}>
                   {col}
@@ -152,7 +152,7 @@ const HeatmapChart = React.forwardRef<HTMLDivElement, HeatmapChartProps>(
               {showLabels ? (
                 <div
                   className="flex items-center pr-2 text-right"
-                  style={{ fontSize: 10, fontFamily: "'DM Mono', monospace", fontWeight: 700, justifyContent: 'flex-end' }}
+                  style={{ fontSize: 10, fontFamily: 'var(--font-mono)', fontWeight: 700, justifyContent: 'flex-end' }}
                 >
                   {row}
                 </div>

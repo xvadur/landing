@@ -26,12 +26,13 @@ export interface SankeyChartProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const NODE_COLORS = [
+  // iba tokeny, bez hot (accent patrí CTA a X)
   'hsl(var(--primary))',
   'hsl(var(--secondary))',
-  'hsl(var(--accent))',
-  'hsl(var(--success))',
+  'hsl(var(--destructive))',
   'hsl(var(--info))',
-  'hsl(var(--warning))',
+  'hsl(var(--chart-5))',
+  'hsl(var(--muted))',
 ]
 
 interface ComputedNode {
@@ -215,7 +216,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
       height = 320,
       showTooltip = true,
       showLabels = true,
-      ariaLabel = 'Sankey chart',
+      ariaLabel = 'Tokový graf',
       emptyState,
       className,
       ...props
@@ -332,7 +333,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
                     dominantBaseline="middle"
                     textAnchor={node.x > width / 2 ? 'end' : 'start'}
                     fill="hsl(var(--foreground))"
-                    style={{ fontSize: 11, fontFamily: "'DM Mono', monospace", fontWeight: 700 }}
+                    style={{ fontSize: 11, fontFamily: 'var(--font-mono)', fontWeight: 700 }}
                   >
                     {node.label}
                   </text>
@@ -349,7 +350,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
             style={{ left: tooltip.x + 12, top: tooltip.y - 32 }}
           >
             <p className="font-black">{tooltip.label}</p>
-            <p className="text-muted-foreground">{tooltip.value.toLocaleString()}</p>
+            <p className="text-muted-foreground">{tooltip.value.toLocaleString('sk-SK')}</p>
           </div>
         )}
       </div>

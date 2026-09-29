@@ -3,7 +3,9 @@ import { format } from 'date-fns'
 import { CalendarIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Calendar } from '@/components/ui/calendar'
+import { Calendar, type CalendarProps } from '@/components/ui/calendar'
+import { sk } from 'react-day-picker/locale'
+import type { Locale } from 'date-fns'
 import {
   Popover,
   PopoverContent,
@@ -22,6 +24,10 @@ export interface DatePickerProps
   dateFormat?: string
   disabled?: boolean
   className?: string
+  /** Jazyk kalendára aj popisu v tlačidle (predvolene slovenčina). */
+  locale?: Locale
+  /** Props pre Calendar: zakázané dni (`disabled` matcher), `startMonth`, `endMonth`, `weekStartsOn`, `modifiers`… */
+  calendarProps?: Omit<Extract<CalendarProps, { mode: 'single' }>, 'mode' | 'selected' | 'onSelect'>
 }
 
 /** A single-date picker: a button trigger that opens a calendar in a popover. */
@@ -39,10 +45,12 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
     value,
     defaultValue,
     onChange,
-    placeholder = 'Pick a date',
-    dateFormat = 'LLL dd, y',
+    placeholder = 'Vyber dátum',
+    dateFormat = 'd. MMMM yyyy',
     disabled,
     className,
+    locale = sk,
+    calendarProps,
     ...props
   } = allProps
 
@@ -76,21 +84,24 @@ export const DatePicker = React.forwardRef<HTMLButtonElement, DatePickerProps>(
           disabled={disabled}
           {...props}
           className={cn(
-            'w-[260px] justify-start gap-2 font-bold normal-case',
+            'w-[260px] max-w-full justify-start gap-2 font-bold normal-case',
             !selected && 'text-muted-foreground',
             className
           )}
         >
           <CalendarIcon className="h-4 w-4" />
-          {selected ? format(selected, dateFormat) : placeholder}
+          {selected ? format(selected, dateFormat, { locale }) : placeholder}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
+          locale={locale}
+          defaultMonth={selected}
+          {...calendarProps}
           mode="single"
           selected={selected}
           onSelect={handleSelect}
-          initialFocus
+          autoFocus
         />
       </PopoverContent>
     </Popover>
