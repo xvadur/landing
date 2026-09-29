@@ -11,14 +11,16 @@ export default function Toaster() {
         unstyled: true,
         classNames: {
           toast:
-            'flex w-[min(92vw,420px)] items-center gap-3 rounded-lg border-3 border-ink px-4 py-3 font-sans font-bold text-ink shadow-brutal',
-          default: 'bg-yellow',
+            'flex w-[min(92vw,420px)] items-center gap-3 rounded-lg border-3 border-ink px-4 py-3 font-sans font-bold shadow-brutal',
+          default: 'bg-yellow text-ink',
           title: 'font-display text-base font-extrabold uppercase tracking-wide',
           description: 'text-sm font-medium',
-          success: 'bg-lime',
-          error: 'bg-hot text-ink',
-          info: 'bg-sky',
-          warning: 'bg-pink',
+          /* V5.3 bez pastelov: success žltá, info biela, warning biela s alarmovým okrajom, error stamp (text paper) */
+          success: 'bg-yellow text-ink',
+          error: 'bg-stamp text-paper',
+          info: 'bg-white text-ink',
+          loading: 'bg-white text-ink',
+          warning: 'bg-white text-ink border-l-[12px] border-l-stamp',
         },
       }}
     />

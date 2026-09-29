@@ -1,40 +1,54 @@
-import { useTheme } from '@/hooks/use-theme'
+import * as React from 'react'
 import { Toaster as Sonner } from 'sonner'
+import { cn } from '@/lib/utils'
 
 type ToasterProps = React.ComponentProps<typeof Sonner>
+type ToastClassNames = NonNullable<NonNullable<ToasterProps['toastOptions']>['classNames']>
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { resolvedTheme } = useTheme()
-
-  return (
-    <Sonner
-      theme={resolvedTheme as ToasterProps['theme']}
-      className="toaster group"
-      toastOptions={{
-        classNames: {
-          toast:
-            'group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border-3 group-[.toaster]:border-foreground group-[.toaster]:shadow-[4px_4px_0px_hsl(var(--shadow-color))] group-[.toaster]:rounded-none group-[.toaster]:font-bold',
-          title: 'group-[.toast]:font-black group-[.toast]:uppercase group-[.toast]:tracking-wide',
-          description: 'group-[.toast]:text-muted-foreground group-[.toast]:font-medium',
-          actionButton:
-            'group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:border-2 group-[.toast]:border-foreground group-[.toast]:font-bold group-[.toast]:uppercase group-[.toast]:rounded-none group-[.toast]:shadow-[2px_2px_0px_hsl(var(--foreground))] group-[.toast]:hover:translate-x-[2px] group-[.toast]:hover:translate-y-[2px] group-[.toast]:hover:shadow-none group-[.toast]:transition',
-          cancelButton:
-            'group-[.toast]:bg-muted group-[.toast]:text-muted-foreground group-[.toast]:border-2 group-[.toast]:border-foreground group-[.toast]:font-bold group-[.toast]:uppercase group-[.toast]:rounded-none',
-          success:
-            'group-[.toaster]:bg-success group-[.toaster]:text-success-foreground group-[.toaster]:border-foreground',
-          error:
-            'group-[.toaster]:bg-destructive group-[.toaster]:text-destructive-foreground group-[.toaster]:border-foreground',
-          warning:
-            'group-[.toaster]:bg-warning group-[.toaster]:text-warning-foreground group-[.toaster]:border-foreground',
-          info:
-            'group-[.toaster]:bg-info group-[.toaster]:text-info-foreground group-[.toaster]:border-foreground',
-          closeButton:
-            'group-[.toast]:border-2 group-[.toast]:border-foreground group-[.toast]:bg-background group-[.toast]:text-foreground group-[.toast]:hover:bg-muted group-[.toast]:rounded-none',
-        },
-      }}
-      {...props}
-    />
-  )
+/* Sonner vkladá vlastné CSS mimo @layer, takže Tailwind 4 utility (v @layer utilities) by prehrali.
+   Preto `unstyled: true` a triedy priamo z tokenov (bez group-[.toaster]:…). Web je light only → žiadny useTheme,
+   Toaster funguje aj bez ThemeProvider. success = žltá, warning = biela s alarmovým okrajom, error = stamp. */
+const BOLDKIT_CLASSNAMES: ToastClassNames = {
+  toast:
+    'relative flex w-[min(calc(100vw-2rem),356px)] items-center gap-3 border-3 border-foreground p-4 font-sans shadow-[4px_4px_0px_hsl(var(--shadow-color))]',
+  content: 'flex flex-1 flex-col gap-0.5',
+  title: 'font-display text-base font-extrabold uppercase tracking-wide',
+  description: 'text-sm font-medium opacity-80',
+  icon: 'shrink-0',
+  default: 'bg-card text-foreground',
+  success: 'bg-success text-success-foreground',
+  warning: 'bg-card text-foreground border-l-[12px] border-l-destructive',
+  error: 'bg-destructive text-destructive-foreground',
+  info: 'bg-background text-foreground',
+  loading: 'bg-background text-foreground',
+  actionButton:
+    'min-h-11 shrink-0 border-2 border-foreground bg-primary px-3 text-xs font-bold uppercase text-primary-foreground',
+  cancelButton:
+    'min-h-11 shrink-0 border-2 border-foreground bg-background px-3 text-xs font-bold uppercase text-foreground',
+  closeButton:
+    'absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center border-2 border-foreground bg-card text-foreground before:absolute before:-inset-2 before:content-[""]',
 }
+
+function mergeClassNames(extra?: ToastClassNames): ToastClassNames {
+  if (!extra) return BOLDKIT_CLASSNAMES
+  const out: ToastClassNames = { ...BOLDKIT_CLASSNAMES }
+  for (const key of Object.keys(extra) as (keyof ToastClassNames)[]) {
+    out[key] = cn(BOLDKIT_CLASSNAMES[key], extra[key])
+  }
+  return out
+}
+
+const Toaster = ({ toastOptions, theme = 'light', ...props }: ToasterProps) => (
+  <Sonner
+    theme={theme}
+    className="toaster group"
+    {...props}
+    toastOptions={{
+      ...toastOptions,
+      unstyled: toastOptions?.unstyled ?? true,
+      classNames: mergeClassNames(toastOptions?.classNames),
+    }}
+  />
+)
 
 export { Toaster }

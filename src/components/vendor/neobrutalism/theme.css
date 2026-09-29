@@ -8,14 +8,14 @@
    ktorý v repe nie je; Radix je v základe (radix-ui 1.6.7), preto vendorujeme Radix verziu. */
 
 :root {
-  /* farby knižnice → tokeny */
-  --background: var(--color-paper);
+  /* farby knižnice → tokeny. --background, --foreground, --border, --ring a --chart-* tu NIE SÚ (29. 9. 2026, V7):
+     BoldKit (src/components/ui/, boldkit.css) ich v :root drží ako HSL trojice a číta cez hsl(var(--foreground));
+     tento súbor sa vkladá neskôr (inline <style>), takže farebná hodnota ich prepísala a hsl(...) bolo neplatné na každej
+     stránke s neobrutalism kusom (domov, /konzultacia/, /kviz/, /kit/vendor/). Komponenty tu používajú Tailwind triedy
+     (bg-background, border-border, ring-ring → --color-* z tokens.css), surové premenné nie. */
   --secondary-background: var(--color-white);
-  --foreground: var(--color-ink);
   --main: var(--color-yellow);
   --main-foreground: var(--color-ink);
-  --border: var(--color-ink);
-  --ring: var(--color-hot);
   --overlay: var(--color-overlay);
 
   /* rám, radius, tieň */
@@ -39,12 +39,7 @@
   --font-weight-base: 500;
   --font-weight-heading: 800;
 
-  /* grafy (ak sa niekedy vendoruje chart): deep pastely, žiadny nový odtieň */
-  --chart-1: var(--color-yellow-deep);
-  --chart-2: var(--color-pink-deep);
-  --chart-3: var(--color-lilac-deep);
-  --chart-4: var(--color-lime-deep);
-  --chart-5: var(--color-sky-deep);
+  /* grafy: --chart-1…5 definuje boldkit.css (bez pastelov, V5.3) */
 }
 
 /* ---------- stavy otvorenia / zatvorenia (Radix data-state), bez tw-animate-css ----------

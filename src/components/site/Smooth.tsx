@@ -14,6 +14,16 @@ function reduced() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
+/* Rolovacie zoznamy v portáloch (Radix popover/select/menu, cmdk, listboxy, vaul zásuvky) si koliesko nechajú:
+   Lenis by inak posúval stránku pod nimi. Platí aj pre všetko s [data-lenis-prevent]. */
+const PREVENT =
+  '[data-radix-popper-content-wrapper], [data-radix-scroll-area-viewport], [cmdk-list], [role="listbox"], [role="menu"], [role="dialog"], [role="alertdialog"], [data-vaul-drawer], [data-sonner-toaster]';
+
+function prevent(node: HTMLElement) {
+  /* Lenis volá prevent pre každý uzol na ceste udalosti, stačí teda matches */
+  return typeof node.matches === 'function' && node.matches(PREVENT);
+}
+
 function create() {
   if (window.__lenis || reduced()) return;
   window.__lenis = new Lenis({
@@ -22,6 +32,7 @@ function create() {
     smoothWheel: true,
     syncTouch: false,
     anchors: true,
+    prevent,
   });
 }
 

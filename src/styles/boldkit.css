@@ -5,8 +5,14 @@
    Obe vrstvy musia ukazovať na tie isté farby. Paleta V5.3: ink, papier, biela, žltá, alarmová červená (stamp),
    hot (#ed4e26) iba na CTA a X. Pastely nie. Hex iba tu a v tokens.css. */
 
+@import 'tw-animate-css';
+/* tw-animate-css (v package.json) dáva kusom animate-in/out, fade-*, zoom-*, slide-in-from-*, accordion-*,
+   collapsible-* a caret-blink. BoldKit-ové keyframes (brutal-*, fadeIn/bounceIn/scaleIn, tvary, marquee) sú v motion.css. */
+
 @theme {
   --color-secondary: var(--color-yellow);
+  /* text na hot je VŽDY ink (5,4 : 1). tokens.css má paper (3,2 : 1) → prepis tu, platí pre text-accent-foreground */
+  --color-accent-foreground: var(--color-ink);
   --color-destructive: var(--color-stamp);
   --color-destructive-foreground: var(--color-paper);
   --color-success: var(--color-yellow);
@@ -15,10 +21,11 @@
   --color-warning-foreground: var(--color-ink);
   --color-info: var(--color-white);
   --color-info-foreground: var(--color-ink);
-  --color-chart-1: var(--color-hot);
-  --color-chart-2: var(--color-ink);
-  --color-chart-3: var(--color-yellow);
-  --color-chart-4: var(--color-stamp);
+  /* grafy: hot nie je predvolená séria (hot iba CTA a X) */
+  --color-chart-1: var(--color-ink);
+  --color-chart-2: var(--color-yellow);
+  --color-chart-3: var(--color-stamp);
+  --color-chart-4: var(--color-white);
   --color-chart-5: oklch(from var(--color-ink) calc(l + 0.45) c h);
   --color-neon-pink: var(--color-hot);
   --color-neon-green: var(--color-yellow);
@@ -30,34 +37,9 @@
   --color-clash-3: var(--color-yellow);
   --color-clash-4: var(--color-ink);
 
-  --bk-ease-snap:  cubic-bezier(0.22, 1, 0.3, 1.12);
-  --bk-dur-snap:   150ms;
-  --bk-ease-step:    steps(4, end);
-  --bk-ease-step-2:  steps(2, end);
-  --bk-ease-stamp:   cubic-bezier(0.7, 0, 0.84, 0);
-  --bk-ease-rubber:  cubic-bezier(0.34, 1.56, 0.64, 1);
-  --bk-ease-linear:  linear;
-  --bk-dur-instant: 80ms;
-  --bk-dur-quick:   240ms;
-  --bk-dur-base:    400ms;
-  --bk-dur-slow:    700ms;
-  --bk-shadow-offset:       4px;
-  --bk-shadow-offset-press: 0px;
-  --bk-translate-press:     2px;
-  --bk-reveal-offset:       16px;
-
-  /* Easing tokens — custom curves per the animations.dev easing blueprint.
-     Built-in CSS easings are too weak; these override Tailwind's defaults so
-     every `ease-out` / `ease-in-out` / `transition-*` utility gets the
-     stronger acceleration.
-     - ease-out: enters + user-initiated interactions (dropdowns, modals)
-     - ease-in-out: elements already on screen moving/morphing
-     - ease-in: avoid (sluggish); kept only for exit symmetry
-     - linear: marquees / progress only */
-  --ease-in: cubic-bezier(0.55, 0.055, 0.675, 0.19); /* in-cubic */
-  --ease-out: cubic-bezier(0.165, 0.84, 0.44, 1); /* out-quart */
-  --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1); /* in-out-cubic */
-  /* Named scale, weakest → strongest acceleration */
+  /* --bk-* easingy, trvania a vzdialenosti sú definované raz, v motion.css (:where(:root)).
+     Tailwind predvoľby --ease-in / --ease-out / --ease-in-out sa tu NEPREPISUJÚ (platia pre celý web, nie iba kit);
+     silnejšie krivky sú pomenované zvlášť: */
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
   --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -67,8 +49,6 @@
   --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
   --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
-  /* Bare `transition-*` utilities default to the responsive ease-out */
-  --default-transition-timing-function: var(--ease-out);
 }
 
 :root {
@@ -102,10 +82,10 @@
   --shadow-color: 0 0% 4%;
   --shadow-offset: 6px;
   --border-width: 3px;
-  --chart-1: 12 85% 54%;
-  --chart-2: 0 0% 4%;
-  --chart-3: 54 100% 50%;
-  --chart-4: 1 76% 41%;
+  --chart-1: 0 0% 4%;                /* ink — predvolená séria (nie hot) */
+  --chart-2: 54 100% 50%;            /* yellow */
+  --chart-3: 1 76% 41%;              /* stamp */
+  --chart-4: 0 0% 100%;              /* white */
   --chart-5: 0 0% 45%;
   --neon-pink: 12 85% 54%;
   --neon-green: 54 100% 50%;
@@ -119,5 +99,5 @@
 }
 
 @media (max-width: 767px) {
-  :root { --shadow-offset: 4px; --bk-shadow-offset: 4px; }
+  :root { --shadow-offset: 4px; }
 }
