@@ -1,0 +1,68 @@
+---
+/** V7 · Katalóg surovín: Formuláre a rezervácia (29. 9. 2026). Každý formulárový kus BoldKitu (src/components/ui/)
+ *  vo všetkých variantoch, s Adamovým obsahom, a na konci kombinovaná ukážka „Vyšetrenie“ (bez API). Noindex.
+ *  Poznámky a nájdené chyby: work/v7/katalog/formulare.md */
+import Base from '@/layouts/Base.astro';
+import Tlacidla from '@/components/v7/kit/formulare/Tlacidla';
+import Vstupy from '@/components/v7/kit/formulare/Vstupy';
+import Volby from '@/components/v7/kit/formulare/Volby';
+import Vybery from '@/components/v7/kit/formulare/Vybery';
+import Subory from '@/components/v7/kit/formulare/Subory';
+import Cas from '@/components/v7/kit/formulare/Cas';
+import Kroky from '@/components/v7/kit/formulare/Kroky';
+import Vysetrenie from '@/components/v7/kit/formulare/Vysetrenie';
+
+const skupiny: [string, string[]][] = [
+  ['Tlačidlá', ['button', 'button-group', 'toggle', 'toggle-group']],
+  ['Vstupy', ['input', 'input-group', 'input-otp', 'textarea', 'field', 'label']],
+  ['Voľby', ['checkbox', 'radio-group', 'switch', 'slider', 'rating']],
+  ['Výbery', ['select', 'native-select', 'combobox', 'tag-input']],
+  ['Súbory', ['dropzone']],
+  ['Čas', ['calendar', 'date-picker', 'date-range-picker', 'time-picker']],
+  ['Kroky', ['stepper', 'multi-step-form']],
+];
+---
+
+<Base title="Kit · Formuláre" description="Formulárové kusy BoldKitu v tokenoch xvadur.com: všetky varianty, stavy a rezervácia vyšetrenia." noindex islands="full">
+  <div class="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-12 sm:px-6">
+    <header class="flex flex-col gap-5">
+      <p class="eyebrow"><a href="/kit/" class="underline">Kit</a> · 01 · suroviny</p>
+      <h1 class="font-display text-display-sm font-extrabold uppercase">Formuláre a rezervácia</h1>
+      <p class="max-w-2xl text-lg">
+        26 kusov z <code class="font-mono text-base">src/components/ui/</code>: tlačidlá, polia, voľby, výbery, súbory, čas a kroky.
+        Pri každom všetky varianty a stavy zo zdrojového kódu, jeden recept s tvojím obsahom a červené štítky tam, kde kus niečo kazí.
+        Na konci celé vyšetrenie poskladané z týchto kusov.
+      </p>
+      <nav aria-label="Obsah katalógu" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          skupiny.map(([nazov, kusy]) => (
+            <div class="rounded-lg border-3 border-ink bg-white p-3">
+              <p class="font-mono text-xs font-bold uppercase">{nazov}</p>
+              <ul class="mt-1 flex flex-wrap gap-x-3">
+                {kusy.map((k) => (
+                  <li>
+                    <a href={`#${k}`} class="inline-flex min-h-11 items-center font-mono text-sm underline decoration-2 underline-offset-4">
+                      {k}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+        <a href="#vysetrenie" class="press flex min-h-11 items-center justify-center rounded-lg border-3 border-ink bg-hot p-3 font-display font-extrabold text-ink uppercase shadow-brutal-sm">
+          Vyšetrenie ↓
+        </a>
+      </nav>
+    </header>
+
+    <Tlacidla client:load />
+    <Vstupy client:visible />
+    <Volby client:visible />
+    <Vybery client:visible />
+    <Subory client:visible />
+    <Cas client:visible />
+    <Kroky client:visible />
+    <Vysetrenie client:visible />
+  </div>
+</Base>
