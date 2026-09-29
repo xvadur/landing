@@ -37,6 +37,7 @@
 - XVD-001: publikovať prvý Substack článok (text je na webe v `/texty/`).
 
 ## Rozhodnutia
+- 2026-09-29 — **Smer XVADUR:** Adam = zdravotná sestra, ktorá sa naučila pracovať s AI a učí ostatných o AI a o svete; nie agentúra, nie marketér. Zarábanie sa teraz nerieši. Dvaja klienti (Lucia, Jakub) dostanú build → šablóna → content cez Higgsfield. Adam rozpíše každý projekt. [A]
 - 2026-09-29 — **V7:** domov sa postaví v 10 naozaj rozdielnych variantoch cez cloudové sessions (kombinácie layoutu, komponentov, pohybu a Higgsfield médií), Adam vyberie; copy neskôr. Základ je BoldKit napojený na tokeny, neobrutalizmus a zdravotnícka línia ostávajú. [A]
 - 2026-09-29 — **Web nehovorí, čo XVADUR predáva.** Metafora (príjem, anamnéza, liečba) nemá pod sebou priamo povedanú ponuku; motto „DIVIDED, WE ARE USELESS.“ nemá hovoriaceho ani predmet. Chýba vozidlo: produkt s menom, cenou a distribúciou. Kým nie je ponuka, V7 sú obaly bez stredu. Porovnanie: aiktivista.sk („NAUČÍM ŤA AI“, rola a sloveso v prvom riadku). [A]
 - 2026-09-27 — **V5.4:** neobrutalizmus a zdravotnícky žargón ostávajú, mení sa rozloženie a podanie podľa cohesion.framer.ai (pohyb do strán ako aiaktivista). Smer V6 (redakčná vizitka bez neobrutalizmu) Adam zamietol. Znak XVADUR ako vodoznak cez celé hero. Nasadené na main. [A]
