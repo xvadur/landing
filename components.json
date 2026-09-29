@@ -13,9 +13,12 @@
   "iconLibrary": "phosphor",
   "aliases": {
     "components": "@/components",
-    "ui": "@/components/vendor/neobrutalism",
+    "ui": "@/components/vendor/boldkit",
     "utils": "@/lib/utils",
     "lib": "@/lib",
     "hooks": "@/hooks"
+  },
+  "registries": {
+    "@boldkit": "https://boldkit.dev/r/{name}.json"
   }
 }

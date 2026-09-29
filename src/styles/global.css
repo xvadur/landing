@@ -6,6 +6,8 @@
    font-display text-lg font-extrabold uppercase text-ink shadow-brutal — text na hot je ink (5,4 : 1), nie paper. */
 
 @import './tokens.css';
+@import './boldkit.css';
+@import './motion.css';
 
 /* ---------- fonty (fontsource, self-host, latin + latin-ext) ---------- */
 /* Bricolage Grotesque variable: osi wght 200–800, wdth 75–100, opsz 12–96 ("standard" = všetky tri) */
