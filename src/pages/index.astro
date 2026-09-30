@@ -1,38 +1,29 @@
 ---
-/** Domov xvadur.com V5.4 (27. 9. 2026): neobrutalizmus + zdravotnícky žargón (XDR-267), layout a pohyb podľa
- *  cohesion.framer.ai a aiaktivista (pohyb do strán). Pilulkové menu so sledovaním sekcie, príjem s bežiacim XVADUR za
- *  fotkou a plávajúcimi symbolmi, vitálne funkcie naživo, anamnéza ako vrstvené karty, inštrumentár v pásoch, liečba
- *  s obrími číslami, chorobopisy vodorovne, tézy, vyšetrenie s rezerváciou, zápis, texty a hry.
- *  Predošlé scény V5 (KtoSom, PredAPo, Dokazy, Ponuka) ostávajú v src/components/v5/, na domove sa nepoužívajú. */
+/** Domov xvadur.com V8 (30. 9. 2026): jeden smer, prémiová disciplína podľa svojtko.com a cohesion.framer.ai
+ *  (jedno slovo v hero, jedna farba navyše, veľké medzery), na zamknutej identite: neobrutalizmus, zdravotnícka línia,
+ *  Bricolage / Space Grotesk / Geist Mono / Instrument Serif. Komponenty v src/components/v8/. Vyšetrenie a zápis sú
+ *  tie isté funkčné bloky ako na V5.4. */
 import Base from '@/layouts/Base.astro';
-import Opona from '@/components/home/Opona.astro';
-import Pilulky from '@/components/v54/Pilulky.astro';
-import Prijem from '@/components/v54/Prijem.astro';
-import Vitalne from '@/components/v54/Vitalne.astro';
-import Anamneza from '@/components/v54/Anamneza.astro';
-import Nastroje from '@/components/v54/Nastroje.astro';
-import Liecba from '@/components/v54/Liecba.astro';
-import Chorobopisy from '@/components/v54/Chorobopisy.astro';
-import Tezy from '@/components/v54/Tezy.astro';
+import Hero from '@/components/v8/Hero.astro';
+import Vitalne from '@/components/v8/Vitalne.astro';
+import KtoSom from '@/components/v8/KtoSom.astro';
+import Vyrok from '@/components/v8/Vyrok.astro';
+import Liecba from '@/components/v8/Liecba.astro';
+import Dokazy from '@/components/v8/Dokazy.astro';
 import Konzultacia from '@/components/v5/Konzultacia.astro';
 import Zber from '@/components/v5/Zber.astro';
-import TextyHry from '@/components/v5/TextyHry.astro';
 import { routeByPath } from '@/data/routes';
 
 const r = routeByPath('/')!;
 ---
 
-<Base title={r.title} description={r.description} islands="full" header="none">
-  <Opona />
-  <Pilulky />
-  <Prijem />
+<Base title={r.title} description={r.description} islands="full" header="bar">
+  <Hero />
   <Vitalne />
-  <Anamneza />
-  <Nastroje />
+  <KtoSom />
+  <Vyrok />
   <Liecba />
-  <Chorobopisy />
-  <Tezy />
+  <Dokazy />
   <Konzultacia />
   <Zber />
-  <TextyHry />
 </Base>

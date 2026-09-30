@@ -1,0 +1,14 @@
+---
+/** V8 Výrok: jedna veta cez celú šírku, Instrument Serif italic. Citát z src/data/cesta.ts (Adam, 26. 9. 2026). */
+import { CESTA } from '@/data/cesta';
+const citat = CESTA.find((k) => k.citat)?.citat ?? '';
+---
+
+<section class="border-b-3 border-ink bg-yellow" aria-label="Výrok">
+  <div class="mx-auto w-full max-w-[1600px] px-4 py-20 sm:px-6 sm:py-28 lg:px-10 lg:py-36">
+    <blockquote class="reveal">
+      <p class="font-serif text-[clamp(2rem,1rem+4.2vw,5.6rem)] leading-[1.02] italic text-ink">„{citat}“</p>
+      <footer class="mt-8 font-mono text-xs font-bold uppercase tracking-[0.24em] text-ink/60">Adam Rudavský · o nemocnici</footer>
+    </blockquote>
+  </div>
+</section>

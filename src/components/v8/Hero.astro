@@ -1,0 +1,97 @@
+---
+/** V8 Príjem (30. 9. 2026): typografické hero podľa laťky svojtko.com a cohesion.framer.ai. Jedno slovo cez celú
+ *  šírku (XVADUR), pod ním EKG čiara, ktorá sa nakreslí raz pri načítaní (podpisový pohyb), jedna veta, jedna akcia.
+ *  Nič iné: žiadne nálepky, symboly, pás ani šifra. Neobrutalizmus ostáva v ráme tlačidla a v tvrdom tieni. */
+import { ekgPath } from '@/components/v5/Symboly';
+const PISMENA = 'XVADUR'.split('');
+---
+
+<section id="uvod" class="hero relative border-b-3 border-ink bg-paper" aria-label="Príjem">
+  <div class="mx-auto flex min-h-[calc(100dvh-var(--header-h,64px))] w-full max-w-[1600px] flex-col justify-between px-4 pt-12 pb-8 sm:px-6 sm:pt-16 lg:px-10 lg:pt-20 lg:pb-10">
+    <p class="font-mono text-[0.72rem] font-bold uppercase tracking-[0.32em] text-hot sm:text-sm">
+      Adam Rudavský · zdravotná sestra, ktorá stavia AI agentov
+    </p>
+
+    <div class="flex flex-col">
+      <h1 class="wordmark font-display leading-[0.8] font-extrabold tracking-[-0.045em] uppercase text-ink" aria-label="XVADUR">
+        {PISMENA.map((p, i) => <span class="inline-block" style={`--i:${i}`} aria-hidden="true">{p}</span>)}
+      </h1>
+      <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="ekg mt-2 h-8 w-full sm:h-10 lg:mt-4" aria-hidden="true">
+        <path d={ekgPath(1200, 640)} fill="none" stroke="var(--color-ink)" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke" pathLength="1" />
+      </svg>
+    </div>
+
+    <div class="mt-10 grid gap-8 lg:mt-12 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-12">
+      <div class="flex flex-col gap-5">
+        <p class="font-display text-[clamp(1.9rem,1rem+3vw,3.6rem)] leading-[1.02] font-extrabold tracking-tight text-ink">
+          Vysvetľujem AI.<br />Staviam systémy.<br />Ukazujem, ako.
+        </p>
+        <p class="max-w-xl text-lg leading-snug text-ink/75 sm:text-xl">
+          Po rokoch v nemocnici som sa naučil pracovať s AI. Dnes staviam agentov, ktorí držia prácu za ľudí, a všetko, čo postavím, ukážem.
+        </p>
+      </div>
+      <div class="flex flex-col items-stretch gap-4 sm:items-start lg:items-end">
+        <a
+          href="#konzultacia"
+          data-track="konzultacia_klik"
+          data-track-miesto="hero"
+          class="press inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-7 font-display text-lg font-extrabold uppercase text-ink shadow-brutal sm:w-auto sm:text-xl"
+        >
+          Objednaj sa na vyšetrenie <span aria-hidden="true">→</span>
+        </a>
+        <a href="#kto-som" class="font-mono text-xs font-bold uppercase tracking-[0.24em] text-ink/60 underline-offset-4 hover:text-ink hover:underline">Kto som ↓</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* XVADUR v Bricolage 800 má pomer šírka/veľkosť písma 3,507 (zmerané 30. 9.); slovo vyplní presne šírku obsahu */
+  .wordmark {
+    --pomer: 3.53;
+    font-size: min(calc((100vw - 2rem) / var(--pomer)), calc(1520px / var(--pomer)));
+  }
+  @media (min-width: 640px) {
+    .wordmark {
+      font-size: min(calc((100vw - 3rem) / var(--pomer)), calc(1520px / var(--pomer)));
+    }
+  }
+  @media (min-width: 1024px) {
+    .wordmark {
+      font-size: min(calc((100vw - 5rem) / var(--pomer)), calc(1520px / var(--pomer)));
+    }
+  }
+  .wordmark span {
+    animation: pismeno 0.9s var(--ease-out-hard) both;
+    animation-delay: calc(var(--i) * 70ms);
+  }
+  @keyframes pismeno {
+    from {
+      transform: translateY(0.35em);
+      opacity: 0;
+    }
+    to {
+      transform: none;
+      opacity: 1;
+    }
+  }
+  .ekg path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: ekg-kresli 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.45s forwards;
+  }
+  @keyframes ekg-kresli {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark span,
+    .ekg path {
+      animation: none;
+      stroke-dashoffset: 0;
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

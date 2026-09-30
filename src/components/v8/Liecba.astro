@@ -1,0 +1,39 @@
+---
+/** V8 Liečba: tri spôsoby, ako začať. Vlajka = vyšetrenie 30 min (src/data/ponuka.ts), potom dva produkty. */
+import { PRODUKTY, VLAJKA } from '@/data/ponuka';
+const karty = [
+  { c: '01', nazov: VLAJKA.nazov, nalepka: `${VLAJKA.trvanie} · ${VLAJKA.cena}`, pre: 'Pre každého, kto má úlohu', popis: VLAJKA.titulok, body: VLAJKA.body, href: '#konzultacia', akcia: 'Objednaj sa', bg: 'bg-yellow' },
+  ...PRODUKTY.slice(0, 2).map((p, i) => ({ c: `0${i + 2}`, nazov: p.nazov, nalepka: p.nalepka, pre: p.pre, popis: p.popis, body: p.body, href: '#zapis', akcia: 'Chcem vedieť ako prvý', bg: 'bg-white' })),
+];
+---
+
+<section id="ponuka" class="border-b-3 border-ink bg-paper" aria-labelledby="ponuka-nadpis">
+  <div class="mx-auto w-full max-w-[1600px] px-4 py-20 sm:px-6 sm:py-28 lg:px-10 lg:py-36">
+    <div class="mb-12 flex flex-col gap-6 lg:mb-16 lg:flex-row lg:items-end lg:justify-between">
+      <div class="flex flex-col gap-5">
+        <p class="eyebrow text-hot">Liečba</p>
+        <h2 id="ponuka-nadpis" class="font-display text-display-sm font-extrabold uppercase leading-[0.9] tracking-tighter">Tri spôsoby,<br />ako začať.</h2>
+      </div>
+      <p class="max-w-md text-lg leading-snug text-ink/75">Najprv vyšetrenie. Až potom liečba, ktorá sedí na tvoju prácu, nie na cudzí návod.</p>
+    </div>
+    <ol class="grid gap-6 lg:grid-cols-3 lg:gap-8">
+      {karty.map((k) => (
+        <li class:list={['reveal flex flex-col gap-6 rounded-lg border-3 border-ink p-6 shadow-brutal sm:p-8', k.bg]}>
+          <div class="flex items-start justify-between gap-4">
+            <span class="font-display text-6xl font-extrabold tracking-tighter sm:text-7xl">{k.c}</span>
+            <span class="mt-2 rounded-full border-3 border-ink bg-paper px-3 py-1 font-mono text-[0.65rem] font-bold uppercase tracking-[0.14em]">{k.nalepka}</span>
+          </div>
+          <div class="flex flex-col gap-3">
+            <p class="font-mono text-xs font-bold uppercase tracking-[0.18em] text-ink/55">{k.pre}</p>
+            <h3 class="font-display text-3xl font-extrabold tracking-tight sm:text-4xl">{k.nazov}</h3>
+            <p class="text-base leading-snug text-ink/80 sm:text-lg">{k.popis}</p>
+          </div>
+          <ul class="mt-auto flex flex-col gap-2 border-t-3 border-ink pt-5 font-mono text-sm">
+            {k.body.map((b) => <li class="flex gap-3"><span class="text-hot">✚</span>{b}</li>)}
+          </ul>
+          <a href={k.href} class="press inline-flex min-h-12 items-center justify-center rounded-lg border-3 border-ink bg-ink px-5 font-display text-base font-extrabold uppercase text-paper shadow-brutal-sm">{k.akcia} →</a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

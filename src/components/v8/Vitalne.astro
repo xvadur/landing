@@ -1,0 +1,42 @@
+---
+/** V8 Vitálne funkcie: tenký čierny pás so štyrmi živými číslami Korpusu (/pulse.json). Bez bežiaceho pásu. */
+import { ZIVE_CISLA, ZIVE_CISLA_SNIMKA, ZIVE_CISLA_ZDROJ } from '@/data/fakty';
+const fmt = (n: number) => new Intl.NumberFormat('sk-SK').format(n).replace(/\s/g, ' ');
+---
+
+<section class="border-b-3 border-ink bg-ink text-paper" aria-label="Vitálne funkcie" data-zdroj={ZIVE_CISLA_ZDROJ ?? ''}>
+  <div class="mx-auto grid w-full max-w-[1600px] gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[220px_1fr] lg:items-center lg:gap-12 lg:px-10 lg:py-10">
+    <p class="inline-flex items-center gap-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-paper/70">
+      <span aria-hidden="true" class="relative flex h-2.5 w-2.5">
+        <span class="absolute inline-flex h-full w-full rounded-full bg-hot opacity-70 motion-safe:animate-ping"></span>
+        <span class="relative inline-flex h-2.5 w-2.5 rounded-full bg-hot"></span>
+      </span>
+      Vitálne funkcie<br class="hidden lg:block" /> <span class="text-paper/45">{ZIVE_CISLA_SNIMKA}</span>
+    </p>
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4">
+      {ZIVE_CISLA.map((z) => (
+        <div class="flex flex-col gap-1 border-l-3 border-paper/20 pl-4" title={z.note}>
+          <dd class="order-1 font-display text-4xl font-extrabold tabular-nums tracking-tight sm:text-5xl lg:text-6xl" data-kluc={z.kluc}>{fmt(z.value)}</dd>
+          <dt class="order-2 font-mono text-[0.68rem] leading-tight uppercase tracking-[0.14em] text-paper/60 sm:text-xs">{z.label}</dt>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<script>
+  const zdroj = document.querySelector<HTMLElement>('[data-zdroj]')?.dataset.zdroj;
+  if (zdroj) {
+    fetch(zdroj, { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (!d) return;
+        const f = new Intl.NumberFormat('sk-SK');
+        document.querySelectorAll<HTMLElement>('[data-kluc]').forEach((el) => {
+          const v = d[el.dataset.kluc!];
+          if (typeof v === 'number') el.textContent = f.format(v).replace(/\s/g, ' ');
+        });
+      })
+      .catch(() => {});
+  }
+</script>
