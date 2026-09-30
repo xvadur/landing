@@ -12,3 +12,6 @@ dist-*/
 CLAUDE.local.md
 # screenshoty QA skriptov (work/qa/*.mjs) — lokálne artefakty, nie do repa
 work/screens/
+
+# Higgsfield výstupy a JSON (obsahujú odkazy na referenčné fotky)
+work/higgsfield/
