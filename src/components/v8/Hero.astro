@@ -1,90 +1,101 @@
 ---
-/** V8 Príjem (30. 9. 2026): typografické hero podľa laťky svojtko.com a cohesion.framer.ai. Jedno slovo cez celú
- *  šírku (XVADUR), pod ním EKG čiara, ktorá sa nakreslí raz pri načítaní (podpisový pohyb), jedna veta, jedna akcia.
- *  Nič iné: žiadne nálepky, symboly, pás ani šifra. Neobrutalizmus ostáva v ráme tlačidla a v tvrdom tieni. */
+/** V8 Príjem (1. 10. 2026): kompozícia podľa aiktivista.sk, na ktorú Adam ukázal 20. 9. („Jevčík tam stojí, ja by som tam
+ *  mohol stáť viac casual“). Postava je veľká, stojí na spodnej hrane hero a meno ju prekrýva cez rameno. Fotka: Higgsfield
+ *  Soul Cinema, Soul ID Sunset Vibes Explorer, výrez work/qa/vyrez.mjs. Na mobile postava stojí na čiare a meno je pod ňou. */
 import { ekgPath } from '@/components/v5/Symboly';
 const PISMENA = 'XVADUR'.split('');
 ---
 
-<section id="uvod" class="hero relative border-b-3 border-ink bg-paper" aria-label="Príjem">
-  <div class="mx-auto flex min-h-[calc(100dvh-var(--header-h,64px))] w-full max-w-[1600px] flex-col justify-between px-4 pt-12 pb-8 sm:px-6 sm:pt-16 lg:px-10 lg:pt-20 lg:pb-10">
-    <p class="font-mono text-[0.72rem] font-bold uppercase tracking-[0.32em] text-hot sm:text-sm">
-      Adam Rudavský · zdravotná sestra, ktorá stavia AI agentov
+<section id="uvod" class="hero relative overflow-hidden border-b-3 border-ink bg-paper" aria-label="Príjem">
+  <div class="relative mx-auto flex min-h-[calc(100dvh-var(--header-h,71px))] w-full max-w-[1600px] flex-col px-4 pt-8 sm:px-6 lg:px-10 lg:pt-10">
+    <p class="relative z-20 font-mono text-[0.7rem] font-bold uppercase tracking-[0.3em] text-ink/70 sm:text-xs">
+      Zdravotná sestra <span class="text-hot">·</span> AI agenti <span class="text-hot">·</span> Systémy, ktoré držia prácu za ľudí
     </p>
 
-    <div class="flex flex-col">
-      <div class="znacka flex items-end justify-between">
-        <h1 class="wordmark flex-none font-display leading-[0.8] font-extrabold whitespace-nowrap tracking-[-0.045em] uppercase text-ink" aria-label="XVADUR">
-          {PISMENA.map((p, i) => <span class="inline-block" style={`--i:${i}`} aria-hidden="true">{p}</span>)}
-        </h1>
+    <div class="scena relative mt-6 flex flex-1 flex-col lg:mt-0 lg:block">
+      <div class="postava-box relative flex justify-center border-b-3 border-ink lg:static lg:border-0">
         <img
           src="/v8/adam-hero.webp"
           alt="Adam Rudavský v uniforme s fonendoskopom"
           width="1100"
           height="1467"
-          class="postava pointer-events-none mb-[0.072em] h-[1.5em] w-auto max-w-none flex-none select-none"
+          class="postava pointer-events-none block h-[44vh] w-auto max-w-none select-none lg:absolute lg:bottom-0 lg:left-[33%] lg:h-[94%]"
           fetchpriority="high"
           decoding="async"
         />
       </div>
-      <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="ekg mt-2 h-8 w-full sm:h-10 lg:mt-4" aria-hidden="true">
-        <path d={ekgPath(1200, 640)} fill="none" stroke="var(--color-ink)" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke" pathLength="1" />
-      </svg>
-    </div>
 
-    <div class="mt-10 grid gap-8 lg:mt-12 lg:grid-cols-[1.4fr_1fr] lg:items-end lg:gap-12">
-      <div class="flex flex-col gap-5">
-        <p class="font-display text-[clamp(1.9rem,1rem+3vw,3.6rem)] leading-[1.02] font-extrabold tracking-tight text-ink">
-          Vysvetľujem AI.<br />Staviam systémy.<br />Ukazujem, ako.
+      <div class="meno relative z-10 flex flex-col items-start pt-6 pb-10 lg:absolute lg:top-1/2 lg:right-0 lg:w-[52%] lg:pt-0 lg:pb-0">
+        <span class="stitok inline-block bg-ink px-3 py-1.5 font-mono text-xs font-bold uppercase tracking-[0.22em] text-paper sm:text-sm">Adam Rudavský</span>
+        <h1 class="wordmark mt-2 font-display leading-[0.8] font-extrabold tracking-[-0.045em] whitespace-nowrap uppercase text-ink" aria-label="XVADUR">
+          {PISMENA.map((p, i) => <span class="inline-block" style={`--i:${i}`} aria-hidden="true">{p}</span>)}
+        </h1>
+        <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="ekg mt-2 h-7 w-full sm:h-9" aria-hidden="true">
+          <path d={ekgPath(1200, 640)} fill="none" stroke="var(--color-ink)" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke" pathLength="1" />
+        </svg>
+        <p class="mt-5 max-w-md font-display text-2xl lg:max-w-none lg:whitespace-nowrap leading-[1.05] font-extrabold tracking-tight text-ink sm:text-3xl">
+          Vysvetľujem AI. Staviam systémy. Ukazujem, ako.
         </p>
-        <p class="max-w-xl text-lg leading-snug text-ink/75 sm:text-xl">
-          Po rokoch v nemocnici som sa naučil pracovať s AI. Dnes staviam agentov, ktorí držia prácu za ľudí, a všetko, čo postavím, ukážem.
-        </p>
-      </div>
-      <div class="flex flex-col items-stretch gap-4 sm:items-start lg:items-end">
-        <a
-          href="#konzultacia"
-          data-track="konzultacia_klik"
-          data-track-miesto="hero"
-          class="press inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-7 font-display text-lg font-extrabold uppercase text-ink shadow-brutal sm:w-auto sm:text-xl"
-        >
-          Objednaj sa na vyšetrenie <span aria-hidden="true">→</span>
-        </a>
-        <a href="#kto-som" class="font-mono text-xs font-bold uppercase tracking-[0.24em] text-ink/60 underline-offset-4 hover:text-ink hover:underline">Kto som ↓</a>
+        <div class="mt-6 flex w-full flex-col items-stretch gap-4 sm:w-auto sm:flex-row sm:items-center">
+          <a
+            href="#konzultacia"
+            data-track="konzultacia_klik"
+            data-track-miesto="hero"
+            class="press inline-flex min-h-14 items-center justify-center gap-3 rounded-lg border-3 border-ink bg-hot px-7 font-display text-lg font-extrabold uppercase text-ink shadow-brutal"
+          >
+            Objednaj sa na vyšetrenie <span aria-hidden="true">→</span>
+          </a>
+          <a href="#kto-som" class="font-mono text-xs font-bold uppercase tracking-[0.24em] text-ink/60 underline-offset-4 hover:text-ink hover:underline">Kto som ↓</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  /* XVADUR v Bricolage 800 má pomer šírka/veľkosť písma 3,507 (zmerané 30. 9.); slovo vyplní presne šírku obsahu */
-  .znacka {
-    --pomer: 4.95; /* slovo 3,5–3,6 em + postava 1,125 em (výška 1,5 em, pomer 3:4) + medzera; na mobile väčšia rezerva */
-    font-size: min(calc((100vw - 2rem) / var(--pomer)), calc(1520px / var(--pomer)));
+  /* XVADUR v Bricolage 800 má pomer šírka/veľkosť písma asi 3,55; na mobile cez celú šírku, na desktope cez 52 % obsahu */
+  .wordmark {
+    font-size: calc((100vw - 2rem) / 3.62);
   }
   @media (min-width: 640px) {
-    .znacka {
-      --pomer: 4.72;
-      font-size: min(calc((100vw - 3rem) / var(--pomer)), calc(1520px / var(--pomer)));
+    .wordmark {
+      font-size: calc((100vw - 3rem) / 3.62);
     }
   }
   @media (min-width: 1024px) {
-    .znacka {
-      font-size: min(calc((100vw - 5rem) / var(--pomer)), calc(1520px / var(--pomer)));
+    .wordmark {
+      font-size: calc((min(100vw, 1600px) - 5rem) * 0.52 / 3.62);
+    }
+    .meno {
+      transform: translateY(-42%);
+    }
+    .postava {
+      transform: translateX(-50%);
     }
   }
-  .wordmark {
-    font-size: 1em;
-  }
-  /* postava stojí vedľa slova na tej istej päte; boky dostratena, lebo ramená sú orezané okrajom záberu */
+  /* ramená sú orezané okrajom záberu: boky idú dostratena */
   .postava {
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
-    animation: postava 0.9s var(--ease-out-hard) 0.5s both;
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
+    animation: postava 1s var(--ease-out-hard) 0.1s both;
   }
   @keyframes postava {
     from {
-      transform: translateY(0.12em);
+      opacity: 0;
+      translate: 0 3%;
+    }
+    to {
+      opacity: 1;
+      translate: 0 0;
+    }
+  }
+  .wordmark span {
+    animation: pismeno 0.9s var(--ease-out-hard) both;
+    animation-delay: calc(0.35s + var(--i) * 70ms);
+  }
+  @keyframes pismeno {
+    from {
+      transform: translateY(0.35em);
       opacity: 0;
     }
     to {
@@ -95,7 +106,7 @@ const PISMENA = 'XVADUR'.split('');
   .ekg path {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    animation: ekg-kresli 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.45s forwards;
+    animation: ekg-kresli 1.6s cubic-bezier(0.4, 0, 0.2, 1) 0.8s forwards;
   }
   @keyframes ekg-kresli {
     to {
@@ -110,6 +121,12 @@ const PISMENA = 'XVADUR'.split('');
       stroke-dashoffset: 0;
       opacity: 1;
       transform: none;
+      translate: none;
+    }
+    @media (min-width: 1024px) {
+      .postava {
+        transform: translateX(-50%);
+      }
     }
   }
 </style>
