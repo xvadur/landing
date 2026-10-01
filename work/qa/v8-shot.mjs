@@ -10,7 +10,7 @@ for (const [name, vp] of [['1440', { width: 1440, height: 900 }], ['375', { widt
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.waitForTimeout(2500);
   const m = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: innerWidth, h: document.documentElement.scrollHeight,
-    wm: (() => { const h = document.querySelector('h1.wordmark'); if (!h) return null; const s = [...h.querySelectorAll('span')]; const a = s[0].getBoundingClientRect(), b = s.at(-1).getBoundingClientRect(); return { fs: getComputedStyle(h).fontSize, w: Math.round(b.right - a.left), cw: Math.round(h.parentElement.getBoundingClientRect().width) }; })() }));
+    wm: (() => { const h = document.querySelector('h1.wordmark'); if (!h) return null; const s = [...h.querySelectorAll('span')]; const a = s[0].getBoundingClientRect(), b = s.at(-1).getBoundingClientRect(); const im = document.querySelector('img.postava')?.getBoundingClientRect(); return { fs: getComputedStyle(h).fontSize, w: Math.round(b.right - a.left), cw: Math.round(h.parentElement.getBoundingClientRect().width), slovoPo: Math.round(b.right), postavaOd: im ? Math.round(im.left) : null, postavaDo: im ? Math.round(im.right) : null }; })() }));
   await page.screenshot({ path: `work/screens/v8-${name}.png`, fullPage: true });
   await page.screenshot({ path: `work/screens/v8-${name}-hero.png`, fullPage: false });
   console.log(name, JSON.stringify(m), 'chyby:', errors.length, errors.slice(0, 3).join(' | '));

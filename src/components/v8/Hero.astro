@@ -13,8 +13,8 @@ const PISMENA = 'XVADUR'.split('');
     </p>
 
     <div class="flex flex-col">
-      <div class="znacka relative pt-[0.42em]">
-        <h1 class="wordmark font-display leading-[0.8] font-extrabold tracking-[-0.045em] uppercase text-ink" aria-label="XVADUR">
+      <div class="znacka flex items-end justify-between">
+        <h1 class="wordmark flex-none font-display leading-[0.8] font-extrabold whitespace-nowrap tracking-[-0.045em] uppercase text-ink" aria-label="XVADUR">
           {PISMENA.map((p, i) => <span class="inline-block" style={`--i:${i}`} aria-hidden="true">{p}</span>)}
         </h1>
         <img
@@ -22,7 +22,7 @@ const PISMENA = 'XVADUR'.split('');
           alt="Adam Rudavský v uniforme s fonendoskopom"
           width="1100"
           height="1467"
-          class="postava pointer-events-none absolute bottom-[0.072em] left-1/2 h-[1.2em] w-auto max-w-none select-none"
+          class="postava pointer-events-none mb-[0.072em] h-[1.5em] w-auto max-w-none flex-none select-none"
           fetchpriority="high"
           decoding="async"
         />
@@ -59,11 +59,12 @@ const PISMENA = 'XVADUR'.split('');
 <style>
   /* XVADUR v Bricolage 800 má pomer šírka/veľkosť písma 3,507 (zmerané 30. 9.); slovo vyplní presne šírku obsahu */
   .znacka {
-    --pomer: 3.53;
+    --pomer: 4.95; /* slovo 3,5–3,6 em + postava 1,125 em (výška 1,5 em, pomer 3:4) + medzera; na mobile väčšia rezerva */
     font-size: min(calc((100vw - 2rem) / var(--pomer)), calc(1520px / var(--pomer)));
   }
   @media (min-width: 640px) {
     .znacka {
+      --pomer: 4.72;
       font-size: min(calc((100vw - 3rem) / var(--pomer)), calc(1520px / var(--pomer)));
     }
   }
@@ -75,31 +76,15 @@ const PISMENA = 'XVADUR'.split('');
   .wordmark {
     font-size: 1em;
   }
-  /* postava vystupuje z písmen a končí na účiari (spodok h1); príde po písmenách */
+  /* postava stojí vedľa slova na tej istej päte; boky dostratena, lebo ramená sú orezané okrajom záberu */
   .postava {
-    /* ramená sú orezané okrajom záberu: boky idú dostratena, aby nevznikla rovná hrana */
-    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%);
-    transform: translateX(-50%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
     animation: postava 0.9s var(--ease-out-hard) 0.5s both;
   }
   @keyframes postava {
     from {
-      transform: translateX(-50%) translateY(0.12em);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(-50%);
-      opacity: 1;
-    }
-  }
-  .wordmark span {
-    animation: pismeno 0.9s var(--ease-out-hard) both;
-    animation-delay: calc(var(--i) * 70ms);
-  }
-  @keyframes pismeno {
-    from {
-      transform: translateY(0.35em);
+      transform: translateY(0.12em);
       opacity: 0;
     }
     to {
