@@ -13,9 +13,20 @@ const PISMENA = 'XVADUR'.split('');
     </p>
 
     <div class="flex flex-col">
-      <h1 class="wordmark font-display leading-[0.8] font-extrabold tracking-[-0.045em] uppercase text-ink" aria-label="XVADUR">
-        {PISMENA.map((p, i) => <span class="inline-block" style={`--i:${i}`} aria-hidden="true">{p}</span>)}
-      </h1>
+      <div class="znacka relative pt-[0.42em]">
+        <h1 class="wordmark font-display leading-[0.8] font-extrabold tracking-[-0.045em] uppercase text-ink" aria-label="XVADUR">
+          {PISMENA.map((p, i) => <span class="inline-block" style={`--i:${i}`} aria-hidden="true">{p}</span>)}
+        </h1>
+        <img
+          src="/v8/adam-hero.webp"
+          alt="Adam Rudavský v uniforme s fonendoskopom"
+          width="1100"
+          height="1467"
+          class="postava pointer-events-none absolute bottom-[0.072em] left-1/2 h-[1.2em] w-auto max-w-none select-none"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </div>
       <svg viewBox="0 0 1200 40" preserveAspectRatio="none" class="ekg mt-2 h-8 w-full sm:h-10 lg:mt-4" aria-hidden="true">
         <path d={ekgPath(1200, 640)} fill="none" stroke="var(--color-ink)" stroke-width="3" stroke-linejoin="round" vector-effect="non-scaling-stroke" pathLength="1" />
       </svg>
@@ -47,18 +58,39 @@ const PISMENA = 'XVADUR'.split('');
 
 <style>
   /* XVADUR v Bricolage 800 má pomer šírka/veľkosť písma 3,507 (zmerané 30. 9.); slovo vyplní presne šírku obsahu */
-  .wordmark {
+  .znacka {
     --pomer: 3.53;
     font-size: min(calc((100vw - 2rem) / var(--pomer)), calc(1520px / var(--pomer)));
   }
   @media (min-width: 640px) {
-    .wordmark {
+    .znacka {
       font-size: min(calc((100vw - 3rem) / var(--pomer)), calc(1520px / var(--pomer)));
     }
   }
   @media (min-width: 1024px) {
-    .wordmark {
+    .znacka {
       font-size: min(calc((100vw - 5rem) / var(--pomer)), calc(1520px / var(--pomer)));
+    }
+  }
+  .wordmark {
+    font-size: 1em;
+  }
+  /* postava vystupuje z písmen a končí na účiari (spodok h1); príde po písmenách */
+  .postava {
+    /* ramená sú orezané okrajom záberu: boky idú dostratena, aby nevznikla rovná hrana */
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%);
+    transform: translateX(-50%);
+    animation: postava 0.9s var(--ease-out-hard) 0.5s both;
+  }
+  @keyframes postava {
+    from {
+      transform: translateX(-50%) translateY(0.12em);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(-50%);
+      opacity: 1;
     }
   }
   .wordmark span {
@@ -87,6 +119,7 @@ const PISMENA = 'XVADUR'.split('');
   }
   @media (prefers-reduced-motion: reduce) {
     .wordmark span,
+    .postava,
     .ekg path {
       animation: none;
       stroke-dashoffset: 0;
