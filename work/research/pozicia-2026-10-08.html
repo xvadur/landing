@@ -1,0 +1,186 @@
+<title>Pozícia XVADUR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: jeden stĺpec; mriežka 5×5 (hĺbka × dôkaz) ako hlavný obraz, pod ňou ľudia pri tebe, ceny, slabiny a metóda. */
+  :root {
+    --bg: #FCFCFB; --fg: #0B0B0B; --muted: #52514E; --line: #E6E5E1; --plate: #F3F2EF;
+    --s1: #cde2fb; --s2: #9ec5f4; --s3: #6da7ec; --s4: #3987e5; --s5: #256abf; --s6: #184f95; --s7: #0d366b;
+    --you: #E0362C; --you-ink: #FFFFFF; --empty: #F3F2EF;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --body: "Geist", "Helvetica Neue", Arial, sans-serif;
+    --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #1A1A19; --fg: #FFFFFF; --muted: #C3C2B7; --line: #33332F; --plate: #24241F;
+    --s1: #184f95; --s2: #1c5cab; --s3: #256abf; --s4: #2a78d6; --s5: #3987e5; --s6: #6da7ec; --s7: #9ec5f4;
+    --you: #FF5A4E; --you-ink: #0B0B0B; --empty: #24241F; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --bg: #1A1A19; --fg: #FFFFFF; --muted: #C3C2B7; --line: #33332F; --plate: #24241F;
+    --s1: #184f95; --s2: #1c5cab; --s3: #256abf; --s4: #2a78d6; --s5: #3987e5; --s6: #6da7ec; --s7: #9ec5f4;
+    --you: #FF5A4E; --you-ink: #0B0B0B; --empty: #24241F; color-scheme: dark; }
+  body { background: var(--bg); color: var(--fg); font: 400 16px/1.55 var(--body); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 40px); padding-block: clamp(32px, 6vw, 72px); display: flex; flex-direction: column; gap: 56px; }
+  .eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 800 clamp(40px, 7vw, 76px)/.95 var(--display); letter-spacing: -.04em; margin: 12px 0 18px; text-wrap: balance; }
+  h2 { font: 700 clamp(24px, 3vw, 32px)/1.1 var(--display); letter-spacing: -.02em; margin: 0 0 14px; text-wrap: balance; }
+  p { margin: 0; max-width: 66ch; }
+  .lead { font-size: 18px; color: var(--muted); }
+  .lead b { color: var(--fg); font-weight: 600; }
+  .nums { display: flex; flex-wrap: wrap; gap: 12px 36px; margin-top: 22px; font-variant-numeric: tabular-nums; }
+  .nums div { display: flex; flex-direction: column; }
+  .nums b { font: 700 32px/1 var(--display); }
+  .nums span { font-size: 13px; color: var(--muted); }
+  .chart { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px 12px; align-items: stretch; }
+  .ylab { display: grid; grid-template-rows: repeat(5, 1fr); gap: 4px; }
+  .ylab div { display: flex; flex-direction: column; justify-content: center; align-items: flex-end; text-align: right; font-size: 12px; line-height: 1.25; color: var(--muted); max-width: 150px; }
+  .ylab b, .xlab b { font: 500 13px/1 var(--mono); color: var(--fg); }
+  .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .cell { position: relative; aspect-ratio: 1.35 / 1; border-radius: 6px; border: 0; padding: 8px; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; font: inherit; color: var(--fg); background: var(--empty); cursor: pointer; text-align: left; min-width: 0; }
+  .cell .n { font: 700 clamp(18px, 3vw, 30px)/1 var(--display); font-variant-numeric: tabular-nums; }
+  .cell .t { font-size: 11px; line-height: 1.2; opacity: .9; }
+  .cell.dark { color: #FFFFFF; }
+  .cell:focus-visible { outline: 3px solid var(--fg); outline-offset: 2px; }
+  .cell.you { outline: 3px solid var(--you); outline-offset: -3px; }
+  .cell.you .badge { position: absolute; top: -12px; right: -6px; background: var(--you); color: var(--you-ink); font: 600 11px/1 var(--mono); padding: 5px 7px; border-radius: 4px; letter-spacing: .04em; white-space: nowrap; }
+  .xlab { grid-column: 2; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+  .xlab div { font-size: 12px; line-height: 1.25; color: var(--muted); display: flex; flex-direction: column; gap: 3px; }
+  .axis { grid-column: 2; display: flex; justify-content: space-between; font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .yaxis { font: 500 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .legend i { display: inline-block; width: 18px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+  .panel { border-top: 1px solid var(--line); padding-top: 16px; min-height: 120px; }
+  .panel h3 { font: 600 15px/1.3 var(--body); margin: 0 0 8px; }
+  .panel ul { margin: 0; padding: 0; list-style: none; columns: 2 240px; column-gap: 28px; font-size: 14px; }
+  .panel li { break-inside: avoid; padding: 2px 0; }
+  .panel li .f { font: 500 11px/1 var(--mono); color: var(--muted); margin-left: 6px; }
+  .tbl { width: 100%; overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; font-variant-numeric: tabular-nums; }
+  th, td { text-align: left; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font: 500 12px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  tr.me td { font-weight: 600; }
+  tr.me td:first-child { box-shadow: inset 3px 0 0 var(--you); padding-left: 10px; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 28px; }
+  .two div { min-width: 0; }
+  .two p + p { margin-top: 10px; }
+  footer { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13px; color: var(--muted); }
+  footer p + p { margin-top: 8px; }
+  @media (max-width: 640px) { .ylab div { max-width: 92px; font-size: 11px; } .cell .t { display: none; } .xlab div span { display: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Slovensko a Česko · 198 hráčov, ktorí predávajú AI · 8. 10. 2026</span>
+    <h1>Kde stojíš medzi 198 hráčmi</h1>
+    <p class="lead">Každý, kto na Slovensku a v Česku predáva AI službu, kurz alebo produkt, dostal dve známky od 0 do 4: <b>ako hlboko stavia</b> a <b>čím to dokazuje</b>. Políčko vpravo hore je najvyššie na oboch osiach. Klikni na políčko a uvidíš mená.</p>
+    <div class="nums">
+      <div><b>198</b><span>predáva AI (107 SK, 91 CZ)</span></div>
+      <div><b>24</b><span>má silný dôkaz (3 alebo 4)</span></div>
+      <div><b>5</b><span>ľudí s tvárou má hĺbku aj dôkaz aspoň 3</span></div>
+      <div><b>1</b><span>človek s tvárou má 4 a 4</span></div>
+    </div>
+  </header>
+
+  <section aria-labelledby="mapa">
+    <h2 id="mapa">Mapa: hĺbka stavby × dôkaz</h2>
+    <div class="chart">
+      <div class="yaxis" style="grid-column:1;align-self:end">Dôkaz ↑</div>
+      <div class="axis"><span>Hĺbka stavby →</span><span></span></div>
+      <div class="ylab" aria-hidden="true">
+        <div><b>4</b>živý systém, do ktorého sa dá pozrieť</div>
+        <div><b>3</b>menovaní klienti, prípady s číslami</div>
+        <div><b>2</b>čísla, recenzie, bez mien</div>
+        <div><b>1</b>iba tvrdenia</div>
+        <div><b>0</b>nič</div>
+      </div>
+      <div class="grid" id="grid" role="grid" aria-label="Počet hráčov podľa hĺbky stavby a dôkazu"></div>
+      <div class="xlab" aria-hidden="true">
+        <div><b>0</b><span>iba obsah</span></div>
+        <div><b>1</b><span>učí nástroje</span></div>
+        <div><b>2</b><span>no-code, chatboty</span></div>
+        <div><b>3</b><span>stavba na mieru</span></div>
+        <div><b>4</b><span>vlastné systémy a dáta v prevádzke</span></div>
+      </div>
+    </div>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:var(--empty)"></i>0</span><span><i style="background:var(--s1)"></i>1–2</span><span><i style="background:var(--s3)"></i>3–5</span><span><i style="background:var(--s4)"></i>6–10</span><span><i style="background:var(--s5)"></i>11–20</span><span><i style="background:var(--s7)"></i>21+</span><span><i style="background:transparent;outline:3px solid var(--you);outline-offset:-3px"></i>ty</span>
+    </div>
+    <div class="panel" id="panel" aria-live="polite">
+      <h3 id="ptitle">Políčko 4 a 4: hĺbka 4, dôkaz 4</h3>
+      <ul id="plist"></ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="pri">
+    <h2 id="pri">Kto je pri tebe</h2>
+    <p style="margin-bottom:16px">Ľudia s tvárou, ktorí majú hĺbku aj dôkaz aspoň 3. Firmy bez tváre na 4 a 4 (CloudTalk, Powerful Medical, Innovatrics) sú produkty so stovkami zamestnancov, nie človek.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Kto</th><th>Čo robí</th><th>Hĺbka</th><th>Dôkaz</th><th>Cena na webe</th></tr></thead>
+      <tbody>
+        <tr class="me"><td>Adam Rudavský, XVADUR</td><td>weby a agenti pre firmy; vlastný Netopier, Korpus a 7 živých webov</td><td>4</td><td>4</td><td>500 € a 250 € mesačne</td></tr>
+        <tr><td>Michal Juhás, AI vo Firme</td><td>workshop v prevádzke a prvý AI projekt; vlastné produkty Calyflow, Sellerita</td><td>4</td><td>3</td><td>workshopy od 2 000–3 000 €</td></tr>
+        <tr><td>Jakub Krasula, KUKRA</td><td>AI pre stavebné firmy (produkt)</td><td>4</td><td>3</td><td>65 € mesačne</td></tr>
+        <tr><td>Peter Kuklis, Personeo</td><td>AI tréning predajcov (produkt, 48 krajín)</td><td>4</td><td>3</td><td>neuvedená</td></tr>
+        <tr><td>Sebastián Šooš, netWRK</td><td>AI a softvér na mieru; klienti Danfoss, Allianz; 30+ riešení</td><td>3</td><td>3</td><td>po audite zadarmo</td></tr>
+        <tr><td>Artem Sotsenko, coMakers (Praha)</td><td>systémy, automatizácie, hlasoví agenti</td><td>3</td><td>3</td><td>systém od 40 000 Kč (asi 1 600 €), prevádzka od 12 000 Kč (asi 480 €) mesačne</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section aria-labelledby="cena">
+    <h2 id="cena">Kde si podcenený</h2>
+    <p style="margin-bottom:16px">Nie oproti agentúram z EÚ, ale oproti tým, ktorí stavajú na Slovensku a v Česku menej hlboko ako ty a cenu zverejňujú.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Kto</th><th>Hĺbka</th><th>Dôkaz</th><th>Jednorazovo</th><th>Mesačne</th></tr></thead>
+      <tbody>
+        <tr class="me"><td>XVADUR</td><td>4</td><td>4</td><td>500 €</td><td>250 €</td></tr>
+        <tr><td>Transformio.ai</td><td>2</td><td>1</td><td>od 2 900 €</td><td>590 €</td></tr>
+        <tr><td>coMakers</td><td>3</td><td>3</td><td>od asi 1 600 €</td><td>od asi 480 €</td></tr>
+        <tr><td>Norvas</td><td>3</td><td>1</td><td>od 1 000 €</td><td>250 € + technológie 50–800 €</td></tr>
+        <tr><td>AIAI.sk</td><td>3</td><td>2</td><td>pilot 600–2 400 €</td><td>–</td></tr>
+        <tr><td>Rivillo</td><td>2</td><td>1</td><td>proces od 900 €, audit 99 €</td><td>–</td></tr>
+        <tr><td>Webshine</td><td>2</td><td>2</td><td>web od 500 €, aplikácie 3 000–7 000 €</td><td>–</td></tr>
+      </tbody>
+    </table></div>
+    <p style="margin-top:14px">Mesačná cena 250 € je na trhu bežná. Jednorazových 500 € je cena webu od Webshine, ktorý stojí na 2 a 2. Každý, kto stavia na mieru (hĺbka 3), pýta za stavbu 600 až 2 900 €.</p>
+  </section>
+
+  <section aria-labelledby="slabe">
+    <h2 id="slabe">Čo mapa ukazuje navyše</h2>
+    <div class="two">
+      <div><p><b>Trh je dole.</b> 96 zo 198 má dôkaz 0, iba tvrdenia na webe. 41 z nich deklaruje stavbu na mieru (hĺbka 3) bez jediného menovaného klienta alebo čísla.</p><p><b>Učitelia sú vľavo.</b> 60 hráčov predáva vzdelávanie a takmer všetci sú na hĺbke 1: učia nástroje, sami nestavajú.</p></div>
+      <div><p><b>Zdravotníctvo má iba produkty.</b> Powerful Medical, AdaSoft, Intes Comp a Amitia AI. Človek ani služba pre zdravotníkov na mape nie je.</p><p><b>Tvoja slabina nie je stavba, ale dosah a výsledky klientov.</b> Tvoje dôkazy sú vlastné systémy. Päť ľudí vedľa teba má menovaných klientov a výsledky (Danfoss, Allianz, 48 krajín). Instagram máš 44 sledovateľov, Gregor má 37 tisíc na YouTube.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Metóda: 107 slovenských hráčov z mapy konkurencie (5.–7. 10.), z toho 60 webov prečítaných skriptom 8. 10.; 91 českých (17 z mapy, 74 z firmy.cz, štítky AI konzultace, AI agenti, AI asistent). Mimo mapy ostalo 13 účtov, ktoré nič nepredávajú, 39 komunít, médií, inštitúcií a mŕtvych účtov a 95 firiem z registra s neovereným predmetom.</p>
+    <p>Obmedzenie: ostatných som hodnotil podľa titulnej stránky alebo jedného riadku popisu, teba podľa všetkého, čo poznám. Niektorí môžu mať hĺbku a dôkazy, ktoré na webe neukazujú. Ceny v Kč sú prepočítané orientačne kurzom 25 Kč za euro.</p>
+  </footer>
+</div>
+
+<script>
+const CELLS = {"1-2": [["Martin Gregor, Zaujalo ma AI", "SK", 1, "V"], ["Pat Krave", "SK", 1, "V"], ["Edu AI", "SK", 1, "V"], ["GOPAS", "SK", 0, "V"], ["IT Learning Slovakia", "SK", 0, "V"], ["Seduo.sk, AI Akadémia (Daniel Gamrot)", "SK", 1, "V"], ["Martin Šubrt, chatgptriky", "CZ", 1, "V"], ["Michal Fiala, AI Univerzita", "CZ", 1, "V"], ["Skyro, moderná škola", "SK", 0, "V"], ["STEP IT Academy Bratislava", "SK", 0, "V"], ["Logiscool Košice", "SK", 0, "V"], ["RobotDreams (Czech)", "SK", 0, "V"], ["Patos Art", "CZ", 0, "M"]], "2-2": [["Rasťo Kiavčin, Digitálci a ToTheMoon Studio", "SK", 1, "V"], ["Slovensko.AI (INBOX SK s. r. o.)", "SK", 0, "V"], ["Webshine s. r. o.", "SK", 0, "M"], ["ui42", "SK", 0, "M"], ["Etnetera Sense", "CZ", 0, "S"], ["Argo22", "CZ", 0, "I"]], "0-2": [["Denis Vencel, Vyvyd Creatives", "SK", 1, "M"], ["Adam Janečko, DigitalGuru", "SK", 1, "V"]], "1-1": [["Yasein Ismail, Synvii AI", "SK", 1, "V"], ["Pragmadad", "SK", 1, "V"], ["Tvorca David", "SK", 1, "V"], ["umelainteligencia.ai", "SK", 0, "V"], ["flai.systems", "SK", 0, "M"], ["Kamil Aujesky, AI Ambassador Academy", "SK", 1, "V"], ["EDU Bird", "SK", 0, "V"], ["DiusAi (Diana Kosová)", "SK", 1, "V"], ["Roman Chovanec, byznysnapady", "CZ", 1, "V"], ["Marek Bartoš, aivangelista", "CZ", 1, "V"], ["Lissa Gritsayeva", "CZ", 1, "V"], ["Lernejo AI Slovensko", "SK", 0, "V"], ["WooAcademy, Marketing Agency", "SK", 0, "V"], ["EDU Effective Business School", "SK", 0, "V"], ["QPC", "SK", 0, "V"], ["Laba", "SK", 0, "V"], ["Eduplace.sk", "SK", 0, "V"], ["UniSkola.sk", "SK", 0, "V"], ["Double Academy", "SK", 0, "V"], ["Český institut pro AI a data", "CZ", 0, "V"]], "3-2": [["Patrik Rehák, patriksystems, Corx", "SK", 1, "S"], ["AIAI.sk (Vylink s. r. o.)", "SK", 0, "S"], ["Apertia Tech", "CZ", 0, "S"], ["eMan", "CZ", 0, "I"]], "3-3": [["Sebastián Šooš, netWRK", "SK", 1, "S"], ["WeKnowAI.agency", "SK", 0, "S"], ["Opium Systems", "SK", 0, "I"], ["coMakers (Artem Sotsenko, Praha)", "CZ", 1, "S"], ["bart.sk", "SK", 0, "I"], ["Cloudy podcast, Aliter Technologies", "SK", 0, "I"], ["Seyfor", "CZ", 0, "I"]], "2-1": [["Samuel Mruk, AI Inovator", "SK", 1, "S"], ["Martyx Academy (Martin Bugár)", "SK", 1, "V"], ["Rivillo s. r. o.", "SK", 0, "S"], ["Tomáš Kupec", "CZ", 1, "S"], ["EJAJ s. r. o., ejaj.cz", "CZ", 0, "P"], ["Transformio.ai", "SK", 0, "S"], ["Next Change AI", "CZ", 0, "S"]], "2-0": [["Martin Fribert", "SK", 1, "S"], ["Peter Sihelník", "SK", 1, "S"], ["Michal Mašek, Fortwana", "SK", 1, "S"], ["Miroslav Schmiedt", "SK", 1, "M"], ["ai-automatizacia.sk", "SK", 0, "S"], ["Noctiks", "SK", 0, "S"], ["Ravid AI", "SK", 0, "S"], ["Skratka.sk", "SK", 0, "S"], ["BizWize Consulting (Michal Kemeník)", "SK", 1, "S"], ["norriv AI (Tomáš Krajčovič)", "SK", 1, "S"], ["AI asistent učiteľa", "SK", 0, "P"], ["Scaleora", "SK", 0, "S"], ["RemPace", "SK", 0, "S"], ["Matěj Venclík", "CZ", 1, "S"], ["Interaktívna škola", "SK", 0, "P"], ["Selohim", "SK", 0, "S"], ["CreaNova", "SK", 0, "S"], ["Prognessa", "SK", 0, "S"], ["Ondřej Dušek (ondrejdusekcom)", "SK", 1, "S"], ["Asistenti učiteľov", "SK", 0, "P"], ["Jan Vašíček, online marketing", "CZ", 1, "M"], ["Bebecon", "CZ", 0, "S"], ["Pavol Stuchlík, AI konzultant", "CZ", 1, "S"], ["Swifty", "CZ", 0, "S"], ["Innovation One", "CZ", 0, "S"], ["L9 AI Studios", "CZ", 0, "M"], ["Tosid technologies", "CZ", 0, "S"], ["vmalek.cz", "CZ", 1, "S"], ["MindBe", "CZ", 0, "I"], ["Adam Motvička", "CZ", 1, "S"], ["Mediatoring", "CZ", 0, "M"], ["Praxio", "CZ", 0, "S"], ["Web Profík", "CZ", 0, "M"], ["The Blue Dot", "CZ", 0, "S"]], "3-1": [["Norvas (Connect Media s. r. o., od 2008)", "SK", 0, "S"], ["Ziapp.ai", "SK", 0, "P"], ["R[AI]sing Sun, Co-Sales.AI (Stanislav Chirk)", "SK", 1, "P"], ["ITAPS, riešenie AiA", "SK", 0, "P"], ["Cognexa (Marek Šebo)", "SK", 1, "S"], ["Kristian, NEO AI, 9xstudios", "CZ", 1, "V"], ["Martin Stibůrek, betterside.ai", "CZ", 1, "S"], ["Informio.eu", "SK", 0, "P"], ["Alpha Solutions", "CZ", 0, "S"], ["DX Heroes", "CZ", 0, "S"], ["Mirek Hovorka", "CZ", 1, "S"], ["Neatech", "CZ", 0, "I"], ["Page Builder", "CZ", 0, "P"]], "4-3": [["AI vo Firme (Michal Juhás, Josef Nevoral)", "SK", 1, "S"], ["KUKRA (Jakub Krasula, Poprad)", "SK", 1, "P"], ["Personeo.ai (Peter Kuklis)", "SK", 1, "P"], ["Trustmatic", "SK", 0, "P"], ["Ecomail (CZ)", "SK", 0, "P"], ["Ximilar", "CZ", 0, "P"], ["Geneea", "CZ", 0, "P"]], "4-2": [["Nexana.ai", "SK", 0, "P"], ["Pably", "SK", 0, "P"], ["Auglio (Ondrej Bagin)", "SK", 1, "P"], ["iERP.ai", "SK", 0, "P"], ["AdaSoft", "SK", 0, "I"], ["Intes Comp", "SK", 0, "P"], ["AIRAmax", "SK", 0, "P"], ["Leadspicker", "CZ", 0, "P"]], "2-3": [["Effectix", "SK", 0, "M"], ["TÜV SÜD Slovakia", "SK", 0, "V"]], "3-0": [["Caskcoded (Lukáš Dobranský)", "SK", 1, "S"], ["Agentix.ai", "SK", 0, "S"], ["Jana Kulhánková", "CZ", 1, "S"], ["Planivo", "SK", 0, "P"], ["Praktik", "SK", 0, "P"], ["Kontexta", "SK", 0, "P"], ["Účtomost, AI účtovný asistent", "SK", 0, "P"], ["SmartLex", "SK", 0, "P"], ["Dufeksoft", "SK", 0, "P"], ["Amitia AI", "CZ", 0, "S"], ["Devehope Technologies", "CZ", 0, "S"], ["BeeAI Agency", "CZ", 0, "S"], ["OmniCrane", "CZ", 0, "P"], ["Jan Drlý", "CZ", 1, "S"], ["Viktor Mikeska", "CZ", 1, "S"], ["Petr Balvín, AI a automatizace", "CZ", 1, "S"], ["VICTA DIGITAL", "CZ", 0, "S"], ["Sýkora IT", "CZ", 1, "S"], ["AI Excellence", "CZ", 0, "S"], ["OperatorAi", "CZ", 0, "P"], ["Stratox", "CZ", 0, "S"], ["PalmApp", "CZ", 0, "P"], ["Ninjabot", "CZ", 0, "P"], ["Mendeor Institute", "CZ", 0, "P"], ["knowdroids.ai", "CZ", 0, "P"], ["Atol Solutions", "CZ", 0, "S"], ["GROVE TECH AI", "CZ", 0, "S"], ["Opora AI", "CZ", 0, "S"], ["Carl Data Company", "CZ", 0, "S"], ["Kaen", "CZ", 0, "P"], ["Solid AI", "CZ", 0, "S"], ["MK IT Consulting", "CZ", 1, "S"], ["Proceder Automation Studio", "CZ", 0, "S"], ["Karan Solutions", "CZ", 0, "S"], ["data mind", "CZ", 0, "S"], ["Avatars", "CZ", 0, "P"], ["WEMAKE", "CZ", 0, "S"], ["Schoolexpert.eu", "CZ", 0, "P"], ["BANDITS", "CZ", 0, "S"], ["Pulsar Solutions", "CZ", 0, "P"], ["Diserta", "CZ", 0, "P"]], "4-1": [["Curipet", "SK", 0, "P"], ["Cequence (Prešov)", "SK", 0, "P"], ["Granton AI", "CZ", 0, "P"]], "4-4": [["CloudTalk", "SK", 0, "P"], ["Powerful Medical", "SK", 0, "P"], ["Innovatrics", "SK", 0, "P"], ["Adam Rudavský, XVADUR", "SK", 1, "S"]], "1-3": [["Skillmea", "SK", 0, "V"], ["Google a KInIT, bezplatný kurz AI pre firmy", "SK", 0, "V"], ["Elements of AI (slovenská verzia)", "SK", 0, "V"], ["AI Institute s. r. o.", "CZ", 0, "V"], ["ITnetwork.sk", "SK", 0, "V"]], "1-0": [["Ondřej Marák, ondrej_digital", "CZ", 1, "V"], ["AI Video Hub CZ/SK", "CZ", 0, "M"], ["Chytré podnikání", "CZ", 0, "V"], ["Renoster Academy", "SK", 0, "V"], ["Vzdelávanie učiteľov", "SK", 0, "V"], ["Macrosoft", "SK", 0, "V"], ["LearnWave", "SK", 0, "V"], ["Alice Manová (alice_miluje_ai)", "SK", 1, "V"], ["Digitáři", "CZ", 0, "V"], ["Naučíme AI", "CZ", 0, "V"], ["IT Prime", "CZ", 0, "I"], ["MBK Consulting", "CZ", 0, "V"], ["AIBILITY", "CZ", 0, "V"], ["AI Koučka", "CZ", 1, "V"], ["AI dětem", "CZ", 0, "V"], ["DigitálníHR", "CZ", 0, "V"], ["AI Institute Education", "CZ", 0, "V"]], "0-1": [["Martin Prodaj Coaching", "SK", 1, "V"], ["Andrej Sobota", "SK", 1, "V"]], "0-0": [["Cesta k vysnívanej práci", "SK", 0, "V"]], "4-0": [["mcptask.online", "CZ", 0, "P"], ["CzechAI", "CZ", 0, "P"], ["Zantra AI", "CZ", 0, "P"]]};
+const HRA = { S: 'služba', V: 'vzdelávanie', P: 'produkt', M: 'marketing a weby', I: 'IT firma' };
+const grid = document.getElementById('grid');
+const shade = n => n === 0 ? 'var(--empty)' : n <= 2 ? 'var(--s1)' : n <= 5 ? 'var(--s3)' : n <= 10 ? 'var(--s4)' : n <= 20 ? 'var(--s5)' : 'var(--s7)';
+const darkText = n => n > 5;
+function show(h, d) {
+  const list = (CELLS[h + '-' + d] || []).slice().sort((a, b) => b[2] - a[2] || a[0].localeCompare(b[0], 'sk'));
+  document.getElementById('ptitle').textContent = `Hĺbka ${h}, dôkaz ${d}: ${list.length} ${list.length === 1 ? 'hráč' : list.length < 5 && list.length > 1 ? 'hráči' : 'hráčov'}`;
+  const ul = document.getElementById('plist'); ul.innerHTML = '';
+  if (!list.length) { const li = document.createElement('li'); li.textContent = 'Nikto.'; ul.appendChild(li); return; }
+  list.forEach(([m, k, t, hra]) => { const li = document.createElement('li'); li.textContent = m; const f = document.createElement('span'); f.className = 'f'; f.textContent = `${k} · ${HRA[hra] || hra}${t ? ' · tvár' : ''}`; li.appendChild(f); ul.appendChild(li); });
+}
+for (let d = 4; d >= 0; d--) for (let h = 0; h <= 4; h++) {
+  const list = CELLS[h + '-' + d] || []; const n = list.length;
+  const b = document.createElement('button'); b.className = 'cell' + (darkText(n) ? ' dark' : '') + (h === 4 && d === 4 ? ' you' : '');
+  b.style.background = shade(n); b.setAttribute('aria-label', `Hĺbka ${h}, dôkaz ${d}: ${n}`);
+  const faces = list.filter(x => x[2]).length;
+  b.innerHTML = `<span class="n">${n}</span><span class="t">${n ? faces + ' s tvárou' : ''}</span>` + (h === 4 && d === 4 ? '<span class="badge">TY</span>' : '');
+  b.addEventListener('click', () => show(h, d)); b.addEventListener('mouseenter', () => show(h, d)); b.addEventListener('focus', () => show(h, d));
+  grid.appendChild(b);
+}
+show(4, 4);
+</script>
