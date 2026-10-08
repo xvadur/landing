@@ -1,0 +1,294 @@
+<title>Top weby 2025</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: jeden stĺpec snímok, každý web ako list v kartotéke: obraz, pod ním meno vľavo a poznámky vpravo. */
+  :root {
+    --bg: #FFFFFF;
+    --fg: #101012;
+    --muted: #5C5C63;
+    --line: #E4E4E8;
+    --plate: #F2F2F4;
+    --accent: #FFD60A;
+    --accent-ink: #101012;
+    --display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+    --body: "Geist", "Helvetica Neue", Arial, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0E0E10; --fg: #F2F2F4; --muted: #A2A2AB; --line: #26262B; --plate: #18181B;
+      --accent: #FFD60A; --accent-ink: #101012; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E0E10; --fg: #F2F2F4; --muted: #A2A2AB; --line: #26262B; --plate: #18181B;
+    --accent: #FFD60A; --accent-ink: #101012; color-scheme: dark;
+  }
+  body { background: var(--bg); color: var(--fg); font: 400 17px/1.55 var(--body); }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-inline: clamp(16px, 4vw, 48px); padding-block: clamp(40px, 7vw, 96px); display: flex; flex-direction: column; gap: clamp(56px, 9vw, 120px); }
+  header { display: flex; flex-direction: column; gap: 28px; }
+  .eyebrow { font: 500 12px/1.4 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+  h1 { font: 800 clamp(48px, 9vw, 112px)/.92 var(--display); letter-spacing: -.045em; margin: 0; text-wrap: balance; }
+  .lead { max-width: 62ch; font-size: clamp(17px, 1.6vw, 20px); color: var(--muted); margin: 0; }
+  .lead strong { color: var(--fg); font-weight: 500; }
+  .index { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0 32px; border-top: 1px solid var(--line); }
+  .index a { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); color: var(--fg); text-decoration: none; font-size: 15px; min-width: 0; }
+  .index a:hover, .index a:focus-visible { color: var(--muted); }
+  .index span:last-child { font: 400 13px/1.6 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .site { display: flex; flex-direction: column; gap: 24px; scroll-margin-top: 24px; }
+  .shot { display: block; aspect-ratio: 16 / 10; width: 100%; max-width: 100%; background: var(--plate); border-radius: 6px; overflow: hidden; outline: 1px solid var(--line); outline-offset: -1px; }
+  .shot img { width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; transition: transform .6s cubic-bezier(.2,.7,.2,1); }
+  .shot:hover img { transform: scale(1.015); }
+  .meta { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px 48px; align-items: start; }
+  .name { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .tag { display: flex; flex-wrap: wrap; gap: 8px 14px; font: 400 12px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .tag b { font-weight: 500; color: var(--fg); }
+  h2 { font: 800 clamp(30px, 4vw, 46px)/1 var(--display); letter-spacing: -.035em; margin: 0; text-wrap: balance; }
+  .by { color: var(--muted); font-size: 15px; }
+  .notes { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .notes p { margin: 0; max-width: 62ch; }
+  .for { display: flex; gap: 12px; align-items: baseline; }
+  .for span { flex-shrink: 0; font: 500 11px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; padding: 5px 7px; border-radius: 3px; background: var(--accent); color: var(--accent-ink); position: relative; top: -2px; }
+  .visit { font: 500 14px/1 var(--mono); color: var(--fg); text-underline-offset: 4px; text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+  .visit:focus-visible, .index a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .star .tag b { background: var(--accent); color: var(--accent-ink); padding: 2px 6px; border-radius: 3px; }
+  footer { border-top: 1px solid var(--line); padding-top: 24px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--fg); }
+  @media (max-width: 760px) { .meta { grid-template-columns: 1fr; } }
+  @media (prefers-reduced-motion: reduce) { .shot img { transition: none; } .shot:hover img { transform: none; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Awwwards · víťazi mesiaca 2025 · pre nový xvadur.com</span>
+    <h1>Top weby 2025</h1>
+    <p class="lead">Dvanásť víťazov „Site of the Month“ za rok 2025 a k nim osobné portfólio Bruna Simona z januára 2026. Navigate (apríl 2025) dnes nebeží, tak jeho miesto zaberá Oryzo AI z apríla 2026. <strong>Pri každom je, čím je krásny a čo si z neho vziať pre teba.</strong> Snímky sú z 7. 10. 2026 v rozlíšení 1440 × 900; číslo je známka poroty Awwwards z 10.</p>
+    <nav class="index" aria-label="Zoznam webov">
+      <a href="#lando"><span>Lando Norris</span><span>8,18</span></a>
+      <a href="#bruno"><span>Bruno Simon</span><span>8,11</span></a>
+      <a href="#immersive"><span>Immersive Garden</span><span>8,00</span></a>
+      <a href="#siena"><span>Siena Film Foundation</span><span>7,90</span></a>
+      <a href="#oryzo"><span>Oryzo AI</span><span>7,86</span></a>
+      <a href="#mindmarket"><span>MindMarket</span><span>7,85</span></a>
+      <a href="#tracing"><span>Tracing Art</span><span>7,68</span></a>
+      <a href="#terminal"><span>Terminal Industries</span><span>7,68</span></a>
+      <a href="#dropbox"><span>Dropbox Brand</span><span>7,67</span></a>
+      <a href="#cartier"><span>Cartier</span><span>7,64</span></a>
+      <a href="#ponpon"><span>Ponpon Mania</span><span>7,64</span></a>
+      <a href="#montfort"><span>Montfort</span><span>7,62</span></a>
+      <a href="#anime"><span>Anime.js</span><span>7,62</span></a>
+    </nav>
+  </header>
+
+  <article class="site star" id="lando">
+    <a class="shot" href="https://landonorris.com/" target="_blank" rel="noopener"><img src="galeria/11-lando-norris.jpg" alt="Prvá obrazovka landonorris.com: portrét pilota, cez ktorý sa pod kurzorom odhaľuje prilba"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>November 2025</b><span>8,18 / 10</span><span>Webflow · GSAP · WebGL</span></div>
+        <h2>Lando Norris</h2>
+        <span class="by">OFF+BRAND · uvádzaný ako Site of the Year 2025</span>
+      </div>
+      <div class="notes">
+        <p>Prvá obrazovka je iba tvár. Kde ide myš, cez tvár sa odhalí prilba. Podpis sa sám nakreslí neónovou čiarou, „na trati“ a „mimo trate“ stoja oproti sebe a prilby sú vystavené ako zbierka predmetov s rokom. Celý web má dve farby.</p>
+        <p class="for"><span>Pre teba</span>Röntgen namiesto prilby. Uniforma a kód ako dve strany. Sieň systémov od Aethera po Netopiera.</p>
+        <a class="visit" href="https://landonorris.com/" target="_blank" rel="noopener">landonorris.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site star" id="bruno">
+    <a class="shot" href="https://bruno-simon.com/" target="_blank" rel="noopener"><img src="galeria/13-bruno-simon.jpg" alt="Portfólio Bruna Simona: malý 3D ostrov s autíčkom a nápisom Click to start"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Január 2026</b><span>8,11 / 10</span><span>Three.js · WebGL</span></div>
+        <h2>Bruno Simon</h2>
+        <span class="by">Bruno Simon, osobné portfólio</span>
+      </div>
+      <div class="notes">
+        <p>Osobný web je hra. Návštevník jazdí autíčkom po 3D svete a projekty nachádza ako miesta v krajine. Je to jeden človek, ktorý si postavil vlastný svet namiesto životopisu.</p>
+        <p class="for"><span>Pre teba</span>Najbližší vzor pre teba ako osobu: web, do ktorého sa vstupuje, nie ktorý sa číta. Tvoje systémy ako miesta.</p>
+        <a class="visit" href="https://bruno-simon.com/" target="_blank" rel="noopener">bruno-simon.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="immersive">
+    <a class="shot" href="https://immersive-g.com/" target="_blank" rel="noopener"><img src="galeria/01-immersive-garden.jpg" alt="Immersive Garden: biely sadrový reliéf a pätkový nadpis na bielej ploche"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Január 2025</b><span>8,00 / 10</span><span>3D · Contentful</span></div>
+        <h2>Immersive Garden</h2>
+        <span class="by">Immersive Garden, web štúdia</span>
+      </div>
+      <div class="notes">
+        <p>Celý web je biely, ako odliatok zo sadry. Predmety vystupujú z plochy ako reliéf a pätkové písmo pôsobí ticho a draho. Štúdio má v tomto zozname tri víťazné weby.</p>
+        <p class="for"><span>Pre teba</span>Tvoja tvár alebo fonendoskop ako biely reliéf. Pokoj namiesto krikľavosti.</p>
+        <a class="visit" href="https://immersive-g.com/" target="_blank" rel="noopener">immersive-g.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="siena">
+    <a class="shot" href="https://siena.film/" target="_blank" rel="noopener"><img src="galeria/03-siena-film.jpg" alt="Siena Film Foundation: filmový plagát dokumentu My Project X s hodnoteniami"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Marec 2025</b><span>7,90 / 10</span><span>Nekonečný posun</span></div>
+        <h2>Siena Film Foundation</h2>
+        <span class="by">Niccolò Miranda</span>
+      </div>
+      <div class="notes">
+        <p>Vstup cez čiernu bránu s jediným tlačidlom Enter, potom filmy ako plagáty s hviezdičkami a citátmi z recenzií. Každý projekt vyzerá ako premiéra.</p>
+        <p class="for"><span>Pre teba</span>Každý tvoj systém ako plagát s jedným číslom a jednou vetou od klienta.</p>
+        <a class="visit" href="https://siena.film/" target="_blank" rel="noopener">siena.film ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="oryzo">
+    <a class="shot" href="https://oryzo.ai/" target="_blank" rel="noopener"><img src="galeria/04-oryzo-ai.jpg" alt="Oryzo AI: korkový podtácok na rezacej podložke s veľkým nápisom ORYZO"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Apríl 2026</b><span>7,86 / 10</span><span>Three.js · GSAP</span></div>
+        <h2>Oryzo AI</h2>
+        <span class="by">Lusion</span>
+      </div>
+      <div class="notes">
+        <p>Obyčajný korkový podtácok podaný ako filmový produkt: rezacia podložka, ceruzka, detail materiálu. Web predáva remeslo cez jeden predmet.</p>
+        <p class="for"><span>Pre teba</span>Jeden predmet ako hrdina: tvoj fonendoskop alebo notebook z nočných služieb.</p>
+        <a class="visit" href="https://oryzo.ai/" target="_blank" rel="noopener">oryzo.ai ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="mindmarket">
+    <a class="shot" href="https://mindmarket.com/" target="_blank" rel="noopener"><img src="galeria/12-mindmarket.jpg" alt="MindMarket: zelená plocha s nadpisom Real human insights a plochou ilustráciou ľudí"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>December 2025</b><span>7,85 / 10</span><span>GSAP · DatoCMS</span></div>
+        <h2>MindMarket</h2>
+        <span class="by">Louis Paquet</span>
+      </div>
+      <div class="notes">
+        <p>Výskumná agentúra, ktorá hľadá ľudské príbehy za dátami, podaná hravou plochou ilustráciou a jednou sýtou farbou. Vážna práca, ľahký tón.</p>
+        <p class="for"><span>Pre teba</span>Najbližšie tvojej práci s médiami a Netopierom: výskum ľudí bez nudnej korporátnej tváre.</p>
+        <a class="visit" href="https://mindmarket.com/" target="_blank" rel="noopener">mindmarket.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="tracing">
+    <a class="shot" href="https://www.getty.edu/tracingart/" target="_blank" rel="noopener"><img src="galeria/07-tracing-art.jpg" alt="Tracing Art od Getty: umelecké predmety voľne rozložené na bielej ploche"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Júl 2025</b><span>7,68 / 10</span><span>Vizualizácia dát</span></div>
+        <h2>Tracing Art</h2>
+        <span class="by">Resn pre Getty</span>
+      </div>
+      <div class="notes">
+        <p>Predmety plávajú voľne na bielej ploche a ku každému sa dá dostať k jeho pôvodu: kto ho mal, kedy a odkiaľ sa vzal. Dáta podané ako múzeum.</p>
+        <p class="for"><span>Pre teba</span>Presne to, čo odporúča aj deep research: každé tvoje číslo s pôvodom, na ktorý sa dá kliknúť.</p>
+        <a class="visit" href="https://www.getty.edu/tracingart/" target="_blank" rel="noopener">getty.edu/tracingart ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="terminal">
+    <a class="shot" href="https://terminal-industries.com/" target="_blank" rel="noopener"><img src="galeria/09-terminal-industries.jpg" alt="Terminal Industries: kamión v protisvetle západu slnka a text into one connected"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>September 2025</b><span>7,68 / 10</span><span>Vue.js · Vercel</span></div>
+        <h2>Terminal Industries</h2>
+        <span class="by">REJOUICE®</span>
+      </div>
+      <div class="notes">
+        <p>Logistický startup ako film: kamión v západe slnka a veta, ktorá sa skladá slovo po slove pri posúvaní. Nudný priemysel podaný ako príbeh.</p>
+        <p class="for"><span>Pre teba</span>Nočná zmena ako film: chodba, monitor, notebook, a veta, ktorá sa skladá pri posúvaní.</p>
+        <a class="visit" href="https://terminal-industries.com/" target="_blank" rel="noopener">terminal-industries.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="dropbox">
+    <a class="shot" href="https://brand.dropbox.com/" target="_blank" rel="noopener"><img src="galeria/02-dropbox-brand.jpg" alt="Dropbox Brand: mriežka farebných blokov s nápisom Imagery"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Február 2025</b><span>7,67 / 10</span><span>Mikrointerakcie</span></div>
+        <h2>Dropbox Brand</h2>
+        <span class="by">Dropbox</span>
+      </div>
+      <div class="notes">
+        <p>Pravidlá značky ako ihrisko: farebné bloky v mriežke, ktoré sa hýbu a dajú sa chytiť. Suchý dokument sa zmenil na hru.</p>
+        <p class="for"><span>Pre teba</span>Sieň systémov ako mriežka blokov, každý systém vlastná farba a pohyb.</p>
+        <a class="visit" href="https://brand.dropbox.com/" target="_blank" rel="noopener">brand.dropbox.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="cartier">
+    <a class="shot" href="https://cartier-waw-0225.dev.60fps.fr/" target="_blank" rel="noopener"><img src="galeria/08-cartier.jpg" alt="Cartier Watches and Wonders: béžová 3D miestnosť s nápisom Watches and Wonders"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>August 2025</b><span>7,64 / 10</span><span>WebGL · Motion</span></div>
+        <h2>Cartier</h2>
+        <span class="by">Immersive Garden · Watches &amp; Wonders 2025</span>
+      </div>
+      <div class="notes">
+        <p>Návštevník prechádza 3D miestnosťami ako výstavou. Luxus nesie priestor a svetlo, nie text.</p>
+        <p class="for"><span>Pre teba</span>Ordinácia ako priestor: vyšetrenie ako miestnosť, do ktorej človek vojde.</p>
+        <a class="visit" href="https://cartier-waw-0225.dev.60fps.fr/" target="_blank" rel="noopener">Cartier Watches &amp; Wonders ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="ponpon">
+    <a class="shot" href="https://ponpon-mania.com/" target="_blank" rel="noopener"><img src="galeria/10-ponpon-mania.jpg" alt="Ponpon Mania: farebný interaktívny komiks s ovečkou a dinosaurom"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Október 2025</b><span>7,64 / 10</span><span>WebGL · GSAP · Nuxt</span></div>
+        <h2>Ponpon Mania</h2>
+        <span class="by">Patrick Heng a Justine Soulié</span>
+      </div>
+      <div class="notes">
+        <p>Interaktívny komiks o ovečke, ktorá chce rozhýbať svet. Kreslené obrázky a kód v jednom, každá strana sa hýbe pod rukou.</p>
+        <p class="for"><span>Pre teba</span>Tvoj príbeh od sanitára k builderovi ako krátky komiks namiesto časovej osi.</p>
+        <a class="visit" href="https://ponpon-mania.com/" target="_blank" rel="noopener">ponpon-mania.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="montfort">
+    <a class="shot" href="https://mont-fort.com/" target="_blank" rel="noopener"><img src="galeria/06-montfort.jpg" alt="Montfort: zasnežené hory v hmle a jemné logo MONTFORT"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Jún 2025</b><span>7,62 / 10</span><span>3D · Responzívny</span></div>
+        <h2>Montfort</h2>
+        <span class="by">Immersive Garden</span>
+      </div>
+      <div class="notes">
+        <p>Firma na obchod s komoditami vyzerá ako krajina: hory v hmle, tenké písmo, veľa ticha. Dôveru buduje pokojom.</p>
+        <p class="for"><span>Pre teba</span>Ukážka, že vážnosť netreba kričať. Dobrá protiváha k veľkým číslam.</p>
+        <a class="visit" href="https://mont-fort.com/" target="_blank" rel="noopener">mont-fort.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="site" id="anime">
+    <a class="shot" href="https://animejs.com/" target="_blank" rel="noopener"><img src="galeria/05-animejs.jpg" alt="Anime.js: tmavá plocha s farebným kruhom a nadpisom All-in-one animation engine"></a>
+    <div class="meta">
+      <div class="name">
+        <div class="tag"><b>Máj 2025</b><span>7,62 / 10</span><span>Vlastná knižnica</span></div>
+        <h2>Anime.js</h2>
+        <span class="by">Julian Garnier</span>
+      </div>
+      <div class="notes">
+        <p>Jeden autor, ktorý web pre svoju knižnicu urobil z nej samej. Živá animácia na prvej obrazovke je zároveň dôkaz, čo nástroj dokáže.</p>
+        <p class="for"><span>Pre teba</span>Monitor s tvojimi systémami ako živá ukážka, nie ako tabuľka čísel.</p>
+        <a class="visit" href="https://animejs.com/" target="_blank" rel="noopener">animejs.com ↗</a>
+      </div>
+    </div>
+  </article>
+
+  <footer>Zdroj: <a href="https://www.awwwards.com/websites/sites_of_the_month/" target="_blank" rel="noopener">Awwwards, Sites of the Month</a>. Známky a mená autorov sú z ich stránok; mesiac je podľa dňa ocenenia. Lando Norris je ako Site of the Year 2025 uvádzaný v iných zdrojoch, na Awwwards som potvrdil Site of the Day 17. 11. 2025.</footer>
+</div>
